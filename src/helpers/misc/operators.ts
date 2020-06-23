@@ -1,6 +1,10 @@
-//@flow
 import { getHasOneInCommon, findElementIndexInSortedArray } from 'helpers/array/utils';
 
+export type Operator = 
+    '<' | '<=' | '>' | '>=' | '==' | '===' | 
+    'inRangeClosed' | 'inRangeOpen' | 'inRangeClosedOpen' | 'inRangeOpenClosed' |
+	'isIncluded' | 'contains' | 'hasOneInCommon';
+	
 export
 const inferior = (a: any, b: any): boolean => a < b;
 
@@ -32,13 +36,13 @@ export
 const inRangeClosedOpen = (a: number, b: [number, number]): boolean => a >= b[0] && a < b[1];
 
 export
-const contains = <T: string | number>(a: Array<T>, b: T): boolean => findElementIndexInSortedArray(a, b) >= 0;
+const contains = (a: Array<unknown>, b: unknown): boolean => findElementIndexInSortedArray(a)(b) >= 0;
 
 export
-const isIncluded = <T: string | number>(a: T, b: Array<T>): boolean => findElementIndexInSortedArray(b, a) >= 0;
+const isIncluded = (a: unknown, b: Array<unknown>): boolean => findElementIndexInSortedArray(b)(a) >= 0;
 
 export
-const hasOneInCommon = <T: string[] | number[]>(a: T, b: T): boolean => getHasOneInCommon(a, b);
+const hasOneInCommon = (a: Array<unknown>, b: Array<unknown>): boolean => getHasOneInCommon(a)(b);
 
 export default
 {

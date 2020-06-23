@@ -89,8 +89,8 @@ export const transformIntoObject = (array: Array<StringOrNumber>): Dictionary<St
 	return array.reduce(reducer, {});
 }
 
-// [a] -> { [string] : a} -> [a]
-export const filterAgainstObjectKeys = <T>(array: T[]) => (object: Dictionary<T>) =>
+// [string | number] -> { [string | number] : string | number} -> [string | number]
+export const filterAgainstObjectKeys = (array: StringOrNumber[]) => (object: Dictionary<StringOrNumber>) =>
 	array.filter( itemId => object[itemId] !== undefined)
 
 

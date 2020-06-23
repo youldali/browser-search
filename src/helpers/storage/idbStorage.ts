@@ -1,12 +1,15 @@
-//@flow
-import { curry, reverse } from 'ramda';
+import { reverse } from 'rambda';
+import { Operator } from 'helpers/misc/operators.ts';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;
 const {indexedDB, IDBKeyRange} = globalScope;
 
 
-const _createOrOpenDatabase = (dbName: string, dbVersion: number, onUpgradeCallback: Function): Promise<IDBDatabase> => {
+export const createOrOpenDatabase = 
+(dbName: string) => 
+(dbVersion: number) => 
+(onUpgradeCallback: Function): Promise<IDBDatabase> => {
     const openDBRequest = indexedDB.open(dbName, dbVersion);
 
     return new Promise((resolve, reject) => {
@@ -15,25 +18,27 @@ const _createOrOpenDatabase = (dbName: string, dbVersion: number, onUpgradeCallb
         openDBRequest.onsuccess = () => resolve(openDBRequest.result);
     });
 }
-export const createOrOpenDatabase = curry(_createOrOpenDatabase);
 
 
-export const _getNumberOfItemsInStore = (db: IDBDatabase, storeName: string):Promise<number> => {
+export const getNumberOfItemsInStore = 
+(db: IDBDatabase) =>
+(storeName: string): Promise<number> => {
     const 
         transaction = db.transaction([storeName], 'readonly'),
         objectStore = transaction.objectStore(storeName),
         countRequest = objectStore.count();
 
     return new Promise((resolve, reject) => {
-        //$FlowFixMe
         countRequest.onsuccess = () => resolve(countRequest.result);
-        countRequest.onerror = () => reject('error fetching data: ' + countRequest.error.message);
+        countRequest.onerror = () => reject('error fetching data: ' + countRequest?.error?.message);
     });
 }
-export const getNumberOfItemsInStore = curry(_getNumberOfItemsInStore);
 
 
-const _addDataToStore = (db: IDBDatabase, storeName: string, data: Object[]): Promise<any> => {
+export const addDataToStore = 
+(db: IDBDatabase) => 
+(storeName: string) =>
+(data: Object[]): Promise<any> => {
     const 
         transaction = db.transaction([storeName], "readwrite"),
         objectStore = transaction.objectStore(storeName);
@@ -44,34 +49,37 @@ const _addDataToStore = (db: IDBDatabase, storeName: string, data: Object[]): Pr
         transaction.onerror = () => reject(`error inserting data for store ${storeName}:`);
     });
 };
-export const addDataToStore = curry(_addDataToStore);
 
 
-const _getPrimaryKeyListMatchingRange = (db: IDBDatabase, storeName: string, indexName: string, keyRange: IDBKeyRange) => {
+export const getPrimaryKeyListMatchingRange = 
+(db: IDBDatabase) => 
+(storeName: string) => 
+(indexName: string) => 
+(keyRange: IDBKeyRange) => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
         index = objectStore.index(indexName),
-        //$FlowFixMe
         request: IDBRequest = index.getAllKeys(keyRange);
 
     return new Promise((resolve, reject) => {
-        //$FlowFixMe
-        request.onsuccess = () => resolve(keyRange.lower === keyRange.upper ? request.result : request.result.sort( (a, b) => a - b));
-        request.onerror = () => reject('error fetching data: ' + request.error.message);
+        request.onsuccess = () => resolve(keyRange.lower === keyRange.upper ? request.result : request.result.sort());
+        request.onerror = () => reject('error fetching data: ' + request?.error?.message);
     });
 };
-export const getPrimaryKeyListMatchingRange = curry(_getPrimaryKeyListMatchingRange);
 
 
-const _iterateOverStore = (db: IDBDatabase, storeName: string, callBack: Function): Promise<any> => {
+export const iterateOverStore = 
+(db: IDBDatabase) => 
+(storeName: string) => 
+(callBack: Function): Promise<any> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
-        request = objectStore.openCursor();
+        request: IDBRequest = objectStore.openCursor();
 
     request.onsuccess = event => {
-        const cursor = event.target.result;
+        const cursor: IDBCursorWithValue = (event.target as IDBRequest).result;
         if(cursor) {
             callBack(cursor.primaryKey, cursor.value);
             cursor.continue();
@@ -80,22 +88,24 @@ const _iterateOverStore = (db: IDBDatabase, storeName: string, callBack: Functio
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject('error fetching data: ' + transaction.error.message);
+        transaction.onerror = () => reject('error fetching data: ' + transaction?.error?.message);
     });
 };
-export const iterateOverStore = curry(_iterateOverStore);
 
 
-const _getAllUniqueKeysForIndex = (db: IDBDatabase, storeName: string, indexName: string) => {
+export const getAllUniqueKeysForIndex = 
+(db: IDBDatabase) => 
+(storeName: string) =>
+(indexName: string) => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
         index = objectStore.index(indexName),
         request = index.openKeyCursor(null, 'nextunique');
 
-    const keyList = [];
+    const keyList: Array<unknown> = [];
     request.onsuccess = event => {
-        const cursor = event.target.result;
+        const cursor = (event.target as IDBRequest).result;
         if(cursor) {
             keyList.push(cursor.key);
             cursor.continue();
@@ -104,34 +114,37 @@ const _getAllUniqueKeysForIndex = (db: IDBDatabase, storeName: string, indexName
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(keyList);
-        transaction.onerror = () => reject('error fetching key list');
+        transaction.onerror = () => reject('error fetching key list ' + transaction?.error?.message);
     });
 };
-export const getAllUniqueKeysForIndex = curry(_getAllUniqueKeysForIndex);
 
 
-const _getAllPrimaryKeysForindex = (db: IDBDatabase, storeName: string, indexName: string, reverseDirection: boolean): Promise<number[]> => {
+export const getAllPrimaryKeysForIndex = 
+(db: IDBDatabase) => 
+(storeName: string) => 
+(indexName: string) => 
+(reverseDirection: boolean): Promise<unknown[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
         index = objectStore.index(indexName),
-        //$FlowFixMe
         request = index.getAllKeys();
 
     return new Promise((resolve, reject) => {
         request.onsuccess = () => resolve( reverseDirection ? reverse(request.result) : request.result );
-        request.onerror = () => reject('error fetching data: ' + request.error.message);
+        request.onerror = () => reject('error fetching data: ' + request?.error?.message);
     });
 };
-export const getAllPrimaryKeysForindex = curry(_getAllPrimaryKeysForindex);
 
 
-const _getItemList = (db: IDBDatabase, storeName: string, idList: number[]): Promise<any> => {
+export const getItemList = 
+(db: IDBDatabase) => 
+(storeName: string) => 
+(idList: number[]): Promise<any> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
-        itemList = [];
-
+        itemList: Array<unknown> = [];
 
     idList.forEach( id => {
         const request = objectStore.get(id);
@@ -140,13 +153,14 @@ const _getItemList = (db: IDBDatabase, storeName: string, idList: number[]): Pro
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(itemList);
-        transaction.onerror = () => reject('error fetching the items');
+        transaction.onerror = () => reject('error fetching the items ' + transaction?.error?.message);
     });
 };
-export const getItemList = curry(_getItemList);
 
 
-const _getKeyRangeMatchingOperator = (operator: Operator, value: any) => {
+export const getKeyRangeMatchingOperator = 
+(operator: Operator) => 
+(value: any) => {
     switch(operator){
         case '===':
         case 'isIncluded':
@@ -171,4 +185,3 @@ const _getKeyRangeMatchingOperator = (operator: Operator, value: any) => {
             return IDBKeyRange.bound(value[0], value[1], false, true);
     }
 }
-export const getKeyRangeMatchingOperator = curry(_getKeyRangeMatchingOperator);

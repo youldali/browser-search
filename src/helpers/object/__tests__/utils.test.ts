@@ -5,13 +5,13 @@ describe('hasOne', () => {
 
 	test('it return true if the Object has at least 1 of the mentionned property', () => {
 		const propertiesToLookup = ['a', 'd', 'x', 'z'];
-		const hasProperty = objectHelper.hasOne(propertiesToLookup)(object);
+		const hasProperty = objectHelper.hasOneProperty(propertiesToLookup)(object);
 		expect(hasProperty).toBe(true)
 	});
 
 	test('it returns false if the Object has none of the mentionned property', () => {
 		const propertiesToLookup = ['d', 'x', 'z'];
-		const hasProperty = objectHelper.hasOne(propertiesToLookup)(object);
+		const hasProperty = objectHelper.hasOneProperty(propertiesToLookup)(object);
 		expect(hasProperty).toBe(false)
 	});
 });
