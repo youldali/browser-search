@@ -1,4 +1,4 @@
-import * as arrayHelper from '../utils';
+import * as arrayHelper from '../array.util';
 
 describe('findHighestValueInObjects', () => {
 	const collection = [

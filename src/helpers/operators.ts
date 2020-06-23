@@ -1,4 +1,4 @@
-import { getHasOneInCommon, findElementIndexInSortedArray } from 'helpers/array/utils';
+import { getHasOneInCommon, findElementIndexInSortedArray } from 'helpers/array.util';
 
 export type Operator = 
     '<' | '<=' | '>' | '>=' | '==' | '===' | 
@@ -6,22 +6,22 @@ export type Operator =
 	'isIncluded' | 'contains' | 'hasOneInCommon';
 	
 export
-const inferior = (a: any, b: any): boolean => a < b;
+const inferior = (a: number, b: number): boolean => a < b;
 
 export
-const inferiorOrEqual = (a: any, b: any): boolean => a <= b;
+const inferiorOrEqual = (a: number, b: number): boolean => a <= b;
 
 export
-const superior = (a: any, b: any): boolean => a > b;
+const superior = (a: number, b: number): boolean => a > b;
 
 export
-const superiorOrEqual = (a: any, b: any): boolean => a >= b;
+const superiorOrEqual = (a: number, b: number): boolean => a >= b;
 
 export
-const equal = (a: any, b: any): boolean => a == b;
+const equal = (a: unknown, b: unknown): boolean => a == b;
 
 export
-const equalStrict = (a: any, b: any): boolean => a === b;
+const equalStrict = (a: unknown, b: unknown): boolean => a === b;
 
 export
 const inRangeClosed = (a: number, b: [number, number]): boolean => a >= b[0] && a <= b[1];
@@ -38,11 +38,6 @@ const inRangeClosedOpen = (a: number, b: [number, number]): boolean => a >= b[0]
 export
 const contains = (a: Array<unknown>, b: unknown): boolean => findElementIndexInSortedArray(a)(b) >= 0;
 
-export
-const isIncluded = (a: unknown, b: Array<unknown>): boolean => findElementIndexInSortedArray(b)(a) >= 0;
-
-export
-const hasOneInCommon = (a: Array<unknown>, b: Array<unknown>): boolean => getHasOneInCommon(a)(b);
 
 export default
 {
@@ -56,8 +51,6 @@ export default
 	inRangeOpen,
 	inRangeClosedOpen,
 	inRangeOpenClosed,
-	isIncluded,
-	hasOneInCommon,
-	contains
+	contains,
 };
 

@@ -1,5 +1,5 @@
 import { reverse } from 'rambda';
-import { Operator } from 'helpers/misc/operators.ts';
+import { Operator } from 'helpers/operators';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;

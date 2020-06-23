@@ -133,47 +133,6 @@ describe('===', function(){
 	});
 });
 
-describe('isIncluded', function(){
-	test('it should return true when a is a subset of b (array)', function(){
-		const a = 20;
-		const b = [10, 20, 30];
-		expect(operators['isIncluded'](a, b)).toBe(true);
-	});
-
-	test('it should return false when a is not a subset of b (string)', function(){
-		const a = 20;
-		const b = [10, 25, 30];
-		expect(operators['isIncluded'](a, b)).toBe(false);
-	});
-});
-
-describe('hasOneInCommon', function(){
-	test('it should return true when a and b have a least one common element (1)', function(){
-		const a = [1,2,3,4,5];
-		const b = [3];
-		expect(operators['hasOneInCommon'](a, b)).toBe(true);
-	});
-
-	test('it should return true when a and b have a least one common element (2)', function(){
-		const a = [100, 200];
-		const b = [1,2,3,4,5,6,7,100];
-		expect(operators['hasOneInCommon'](a, b)).toBe(true);
-	});
-
-	test('it should return true when a and b have a least one common element (3)', function(){
-		const a = ['car', 'plane'];
-		const b = ['bike', 'boat', 'car', 'plane', 'town'];
-		expect(operators['hasOneInCommon'](a, b)).toBe(true);
-	});
-
-	test('it should return false when a and b have a no common element', function(){
-		const a = [100, 200, 300, 400, 500];
-		const b = [1,2,3,4,5,6,7,8,9];
-		expect(operators['hasOneInCommon'](a, b)).toBe(false);
-	});
-});
-
-
 describe('contains', function(){
 	test('it should return true when a (array) contains b', function(){
 		const a = [10, 20, 30];

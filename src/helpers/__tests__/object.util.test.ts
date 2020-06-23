@@ -1,4 +1,4 @@
-import * as objectHelper from '../utils';
+import * as objectHelper from '../object.util';
 
 describe('hasOne', () => {
 	const object = {a: 'prop1', b: 'prop2', c: 100};

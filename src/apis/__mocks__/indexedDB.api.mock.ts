@@ -1,74 +1,100 @@
-import { comparator, compose, curry, filter, map, prop, reduce, reverse, sort, sortBy } from 'ramda';
-import operators from 'helpers/misc/operators';
-import createInterval from 'helpers/dataStructure/interval';
+import { compose, curry, filter, isNil, map, prop, reduce, reverse, sort, sortBy } from 'rambda';
+import operators, { Operator } from 'helpers/operators';
 
-jest.genMockFromModule('../idbStorage');
-let itemCollection = {};
+jest.genMockFromModule('../indexedDB.api');
 
-const _createOrOpenDatabase = (dbName: string, dbVersion: number, onUpgradeCallback: Function): Promise<IDBDatabase> => 
-    Promise.resolve({dbName, dbVersion});
+interface MockStore {
+    [key: string]: any[]
+}
+
+interface OperatorAndValue {
+    operator : Operator,
+    value: unknown
+}
+
+let itemCollection: MockStore = {};
+
+const _createOrOpenDatabase = 
+(dbName: string) => 
+(dbVersion: number) => 
+(_: Function): Promise<Partial<IDBDatabase>> => 
+    Promise.resolve({name: dbName, version: dbVersion});
 export const createOrOpenDatabase = curry(_createOrOpenDatabase);
 
 
-export const _getNumberOfItemsInStore = (db: IDBDatabase, storeName: string):Promise<number> => 
+export const getNumberOfItemsInStore = 
+(_: IDBDatabase) => 
+(storeName: string): Promise<number> => 
     Promise.resolve(itemCollection[storeName] ? itemCollection[storeName].length : 0);
-export const getNumberOfItemsInStore = curry(_getNumberOfItemsInStore);
 
 
-const _addDataToStore = (db: IDBDatabase, storeName: string, data: Object[] = []): Promise<any> => {
-    itemCollection[storeName] === undefined ? itemCollection[storeName] = data : itemCollection[storeName] = itemCollection[storeName].concat(data);
+export const addDataToStore = 
+(_: IDBDatabase) => 
+(storeName: string) => 
+(data: Object[] = []): Promise<any> => {
+    itemCollection[storeName] === undefined ? 
+    itemCollection[storeName] = data : 
+    itemCollection[storeName] = itemCollection[storeName].concat(data);
     return Promise.resolve();
 };
-export const addDataToStore = curry(_addDataToStore);
 
 
-const _getPrimaryKeyListMatchingRange = (db: IDBDatabase, storeName: string, indexName: string, keyRange: IDBKeyRange) => {
+export const getPrimaryKeyListMatchingRange = 
+(_: IDBDatabase) =>
+(storeName: string) => 
+(indexName: string) => 
+(keyRange: IDBKeyRange) => {
     const 
-        { operator, value } = keyRange,
+        { operator, value } = getOperatorMatchingKeyRange(keyRange),
         field = indexName;
 
     const 
-        filterCollection = filter( item => operators[operator](item[field], value) ),
-        mapToId = map( item => item.id),
+        filterCollection = filter( (item: any) => (operators as any)[operator](item[field], value) ),
+        mapToId = map( (item: any) => item.id),
         filteredItemIdList = compose(mapToId, filterCollection)(itemCollection[storeName]);
 
     return Promise.resolve(filteredItemIdList);
 }
-export const getPrimaryKeyListMatchingRange = curry(_getPrimaryKeyListMatchingRange);
 
 
-const _iterateOverStore = (db: IDBDatabase, storeName: string, callBack: Function)=> {
+export const iterateOverStore = 
+(_: IDBDatabase) => 
+(storeName: string) => 
+(callBack: Function) => {
     itemCollection[storeName].forEach(element => callBack(element.id, element) );
     return Promise.resolve();
 }
-export const iterateOverStore = curry(_iterateOverStore);
 
 
-const _getAllUniqueKeysForIndex = (db: IDBDatabase, storeName: string, indexName: string) => {
-    const reducerToUniqueSetOfValues = (uniqueCollection, currentElement) => {
+export const getAllUniqueKeysForIndex = 
+(_: IDBDatabase) => 
+(storeName: string) => 
+(indexName: string) => {
+    const reducerToUniqueSetOfValues = (uniqueCollection: any, currentElement: any) => {
         const 
             fieldValue = currentElement[indexName],
             mFieldValue = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
 
-        //for each elt in the array, we check if the value exist, if not we push it
+        //for each element in the array, we check if the value exist, if not we push it
         mFieldValue.forEach( singleValue => uniqueCollection.indexOf(singleValue) === -1 && uniqueCollection.push(singleValue) );
         
 		return uniqueCollection;
     }
 
     const 
-        sortCollection = sort(comparator( (a, b) => a < b )),
         getUniqueValues = reduce(reducerToUniqueSetOfValues, []),
-        operandList = compose( sortCollection, getUniqueValues )(itemCollection[storeName]);
+        operandList = compose( sort, getUniqueValues )(itemCollection[storeName]);
     
 	return Promise.resolve(operandList);
 };
-export const getAllUniqueKeysForIndex = curry(_getAllUniqueKeysForIndex);
 
 
-
-const _getAllPrimaryKeysForindex = (db: IDBDatabase, storeName: string, indexName: string, reverseDirection: boolean) => {
-    const reducerToSetOfValues = (primaryKeyCollection, currentElement) => {
+export const getAllPrimaryKeysForindex = 
+(_: IDBDatabase) => 
+(storeName: string) => 
+(indexName: string) => 
+(reverseDirection: boolean) => {
+    const reducerToSetOfValues = (primaryKeyCollection: any, currentElement: any) => {
         primaryKeyCollection.push(currentElement.id);   
 		return primaryKeyCollection;
     };
@@ -76,15 +102,17 @@ const _getAllPrimaryKeysForindex = (db: IDBDatabase, storeName: string, indexNam
     const
         sortCollection = sortBy(prop(indexName)),
         getPrimaryKeys = reduce(reducerToSetOfValues, []),
-        primaryKeyCollection = compose(getPrimaryKeys, sortCollection)(itemCollection[storeName])
+        primaryKeyCollection = getPrimaryKeys(sortCollection(itemCollection[storeName]))
 
     return Promise.resolve(reverseDirection ? reverse(primaryKeyCollection) : primaryKeyCollection);
 };
-export const getAllPrimaryKeysForindex = curry(_getAllPrimaryKeysForindex);
 
 
-const _getItemList = (db: IDBDatabase, storeName: string, idList: number[]): Promise<any> => {
-    const itemList = [];
+export const getItemList = 
+(_: IDBDatabase) => 
+(storeName: string) => 
+(idList: number[]): Promise<any> => {
+    const itemList: any = [];
 
     idList.forEach( id => {
         const item = itemCollection[storeName].find( element => element.id === id)
@@ -93,10 +121,30 @@ const _getItemList = (db: IDBDatabase, storeName: string, idList: number[]): Pro
 
     return Promise.resolve(itemList);
 };
-export const getItemList = curry(_getItemList);
 
 
-const _getKeyRangeMatchingOperator = (operator: Operator, value: any) => {
+const getOperatorMatchingKeyRange = (keyRange: IDBKeyRange): OperatorAndValue => {
+    const { lower, upper, lowerOpen, upperOpen } = keyRange;
+
+    if(lower === upper)
+        return { operator: '===', value: lower };
+    if(isNil(lower))
+        return upperOpen === true ? { operator: '<', value: upper } : { operator: '<=', value: upper };
+    if(isNil(upper))
+        return lowerOpen === true ? { operator: '>', value: lower } : { operator: '>=', value: lower };
+    if(!lowerOpen && !upperOpen)
+        return { operator: 'inRangeClosed', value: [lower, upper] };
+    if(lowerOpen && upperOpen)
+        return { operator: 'inRangeOpen', value: [lower, upper] };
+    if(lowerOpen && !upperOpen)
+        return { operator: 'inRangeOpenClosed', value: [lower, upper] };
+    
+    return { operator: 'inRangeClosedOpen', value: [lower, upper] };
+}
+
+export const getKeyRangeMatchingOperator = 
+(operator: Operator) => 
+(value: any) => {
     let keyRangeMock = {};
     switch(operator){
         case '===':
@@ -178,4 +226,3 @@ const _getKeyRangeMatchingOperator = (operator: Operator, value: any) => {
 
     return Object.assign({}, keyRangeMock, {operator, value});
 }
-export const getKeyRangeMatchingOperator = curry(_getKeyRangeMatchingOperator);
