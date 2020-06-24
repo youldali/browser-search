@@ -1,24 +1,36 @@
 import { reverse } from 'rambda';
-import { Operator } from 'helpers/operators';
+import { Operator } from 'modules/filterConfiguration/operators';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;
 const {indexedDB, IDBKeyRange} = globalScope;
 
+type OnUpgradeCallback = (db: IDBDatabase) => void
+export type IndexConfig = {multiEntry?: boolean, unique?: boolean};
+export type FieldsToIndex = Dictionary<IndexConfig>;
 
 export const createOrOpenDatabase = 
 (dbName: string) => 
 (dbVersion: number) => 
-(onUpgradeCallback: Function): Promise<IDBDatabase> => {
+(createObjectStore: OnUpgradeCallback): Promise<IDBDatabase> => {
     const openDBRequest = indexedDB.open(dbName, dbVersion);
 
     return new Promise((resolve, reject) => {
         openDBRequest.onerror = () => reject(`error opening DB ${dbName}: ${openDBRequest.error}`);
-        openDBRequest.onupgradeneeded = () => onUpgradeCallback(openDBRequest.result);
+        openDBRequest.onupgradeneeded = () => createObjectStore(openDBRequest.result);
         openDBRequest.onsuccess = () => resolve(openDBRequest.result);
     });
 }
 
+export const createObjectStore = 
+(storeName: string) =>
+(fieldsToIndex: FieldsToIndex) => 
+(keyPath: string) => 
+(db: IDBDatabase) => {
+    const objectStore = db.createObjectStore(storeName, { keyPath });
+    Object.entries(fieldsToIndex)
+        .forEach( ([indexName, indexConfig]) => objectStore.createIndex(indexName, indexName, indexConfig || {}) );
+}
 
 export const getNumberOfItemsInStore = 
 (db: IDBDatabase) =>
@@ -163,8 +175,6 @@ export const getKeyRangeMatchingOperator =
 (value: any) => {
     switch(operator){
         case '===':
-        case 'isIncluded':
-        case 'hasOneInCommon':
         case 'contains':
             return IDBKeyRange.only(value);
         case '<':

@@ -1,6 +1,6 @@
 //@flow
 
-import type { BoxId, BoxesIdMappedByFilteredStatus, FilteredBoxStatus, FilterGroup } from '../types';
+import type { BoxId, BoxesIdMappedByFilteredStatus, FilteredBoxStatus, FilterGroup } from '../../types';
 
 export
 const createBoxesFilteredStatusStructure = (filterGroupList: FilterGroup[] = []) => {

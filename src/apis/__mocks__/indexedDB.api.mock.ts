@@ -1,5 +1,6 @@
 import { compose, curry, filter, isNil, map, prop, reduce, reverse, sort, sortBy } from 'rambda';
-import operators, { Operator } from 'helpers/operators';
+import operators, { Operator } from 'modules/filterConfiguration/operators';
+import { FieldsToIndex } from '../indexedDB.api';
 
 jest.genMockFromModule('../indexedDB.api');
 
@@ -14,13 +15,17 @@ interface OperatorAndValue {
 
 let itemCollection: MockStore = {};
 
-const _createOrOpenDatabase = 
+export const createOrOpenDatabase = 
 (dbName: string) => 
 (dbVersion: number) => 
 (_: Function): Promise<Partial<IDBDatabase>> => 
     Promise.resolve({name: dbName, version: dbVersion});
-export const createOrOpenDatabase = curry(_createOrOpenDatabase);
 
+export const createObjectStore = 
+(storeName: string) =>
+(_: FieldsToIndex) => 
+(_: string) => //keyPath
+(_: IDBDatabase) => itemCollection[storeName] = [];
 
 export const getNumberOfItemsInStore = 
 (_: IDBDatabase) => 
@@ -148,8 +153,6 @@ export const getKeyRangeMatchingOperator =
     let keyRangeMock = {};
     switch(operator){
         case '===':
-        case 'isIncluded':
-        case 'hasOneInCommon':
         case 'contains':
             keyRangeMock = {
                 lower: value,

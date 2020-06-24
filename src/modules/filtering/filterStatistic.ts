@@ -1,7 +1,7 @@
 //@flow
-import type { BoxId, BoxesIdMappedByFilteredStatus, FilterGroup, FilterStatisticDetailed } from '../types';
+import type { BoxId, BoxesIdMappedByFilteredStatus, FilterGroup, FilterStatisticDetailed } from '../../types';
 
-import { findIntersectionOfSortedArrays } from 'helpers/array/utils.js'
+import { findIntersectionOfSortedArrays } from 'helpers/array.util.js'
 import { curry } from 'ramda';
 
 const _getFilterStatistic = 

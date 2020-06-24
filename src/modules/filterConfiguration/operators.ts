@@ -1,4 +1,4 @@
-import { getHasOneInCommon, findElementIndexInSortedArray } from 'helpers/array.util';
+import { findElementIndexInSortedArray } from 'helpers/array.util';
 
 export type Operator = 
     '<' | '<=' | '>' | '>=' | '==' | '===' | 
