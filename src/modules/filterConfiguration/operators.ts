@@ -1,27 +1,33 @@
 import { findElementIndexInSortedArray } from 'helpers/array.util';
 
-export type Operator = 
-    '<' | '<=' | '>' | '>=' | '==' | '===' | 
-    'inRangeClosed' | 'inRangeOpen' | 'inRangeClosedOpen' | 'inRangeOpenClosed' |
-	'isIncluded' | 'contains' | 'hasOneInCommon';
-	
-export
-const inferior = (a: number, b: number): boolean => a < b;
+export enum Operators {
+	lt = '<',
+	lte = '<=',
+	gt = '>',
+	gte = '>=',
+	equals = '==',
+	inRangeClosed = 'inRangeClosed',
+	inRangeOpen = 'inRangeOpen',
+	inRangeOpenClosed = 'inRangeOpenClosed',
+	inRangeClosedOpen = 'inRangeClosedOpen',
+	containsOptimized = 'containsOptimized',
+	contains = 'contains',
+}
 
 export
-const inferiorOrEqual = (a: number, b: number): boolean => a <= b;
+const lt = (a: number, b: number): boolean => a < b;
 
 export
-const superior = (a: number, b: number): boolean => a > b;
+const lte = (a: number, b: number): boolean => a <= b;
 
 export
-const superiorOrEqual = (a: number, b: number): boolean => a >= b;
+const gt = (a: number, b: number): boolean => a > b;
 
 export
-const equal = (a: unknown, b: unknown): boolean => a == b;
+const gte = (a: number, b: number): boolean => a >= b;
 
 export
-const equalStrict = (a: unknown, b: unknown): boolean => a === b;
+const equal = (a: unknown, b: unknown): boolean => a === b;
 
 export
 const inRangeClosed = (a: number, b: [number, number]): boolean => a >= b[0] && a <= b[1];
@@ -36,21 +42,23 @@ export
 const inRangeClosedOpen = (a: number, b: [number, number]): boolean => a >= b[0] && a < b[1];
 
 export
-const contains = (a: Array<unknown>, b: unknown): boolean => findElementIndexInSortedArray(a)(b) >= 0;
+const containsOptimized = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => findElementIndexInSortedArray(a)(b) >= 0;
 
+export
+const contains = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => a.includes(b);
 
-export default
+export const operatorToFunction =
 {
-	'<': inferior,
-	'<=': inferiorOrEqual,
-	'>': superior,
-	'>=': superiorOrEqual,
-	'==': equal,
-	'===': equalStrict,
-	inRangeClosed,
-	inRangeOpen,
-	inRangeClosedOpen,
-	inRangeOpenClosed,
-	contains,
+	[Operators.lt]: lt,
+	[Operators.lte]: lte,
+	[Operators.gt]: gt,
+	[Operators.gte]: gte,
+	[Operators.lt]: equal,
+	[Operators.inRangeClosed]: inRangeClosed,
+	[Operators.inRangeOpen]: inRangeOpen,
+	[Operators.inRangeClosedOpen]: inRangeClosedOpen,
+	[Operators.inRangeOpenClosed]: inRangeOpenClosed,
+	[Operators.contains]: contains,
+	[Operators.containsOptimized]: containsOptimized,
 };
 

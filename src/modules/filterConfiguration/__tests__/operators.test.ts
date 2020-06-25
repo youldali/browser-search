@@ -1,6 +1,5 @@
 import operators from '../operators';
 
-
 describe('<', function(){
 	test('it should return true when a < b', function(){
 		const a = 10;
@@ -138,11 +137,13 @@ describe('contains', function(){
 		const a = [10, 20, 30];
 		const b = 20;
 		expect(operators['contains'](a, b)).toBe(true);
+		expect(operators['containsOptimized'](a, b)).toBe(true);
 	});
 
 	test('it should return false when a (array) does not contain b', function(){
 		const a = [10, 20, 30];
 		const b = 21;
 		expect(operators['contains'](a, b)).toBe(false);
+		expect(operators['containsOptimized'](a, b)).toBe(false);
 	});
 });

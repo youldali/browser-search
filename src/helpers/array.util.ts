@@ -80,7 +80,6 @@ export const findElementIndexInSortedArray = <T>(a: Array<T>) => (searchedElemen
 }
 
 // [string | number] -> { [string] : string | number}
-type StringOrNumber = number | string;
 export const transformIntoObject = (array: Array<StringOrNumber>): Dictionary<StringOrNumber> => {
 	const reducer = (accumulator: Dictionary<StringOrNumber>, currentValue: StringOrNumber) => {
 		accumulator[currentValue] = currentValue;

@@ -1,5 +1,5 @@
-import { compose, curry, filter, isNil, map, prop, reduce, reverse, sort, sortBy } from 'rambda';
-import operators, { Operator } from 'modules/filterConfiguration/operators';
+import { compose, filter, map, prop, reduce, reverse, sort, sortBy } from 'rambda';
+import { Operators, operatorToFunction } from 'modules/filterConfiguration/operators';
 import { FieldsToIndex } from '../indexedDB.api';
 
 jest.genMockFromModule('../indexedDB.api');
@@ -8,9 +8,9 @@ interface MockStore {
     [key: string]: any[]
 }
 
-interface OperatorAndValue {
-    operator : Operator,
-    value: unknown
+interface MockedIDBKeyRange extends IDBKeyRange {
+    operator: Operators,
+    value: any,
 }
 
 let itemCollection: MockStore = {};
@@ -43,18 +43,17 @@ export const addDataToStore =
     return Promise.resolve();
 };
 
-
 export const getPrimaryKeyListMatchingRange = 
 (_: IDBDatabase) =>
 (storeName: string) => 
 (indexName: string) => 
-(keyRange: IDBKeyRange) => {
+(keyRange: MockedIDBKeyRange) => {
     const 
-        { operator, value } = getOperatorMatchingKeyRange(keyRange),
+        { operator, value } = keyRange,
         field = indexName;
 
     const 
-        filterCollection = filter( (item: any) => (operators as any)[operator](item[field], value) ),
+        filterCollection = filter( (item: any) => (operatorToFunction as any)[operator](item[field], value) ),
         mapToId = map( (item: any) => item.id),
         filteredItemIdList = compose(mapToId, filterCollection)(itemCollection[storeName]);
 
@@ -128,101 +127,92 @@ export const getItemList =
 };
 
 
-const getOperatorMatchingKeyRange = (keyRange: IDBKeyRange): OperatorAndValue => {
-    const { lower, upper, lowerOpen, upperOpen } = keyRange;
-
-    if(lower === upper)
-        return { operator: '===', value: lower };
-    if(isNil(lower))
-        return upperOpen === true ? { operator: '<', value: upper } : { operator: '<=', value: upper };
-    if(isNil(upper))
-        return lowerOpen === true ? { operator: '>', value: lower } : { operator: '>=', value: lower };
-    if(!lowerOpen && !upperOpen)
-        return { operator: 'inRangeClosed', value: [lower, upper] };
-    if(lowerOpen && upperOpen)
-        return { operator: 'inRangeOpen', value: [lower, upper] };
-    if(lowerOpen && !upperOpen)
-        return { operator: 'inRangeOpenClosed', value: [lower, upper] };
-    
-    return { operator: 'inRangeClosedOpen', value: [lower, upper] };
-}
-
 export const getKeyRangeMatchingOperator = 
-(operator: Operator) => 
-(value: any) => {
-    let keyRangeMock = {};
+(operator: Operators) => 
+(value: any): MockedIDBKeyRange => {
+    let keyRangeMock: IDBKeyRange;
     switch(operator){
-        case '===':
-        case 'contains':
+        case Operators.equals:
+        case Operators.contains:
+        case Operators.containsOptimized:
             keyRangeMock = {
                 lower: value,
                 upper: value,
                 lowerOpen: false, 
-                upperOpen: false
+                upperOpen: false,
+                includes: (key) => value === key,
             };
             break;
-        case '<':
+        case Operators.lt:
             keyRangeMock = { 
                 upper: value,
                 lower: undefined,
                 lowerOpen: true, 
-                upperOpen: true 
+                upperOpen: true,
+                includes: (key) => key < value,
             }
             break;
-        case '<=':
+        case Operators.lte:
             keyRangeMock = { 
                 upper: value,
                 lower: undefined,
                 lowerOpen: true, 
-                upperOpen: false 
+                upperOpen: false,
+                includes: (key) => key <= value,
             }
             break;
-        case '>':
+        case Operators.gt:
             keyRangeMock = { 
                 lower: value,
                 upper: undefined,
                 lowerOpen: true, 
-                upperOpen: true 
+                upperOpen: true,
+                includes: (key) => key > value,
             }
             break;
-        case '>=':
+        case Operators.gte:
             keyRangeMock = { 
                 lower: value,
                 upper: undefined,
                 lowerOpen: false, 
-                upperOpen: true 
+                upperOpen: true,
+                includes: (key) => key >= value,
             }
             break;
-        case 'inRangeClosed':
+        case Operators.inRangeClosed:
             keyRangeMock = { 
                 lower: value[0],
                 upper: value[1],
                 lowerOpen: false,
-                upperOpen: false 
+                upperOpen: false,
+                includes: (key) => key >= value[1] && key <= value[1],
             }
             break;
-        case 'inRangeOpen':
+        case Operators.inRangeOpen:
             keyRangeMock = { 
                 lower: value[0],
                 upper: value[1],
                 lowerOpen: true,
-                upperOpen: true 
+                upperOpen: true,
+                includes: (key) => key > value[1] && key < value[1],
             }
             break;
-        case 'inRangeOpenClosed':
+        case Operators.inRangeOpenClosed:
             keyRangeMock = { 
                 lower: value[0],
                 upper: value[1],
                 lowerOpen: true,
-                upperOpen: false 
+                upperOpen: false,
+                includes: (key) => key > value[1] && key <= value[1],
             }
             break;
-        case 'inRangeClosedOpen':
+        case Operators.inRangeClosedOpen:
             keyRangeMock = { 
                 lower: value[0],
                 upper: value[1],
                 lowerOpen: false,
-                upperOpen: true 
+                upperOpen: true,
+                includes: (key) => key >= value[1] && key < value[1],
             }
             break;
     }
