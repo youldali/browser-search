@@ -43,53 +43,6 @@ const evaluateCriteria =
 	return target[field] !== undefined && operators[operator](target[field], filterValue);
 };
 
-
-//store filters functions according to group
-//return a sorted filter function collection
-export
-const createFilterFunctionDataStructure = () => {
-	const 
-		filtersFunctionsMappedToFilterGroup: {[key: string]: FilterFunction[]} = {},
-		noGroupFilterFunctionList: Array<FilterFunction[]> = [],
-		filterFunctionListMappedToFilterGroup = new Map(),
-		filterGroupList: string[] = [],
-
-		addFilterFunctionToNoGroupList = (filterFunction: FilterFunction) => noGroupFilterFunctionList.push([filterFunction]),
-
-		addFilterFunctionToNewGroup = (filterFunction: FilterFunction, filterGroup: FilterGroup) => {
-			const filterGroupFunctionCollection = [filterFunction];
-			filtersFunctionsMappedToFilterGroup[filterGroup] = filterGroupFunctionCollection;
-			filterFunctionListMappedToFilterGroup.set(filterGroupFunctionCollection, filterGroup);
-			filterGroupList.push(filterGroup);
-		},
-
-		saveFilterFunctionIntoGroup = (filterFunction: FilterFunction, filterGroup: FilterGroup) => filtersFunctionsMappedToFilterGroup[filterGroup].push(filterFunction);
-
-	return {
-		addFilterFunction(filterFunction: FilterFunction, filterGroup?: FilterGroup){
-			!filterGroup ? addFilterFunctionToNoGroupList(filterFunction) :
-			filtersFunctionsMappedToFilterGroup[filterGroup] ? saveFilterFunctionIntoGroup(filterFunction, filterGroup) : 
-			addFilterFunctionToNewGroup(filterFunction, filterGroup);
-			
-			return this;
-		},
-
-		getFilteringData(): FiltersFunctionsData {
-			const 
-				sorterByLength = (a: Array<unknown>, b: Array<unknown>) => a.length - b.length,
-				sortedFilterFunctionCollectionBelongingToGroup = compose(sort(sorterByLength), Object.values)(filtersFunctionsMappedToFilterGroup),
-				filterFunctionListByGroup = concat(noGroupFilterFunctionList, sortedFilterFunctionCollectionBelongingToGroup);
-
-			return {
-				filterFunctionListByGroup,
-				filterFunctionListMappedToFilterGroup,
-				filterGroupList,
-			}
-		}
-	};
-};
-
-
 const _getFilterFunctionsData = 
 (filterStructureMap: FilterStructureMap, filtersApplied: FiltersApplied): FiltersFunctionsData => {
 

@@ -1,5 +1,5 @@
 import { createFilterDataBuilder } from '../filter.model';
-import { filterFunctionCollectionFixture } from '../fixtures/filter.fixture';
+import { filterFunctionCollectionFixture } from '../__fixtures__/filter.fixture';
 
 describe('createFilterDataBuilder', () => {
     const filterDataBuilder = createFilterDataBuilder();

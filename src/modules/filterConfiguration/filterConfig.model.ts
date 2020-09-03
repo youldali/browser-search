@@ -1,5 +1,5 @@
 import { Operators } from './operators'
-import { Interval } from 'dataStructure/interval'
+import { Interval } from 'dataStructures/interval'
 
 /**
  * Describes the JSON representation of the filter configuration used as a base to create filtering functions

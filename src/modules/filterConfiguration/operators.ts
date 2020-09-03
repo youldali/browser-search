@@ -55,7 +55,7 @@ export const operatorToFunction =
 	[Operators.lte]: lte,
 	[Operators.gt]: gt,
 	[Operators.gte]: gte,
-	[Operators.lt]: equal,
+	[Operators.equals]: equal,
 	[Operators.inRangeClosed]: inRangeClosed,
 	[Operators.inRangeOpen]: inRangeOpen,
 	[Operators.inRangeClosedOpen]: inRangeClosedOpen,
