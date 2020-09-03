@@ -1,26 +1,27 @@
 import { Operators } from './operators'
 import { Interval } from 'dataStructure/interval'
-import Joi from '@hapi/joi';
+
+/**
+ * Describes the JSON representation of the filter configuration used as a base to create filtering functions
+ * Example:
+ * [ // FilterConfig
+ *   [ // GroupOfFilters
+ *     { id: 'priceMin', field: 'price', operator: '>', operand: 200 }, // Filter
+ *     { id: 'priceMax', field: 'price', operator: '<', operand: 500}
+ *   ],
+ *   [
+ *     { id: 'numberOfPeople' field: 'people', operator: '==', operand: 3 }
+ *   ]
+ * ]
+ */
 
 export type FilterId = string;
 export type FilterOperand = number | string | number[] | string[] | Interval;
-export interface FilterContent {
+export interface Filter {
+	id: string,
 	field: string,
 	operator: Operators,
 	operand: FilterOperand,
 };
-export type Filter = Dictionary<FilterContent>; //key is FilterId
 export type GroupOfFilters = Filter[];
 export type FilterConfig = GroupOfFilters[];
-
-
-const filterContentSchema = Joi.object({
-	field: Joi.string().alphanum(),
-	operator: Joi.string().valid('apple', 'banana'),
-	operand: Joi.string(),
-});
-const filterSchema = Joi.object().pattern(Joi.string().min(1), filterContentSchema);
-const groupOfFiltersSchema = Joi.array().items(filterSchema).min(1);
-const filterConfigSchema = Joi.array().items(groupOfFiltersSchema).min(1);
-
-Joi.array().items(Joi.string().valid('a', 'b'));

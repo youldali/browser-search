@@ -14,38 +14,40 @@ export enum Operators {
 	contains = 'contains',
 }
 
-export
-const lt = (a: number, b: number): boolean => a < b;
+type OperatorFunction = (targetValue: any, operandValue: any) => boolean;
 
 export
-const lte = (a: number, b: number): boolean => a <= b;
+const lt: OperatorFunction = (a: number, b: number): boolean => a < b;
 
 export
-const gt = (a: number, b: number): boolean => a > b;
+const lte: OperatorFunction = (a: number, b: number): boolean => a <= b;
 
 export
-const gte = (a: number, b: number): boolean => a >= b;
+const gt: OperatorFunction = (a: number, b: number): boolean => a > b;
 
 export
-const equal = (a: unknown, b: unknown): boolean => a === b;
+const gte: OperatorFunction = (a: number, b: number): boolean => a >= b;
 
 export
-const inRangeClosed = (a: number, b: [number, number]): boolean => a >= b[0] && a <= b[1];
+const equal: OperatorFunction = (a: unknown, b: unknown): boolean => a === b;
 
 export
-const inRangeOpen = (a: number, b: [number, number]): boolean => a > b[0] && a < b[1];
+const inRangeClosed: OperatorFunction = (a: number, b: [number, number]): boolean => a >= b[0] && a <= b[1];
 
 export
-const inRangeOpenClosed = (a: number, b: [number, number]): boolean => a > b[0] && a <= b[1];
+const inRangeOpen: OperatorFunction = (a: number, b: [number, number]): boolean => a > b[0] && a < b[1];
 
 export
-const inRangeClosedOpen = (a: number, b: [number, number]): boolean => a >= b[0] && a < b[1];
+const inRangeOpenClosed: OperatorFunction = (a: number, b: [number, number]): boolean => a > b[0] && a <= b[1];
 
 export
-const containsOptimized = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => findElementIndexInSortedArray(a)(b) >= 0;
+const inRangeClosedOpen: OperatorFunction = (a: number, b: [number, number]): boolean => a >= b[0] && a < b[1];
 
 export
-const contains = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => a.includes(b);
+const containsOptimized: OperatorFunction = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => findElementIndexInSortedArray(a)(b) >= 0;
+
+export
+const contains: OperatorFunction = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => a.includes(b);
 
 export const operatorToFunction =
 {
