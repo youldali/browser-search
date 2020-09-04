@@ -2,7 +2,7 @@ import {
 	FilteredBoxStatus, 
 	FilterGroup, 
 	FilterFunction, 
-	FilterFunctionsByGroup,
+	FilterFunctionsCollection,
 } from './filter.model';
 
 
@@ -32,7 +32,7 @@ const filterObjectAgainstFilterGroup =
  * The filterGroup is only mentioned if the item is rejected by ONE AND ONLY ONE group (for stats purposes)
  */
 const getFilterStatusForItem = 
-(filterFunctionsByGroup: FilterFunctionsByGroup) =>
+(filterFunctionsCollection: FilterFunctionsCollection) =>
 (filterFunctionListMappedToFilterGroup: FilterFunctionListMappedToFilterGroup) =>
 (target: Object): FilteredBoxStatus =>
 {
@@ -53,7 +53,7 @@ const getFilterStatusForItem =
 			// @ts-ignore: downlevel iteration
 			yield* evaluateNextGroupOfFilterFunctions(iterator);
 		}
-	)(filterFunctionsByGroup[Symbol.iterator]());
+	)(filterFunctionsCollection[Symbol.iterator]());
 
 	const filteringStatus = iteratorOnFilter.next().value || { pass: true };
 	const filteringStatus2 = iteratorOnFilter.next().value;

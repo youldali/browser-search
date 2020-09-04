@@ -1,4 +1,4 @@
-import { compose, concat, sort } from 'rambda';
+import { compose, sort } from 'rambda';
 
 export type FilterGroup = string;
 export type FilterFunction = (target: Object) => boolean;
@@ -6,19 +6,22 @@ export interface FilteredBoxStatus {
 	readonly pass: boolean,
 	readonly filterGroupRejected?: FilterGroup
 };
+export type FilterFunctionsCollection = FilterFunction[][];
+export type FilterGroupToFilterFunctions = Dictionary<FilterFunction[]>;
+export type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroup>
 
-type FilterFunctionsCollection = FilterFunction[][];
-type FilterGroupToFilterFunctions = Dictionary<FilterFunction[]>;
-type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroup>
+export interface FilterData {
+	getFilterFunctionsFromFilterGroup: (filterGroup: FilterGroup) => FilterFunction[],
+	getFilterGroupFromFilterFunctions: (filterFunctions: FilterFunction[]) => string | undefined,
+	getFilterFunctionsCollection: () => FilterFunctionsCollection,
+}
 
 export const createFilterDataBuilder = () => {
 	const 
 		filterGroupToFilterFunctions: FilterGroupToFilterFunctions = {},
-		noGroupFilterFunctions: FilterFunction[][] = [],
 		filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Map(),
 		filterGroups: FilterGroup[] = [],
 
-		addFilterFunctionToNoGroupList = (filterFunction: FilterFunction) => noGroupFilterFunctions.push([filterFunction]),
 		addFilterFunctionToNewGroup = (filterFunction: FilterFunction, filterGroup: FilterGroup) => {
 			const filterGroupFunctionCollection = [filterFunction];
 			filterGroupToFilterFunctions[filterGroup] = filterGroupFunctionCollection;
@@ -28,8 +31,7 @@ export const createFilterDataBuilder = () => {
 		saveFilterFunctionIntoGroup = (filterFunction: FilterFunction, filterGroup: FilterGroup) => filterGroupToFilterFunctions[filterGroup].push(filterFunction);
 
 	return {
-		addFilterFunction(filterFunction: FilterFunction, filterGroup?: FilterGroup) {
-			!filterGroup ? addFilterFunctionToNoGroupList(filterFunction) :
+		addFilterFunction(filterFunction: FilterFunction, filterGroup: FilterGroup) {
 			filterGroupToFilterFunctions[filterGroup] ? saveFilterFunctionIntoGroup(filterFunction, filterGroup) : 
 			addFilterFunctionToNewGroup(filterFunction, filterGroup);
 			
@@ -37,12 +39,17 @@ export const createFilterDataBuilder = () => {
 		},
 
 		getFilteringData() {
+			/**
+			 * We sort the function collection by length so that the groups with the least "OR" functions get matched first to optimize
+			 */
 			const 
 				sorterByLength = (a: any[], b: any[]) => a.length - b.length,
-				sortedFilterFunctionCollectionBelongingToGroup: FilterFunctionsCollection = compose(sort(sorterByLength), Object.values)(filterGroupToFilterFunctions),
-				filterFunctionsCollection: FilterFunctionsCollection = concat(noGroupFilterFunctions, sortedFilterFunctionCollectionBelongingToGroup);
+				filterFunctionsCollection: FilterFunctionsCollection = compose(
+						sort(sorterByLength), 
+						Object.values
+					)(filterGroupToFilterFunctions);
 
-			return filterData({
+			return buildFilterData({
                 filterGroups,
                 filterGroupToFilterFunctions,
                 filterFunctionsToFilterGroup,
@@ -59,10 +66,10 @@ interface FilterDataParams {
     filterFunctionsCollection: FilterFunctionsCollection,
 };
 
-const filterData = (filterData: FilterDataParams) => {
-    const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroup) => filterData.filterGroupToFilterFunctions[filterGroup];
-    const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterData.filterFunctionsToFilterGroup.get(filterFunctions);
-    const getFilterFunctionsCollection = () => filterData.filterFunctionsCollection;
+const buildFilterData = (filterParams: FilterDataParams): FilterData => {
+    const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroup) => filterParams.filterGroupToFilterFunctions[filterGroup];
+    const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterParams.filterFunctionsToFilterGroup.get(filterFunctions);
+    const getFilterFunctionsCollection = () => filterParams.filterFunctionsCollection;
 
     return {
         getFilterFunctionsFromFilterGroup,
@@ -70,5 +77,3 @@ const filterData = (filterData: FilterDataParams) => {
         getFilterFunctionsCollection,
     }
 };
-
-export type FilterData = typeof filterData;

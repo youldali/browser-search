@@ -4,7 +4,7 @@ import { filterFunctionCollectionFixture } from '../__fixtures__/filter.fixture'
 describe('createFilterDataBuilder', () => {
     const filterDataBuilder = createFilterDataBuilder();
     filterDataBuilder
-            .addFilterFunction(filterFunctionCollectionFixture[0])
+            .addFilterFunction(filterFunctionCollectionFixture[0], 'group')
             .addFilterFunction(filterFunctionCollectionFixture[1], 'groupA')
             .addFilterFunction(filterFunctionCollectionFixture[2], 'groupA')
             .addFilterFunction(filterFunctionCollectionFixture[3], 'groupB')
