@@ -37,38 +37,40 @@ export interface FilterConfigData {
 	getFiltersByGroup: () => FiltersByGroup,
 }
 
-const filterConfigToFilterDictionary = (filterConfig: FilterConfig): Dictionary<Filter> => {
-	const groupOfFiltersReducer = (filterDictionary: Dictionary<Filter>, currentFilter: Filter): Dictionary<Filter> => {
-		filterDictionary[currentFilter.id] = currentFilter;
+const filterConfigToFilterDictionary = 
+	(filterConfig: FilterConfig): Dictionary<Filter> => {
+		const groupOfFiltersReducer = (filterDictionary: Dictionary<Filter>, currentFilter: Filter): Dictionary<Filter> => {
+			filterDictionary[currentFilter.id] = currentFilter;
+			return filterDictionary;
+		}
+
+		const filterDictionary: Dictionary<Filter> = mergeAll(
+			filterConfig.map(groupOfFilters => groupOfFilters.reduce(groupOfFiltersReducer, {}))
+		);
 		return filterDictionary;
 	}
 
-	const filterDictionary: Dictionary<Filter> = mergeAll(
-		filterConfig.map(groupOfFilters => groupOfFilters.reduce(groupOfFiltersReducer, {}))
-	);
-	return filterDictionary;
-}
 
+export const buildFilterConfigData = 
+	(filterConfig: FilterConfig) =>
+	(filterIdsApplied: FiltersApplied): FilterConfigData => {
+		const filterDictionary = filterConfigToFilterDictionary(filterConfig);
+		const filtersApplied = reject(
+			isNil,
+			filterIdsApplied.map( filterId => filterDictionary[filterId] )
+		);
+		const filtersByGroup = filterConfig.reduce(
+			(filtersByGroupDictionary, groupOfFilters, index) => {
+				filtersByGroupDictionary[index.toString()] = groupOfFilters;
+				return filtersByGroupDictionary;
+			},
+			{} as FiltersByGroup
+		);
 
-export const buildFilterConfigData = (filterConfig: FilterConfig) =>
-(filterIdsApplied: FiltersApplied): FilterConfigData => {
-	const filterDictionary = filterConfigToFilterDictionary(filterConfig);
-	const filtersApplied = reject(
-		isNil,
-		filterIdsApplied.map( filterId => filterDictionary[filterId] )
-	);
-	const filtersByGroup = filterConfig.reduce(
-		(filtersByGroupDictionary, groupOfFilters, index) => {
-			filtersByGroupDictionary[index.toString()] = groupOfFilters;
-			return filtersByGroupDictionary;
-		},
-		{} as FiltersByGroup
-	);
-
-	return {
-		getFilterDictionary: () => filterDictionary,
-		getFiltersApplied: () => filtersApplied,
-		getFiltersByGroup: () => filtersByGroup,
+		return {
+			getFilterDictionary: () => filterDictionary,
+			getFiltersApplied: () => filtersApplied,
+			getFiltersByGroup: () => filtersByGroup,
+		}
 	}
-}
 

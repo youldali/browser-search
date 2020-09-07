@@ -22,7 +22,7 @@ const filterSchema = Joi.object({
 const groupOfFiltersSchema = Joi.array().items(filterSchema).min(1).message(filterSchemaErrorMessage);
 const filterConfigSchema = Joi.array().items(groupOfFiltersSchema).min(1).message(filterConfigSchemaErrorMessage);
 
-export const validateFilterConfig = (filterConfig: FilterConfig): Either<string, FilterConfig> => {
+export const validateFilterConfig = (filterConfig: any): Either<string, FilterConfig> => {
 	const validation = filterConfigSchema.validate(filterConfig);
 	return isNil(validation.error) ? Right(filterConfig) : Left(validation.error.message);	
 }
