@@ -1,37 +1,87 @@
 import { compose, sort } from 'rambda';
+import { 
+	Filter, 
+	FilterGroupId,
+	FilterConfigData,
+	Operators,
+	operatorToFunction,
+} from 'modules/filterConfiguration';
 
-export type FilterGroup = string;
 export type FilterFunction = (target: Object) => boolean;
 export interface FilteredBoxStatus {
 	readonly pass: boolean,
-	readonly filterGroupRejected?: FilterGroup
+	readonly filterGroupRejected?: FilterGroupId
 };
 export type FilterFunctionsCollection = FilterFunction[][];
 export type FilterGroupToFilterFunctions = Dictionary<FilterFunction[]>;
-export type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroup>
+export type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroupId>
 
 export interface FilterData {
-	getFilterFunctionsFromFilterGroup: (filterGroup: FilterGroup) => FilterFunction[],
+	getFilterFunctionsFromFilterGroup: (filterGroup: FilterGroupId) => FilterFunction[],
 	getFilterGroupFromFilterFunctions: (filterFunctions: FilterFunction[]) => string | undefined,
 	getFilterFunctionsCollection: () => FilterFunctionsCollection,
 }
 
-export const createFilterDataBuilder = () => {
+export type ObjectFiltered = Dictionary<any>
+
+export const getFilteringData = (filterConfigData: FilterConfigData): FilterData => {
+	const getFilterFunction = (filter: Filter): FilterFunction => evaluateCriteria(filter);
+	const appliedFilters = filterConfigData.getFiltersApplied();
+	const filterDataBuilder = createFilterDataBuilder();
+
+	appliedFilters.forEach(filter => {
+		const filterFunction = getFilterFunction(filter);
+		const filterGroup = filterConfigData.getGroupIdForFilter(filter);
+
+		filterDataBuilder.addFilterFunction(filterFunction, filterGroup);
+	})
+
+	return filterDataBuilder.getFilteringData();
+};
+
+const evaluateCriteria = 
+	(filter: Filter) => 
+	(target: ObjectFiltered): boolean => {
+		const { field, operand, operator } = filter;
+		const operatorFunction = operatorToFunction[Operators[operator]]
+		return target[field] !== undefined && operatorFunction(target[field], operand);
+	};
+
+interface FilterDataParams {
+    filterGroups: FilterGroupId[],
+    filterGroupToFilterFunctions: FilterGroupToFilterFunctions,
+    filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup
+    filterFunctionsCollection: FilterFunctionsCollection,
+};
+
+const buildFilterData = (filterParams: FilterDataParams): FilterData => {
+    const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroupId) => filterParams.filterGroupToFilterFunctions[filterGroup];
+    const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterParams.filterFunctionsToFilterGroup.get(filterFunctions);
+    const getFilterFunctionsCollection = () => filterParams.filterFunctionsCollection;
+
+    return {
+        getFilterFunctionsFromFilterGroup,
+        getFilterGroupFromFilterFunctions,
+        getFilterFunctionsCollection,
+    }
+};
+
+const createFilterDataBuilder = () => {
 	const 
 		filterGroupToFilterFunctions: FilterGroupToFilterFunctions = {},
 		filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Map(),
-		filterGroups: FilterGroup[] = [],
+		filterGroups: FilterGroupId[] = [],
 
-		addFilterFunctionToNewGroup = (filterFunction: FilterFunction, filterGroup: FilterGroup) => {
+		addFilterFunctionToNewGroup = (filterFunction: FilterFunction, filterGroup: FilterGroupId) => {
 			const filterGroupFunctionCollection = [filterFunction];
 			filterGroupToFilterFunctions[filterGroup] = filterGroupFunctionCollection;
 			filterFunctionsToFilterGroup.set(filterGroupFunctionCollection, filterGroup);
 			filterGroups.push(filterGroup);
 		},
-		saveFilterFunctionIntoGroup = (filterFunction: FilterFunction, filterGroup: FilterGroup) => filterGroupToFilterFunctions[filterGroup].push(filterFunction);
+		saveFilterFunctionIntoGroup = (filterFunction: FilterFunction, filterGroup: FilterGroupId) => filterGroupToFilterFunctions[filterGroup].push(filterFunction);
 
 	return {
-		addFilterFunction(filterFunction: FilterFunction, filterGroup: FilterGroup) {
+		addFilterFunction(filterFunction: FilterFunction, filterGroup: FilterGroupId) {
 			filterGroupToFilterFunctions[filterGroup] ? saveFilterFunctionIntoGroup(filterFunction, filterGroup) : 
 			addFilterFunctionToNewGroup(filterFunction, filterGroup);
 			
@@ -57,23 +107,4 @@ export const createFilterDataBuilder = () => {
 			})
 		}
 	};
-};
-
-interface FilterDataParams {
-    filterGroups: FilterGroup[],
-    filterGroupToFilterFunctions: FilterGroupToFilterFunctions,
-    filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup
-    filterFunctionsCollection: FilterFunctionsCollection,
-};
-
-const buildFilterData = (filterParams: FilterDataParams): FilterData => {
-    const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroup) => filterParams.filterGroupToFilterFunctions[filterGroup];
-    const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterParams.filterFunctionsToFilterGroup.get(filterFunctions);
-    const getFilterFunctionsCollection = () => filterParams.filterFunctionsCollection;
-
-    return {
-        getFilterFunctionsFromFilterGroup,
-        getFilterGroupFromFilterFunctions,
-        getFilterFunctionsCollection,
-    }
 };

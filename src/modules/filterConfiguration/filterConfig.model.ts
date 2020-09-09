@@ -17,7 +17,7 @@ import { isNil, mergeAll, reject } from 'rambda';
  * ]
  */
 
-export type FilterGroup = string;
+export type FilterGroupId = string;
 export type FilterId = string;
 export type FilterOperand = number | string | number[] | string[] | Interval;
 export interface Filter {
@@ -30,11 +30,13 @@ export type GroupOfFilters = Filter[];
 export type FilterConfig = GroupOfFilters[];
 export type FiltersApplied = FilterId[];
 export type FiltersByGroup = Dictionary<GroupOfFilters>; //key is FilterGroup
+export type FilterToGroup = Map<Filter, FilterGroupId>; //key is FilterGroup
 
 export interface FilterConfigData {
 	getFilterDictionary: () => Dictionary<Filter>,
 	getFiltersApplied: () => Filter[],
 	getFiltersByGroup: () => FiltersByGroup,
+	getGroupIdForFilter : (filter: Filter) => FilterGroupId,
 }
 
 const filterConfigToFilterDictionary = 
@@ -55,10 +57,12 @@ export const buildFilterConfigData =
 	(filterConfig: FilterConfig) =>
 	(filterIdsApplied: FiltersApplied): FilterConfigData => {
 		const filterDictionary = filterConfigToFilterDictionary(filterConfig);
+		
 		const filtersApplied = reject(
 			isNil,
 			filterIdsApplied.map( filterId => filterDictionary[filterId] )
 		);
+
 		const filtersByGroup = filterConfig.reduce(
 			(filtersByGroupDictionary, groupOfFilters, index) => {
 				filtersByGroupDictionary[index.toString()] = groupOfFilters;
@@ -67,10 +71,19 @@ export const buildFilterConfigData =
 			{} as FiltersByGroup
 		);
 
+		const filterToGroup = filterConfig.reduce(
+			(filterToGroup, groupOfFilters, index) => {
+				groupOfFilters.forEach(filter => filterToGroup.set(filter, index.toString()))
+				return filterToGroup;
+			},
+			new Map() as FilterToGroup
+		);
+
 		return {
 			getFilterDictionary: () => filterDictionary,
 			getFiltersApplied: () => filtersApplied,
 			getFiltersByGroup: () => filtersByGroup,
+			getGroupIdForFilter: (filter: Filter) => filterToGroup.get(filter) || 'default',
 		}
 	}
 

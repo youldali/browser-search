@@ -1,38 +1,43 @@
-import { createFilterDataBuilder } from '../filter.model';
-import { filterFunctionCollectionFixture } from '../__fixtures__/filter.fixture';
+import { getFilteringData } from '../filter.model';
+import * as fixtures from 'modules/filterConfiguration/__fixtures__/filterConfig.fixture';
 
-describe('createFilterDataBuilder', () => {
-    const filterDataBuilder = createFilterDataBuilder();
-    filterDataBuilder
-            .addFilterFunction(filterFunctionCollectionFixture[0], 'group')
-            .addFilterFunction(filterFunctionCollectionFixture[1], 'groupA')
-            .addFilterFunction(filterFunctionCollectionFixture[2], 'groupA')
-            .addFilterFunction(filterFunctionCollectionFixture[3], 'groupB')
+describe('getFilteringData', () => {
+    const filterData = getFilteringData(fixtures.filterConfigData);
+    const filterFunctionsCollection = filterData.getFilterFunctionsCollection();
 
-    const filterData = filterDataBuilder.getFilteringData();
-
-	test('Should return a sorted FiltersFunctionCollection (1st: no group, 2nd: group by number of filter functions', () => {
-        const expectedFilterFunctionsCollection = [
-            [filterFunctionCollectionFixture[0]],
-            [filterFunctionCollectionFixture[3]],
-            [filterFunctionCollectionFixture[1], filterFunctionCollectionFixture[2]]
-        ];
-
-        expect(filterData.getFilterFunctionsCollection()).toEqual(expectedFilterFunctionsCollection);
+	test('Should return a sorted FiltersFunctionCollection by group length (number of filtering function per group)', () => {
+        for (let i = 0; i < filterFunctionsCollection.length; i++) {
+            expect(filterFunctionsCollection[i].length).toBe(fixtures.filterFunctionsCollection[i].length);
+        }
     });
 
-    test('Should return the filterFunctions associated to a group', () => {
-        const expectedFilterFunctionsGroupA = [
-            filterFunctionCollectionFixture[1],
-            filterFunctionCollectionFixture[2],
-        ];
+    test('the filter functions returned should properly filter data', () => {
+        const allFilterFunctions = filterFunctionsCollection.flat();
+        const fixtureAllFilterFunctions = fixtures.filterFunctionsCollection.flat();
 
-        expect(filterData.getFilterFunctionsFromFilterGroup('groupA')).toEqual(expectedFilterFunctionsGroupA);
+        fixtures.sampleData.forEach (data => {
+            allFilterFunctions.forEach( (filterFunction, index) => {
+                expect(filterFunction(data)).toBe(fixtureAllFilterFunctions[index](data));
+            });
+        })
     });
 
-    test('Should return the group matching a filterFunctionCollection', () => {
-        const filterCollectionGroupA = filterData.getFilterFunctionsFromFilterGroup('groupA');
-        expect(filterData.getFilterGroupFromFilterFunctions(filterCollectionGroupA)).toEqual('groupA');
+    test('returns the filter functions associated to a group', () => {
+        const groupIds = Object.keys(fixtures.filterGroupToFilterFunctions);
+
+        groupIds.forEach (groupId => {
+            expect(filterData.getFilterFunctionsFromFilterGroup(groupId)?.length)
+                .toBe(fixtures.filterGroupToFilterFunctions[groupId].length)
+        })
     });
 
+    test('returns the filter group associated to a filterFunctions list', () => {
+        for (let i = 0; i < filterFunctionsCollection.length; i++) {
+            const filterFunctions = filterFunctionsCollection[i];
+            const fixtureFilterFunctions = fixtures.filterFunctionsCollection[i];
+
+            expect(filterData.getFilterGroupFromFilterFunctions(filterFunctions))
+                .toBe(fixtures.filterFunctionsToFilterGroup.get(fixtureFilterFunctions));
+        }
+    });
 });

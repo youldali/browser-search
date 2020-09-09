@@ -1,11 +1,11 @@
 import { findElementIndexInSortedArray } from 'helpers/array.util';
 
 export enum Operators {
-	lt = '<',
-	lte = '<=',
-	gt = '>',
-	gte = '>=',
-	equals = '==',
+	lt = 'lt',
+	lte = 'lte',
+	gt = 'gt',
+	gte = 'gte',
+	equals = 'equals',
 	inRangeClosed = 'inRangeClosed',
 	inRangeOpen = 'inRangeOpen',
 	inRangeOpenClosed = 'inRangeOpenClosed',

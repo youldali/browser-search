@@ -1,4 +1,5 @@
-import getFilterStatusForItem, { FilterFunction } from '../filterStatus';
+import getFilterStatusForItem from '../filterStatus';
+import { filterFunctionCollectionFixture } from '../__fixtures__/filter.fixture';
 
 const falseThunk: FilterFunction = (_) => false;
 const trueThunk: FilterFunction = (_) => true;

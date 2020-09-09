@@ -1,12 +1,19 @@
 import { buildFilterConfigData } from '../index';
-import * as fixtures from '../__fixtures__/filterConfig'
+import * as fixtures from '../__fixtures__/filterConfig.fixture';
+import * as wrongFixtures from '../__fixtures__/wrongFilterConfig.fixture';
 
 describe('buildFilterConfigData', () => {
 	test('it should return Right(filterConfigData) if the config is valid', () => {
-		expect(buildFilterConfigData(fixtures.validFilterConfig)(['priceMin']).isRight()).toBe(true);
+		expect(
+            buildFilterConfigData(fixtures.filterConfig)(fixtures.filtersIdsApplied)
+                .isRight()
+        ).toBe(true);
     });
 
     test('it should return Left(string) if the config is invalid', () => {
-		expect(buildFilterConfigData(fixtures.emptyFilterConfig)(['priceMin']).isLeft()).toBe(true);
+		expect(
+            buildFilterConfigData(wrongFixtures.emptyFilterConfig)(fixtures.filtersIdsApplied)
+                .isLeft()
+        ).toBe(true);
     });
 });

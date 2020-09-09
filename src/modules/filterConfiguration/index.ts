@@ -4,7 +4,7 @@ import { Either, Right } from 'purify-ts/Either'
 
 export {
     Filter,
-    FilterGroup,
+    FilterGroupId,
     FilterId,
     FilterConfig,
     FilterConfigData,
@@ -12,6 +12,11 @@ export {
     FiltersApplied,
     FiltersByGroup,
 } from './filterConfig.model' 
+
+export {
+    Operators,
+    operatorToFunction,
+} from './operators' 
 
 export const buildFilterConfigData =
     (filterConfig: any) =>
