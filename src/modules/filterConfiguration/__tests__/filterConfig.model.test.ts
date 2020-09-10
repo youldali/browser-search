@@ -1,5 +1,5 @@
 import { buildFilterConfigData } from '../filterConfig.model';
-import * as fixtures from '../__fixtures__/filterConfig.fixture'
+import * as fixtures from 'modules/__fixtures__/filterConfig.fixture'
 
 describe('buildFilterConfigData', function(){
     const filterConfigData = buildFilterConfigData(fixtures.filterConfig)(fixtures.filtersIdsApplied);

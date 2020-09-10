@@ -1,8 +1,13 @@
+import { FilterGroupId,} from 'modules/filterConfiguration';
 import { 
-	FilteredBoxStatus,  
 	FilterFunction, 
-	FilterData,
-} from './filter.model';
+	FilteringData,
+} from './filtering.model';
+
+export interface FilteredBoxStatus {
+	readonly pass: boolean,
+	readonly filterGroupRejected?: FilterGroupId
+};
 
 /**
  * Receives a group of filters represented by an array of boolean functions
@@ -28,7 +33,7 @@ const filterObjectAgainstFilterGroup =
  * The filterGroup is only mentioned if the item is rejected by ONE AND ONLY ONE group (for stats purposes)
  */
 const getFilterStatusForItem = 
-(filterData: FilterData) =>
+(filteringData: FilteringData) =>
 (target: Object): FilteredBoxStatus =>
 {
 	const iteratorOnFilter = (
@@ -43,12 +48,12 @@ const getFilterStatusForItem =
 			const filterFunctionsForOneGroup = currentIteratorState.value;
 
 			if(!filterObjectAgainstFilterGroup(filterFunctionsForOneGroup)(target))
-				yield {pass: false, filterGroupRejected: filterData.getFilterGroupFromFilterFunctions(filterFunctionsForOneGroup)};
+				yield {pass: false, filterGroupRejected: filteringData.getFilterGroupFromFilterFunctions(filterFunctionsForOneGroup)};
 			
 			// @ts-ignore: downlevel iteration
 			yield* evaluateNextGroupOfFilterFunctions(iterator);
 		}
-	)(filterData.getFilterFunctionsCollection()[Symbol.iterator]());
+	)(filteringData.getFilterFunctionsCollection()[Symbol.iterator]());
 
 	const filteringStatus = iteratorOnFilter.next().value || { pass: true };
 	const filteringStatus2 = iteratorOnFilter.next().value;

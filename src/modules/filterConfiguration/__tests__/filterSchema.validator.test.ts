@@ -1,6 +1,6 @@
 import { validateFilterConfig } from '../filterSchema.validator';
-import * as fixtures from '../__fixtures__/filterConfig.fixture'
-import * as wrongFixtures from '../__fixtures__/wrongFilterConfig.fixture'
+import * as fixtures from 'modules/__fixtures__/filterConfig.fixture'
+import * as wrongFixtures from 'modules/__fixtures__/wrongFilterConfig.fixture'
 
 describe('validateFilterConfig', () => {
 	test('it should return the filterConfig is the validation succeeds', () => {

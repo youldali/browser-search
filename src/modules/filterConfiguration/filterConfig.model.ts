@@ -8,11 +8,14 @@ import { isNil, mergeAll, reject } from 'rambda';
  * Example:
  * [ // FilterConfig
  *   [ // GroupOfFilters
- *     { id: 'priceMin', field: 'price', operator: '>', operand: 200 }, // Filter
- *     { id: 'priceMax', field: 'price', operator: '<', operand: 500}
+ *     { id: 'priceMin', field: 'price', operator: 'lg', operand: 200 }, // Filter
  *   ],
+ * 	 [
+ *     { id: 'priceMax', field: 'price', operator: 'gt', operand: 500}
+ *   ]
  *   [
- *     { id: 'numberOfPeople' field: 'people', operator: '==', operand: 3 }
+ *     { id: 'solo' field: 'people', operator: 'equals', operand: 1 }
+ *     { id: 'forCouple' field: 'people', operator: 'equals', operand: 2 }
  *   ]
  * ]
  */

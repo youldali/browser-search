@@ -1,4 +1,4 @@
-import { Operators } from '../operators';
+import { Operators } from 'modules/filterConfiguration/operators';
 
 export const emptyFilterConfig: any = [
 ];

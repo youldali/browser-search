@@ -8,15 +8,11 @@ import {
 } from 'modules/filterConfiguration';
 
 export type FilterFunction = (target: Object) => boolean;
-export interface FilteredBoxStatus {
-	readonly pass: boolean,
-	readonly filterGroupRejected?: FilterGroupId
-};
 export type FilterFunctionsCollection = FilterFunction[][];
 export type FilterGroupToFilterFunctions = Dictionary<FilterFunction[]>;
 export type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroupId>
 
-export interface FilterData {
+export interface FilteringData {
 	getFilterFunctionsFromFilterGroup: (filterGroup: FilterGroupId) => FilterFunction[],
 	getFilterGroupFromFilterFunctions: (filterFunctions: FilterFunction[]) => string | undefined,
 	getFilterFunctionsCollection: () => FilterFunctionsCollection,
@@ -24,7 +20,7 @@ export interface FilterData {
 
 export type ObjectFiltered = Dictionary<any>
 
-export const getFilteringData = (filterConfigData: FilterConfigData): FilterData => {
+export const getFilteringData = (filterConfigData: FilterConfigData): FilteringData => {
 	const getFilterFunction = (filter: Filter): FilterFunction => evaluateCriteria(filter);
 	const appliedFilters = filterConfigData.getFiltersApplied();
 	const filterDataBuilder = createFilterDataBuilder();
@@ -54,7 +50,7 @@ interface FilterDataParams {
     filterFunctionsCollection: FilterFunctionsCollection,
 };
 
-const buildFilterData = (filterParams: FilterDataParams): FilterData => {
+const buildFilterData = (filterParams: FilterDataParams): FilteringData => {
     const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroupId) => filterParams.filterGroupToFilterFunctions[filterGroup];
     const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterParams.filterFunctionsToFilterGroup.get(filterFunctions);
     const getFilterFunctionsCollection = () => filterParams.filterFunctionsCollection;
