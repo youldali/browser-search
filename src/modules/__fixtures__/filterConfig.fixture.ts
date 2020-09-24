@@ -25,12 +25,12 @@ export const filterByGroup: FiltersByGroup = {
 }
 
 export const filterToGroup: FilterToGroup = new Map([
-    [filterDictionary.priceMin, '0'],
-    [filterDictionary.priceMax, '1'],
-    [filterDictionary.numberOfPeople, '2'],
-    [filterDictionary['activity-1'], '3'],
-    [filterDictionary['activity-2'], '3'],
-    [filterDictionary['activity-3'], '3'],
+    [filterDictionary.priceMin.id, '0'],
+    [filterDictionary.priceMax.id, '1'],
+    [filterDictionary.numberOfPeople.id, '2'],
+    [filterDictionary['activity-1'].id, '3'],
+    [filterDictionary['activity-2'].id, '3'],
+    [filterDictionary['activity-3'].id, '3'],
 ]);
 
 export const filterConfig: FilterConfig = [

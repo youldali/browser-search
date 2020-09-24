@@ -1,4 +1,4 @@
-import getFilterStatusForItem from '../filteringStatus';
+import { getFilterStatusForItem } from '../filteringStatus';
 import * as fixtures from 'modules/__fixtures__/filteringStatus.fixture';
 import { filteringData as filteringDataFixture} from 'modules/__fixtures__/filtering.fixture';
 

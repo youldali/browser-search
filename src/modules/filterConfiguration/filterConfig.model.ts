@@ -33,13 +33,13 @@ export type GroupOfFilters = Filter[];
 export type FilterConfig = GroupOfFilters[];
 export type FiltersApplied = FilterId[];
 export type FiltersByGroup = Dictionary<GroupOfFilters>; //key is FilterGroup
-export type FilterToGroup = Map<Filter, FilterGroupId>; //key is FilterGroup
+export type FilterToGroup = Map<FilterId, FilterGroupId>; 
 
 export interface FilterConfigData {
 	getFilterDictionary: () => Dictionary<Filter>,
 	getFiltersApplied: () => Filter[],
 	getFiltersByGroup: () => FiltersByGroup,
-	getGroupIdForFilter : (filter: Filter) => FilterGroupId,
+	getGroupIdForFilter: (filterId: FilterId) => FilterGroupId,
 }
 
 const filterConfigToFilterDictionary = 
@@ -76,7 +76,7 @@ export const buildFilterConfigData =
 
 		const filterToGroup = filterConfig.reduce(
 			(filterToGroup, groupOfFilters, index) => {
-				groupOfFilters.forEach(filter => filterToGroup.set(filter, index.toString()))
+				groupOfFilters.forEach(filter => filterToGroup.set(filter.id, index.toString()))
 				return filterToGroup;
 			},
 			new Map() as FilterToGroup
@@ -86,7 +86,7 @@ export const buildFilterConfigData =
 			getFilterDictionary: () => filterDictionary,
 			getFiltersApplied: () => filtersApplied,
 			getFiltersByGroup: () => filtersByGroup,
-			getGroupIdForFilter: (filter: Filter) => filterToGroup.get(filter) || 'default',
+			getGroupIdForFilter: (filterId: FilterId) => filterToGroup.get(filterId) || 'default',
 		}
 	}
 

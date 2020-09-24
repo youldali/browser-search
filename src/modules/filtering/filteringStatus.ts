@@ -32,7 +32,7 @@ const filterObjectAgainstFilterGroup =
  * Returns a filterStatus (boolean) and if necessary, the filterGroup that rejected the item
  * The filterGroup is only mentioned if the item is rejected by ONE AND ONLY ONE group (for stats purposes)
  */
-const getFilterStatusForItem = 
+export const getFilterStatusForItem = 
 (filteringData: FilteringData) =>
 (target: Object): FilteredBoxStatus =>
 {
@@ -67,5 +67,3 @@ const getFilterStatusForItem =
 		: { pass: false } 
 	);
 };
-
-export default getFilterStatusForItem;

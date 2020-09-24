@@ -21,16 +21,15 @@ export interface FilteringData {
 export type ObjectFiltered = Dictionary<any>
 
 export const getFilteringData = (filterConfigData: FilterConfigData): FilteringData => {
-	const getFilterFunction = (filter: Filter): FilterFunction => evaluateCriteria(filter);
 	const appliedFilters = filterConfigData.getFiltersApplied();
 	const filterDataBuilder = createFilterDataBuilder();
 
 	appliedFilters.forEach(filter => {
-		const filterFunction = getFilterFunction(filter);
-		const filterGroup = filterConfigData.getGroupIdForFilter(filter);
+		const filterFunction = evaluateCriteria(filter);
+		const filterGroup = filterConfigData.getGroupIdForFilter(filter.id);
 
 		filterDataBuilder.addFilterFunction(filterFunction, filterGroup);
-	})
+	});
 
 	return filterDataBuilder.getFilteringData();
 };
