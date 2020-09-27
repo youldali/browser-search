@@ -1,11 +1,11 @@
 import { createFilteringStatistics } from '../filtersStatistics.model';
-import { dataToFilterStatus } from 'modules/__fixtures__/filteringStatus.fixture';
+import { itemToFilteringStatus } from 'modules/__fixtures__/filteringStatus.fixture';
 import { filterConfigData } from 'modules/__fixtures__/filterConfig.fixture';
 import { filterIdToMatchingItemIds } from 'modules/__fixtures__/filterStatistics.fixture';
 
 describe('createFilteringStatistics', () => {
     const filteringStatisticsDataBuilder = createFilteringStatistics(filterConfigData)(filterIdToMatchingItemIds);
-    dataToFilterStatus.forEach( (filteredItemStatus, item) => {
+    itemToFilteringStatus.forEach( (filteredItemStatus, item) => {
             filteringStatisticsDataBuilder.addFilteredObjectStatus(filteredItemStatus, item.id)
         }
     );

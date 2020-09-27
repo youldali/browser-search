@@ -25,7 +25,7 @@ describe('buildFilterConfigData', function(){
     });
 
     test('it should return only the filters applied', () => {
-        expect(filterConfigData.getFiltersApplied()).toEqual(fixtures.filtersApplied);
+        expect(filterConfigData.getFiltersApplied()).toMatchSnapshot();
     });
 
     test('it should return only the filters not applied', () => {
@@ -33,17 +33,12 @@ describe('buildFilterConfigData', function(){
     });
 
     test('it should return a dictionary of groupOfFilter by key of group', () => {
-        expect(filterConfigData.getFiltersByGroup()).toEqual(fixtures.filterByGroup);
+        expect(filterConfigData.getFiltersByGroup()).toMatchSnapshot();
     });
 
-    test('it should return the filterGroupId associated to a filter', () => {
-        const filterId_0 = fixtures.filtersIdsApplied[0];
-        const filterId_1 = fixtures.filtersIdsApplied[1];
-
-        expect(filterConfigData.getGroupIdForFilter(filterId_0))
-            .toBe(fixtures.filterToGroup.get(filterId_0));
-
-        expect(filterConfigData.getGroupIdForFilter(filterId_1))
-            .toBe(fixtures.filterToGroup.get(filterId_1));
+    Object.keys(fixtures.filterDictionary).forEach(filterId => {
+        test(`it should return the filterGroupId associated to the filter ${filterId}`, () => {
+            expect(filterConfigData.getGroupIdForFilter(filterId)).toMatchSnapshot();
+        }); 
     });
 });

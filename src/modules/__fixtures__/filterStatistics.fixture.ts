@@ -1,5 +1,5 @@
 import { filterConfigData, filterDictionary } from './filterConfig.fixture';
-import { dataToFilterStatus } from './filteringStatus.fixture';
+import { itemToFilteringStatus } from './filteringStatus.fixture';
 import { createFilteringStatistics, FilterIdToMatchingItemIds } from '../filteringStatistics';
 
 
@@ -12,11 +12,9 @@ export const filterIdToMatchingItemIds: FilterIdToMatchingItemIds = {
     [filterDictionary['activity-3'].id]: [1, 3],
 }
 
-export const filteringStatisticsDataBuilder = createFilteringStatistics(filterConfigData)(filterIdToMatchingItemIds);
-
-dataToFilterStatus.forEach( (filteredItemStatus, item) => {
+const filteringStatisticsDataBuilder = createFilteringStatistics(filterConfigData)(filterIdToMatchingItemIds);
+itemToFilteringStatus.forEach( (filteredItemStatus, item) => {
         filteringStatisticsDataBuilder.addFilteredObjectStatus(filteredItemStatus, item.id)
     }
 );
-
 export const filteringStatisticsData = filteringStatisticsDataBuilder.done();
