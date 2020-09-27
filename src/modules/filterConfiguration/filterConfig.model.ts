@@ -38,7 +38,12 @@ export type FilterToGroup = Map<FilterId, FilterGroupId>;
 export interface FilterConfigData {
 	getFilterDictionary: () => Dictionary<Filter>,
 	getFiltersApplied: () => Filter[],
+	getFiltersNotApplied: () => Filter[],
+	getAllFilterIds: () => FilterId[],
+	getFilterIdsApplied: () => FilterId[],
+	getFilterIdsNotApplied: () => FilterId[],
 	getFiltersByGroup: () => FiltersByGroup,
+	getAllFilterGroupIds: () => FilterGroupId[],
 	getGroupIdForFilter: (filterId: FilterId) => FilterGroupId,
 }
 
@@ -60,11 +65,22 @@ export const buildFilterConfigData =
 	(filterConfig: FilterConfig) =>
 	(filterIdsApplied: FiltersApplied): FilterConfigData => {
 		const filterDictionary = filterConfigToFilterDictionary(filterConfig);
-		
+
+		const allFilterIds = Object.values(filterDictionary).map(filter => filter.id);
+
+		const filterIdsNotApplied = reject(
+			(filterId => filterIdsApplied.includes(filterId)),
+			allFilterIds
+		);
+
+		const filtersNotApplied = filterIdsNotApplied.map(filterId => filterDictionary[filterId]);
+
 		const filtersApplied = reject(
 			isNil,
 			filterIdsApplied.map( filterId => filterDictionary[filterId] )
 		);
+
+		const filterIdsAppliedVerified = filtersApplied.map( filter => filter.id);
 
 		const filtersByGroup = filterConfig.reduce(
 			(filtersByGroupDictionary, groupOfFilters, index) => {
@@ -73,6 +89,8 @@ export const buildFilterConfigData =
 			},
 			{} as FiltersByGroup
 		);
+
+		const allFilterGroupIds = Object.keys(filtersByGroup);
 
 		const filterToGroup = filterConfig.reduce(
 			(filterToGroup, groupOfFilters, index) => {
@@ -83,9 +101,14 @@ export const buildFilterConfigData =
 		);
 
 		return {
+			getAllFilterIds: () => allFilterIds,
 			getFilterDictionary: () => filterDictionary,
 			getFiltersApplied: () => filtersApplied,
+			getFiltersNotApplied: () => filtersNotApplied,
+			getFilterIdsApplied: () => filterIdsAppliedVerified,
+			getFilterIdsNotApplied: () => filterIdsNotApplied,
 			getFiltersByGroup: () => filtersByGroup,
+			getAllFilterGroupIds: () => allFilterGroupIds,
 			getGroupIdForFilter: (filterId: FilterId) => filterToGroup.get(filterId) || 'default',
 		}
 	}

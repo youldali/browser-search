@@ -16,15 +16,14 @@ export type FilteringStat = {
 
 export interface FilteringStatisticsData {
     getItemsIdsModifiedByFilter: (filterId: FilterId) => FilteringStat,
-    getItemsIdsRejectedByGroup: (groupId: FilterGroupId) => ItemId[],
-    getItemsIdsRejected: () => ItemId[],
+    getItemsIdsRejectedByOneGroup: (groupId: FilterGroupId) => ItemId[],
+    getItemsIdsRejectedByMultipleFilters: () => ItemId[],
     getItemsIdsValidated: () => ItemId[],
 }
 
 type ItemIdsByFilteringStatus = Map<FilterGroupId | boolean, ItemId[]>;
 
-export
-const createFilteringStatistics = 
+export const createFilteringStatistics = 
     (filterConfigData: FilterConfigData) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) => {
         const initMapStructure = (): ItemIdsByFilteringStatus => {
@@ -39,7 +38,6 @@ const createFilteringStatistics =
         const addItemIdToBoolean = (hasPassed: boolean, id: ItemId) => {
             const itemIds = boxesIdMappedByFilteredStatus.get(hasPassed) as ItemId[];
             itemIds.push(id);      
-            return this;
         };
 
         const addItemIdToRejectedGroup = (group: FilterGroupId, id: ItemId) => {
@@ -47,8 +45,6 @@ const createFilteringStatistics =
             listForGroup 
                 ? listForGroup.push(id)
                 : boxesIdMappedByFilteredStatus.set(group, [id]);
-
-            return this;
         };
 
         const boxesIdMappedByFilteredStatus = initMapStructure();
@@ -124,8 +120,8 @@ const getFilteringStatistics =
 
         return {
             getItemsIdsModifiedByFilter,
-            getItemsIdsRejectedByGroup: (filterGroupId: FilterGroupId) => itemIdsByFilteringStatus.get(filterGroupId) ?? [],
-            getItemsIdsRejected: () => itemIdsByFilteringStatus.get(false) ?? [],
+            getItemsIdsRejectedByOneGroup: (filterGroupId: FilterGroupId) => itemIdsByFilteringStatus.get(filterGroupId) ?? [],
+            getItemsIdsRejectedByMultipleFilters: () => itemIdsByFilteringStatus.get(false) ?? [],
             getItemsIdsValidated: () => itemIdsByFilteringStatus.get(true) ?? [],
         }
     }

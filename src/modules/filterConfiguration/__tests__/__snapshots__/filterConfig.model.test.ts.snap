@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildFilterConfigData it should return all the filter group ids 1`] = `
+Array [
+  "0",
+  "1",
+  "2",
+  "3",
+]
+`;
+
+exports[`buildFilterConfigData it should return all the filter ids 1`] = `
+Array [
+  "priceMin",
+  "priceMax",
+  "numberOfPeople",
+  "activity-1",
+  "activity-2",
+  "activity-3",
+]
+`;
+
+exports[`buildFilterConfigData it should return only the filter ids not applied 1`] = `
+Array [
+  "priceMax",
+  "numberOfPeople",
+  "activity-3",
+]
+`;
+
+exports[`buildFilterConfigData it should return only the filters not applied 1`] = `
+Array [
+  Object {
+    "field": "price",
+    "id": "priceMax",
+    "operand": 500,
+    "operator": "lt",
+  },
+  Object {
+    "field": "numberOfPeople",
+    "id": "numberOfPeople",
+    "operand": 2,
+    "operator": "equals",
+  },
+  Object {
+    "field": "activity",
+    "id": "activity-3",
+    "operand": "golfing",
+    "operator": "contains",
+  },
+]
+`;

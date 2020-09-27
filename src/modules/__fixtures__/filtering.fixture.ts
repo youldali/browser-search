@@ -1,4 +1,4 @@
-import { filterConfigData, filterDictionary } from './filterConfig.fixture'
+import { filterConfigData, filterDictionary } from './filterConfig.fixture';
 import { operatorToFunction } from '../filterConfiguration/operators';
 import { 
     FilterFunctionsCollection,
