@@ -1,11 +1,10 @@
 import { getFilterStatusForItem } from '../filteringStatus';
-import { items } from 'modules/__fixtures__/filteringStatus.fixture';
-import { filteringData as filteringDataFixture} from 'modules/__fixtures__/filtering.fixture';
+import * as fixtures from 'modules/__fixtures__/fixtures';
 
 describe('getFilterStatusForItem', () => {
-	items.forEach( item => {
+	fixtures.items.forEach( item => {
 		test(`correct filterStatus for item: ${JSON.stringify(item)}`, () => {
-			expect(getFilterStatusForItem(filteringDataFixture)(item)).toMatchSnapshot();
+			expect(getFilterStatusForItem(fixtures.filteringData)(item)).toMatchSnapshot();
 		});
 	})
 });

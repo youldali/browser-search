@@ -2,6 +2,7 @@ export {
     FilterFunction,
     FilterFunctionsCollection,
     FilterGroupToFilterFunctions,
+    FilterFunctionsToFilterGroup,
     FilteringData,
     getFilteringData,
 } from './filtering.model';

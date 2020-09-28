@@ -1,9 +1,8 @@
 import { getFilteringData } from '../filtering.model';
-import * as fixtures from 'modules/__fixtures__/filtering.fixture';
-import { filterConfigData as filterConfigDataFixture} from 'modules/__fixtures__/filterConfig.fixture';
+import * as fixtures from 'modules/__fixtures__/fixtures';
 
 describe('getFilteringData', () => {
-    const filterData = getFilteringData(filterConfigDataFixture);
+    const filterData = getFilteringData(fixtures.filterConfigData);
     const filterFunctionsCollection = filterData.getFilterFunctionsCollection();
 
 	test('Should return a sorted FiltersFunctionCollection by group length (number of filtering function per group)', () => {
@@ -16,7 +15,7 @@ describe('getFilteringData', () => {
         const allFilterFunctions = filterFunctionsCollection.flat();
         const fixtureAllFilterFunctions = fixtures.filterFunctionsCollection.flat();
 
-        fixtures.sampleData.forEach (data => {
+        fixtures.items.forEach (data => {
             allFilterFunctions.forEach( (filterFunction, index) => {
                 expect(filterFunction(data)).toBe(fixtureAllFilterFunctions[index](data));
             });

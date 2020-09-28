@@ -1,5 +1,5 @@
 import { buildFilterConfigData } from '../index';
-import * as fixtures from 'modules/__fixtures__/filterConfig.fixture';
+import * as fixtures from 'modules/__fixtures__/fixtures';
 import * as wrongFixtures from 'modules/__fixtures__/wrongFilterConfig.fixture';
 
 describe('buildFilterConfigData', () => {
