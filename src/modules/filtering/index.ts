@@ -3,11 +3,11 @@ export {
     FilterFunctionsCollection,
     FilterGroupToFilterFunctions,
     FilterFunctionsToFilterGroup,
-    FilteringData,
+    FilteringFunctionsData,
     getFilteringData,
 } from './filtering.model';
 
 export {
-    FilteredBoxStatus,
+    FilteredItemStatus,
     getFilterStatusForItem,
 } from './filteringStatus';

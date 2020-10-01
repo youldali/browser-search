@@ -1,5 +1,5 @@
 import { FilterGroupId, FilterId } from 'modules/filterConfiguration'
-import { FilteredBoxStatus } from 'modules/filtering'
+import { FilteredItemStatus } from 'modules/filtering'
 import { FilterConfigData } from 'modules/filterConfiguration'
 import { findIntersectionOfSortedArrays } from 'helpers/array.util'
 
@@ -14,7 +14,7 @@ export type FilteringStat = {
     itemIds: ItemId[]
 }
 
-export interface FilteringStatisticsData {
+export interface FilteringData {
     getItemsIdsModifiedByFilter: (filterId: FilterId) => FilteringStat,
     getItemsIdsRejectedByOneGroup: (groupId: FilterGroupId) => ItemId[],
     getItemsIdsRejectedByMultipleFilters: () => ItemId[],
@@ -23,7 +23,7 @@ export interface FilteringStatisticsData {
 
 type ItemIdsByFilteringStatus = Map<FilterGroupId | boolean, ItemId[]>;
 
-export const createFilteringStatistics = 
+export const createFilteringData = 
     (filterConfigData: FilterConfigData) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) => {
         const initMapStructure = (): ItemIdsByFilteringStatus => {
@@ -50,35 +50,35 @@ export const createFilteringStatistics =
         const boxesIdMappedByFilteredStatus = initMapStructure();
 
         return {
-            addFilteredObjectStatus(filteredBoxStatus: FilteredBoxStatus, itemId: ItemId) {
+            addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, itemId: ItemId) {
                 return (
-                    filteredBoxStatus.pass 
+                    filteredItemStatus.pass 
                         ? addItemIdToBoolean(true, itemId) :
-                    filteredBoxStatus.filterGroupRejected 
-                        ? addItemIdToRejectedGroup(filteredBoxStatus.filterGroupRejected, itemId) 
+                    filteredItemStatus.filterGroupRejected 
+                        ? addItemIdToRejectedGroup(filteredItemStatus.filterGroupRejected, itemId) 
                         : addItemIdToBoolean(false, itemId)
                 );
             },
 
-            setStatusValue(filteredBoxStatus: FilteredBoxStatus, idList: ItemId[]) {
-                filteredBoxStatus.filterGroupRejected 
-                    ? boxesIdMappedByFilteredStatus.set(filteredBoxStatus.filterGroupRejected, idList) 
-                    : boxesIdMappedByFilteredStatus.set(filteredBoxStatus.pass, idList);
+            setStatusValue(filteredItemStatus: FilteredItemStatus, idList: ItemId[]) {
+                filteredItemStatus.filterGroupRejected 
+                    ? boxesIdMappedByFilteredStatus.set(filteredItemStatus.filterGroupRejected, idList) 
+                    : boxesIdMappedByFilteredStatus.set(filteredItemStatus.pass, idList);
 
                 return this;
             },
 
-            done(): FilteringStatisticsData {
-                return getFilteringStatistics(filterConfigData)(filterIdToMatchingItemIds)(boxesIdMappedByFilteredStatus)
+            done(): FilteringData {
+                return getFilteringData(filterConfigData)(filterIdToMatchingItemIds)(boxesIdMappedByFilteredStatus)
             }
         };
     };
 
 
-const getFilteringStatistics = 
+const getFilteringData = 
     (filterConfigData: FilterConfigData) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) =>
-    (itemIdsByFilteringStatus: ItemIdsByFilteringStatus): FilteringStatisticsData => {
+    (itemIdsByFilteringStatus: ItemIdsByFilteringStatus): FilteringData => {
 
         /**
          * If 1 filter of the group has been checked, we are in this case:

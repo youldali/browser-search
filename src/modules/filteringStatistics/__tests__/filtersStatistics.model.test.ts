@@ -1,8 +1,8 @@
-import { createFilteringStatistics } from '../filtersStatistics.model';
+import { createFilteringData } from '../filtersStatistics.model';
 import * as fixtures from 'modules/__fixtures__/fixtures';
 
-describe('createFilteringStatistics', () => {
-    const filteringStatisticsDataBuilder = createFilteringStatistics(fixtures.filterConfigData)(fixtures.filterIdToMatchingItemIds);
+describe('createFilteringData', () => {
+    const filteringStatisticsDataBuilder = createFilteringData(fixtures.filterConfigData)(fixtures.filterIdToMatchingItemIds);
     fixtures.itemToFilteringStatus.forEach( (filteredItemStatus, item) => {
             filteringStatisticsDataBuilder.addFilteredObjectStatus(filteredItemStatus, item.id)
         }

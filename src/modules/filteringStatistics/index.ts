@@ -1,6 +1,6 @@
 export {
     FilterIdToMatchingItemIds,
     FilteringStat,
-    FilteringStatisticsData,
-    createFilteringStatistics,
+    FilteringData,
+    createFilteringData,
 } from './filtersStatistics.model';

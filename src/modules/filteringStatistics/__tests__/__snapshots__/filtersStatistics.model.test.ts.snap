@@ -1,5 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`createFilteringData Should give all the FilteringStat by filter "activity-3" 1`] = `
+Object {
+  "itemIds": Array [
+    3,
+  ],
+  "type": "added",
+}
+`;
+
+exports[`createFilteringData Should give all the FilteringStat by filter "numberOfPeople" 1`] = `
+Object {
+  "itemIds": Array [
+    1,
+  ],
+  "type": "narrowed",
+}
+`;
+
+exports[`createFilteringData Should give all the FilteringStat by filter "priceMax" 1`] = `
+Object {
+  "itemIds": Array [
+    0,
+  ],
+  "type": "narrowed",
+}
+`;
+
+exports[`createFilteringData Should give all the items id rejected 1`] = `
+Array [
+  4,
+]
+`;
+
+exports[`createFilteringData Should give all the items id rejected by group "0" 1`] = `
+Array [
+  2,
+]
+`;
+
+exports[`createFilteringData Should give all the items id rejected by group "1" 1`] = `Array []`;
+
+exports[`createFilteringData Should give all the items id rejected by group "2" 1`] = `Array []`;
+
+exports[`createFilteringData Should give all the items id rejected by group "3" 1`] = `
+Array [
+  3,
+]
+`;
+
+exports[`createFilteringData Should give all the items id validated 1`] = `
+Array [
+  0,
+  1,
+]
+`;
+
 exports[`createFilteringStatistics Should give all the FilteringStat by filter "activity-3" 1`] = `
 Object {
   "itemIds": Array [

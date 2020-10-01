@@ -9,11 +9,11 @@ import {
     FilterFunctionsCollection,
     FilterGroupToFilterFunctions,
     FilterFunctionsToFilterGroup,
-    FilteredBoxStatus,
+    FilteredItemStatus,
     getFilteringData,
     getFilterStatusForItem,
 } from '../filtering/';
-import { createFilteringStatistics, FilterIdToMatchingItemIds } from '../filteringStatistics';
+import { createFilteringData, FilterIdToMatchingItemIds } from '../filteringStatistics';
 
 
 export const items: any[] = [
@@ -83,7 +83,7 @@ export const filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Ma
 
 export const filteringData = getFilteringData(filterConfigData);
 
-export const itemToFilteringStatus:  Map<any, FilteredBoxStatus> = new Map (
+export const itemToFilteringStatus:  Map<any, FilteredItemStatus> = new Map (
     items.map( item => [
         item,
         getFilterStatusForItem(filteringData)(item),
@@ -104,7 +104,7 @@ export const filterIdToMatchingItemIds: FilterIdToMatchingItemIds = {
     [filterDictionary['activity-3'].id]: [1, 3],
 }
 
-const filteringStatisticsDataBuilder = createFilteringStatistics(filterConfigData)(filterIdToMatchingItemIds);
+const filteringStatisticsDataBuilder = createFilteringData(filterConfigData)(filterIdToMatchingItemIds);
 itemToFilteringStatus.forEach( (filteredItemStatus, item) => {
         filteringStatisticsDataBuilder.addFilteredObjectStatus(filteredItemStatus, item.id)
     }

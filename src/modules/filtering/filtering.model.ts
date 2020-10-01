@@ -12,7 +12,7 @@ export type FilterFunctionsCollection = FilterFunction[][];
 export type FilterGroupToFilterFunctions = Dictionary<FilterFunction[]>;
 export type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroupId>
 
-export interface FilteringData {
+export interface FilteringFunctionsData {
 	getFilterFunctionsFromFilterGroup: (filterGroup: FilterGroupId) => FilterFunction[],
 	getFilterGroupFromFilterFunctions: (filterFunctions: FilterFunction[]) => string | undefined,
 	getFilterFunctionsCollection: () => FilterFunctionsCollection,
@@ -20,7 +20,7 @@ export interface FilteringData {
 
 export type ObjectFiltered = Dictionary<any>
 
-export const getFilteringData = (filterConfigData: FilterConfigData): FilteringData => {
+export const getFilteringData = (filterConfigData: FilterConfigData): FilteringFunctionsData => {
 	const appliedFilters = filterConfigData.getFiltersApplied();
 	const filterDataBuilder = createFilterDataBuilder();
 
@@ -49,7 +49,7 @@ interface FilterDataParams {
     filterFunctionsCollection: FilterFunctionsCollection,
 };
 
-const buildFilterData = (filterParams: FilterDataParams): FilteringData => {
+const buildFilterData = (filterParams: FilterDataParams): FilteringFunctionsData => {
     const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroupId) => filterParams.filterGroupToFilterFunctions[filterGroup];
     const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterParams.filterFunctionsToFilterGroup.get(filterFunctions);
     const getFilterFunctionsCollection = () => filterParams.filterFunctionsCollection;
