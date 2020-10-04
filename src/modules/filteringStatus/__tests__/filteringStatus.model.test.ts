@@ -1,4 +1,4 @@
-import { getFilterStatusForItem } from '../filteringStatus';
+import { getFilterStatusForItem } from '../filteringStatus.model';
 import * as fixtures from 'modules/__fixtures__/fixtures';
 
 describe('getFilterStatusForItem', () => {

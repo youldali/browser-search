@@ -4,7 +4,7 @@ import {
     FilterConfig,
     FilterConfigData 
 } from 'modules/filterConfiguration'
-import { getFilteringData, getFilterStatusForItem } from 'modules/filtering';
+import { getFilteringData, getFilterStatusForItem } from 'modules/filteringStatus';
 
 type ItemId = string;
 type Item = any;

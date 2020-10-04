@@ -10,10 +10,10 @@ import {
     FilterGroupToFilterFunctions,
     FilterFunctionsToFilterGroup,
     FilteredItemStatus,
-    getFilteringData,
+    getFilteringFunctionsData,
     getFilterStatusForItem,
-} from '../filtering/';
-import { createFilteringData, FilterIdToMatchingItemIds } from '../filteringStatistics';
+} from '../filteringStatus';
+import { createFilteringData, FilterIdToMatchingItemIds } from '../filteringData';
 
 
 export const items: any[] = [
@@ -81,7 +81,7 @@ export const filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Ma
     [filterGroupToFilterFunctions['3'], '3'],
 ]);
 
-export const filteringData = getFilteringData(filterConfigData);
+export const filteringData = getFilteringFunctionsData(filterConfigData);
 
 export const itemToFilteringStatus:  Map<any, FilteredItemStatus> = new Map (
     items.map( item => [

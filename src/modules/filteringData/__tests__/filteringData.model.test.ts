@@ -1,4 +1,4 @@
-import { createFilteringData } from '../filtersStatistics.model';
+import { createFilteringData } from '../filteringData.model';
 import * as fixtures from 'modules/__fixtures__/fixtures';
 
 describe('createFilteringData', () => {

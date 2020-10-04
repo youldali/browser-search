@@ -3,4 +3,4 @@ export {
     FilteringStat,
     FilteringData,
     createFilteringData,
-} from './filtersStatistics.model';
+} from './filteringData.model';

@@ -1,5 +1,5 @@
 import { FilterGroupId, FilterId } from 'modules/filterConfiguration'
-import { FilteredItemStatus } from 'modules/filtering'
+import { FilteredItemStatus } from 'modules/filteringStatus'
 import { FilterConfigData } from 'modules/filterConfiguration'
 import { findIntersectionOfSortedArrays } from 'helpers/array.util'
 

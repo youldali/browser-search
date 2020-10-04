@@ -4,9 +4,9 @@ import {
     FilterConfig,
     FilterConfigData 
 } from 'modules/filterConfiguration'
-import { getFilteringData, getFilterStatusForItem } from 'modules/filtering';
-import { createFilteringStatistics, FilteringStatisticsData } from 'modules/filteringStatistics';
+import { getFilteringData, getFilterStatusForItem } from 'modules/filteringStatus';
+import { createFilteringData, FilteringData } from 'modules/filteringData';
 
-export const getFilterStatitics = (filterConfigData: FilterConfigData): FilteringStatisticsData => {
-    
+export const getFilterStatitics = (filterConfigData: FilterConfigData): FilteringData => {
+
 }

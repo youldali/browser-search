@@ -2,7 +2,7 @@ import { FilterGroupId,} from 'modules/filterConfiguration';
 import { 
 	FilterFunction, 
 	FilteringFunctionsData,
-} from './filtering.model';
+} from './filteringFunctions.model';
 
 export interface FilteredItemStatus {
 	readonly pass: boolean,

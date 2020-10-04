@@ -1,8 +1,8 @@
-import { getFilteringData } from '../filtering.model';
+import { getFilteringFunctionsData } from '../filteringFunctions.model';
 import * as fixtures from 'modules/__fixtures__/fixtures';
 
 describe('getFilteringData', () => {
-    const filterData = getFilteringData(fixtures.filterConfigData);
+    const filterData = getFilteringFunctionsData(fixtures.filterConfigData);
     const filterFunctionsCollection = filterData.getFilterFunctionsCollection();
 
 	test('Should return a sorted FiltersFunctionCollection by group length (number of filtering function per group)', () => {

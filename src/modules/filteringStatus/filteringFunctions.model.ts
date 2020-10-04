@@ -20,7 +20,7 @@ export interface FilteringFunctionsData {
 
 export type ObjectFiltered = Dictionary<any>
 
-export const getFilteringData = (filterConfigData: FilterConfigData): FilteringFunctionsData => {
+export const getFilteringFunctionsData = (filterConfigData: FilterConfigData): FilteringFunctionsData => {
 	const appliedFilters = filterConfigData.getFiltersApplied();
 	const filterDataBuilder = createFilterDataBuilder();
 
