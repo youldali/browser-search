@@ -9,5 +9,5 @@ export {
 export const getFilterStatusFromFilterConfig = 
 (filterConfigData: FilterConfigData) => {
     const filteringFunctionsData = getFilteringFunctionsData(filterConfigData);
-    return getFilterStatusForItem(filteringFunctionsData)
+    return getFilterStatusForItem(filteringFunctionsData);
 }

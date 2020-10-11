@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "loglevel": "^1.7.0",
     "purify-ts": "^0.15.1",
     "rambda": "^5.8.0"
   }

@@ -1,35 +1,72 @@
 import { reverse } from 'rambda';
-import { Operator } from 'modules/filterConfiguration/operators';
+import { Operators } from 'modules/filterConfiguration/operators';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;
 const {indexedDB, IDBKeyRange} = globalScope;
 
 type OnUpgradeCallback = (db: IDBDatabase) => void
-export type IndexConfig = {multiEntry?: boolean, unique?: boolean};
-export type FieldsToIndex = Dictionary<IndexConfig>;
+export type IndexValue = { multiEntry?: boolean, unique?: boolean };
+export type IndexConfig = Dictionary<IndexValue>;
 
-export const createOrOpenDatabase = 
-(dbName: string) => 
-(dbVersion: number) => 
-(createObjectStore: OnUpgradeCallback): Promise<IDBDatabase> => {
-    const openDBRequest = indexedDB.open(dbName, dbVersion);
+export const closeDatabase = (db: IDBDatabase): void  => (db.close())
+
+export const openDatabaseLatestVersion = (dbName: string): Promise<IDBDatabase>  => {
+    const openDBRequest = indexedDB.open(dbName);
 
     return new Promise((resolve, reject) => {
         openDBRequest.onerror = () => reject(`error opening DB ${dbName}: ${openDBRequest.error}`);
-        openDBRequest.onupgradeneeded = () => createObjectStore(openDBRequest.result);
         openDBRequest.onsuccess = () => resolve(openDBRequest.result);
     });
 }
 
+export const createOrOpenDatabase = 
+(dbName: string) => 
+(dbVersion: number) => 
+(onUpgradeCallback: OnUpgradeCallback): Promise<IDBDatabase> => {
+    const openDBRequest = indexedDB.open(dbName, dbVersion);
+
+    return new Promise((resolve, reject) => {
+        openDBRequest.onerror = () => reject(`error opening DB ${dbName}: ${openDBRequest.error}`);
+        openDBRequest.onsuccess = () => resolve(openDBRequest.result);
+        openDBRequest.onupgradeneeded = () => onUpgradeCallback(openDBRequest.result);
+    });
+}
+
+export const upgradeDatabase = 
+(dbName: string) => 
+async (createObjectStore: OnUpgradeCallback): Promise<IDBDatabase> => {
+    const db = await openDatabaseLatestVersion(dbName);
+    const latestVersion = db.version;
+    db.close();
+
+    return createOrOpenDatabase(dbName)(latestVersion + 1)(createObjectStore);
+}
+
 export const createObjectStore = 
 (storeName: string) =>
-(fieldsToIndex: FieldsToIndex) => 
+(indexConfig: IndexConfig) => 
 (keyPath: string) => 
 (db: IDBDatabase) => {
     const objectStore = db.createObjectStore(storeName, { keyPath });
-    Object.entries(fieldsToIndex)
+    Object.entries(indexConfig)
         .forEach( ([indexName, indexConfig]) => objectStore.createIndex(indexName, indexName, indexConfig || {}) );
+}
+
+export const deleteObjectStore = 
+(storeName: string) =>
+(db: IDBDatabase) => {
+    const stores = db.objectStoreNames;
+    if(stores.contains(storeName)) {
+        try {
+            db.deleteObjectStore(storeName);
+            return db;
+        }
+        catch (exception) {
+            throw (`Couldn't delete object store ${storeName}: ${exception}`)
+        }
+    }
+    return db;
 }
 
 export const getNumberOfItemsInStore = 
@@ -171,27 +208,27 @@ export const getItemList =
 
 
 export const getKeyRangeMatchingOperator = 
-(operator: Operator) => 
+(operator: Operators) => 
 (value: any) => {
     switch(operator){
-        case '===':
-        case 'contains':
+        case Operators.equals:
+        case Operators.contains:
             return IDBKeyRange.only(value);
-        case '<':
+        case Operators.lt:
             return IDBKeyRange.upperBound(value, true);
-        case '<=':
+        case Operators.lte:
             return IDBKeyRange.upperBound(value);
-        case '>':
+        case Operators.gt:
             return IDBKeyRange.lowerBound(value, true);
-        case '>=':
+        case Operators.gte:
             return IDBKeyRange.lowerBound(value);
-        case 'inRangeClosed':
+        case Operators.inRangeClosed:
             return IDBKeyRange.bound(value[0], value[1]);
-        case 'inRangeOpen':
+        case Operators.inRangeOpen:
             return IDBKeyRange.bound(value[0], value[1], true, true);
-        case 'inRangeOpenClosed':
+        case Operators.inRangeOpenClosed:
             return IDBKeyRange.bound(value[0], value[1], true, false);
-        case 'inRangeClosedOpen':
+        case Operators.inRangeClosedOpen:
             return IDBKeyRange.bound(value[0], value[1], false, true);
     }
 }
