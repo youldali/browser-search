@@ -27,27 +27,27 @@ export const createFilteringData =
     (filterConfigData: FilterConfigData) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) => {
         const initMapStructure = (): ItemIdsByFilteringStatus => {
-            const boxesIdMappedByFilteredStatus: ItemIdsByFilteringStatus = new Map();
-            boxesIdMappedByFilteredStatus
+            const itemIdsByFilteringStatus: ItemIdsByFilteringStatus = new Map();
+            itemIdsByFilteringStatus
                 .set(true, [])
                 .set(false, []);
 
-            return boxesIdMappedByFilteredStatus;
+            return itemIdsByFilteringStatus;
         };
 
         const addItemIdToBoolean = (hasPassed: boolean, id: ItemId) => {
-            const itemIds = boxesIdMappedByFilteredStatus.get(hasPassed) as ItemId[];
+            const itemIds = itemIdsByFilteringStatus.get(hasPassed) as ItemId[];
             itemIds.push(id);      
         };
 
         const addItemIdToRejectedGroup = (group: FilterGroupId, id: ItemId) => {
-            const listForGroup = boxesIdMappedByFilteredStatus.get(group);
+            const listForGroup = itemIdsByFilteringStatus.get(group);
             listForGroup 
                 ? listForGroup.push(id)
-                : boxesIdMappedByFilteredStatus.set(group, [id]);
+                : itemIdsByFilteringStatus.set(group, [id]);
         };
 
-        const boxesIdMappedByFilteredStatus = initMapStructure();
+        const itemIdsByFilteringStatus = initMapStructure();
 
         return {
             addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, itemId: ItemId) {
@@ -62,14 +62,14 @@ export const createFilteringData =
 
             setStatusValue(filteredItemStatus: FilteredItemStatus, idList: ItemId[]) {
                 filteredItemStatus.filterGroupRejected 
-                    ? boxesIdMappedByFilteredStatus.set(filteredItemStatus.filterGroupRejected, idList) 
-                    : boxesIdMappedByFilteredStatus.set(filteredItemStatus.pass, idList);
+                    ? itemIdsByFilteringStatus.set(filteredItemStatus.filterGroupRejected, idList) 
+                    : itemIdsByFilteringStatus.set(filteredItemStatus.pass, idList);
 
                 return this;
             },
 
             done(): FilteringData {
-                return getFilteringData(filterConfigData)(filterIdToMatchingItemIds)(boxesIdMappedByFilteredStatus)
+                return getFilteringData(filterConfigData)(filterIdToMatchingItemIds)(itemIdsByFilteringStatus);
             }
         };
     };

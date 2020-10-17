@@ -1,5 +1,4 @@
 import { reverse } from 'rambda';
-import { Operators } from 'modules/filterConfiguration/operators';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;
@@ -9,7 +8,7 @@ type OnUpgradeCallback = (db: IDBDatabase) => void
 export type IndexValue = { multiEntry?: boolean, unique?: boolean };
 export type IndexConfig = Dictionary<IndexValue>;
 
-export const closeDatabase = (db: IDBDatabase): void  => (db.close())
+export const closeDatabase = (db: IDBDatabase): Promise<void>  => (Promise.resolve(db.close()))
 
 export const openDatabaseLatestVersion = (dbName: string): Promise<IDBDatabase>  => {
     const openDBRequest = indexedDB.open(dbName);
@@ -56,8 +55,7 @@ export const createObjectStore =
 export const deleteObjectStore = 
 (storeName: string) =>
 (db: IDBDatabase) => {
-    const stores = db.objectStoreNames;
-    if(stores.contains(storeName)) {
+    if(doesStoreExist(storeName)(db)) {
         try {
             db.deleteObjectStore(storeName);
             return db;
@@ -69,9 +67,14 @@ export const deleteObjectStore =
     return db;
 }
 
+export const doesStoreExist = 
+(storeName: string) =>
+(db: IDBDatabase): boolean => (db.objectStoreNames.contains(storeName));
+
+
 export const getNumberOfItemsInStore = 
-(db: IDBDatabase) =>
-(storeName: string): Promise<number> => {
+(storeName: string) =>
+(db: IDBDatabase): Promise<number> => {
     const 
         transaction = db.transaction([storeName], 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -85,26 +88,30 @@ export const getNumberOfItemsInStore =
 
 
 export const addDataToStore = 
-(db: IDBDatabase) => 
 (storeName: string) =>
-(data: Object[]): Promise<any> => {
+(db: IDBDatabase) =>
+(data: Object[]): Promise<IDBDatabase> => {
+    if(!doesStoreExist(storeName)(db)){
+        Promise.reject(`Store ${storeName} does not exist !`);
+    }
+
     const 
         transaction = db.transaction([storeName], "readwrite"),
         objectStore = transaction.objectStore(storeName);
     
     data.forEach( row => objectStore.add(row) );
     return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => resolve();
+        transaction.oncomplete = () => resolve(db);
         transaction.onerror = () => reject(`error inserting data for store ${storeName}:`);
     });
 };
 
 
-export const getPrimaryKeyListMatchingRange = 
+export const getPrimaryKeysMatchingRange = 
 (db: IDBDatabase) => 
 (storeName: string) => 
 (indexName: string) => 
-(keyRange: IDBKeyRange) => {
+(keyRange: IDBKeyRange): Promise<unknown> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -119,9 +126,9 @@ export const getPrimaryKeyListMatchingRange =
 
 
 export const iterateOverStore = 
-(db: IDBDatabase) => 
 (storeName: string) => 
-(callBack: Function): Promise<any> => {
+(db: IDBDatabase) => 
+(callBack: Function): Promise<IDBDatabase> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -136,7 +143,7 @@ export const iterateOverStore =
     };
 
     return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => resolve();
+        transaction.oncomplete = () => resolve(db);
         transaction.onerror = () => reject('error fetching data: ' + transaction?.error?.message);
     });
 };
@@ -205,30 +212,3 @@ export const getItemList =
         transaction.onerror = () => reject('error fetching the items ' + transaction?.error?.message);
     });
 };
-
-
-export const getKeyRangeMatchingOperator = 
-(operator: Operators) => 
-(value: any) => {
-    switch(operator){
-        case Operators.equals:
-        case Operators.contains:
-            return IDBKeyRange.only(value);
-        case Operators.lt:
-            return IDBKeyRange.upperBound(value, true);
-        case Operators.lte:
-            return IDBKeyRange.upperBound(value);
-        case Operators.gt:
-            return IDBKeyRange.lowerBound(value, true);
-        case Operators.gte:
-            return IDBKeyRange.lowerBound(value);
-        case Operators.inRangeClosed:
-            return IDBKeyRange.bound(value[0], value[1]);
-        case Operators.inRangeOpen:
-            return IDBKeyRange.bound(value[0], value[1], true, true);
-        case Operators.inRangeOpenClosed:
-            return IDBKeyRange.bound(value[0], value[1], true, false);
-        case Operators.inRangeClosedOpen:
-            return IDBKeyRange.bound(value[0], value[1], false, true);
-    }
-}
