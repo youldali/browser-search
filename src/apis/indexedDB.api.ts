@@ -111,7 +111,7 @@ export const getPrimaryKeysMatchingRange =
 (db: IDBDatabase) => 
 (storeName: string) => 
 (indexName: string) => 
-(keyRange: IDBKeyRange): Promise<unknown> => {
+(keyRange: IDBKeyRange): Promise<unknown[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),

@@ -1,3 +1,4 @@
+import { EitherAsync, liftPromise } from 'purify-ts/EitherAsync'
 import { 
     buildFilterConfigData,
     Filter,
@@ -8,9 +9,10 @@ import {
 import { getFilterStatusFromFilterConfig } from 'modules/filteringStatus';
 import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'modules/filteringData';
 import { getAllBoxesId, iterateOverBoxes } from '../services/idbStorageService';
-import { filter, map } from 'rambda';
+import { compose, filter, fromPairs, map, zip } from 'rambda';
 import { filterConfigData } from 'modules/__fixtures__/fixtures';
 import { getPrimaryKeysMatchingOperator } from 'apis/storage.util';
+import { allEitherAsyncs } from 'helpers/purify.util';
 
 
 
@@ -28,11 +30,19 @@ const iterateOnItemCallback = (filterStatisticStructure: Object, getFilterStatus
 };
 
 
-const getFilterIdToMatchingItemIds = (storeName: string) => (filterConfigData: FilterConfigData): FilterIdToMatchingItemIds => {
-    const filterDictionary = filterConfigData.getFilterDictionary();
+const getFilterIdToMatchingItemIds = (storeName: string) => (filterConfigData: FilterConfigData): EitherAsync<Error, FilterIdToMatchingItemIds> => {
+    const filters = Object.values(filterConfigData.getFilterDictionary());
+    const filtersIds = filterConfigData.getAllFilterIds();
 
-    const getItemsIdsMatchingFilter = (filter: Filter) => getPrimaryKeysMatchingOperator('storename')(filter.field)(filter.operator)(filter.operand);
+    const eitherAsyncItemsIdsMatchingFiltersList = allEitherAsyncs( 
+        filters.map( filter => getPrimaryKeysMatchingOperator(storeName)(filter.field)(filter.operator)(filter.operand) )
+    );
+   
+    const eitherAsyncItemsIdsMatchingFilters = 
+        eitherAsyncItemsIdsMatchingFiltersList.map( itemsIdsMatchingFilters => (
+            fromPairs(zip(filtersIds, itemsIdsMatchingFilters))
+        ));
 
-    map(filterDictionary)
+    return eitherAsyncItemsIdsMatchingFilters;
 }
 

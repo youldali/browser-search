@@ -99,7 +99,7 @@ export const getPrimaryKeysMatchingOperator =
 (storeName: string) => 
 (indexName: string) =>
 (operator: Operators) =>
-(value: any): EitherAsync<Error, StringOrNumber> => {
+(value: any): EitherAsync<Error, StringOrNumber[]> => {
     const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(value));
 
     const command: IDBCommand = db => 

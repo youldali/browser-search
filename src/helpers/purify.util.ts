@@ -15,18 +15,16 @@ export const allEitherAsyncs = <E,T>(eitherAyncs: EitherAsync<E,T>[]): EitherAsy
     )
 }
 
-const traverseEithers = <E,T>(eithers: Either<E,T>[]): Either<E, T[]> => {
-    const i: Either<E, T[]> = Right([])
-    const traversedEithers = 
-        eithers.reduce((acc: Either<E, T[]>, either: Either<E, T>): Either<E, T[]> => {
-            if(acc.isRight() && either.isRight()){
+export const traverseEithers = <E,T>(eithers: Either<E,T>[]): Either<E, T[]> => (
+    eithers.reduce(
+        (eitherAcc: Either<E, T[]>, either: Either<E, T>): Either<E, T[]> => {
+            if(eitherAcc.isRight() && either.isRight()){
                 const value = either.extract()
-                acc.map(results => [...results, value]);
-                return acc as Either<E, T[]>;
+                return eitherAcc.map(results => [...results, value]);
             }
             
-            return acc.isLeft() ? acc : Left(either.extract() as E);
-        }, i);
-
-    return traversedEithers;
-}
+            return eitherAcc.isLeft() ? eitherAcc : Left(either.extract() as E);
+        }, 
+        Right([])
+    )
+)
