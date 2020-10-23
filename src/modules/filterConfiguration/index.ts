@@ -20,7 +20,7 @@ export {
 
 export const buildFilterConfigData =
     (filterConfig: any) =>
-    (filterIdsApplied: F.FiltersApplied): Either<string, F.FilterConfigData> => {
+    (filterIdsApplied: F.FiltersApplied): Either<Error, F.FilterConfigData> => {
         const eitherFilterConfig = validateFilterConfig(filterConfig);
         
         const eitherFilterConfigData = eitherFilterConfig.chain(filterConfig => {

@@ -1,3 +1,4 @@
+import { EitherAsync, liftEither, fromPromise } from 'purify-ts/EitherAsync'
 import { 
     buildFilterConfigData,
     FiltersApplied,
@@ -5,18 +6,13 @@ import {
     FilterConfigData 
 } from 'modules/filterConfiguration'
 import { getFilteringData, getFilterStatusForItem } from 'modules/filteringStatus';
+import { Item, ItemId, Request } from './request.model';
+import { getFilterStatitics } from './filter';
+import { getOrderedItemIds } from './order';
+import { getPaginatedItems } from './pagination';
 
-type ItemId = string;
-type Item = any;
-
+const context: DedicatedWorkerGlobalScope = self as any;
 const ITEMS_PER_PAGE = 10;
-
-export interface Request {
-    filterConfig: FilterConfig
-	filtersApplied: FiltersApplied,
-	orderBy: string,
-	page: number
-};
 
 export interface FilteringResponse {
     itemIds: ItemId[],
@@ -43,9 +39,26 @@ const processBoxRequest = (request: Request) => {
 
     const eitherFilterConfigData = buildFilterConfigData(request.filterConfig)(request.filtersApplied);
 
-    eitherFilterConfigData.ifRight((filterConfigData) => {
-        const filteringData = getFilteringData(filterConfigData)
-        const getFilteringStatus = getFilterStatusForItem(filteringData);
+    const eitherFilterStatisticData = 
+        liftEither(eitherFilterConfigData)
+        .chain(getFilterStatitics(request.storeId));
+
+    const items = 
+        eitherFilterStatisticData
+        .chain(filteringData => getOrderedItemIds(request.storeId)(request.orderBy)(filteringData.getItemsIdsValidated()))
+        .chain(getPaginatedItems(request)(ITEMS_PER_PAGE));
+
+    items.run()
+    .then( eitherItems => {
+        eitherItems.ifRight(postItems);
+        eitherItems.ifLeft(postError);
     })
-    
 }
+
+const postItems = (items: Item[]) => {
+    context.postMessage({ type: 'ITEMS', items: items });
+};
+
+const postError = (error: Error) => {
+    context.postMessage({ type: 'ERROR', error: error });
+};

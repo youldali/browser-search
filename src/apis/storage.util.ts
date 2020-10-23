@@ -109,6 +109,21 @@ export const getPrimaryKeysMatchingOperator =
     return execute(command);
 }
 
+export const getAllPrimaryKeysForIndex = 
+(storeName: string) => 
+(indexName: string) => 
+(reverseDirection: boolean): EitherAsync<Error, StringOrNumber[]> => {
+    const command: IDBCommand = db => liftPromise(() => idb.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
+    return execute(command);
+}
+
+export const getItems = 
+(storeName: string) => 
+(itemIds: StringOrNumber[]): EitherAsync<Error, Object[]> => {
+    const command: IDBCommand = db => liftPromise(() => idb.getItems(db)(storeName)(itemIds));
+    return execute(command);
+};
+
 export const getKeyRangeMatchingOperator = 
     (operator: Operators) => 
     (value: any): IDBKeyRange  => {

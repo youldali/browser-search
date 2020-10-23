@@ -193,22 +193,22 @@ export const getAllPrimaryKeysForIndex =
 };
 
 
-export const getItemList = 
+export const getItems = 
 (db: IDBDatabase) => 
 (storeName: string) => 
-(idList: number[]): Promise<any> => {
+(itemIds: StringOrNumber[]): Promise<any> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
-        itemList: Array<unknown> = [];
+        items: Array<unknown> = [];
 
-    idList.forEach( id => {
+    itemIds.forEach( id => {
         const request = objectStore.get(id);
-        request.onsuccess = () => itemList.push(request.result);
+        request.onsuccess = () => items.push(request.result);
     });
 
     return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => resolve(itemList);
+        transaction.oncomplete = () => resolve(items);
         transaction.onerror = () => reject('error fetching the items ' + transaction?.error?.message);
     });
 };

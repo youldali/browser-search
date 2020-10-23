@@ -1,33 +1,37 @@
-import { EitherAsync, liftPromise } from 'purify-ts/EitherAsync'
-import { 
-    buildFilterConfigData,
-    Filter,
-    FiltersApplied,
-    FilterConfig,
-    FilterConfigData 
-} from 'modules/filterConfiguration'
-import { getFilterStatusFromFilterConfig } from 'modules/filteringStatus';
+import { EitherAsync } from 'purify-ts/EitherAsync'
+import { FilterConfigData } from 'modules/filterConfiguration'
+import { getFilterStatusFromFilterConfig, FilteredItemStatus } from 'modules/filteringStatus';
 import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'modules/filteringData';
-import { getAllBoxesId, iterateOverBoxes } from '../services/idbStorageService';
-import { compose, filter, fromPairs, map, zip } from 'rambda';
-import { filterConfigData } from 'modules/__fixtures__/fixtures';
-import { getPrimaryKeysMatchingOperator } from 'apis/storage.util';
+import { fromPairs, zip } from 'rambda';
+import { getPrimaryKeysMatchingOperator, iterateOverStore } from 'apis/storage.util';
 import { allEitherAsyncs } from 'helpers/purify.util';
+import { StoreId } from './request.model';
 
 
 
 export const getFilterStatitics = 
-(filterConfigData: FilterConfigData) =>
-(request: Request): FilteringData => {
+(storeId: StoreId) =>
+(filterConfigData: FilterConfigData): EitherAsync<Error, FilteringData> => {
     const getFilterStatus = getFilterStatusFromFilterConfig(filterConfigData);
-    const filteringData = createFilteringData(filterConfigData)
+
+    const saveItemFilterStatus = 
+        (savingFunction: (filteredItemStatus: FilteredItemStatus, itemId: StringOrNumber) => void) => 
+        (itemId: StringOrNumber, item: Object): void =>  {
+            const status = getFilterStatus(item);
+            savingFunction(status, itemId);
+        };
+
+    const eitherFilteringData = 
+        getFilterIdToMatchingItemIds(storeId)(filterConfigData)
+        .map(createFilteringData(filterConfigData))
+        .chain(filteringData => (
+            iterateOverStore(storeId)(saveItemFilterStatus(filteringData.addFilteredObjectStatus))
+                .map(_ => filteringData.done())
+        ))
+
+    return eitherFilteringData;
 }
 
-
-const iterateOnItemCallback = (filterStatisticStructure: Object, getFilterStatusForItem: Function, itemId: BoxId, item: Box): void =>  {
-    const status = getFilterStatusForItem(item);
-    filterStatisticStructure.addFilteredObjectStatus(status, itemId);
-};
 
 
 const getFilterIdToMatchingItemIds = (storeName: string) => (filterConfigData: FilterConfigData): EitherAsync<Error, FilterIdToMatchingItemIds> => {
