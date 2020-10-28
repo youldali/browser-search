@@ -1,14 +1,14 @@
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { transformIntoObject, filterAgainstObjectKeys } from 'helpers/array.util';
 import { getAllPrimaryKeysForIndex } from 'apis/storage.util';
-import { ItemId, StoreId } from './request.model';
+import { ItemId, Request } from './request.model';
 
 type OrderByData = {
     field: string,
     isReversed: boolean
 };
 
-export const getOrderedItemIds = (storeId: StoreId) => (orderBy: string) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => {
+export const getOrderedItemIds = ({ storeId, orderBy}: Request) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => {
     const orderByData = getOrderByData(orderBy);
 
     const itemsIdsToSortmap = transformIntoObject(itemsIdsToSort),

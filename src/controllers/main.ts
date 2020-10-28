@@ -1,11 +1,5 @@
-import { EitherAsync, liftEither, fromPromise } from 'purify-ts/EitherAsync'
-import { 
-    buildFilterConfigData,
-    FiltersApplied,
-    FilterConfig,
-    FilterConfigData 
-} from 'modules/filterConfiguration'
-import { getFilteringData, getFilterStatusForItem } from 'modules/filteringStatus';
+import { liftEither } from 'purify-ts/EitherAsync'
+import { buildFilterConfigData } from 'modules/filterConfiguration'
 import { Item, ItemId, Request } from './request.model';
 import { getFilterStatitics } from './filter';
 import { getOrderedItemIds } from './order';
@@ -20,7 +14,7 @@ export interface FilteringResponse {
 };
 
 export interface FilteringStatisticsResponse {
-    filtersStatisticsDetailedByFilter: ?FilterStatisticDetailed,
+    filtersStatisticsDetailedByFilter: number,
     numberOfMatchingItems: number,
     totalNumberOfItems: number,
 };
@@ -45,7 +39,7 @@ const processBoxRequest = (request: Request) => {
 
     const items = 
         eitherFilterStatisticData
-        .chain(filteringData => getOrderedItemIds(request.storeId)(request.orderBy)(filteringData.getItemsIdsValidated()))
+        .chain(filteringData => getOrderedItemIds(request)(filteringData.getItemsIdsValidated()))
         .chain(getPaginatedItems(request)(ITEMS_PER_PAGE));
 
     items.run()
@@ -56,9 +50,15 @@ const processBoxRequest = (request: Request) => {
 }
 
 const postItems = (items: Item[]) => {
-    context.postMessage({ type: 'ITEMS', items: items });
+    context.postMessage({ 
+        type: 'items', 
+        payload: {items},
+    });
 };
 
 const postError = (error: Error) => {
-    context.postMessage({ type: 'ERROR', error: error });
+    context.postMessage({ 
+        type: 'error', 
+        error: error,
+    });
 };
