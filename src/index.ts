@@ -1,6 +1,7 @@
-export const sum = (a: number, b: number) => {
-  if ('development' === process.env.NODE_ENV) {
-    console.log('boop');
-  }
-  return a + b;
+import { Request } from 'controllers/request.model'
+import DataWorker from 'web-worker:./controllers/main';
+
+export const process = (request: Request) => {
+  const dataWorker = new DataWorker();
+  dataWorker.postMessage({data: request});
 };
