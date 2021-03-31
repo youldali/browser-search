@@ -5,7 +5,7 @@ import { getFilterStatitics } from './filter';
 import { getOrderedItemIds } from './order';
 import { getPaginatedItems } from './pagination';
 
-const context: DedicatedWorkerGlobalScope = self as any;
+//const context: DedicatedWorkerGlobalScope = self as any;
 const ITEMS_PER_PAGE = 10;
 
 export interface FilteringResponse {
@@ -24,10 +24,35 @@ interface RequestEvent extends MessageEvent {
     data: Request,
 }
 
-self.onmessage = async (event: RequestEvent) => {
+self.onmessage = (event: RequestEvent) => {
     const requestData = event.data;
-    processBoxRequest(requestData);
+    console.log('from worker, received data: ', requestData);
+    //processBoxRequest(requestData);
+    console.log(processBoxRequest);
+    self.postMessage({ 
+        type: 'from worker',
+        data: 'BIEN RECU !', 
+    });
+
+    const a = ta();
+    a.then(v => {
+        self.postMessage({ 
+            type: 'from worker Promise Value',
+            data: v, 
+        });
+    })
 };
+
+const ta = async () => {
+    const p: Promise<number> = new Promise((resolve) => {
+        setTimeout( function() {
+            resolve(1000) 
+        }, 250) 
+        }) 
+
+    const v = await p;
+    return (v * 5);
+}
 
 const processBoxRequest = (request: Request) => {
 
@@ -50,14 +75,14 @@ const processBoxRequest = (request: Request) => {
 }
 
 const postItems = (items: Item[]) => {
-    context.postMessage({ 
+    self.postMessage({ 
         type: 'items', 
         payload: {items},
     });
 };
 
 const postError = (error: Error) => {
-    context.postMessage({ 
+    self.postMessage({ 
         type: 'error', 
         error: error,
     });

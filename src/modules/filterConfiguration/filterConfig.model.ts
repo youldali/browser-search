@@ -1,6 +1,6 @@
 import { Operators } from './operators'
 import { Interval } from 'dataStructures/interval'
-import { isNil, mergeAll, reject } from 'rambda';
+import { isNil, mergeAll, reject } from 'ramda';
 
 /**
  * FilterConfig ::

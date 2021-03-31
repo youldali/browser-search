@@ -1,4 +1,4 @@
-import { has } from 'rambda';
+import { has } from 'ramda';
 
 export const
 hasOneProperty = <T>(properties: Array<string>) => (target: T): boolean => (

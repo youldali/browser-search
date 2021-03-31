@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import * as check from 'browser-search';
+console.log('22', check.process({a: 5}));
 ReactDOM.render(
   <React.StrictMode>
     <App />

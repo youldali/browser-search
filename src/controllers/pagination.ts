@@ -9,5 +9,3 @@ export const getPaginatedItems = ({storeId, page}: Request) => (perPage: number)
 
     return getItems(storeId)(paginatedItemIds);
 };
-
-export default getPaginatedBoxList;

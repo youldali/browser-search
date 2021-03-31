@@ -11,7 +11,7 @@ type OrderByData = {
 export const getOrderedItemIds = ({ storeId, orderBy}: Request) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => {
     const orderByData = getOrderByData(orderBy);
 
-    const itemsIdsToSortmap = transformIntoObject(itemsIdsToSort),
+    const itemsIdsToSortmap = transformIntoObject(itemsIdsToSort);
     
     const eitherSortedItemIds = 
         getAllPrimaryKeysForIndex(storeId)(orderByData.field)(orderByData.isReversed)
@@ -30,6 +30,3 @@ const getOrderByData = (orderBy: string): OrderByData => {
         isReversed
     };
 };
-
-
-export default getOrderedBoxIdList;

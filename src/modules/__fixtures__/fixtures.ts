@@ -10,9 +10,8 @@ import {
     FilterGroupToFilterFunctions,
     FilterFunctionsToFilterGroup,
     FilteredItemStatus,
-    getFilteringFunctionsData,
-    getFilterStatusForItem,
-} from '../filteringStatus';
+    getFilterStatusFromFilterConfig,
+} from 'modules/filteringStatus';
 import { createFilteringData, FilterIdToMatchingItemIds } from '../filteringData';
 
 
@@ -81,12 +80,12 @@ export const filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Ma
     [filterGroupToFilterFunctions['3'], '3'],
 ]);
 
-export const filteringData = getFilteringFunctionsData(filterConfigData);
+export const getFilterStatusForItem = getFilterStatusFromFilterConfig(filterConfigData);
 
 export const itemToFilteringStatus:  Map<any, FilteredItemStatus> = new Map (
     items.map( item => [
         item,
-        getFilterStatusForItem(filteringData)(item),
+        getFilterStatusForItem(item),
     ])
 );
 

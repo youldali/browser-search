@@ -2,7 +2,7 @@ import { EitherAsync } from 'purify-ts/EitherAsync'
 import { FilterConfigData } from 'modules/filterConfiguration'
 import { getFilterStatusFromFilterConfig, FilteredItemStatus } from 'modules/filteringStatus';
 import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'modules/filteringData';
-import { fromPairs, zip } from 'rambda';
+import { fromPairs, zip } from 'ramda';
 import { getPrimaryKeysMatchingOperator, iterateOverStore } from 'apis/storage.util';
 import { allEitherAsyncs } from 'helpers/purify.util';
 import { StoreId } from './request.model';

@@ -1,8 +1,8 @@
-import { reverse } from 'rambda';
+import { reverse } from 'ramda';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;
-const {indexedDB, IDBKeyRange} = globalScope;
+const { indexedDB } = globalScope;
 
 type OnUpgradeCallback = (db: IDBDatabase) => void
 export type IndexValue = { multiEntry?: boolean, unique?: boolean };
@@ -179,7 +179,7 @@ export const getAllPrimaryKeysForIndex =
 (db: IDBDatabase) => 
 (storeName: string) => 
 (indexName: string) => 
-(reverseDirection: boolean): Promise<unknown[]> => {
+(reverseDirection: boolean): Promise<IDBValidKey[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),

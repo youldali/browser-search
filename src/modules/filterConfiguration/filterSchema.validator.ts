@@ -1,8 +1,8 @@
-import Joi from '@hapi/joi';
+import * as Joi from 'joi';
 import { Operators } from './operators'
 import { FilterConfig } from './filterConfig.model'
 import { Either, Left, Right } from 'purify-ts/Either'
-import { isNil } from 'rambda'
+import { isNil } from 'ramda'
 
 /**
  * Validates the JSON filter config passed to the library

@@ -1,4 +1,4 @@
-import { compose, sort } from 'rambda';
+import { compose, sort } from 'ramda';
 import { 
 	Filter, 
 	FilterGroupId,

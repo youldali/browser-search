@@ -1,9 +1,7 @@
 import * as idb from './indexedDB.api'
-import { map } from 'rambda'
+import { isNil, map } from 'ramda'
 import { Either } from 'purify-ts/Either';
 import { EitherAsync, liftPromise, liftEither } from 'purify-ts/EitherAsync'
-import { logEithers } from './purifyLogger'
-import { isNil } from 'rambda';
 import { Operators } from 'modules/filterConfiguration/operators';
 
 const databaseId = "browser-search";
@@ -69,10 +67,10 @@ export const createStore =
     (keyPath: string): EitherAsync<Error, void> => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
     const createObjectStore = (database: IDBDatabase) => {
-        logEithers(
-            Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(database)),
-            Either.encase(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(database))
-        )
+
+            Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(database));
+            Either.encase(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(database));
+        
     }
 
     return (
