@@ -1,6 +1,6 @@
 import { validateFilterConfig } from './filterSchema.validator';
 import * as F from './filterConfig.model';
-import { Either, Right } from 'purify-ts/Either'
+import { EitherAsync } from 'purify-ts/EitherAsync';
 
 export {
     Filter,
@@ -20,12 +20,12 @@ export {
 
 export const buildFilterConfigData =
     (filterConfig: any) =>
-    (filterIdsApplied: F.FiltersApplied): Either<Error, F.FilterConfigData> => {
+    (filterIdsApplied: F.FiltersApplied): EitherAsync<string[], F.FilterConfigData> => {
         const eitherFilterConfig = validateFilterConfig(filterConfig);
         
-        const eitherFilterConfigData = eitherFilterConfig.chain(filterConfig => {
+        const eitherFilterConfigData = eitherFilterConfig.map(filterConfig => {
             const filterConfigData = F.buildFilterConfigData(filterConfig)(filterIdsApplied);
-            return Right(filterConfigData);
+            return filterConfigData;
         });
 
         return eitherFilterConfigData;
