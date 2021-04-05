@@ -1,4 +1,3 @@
-import { liftEither } from 'purify-ts/EitherAsync'
 import { buildFilterConfigData } from 'modules/filterConfiguration'
 import { Item, ItemId, Request } from './request.model';
 import { getFilterStatitics } from './filter';
@@ -58,8 +57,7 @@ const processBoxRequest = (request: Request) => {
 
     const eitherFilterConfigData = buildFilterConfigData(request.filterConfig)(request.filtersApplied);
 
-    const eitherFilterStatisticData = 
-        liftEither(eitherFilterConfigData)
+    const eitherFilterStatisticData = eitherFilterConfigData
         .chain(getFilterStatitics(request.storeId));
 
     const items = 

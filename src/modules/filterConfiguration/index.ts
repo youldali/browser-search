@@ -20,7 +20,7 @@ export {
 
 export const buildFilterConfigData =
     (filterConfig: any) =>
-    (filterIdsApplied: F.FiltersApplied): EitherAsync<string[], F.FilterConfigData> => {
+    (filterIdsApplied: F.FiltersApplied): EitherAsync<Error, F.FilterConfigData> => {
         const eitherFilterConfig = validateFilterConfig(filterConfig);
         
         const eitherFilterConfigData = eitherFilterConfig.map(filterConfig => {
