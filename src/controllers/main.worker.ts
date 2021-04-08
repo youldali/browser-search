@@ -26,34 +26,11 @@ interface RequestEvent extends MessageEvent {
 self.onmessage = (event: RequestEvent) => {
     const requestData = event.data;
     console.log('from worker, received data: ', requestData);
-    //processBoxRequest(requestData);
-    console.log(processBoxRequest);
-    self.postMessage({ 
-        type: 'from worker',
-        data: 'BIEN RECU !', 
-    });
-
-    const a = ta();
-    a.then(v => {
-        self.postMessage({ 
-            type: 'from worker Promise Value',
-            data: v, 
-        });
-    })
+    processRequest(requestData);
 };
 
-const ta = async () => {
-    const p: Promise<number> = new Promise((resolve) => {
-        setTimeout( function() {
-            resolve(1000) 
-        }, 250) 
-        }) 
 
-    const v = await p;
-    return (v * 5);
-}
-
-const processBoxRequest = (request: Request) => {
+const processRequest = (request: Request) => {
 
     const eitherFilterConfigData = buildFilterConfigData(request.filterConfig)(request.filtersApplied);
 
