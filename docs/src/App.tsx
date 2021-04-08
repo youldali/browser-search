@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       display: 'flex',
     },
+    itemTable: {
+      flexGrow: 1,
+    }
   }),
 );
 
@@ -21,7 +24,7 @@ function App() {
       <AppBar />
       <main className={classes.content}>
           <FilterPanel />
-          <ItemTable />
+          <ItemTable className={classes.itemTable} />
       </main>
     </>
   );

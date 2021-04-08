@@ -8,7 +8,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
+import TablePagination from '@material-ui/core/TablePagination';
 
 const rows = [{
     "Name":"chevrolet chevelle malibu",
@@ -61,11 +61,19 @@ const useStyles = makeStyles((theme: Theme) =>
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
     },
-  }
+  },
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
   }),
 );
 
-export const ItemTable = () => {
+type ItemTableProps = {
+  className?: string;
+}
+
+export const ItemTable = ({className}: ItemTableProps) => {
   const classes = useStyles();
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<string | undefined>(undefined);
@@ -77,40 +85,53 @@ export const ItemTable = () => {
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            {headCells.map((headCell) => (
-              <TableCell
-                className={classes.headCell}
-                key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
-                sortDirection={orderBy === headCell.id ? orderDirection : false}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? orderDirection : 'asc'}
-                  onClick={() => sortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                </TableSortLabel>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
+    <section className={className}>
+      <Paper className={classes.paper}>
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table" size='small'>
+            <TableHead>
+              <TableRow>
+                {headCells.map((headCell) => (
+                  <TableCell
+                    className={classes.headCell}
+                    key={headCell.id}
+                    align={headCell.numeric ? 'right' : 'left'}
+                    sortDirection={orderBy === headCell.id ? orderDirection : false}
+                  >
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? orderDirection : 'asc'}
+                      onClick={() => sortHandler(headCell.id)}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
 
-        <TableBody>
-        {rows.map((row) => (
-            <TableRow key={row.Name} className={classes.row}>
-                <TableCell>
-                    {row.Name}
-                </TableCell>
-                <TableCell align="right">{row.Horsepower}</TableCell>
-            </TableRow>
-        ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            <TableBody>
+            {rows.map((row) => (
+                <TableRow key={row.Name} className={classes.row}>
+                    <TableCell>
+                        {row.Name}
+                    </TableCell>
+                    <TableCell align="right">{row.Horsepower}</TableCell>
+                </TableRow>
+            ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={5}
+          page={0}
+          onChangePage={(_, page) => console.log(page)}
+          onChangeRowsPerPage={(event) => console.log(parseInt(event.target.value, 10))}
+        />
+      </Paper>
+    </section>
   );
 }
