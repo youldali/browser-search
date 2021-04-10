@@ -4,6 +4,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { AppBar } from './AppBar';
 import { ItemTable } from './ItemTable';
 import { FilterPanel } from './FilterPanel';
+import { generatePersons } from './modules/dataGenerator';
+
+console.log(generatePersons(10));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
