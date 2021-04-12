@@ -4,9 +4,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { AppBar } from './AppBar';
 import { ItemTable } from './ItemTable';
 import { FilterPanel } from './FilterPanel';
-import { generatePersons } from './modules/dataGenerator';
+import { personGenerator } from '../modules';
+import { useItemTable } from './hooks';
 
-console.log(generatePersons(10));
+console.log(personGenerator.generatePersons(10));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,13 +22,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function App() {
   const classes = useStyles();
+  const itemTableProps = useItemTable();
   return (
     <>
       <CssBaseline />
       <AppBar />
       <main className={classes.content}>
           <FilterPanel />
-          <ItemTable className={classes.itemTable} />
+          <ItemTable 
+            className={classes.itemTable} 
+            {...itemTableProps}
+          />
       </main>
     </>
   );

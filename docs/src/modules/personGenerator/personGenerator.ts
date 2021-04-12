@@ -5,6 +5,7 @@ const chance = new Chance();
 
 export const generatePerson = () => (
   {
+    id: chance.guid(),
     name: chance.name(),
     age: chance.age(),
     email: chance.email(),
@@ -15,4 +16,4 @@ export const generatePerson = () => (
   }
 )
 
-export const generatePersons = (n: number) => times(generatePerson, n)
+export const generatePersons = (n: number) => times(generatePerson, n);

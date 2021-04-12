@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -10,47 +10,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TablePagination from '@material-ui/core/TablePagination';
 
-const rows = [{
-    "Name":"chevrolet chevelle malibu",
-    "Miles_per_Gallon":18,
-    "Cylinders":8,
-    "Displacement":307,
-    "Horsepower":130,
-    "Weight_in_lbs":3504,
-    "Acceleration":12,
-    "Year":"1970-01-01",
-    "Origin":"USA"
- },
- {
-    "Name":"buick skylark 320",
-    "Miles_per_Gallon":15,
-    "Cylinders":8,
-    "Displacement":350,
-    "Horsepower":165,
-    "Weight_in_lbs":3693,
-    "Acceleration":11.5,
-    "Year":"1970-01-01",
-    "Origin":"USA"
- },
- {
-  "Name":"BMW",
-  "Miles_per_Gallon":15,
-  "Cylinders":8,
-  "Displacement":350,
-  "Horsepower":165,
-  "Weight_in_lbs":3693,
-  "Acceleration":11.5,
-  "Year":"1970-01-01",
-  "Origin":"USA"
+export interface TableData {
+  id: string;
 }
 
-];
+export type HeadCell<T extends TableData> = {
+  id: keyof T & string;
+  numeric: boolean;
+  label: string;
+}
 
- const headCells = [
-  { id: 'name', numeric: false, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, label: 'Calories' },
-];
-
+export type OrderDirection = 'asc' | 'desc';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,24 +39,36 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type ItemTableProps = {
+type ItemTableProps<T extends TableData> = {
   className?: string;
+  headCells: HeadCell<T>[];
+  orderDirection: OrderDirection;
+  orderBy: string | undefined;
+  perPage: number;
+  page: number;
+  data: T[];
+  onPageChange: (page: number) => void;
+  onSortChange: (property: string) => void;
+  onPerPageChange: (perPage: number) => void;
 }
 
-export const ItemTable = ({className}: ItemTableProps) => {
+export const ItemTable = <T extends {id: string}>({
+  className,
+  headCells,
+  orderDirection,
+  orderBy,
+  perPage,
+  page,
+  data,
+  onPageChange,
+  onSortChange,
+  onPerPageChange,
+}: ItemTableProps<T>) => {
   const classes = useStyles();
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = useState<string | undefined>(undefined);
-  const sortHandler = (property: string) => {
-    console.log(property);
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
-    setOrderBy(property)
-  };
 
   return (
     <section className={className}>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper}>ß
         <TableContainer component={Paper}>
           <Table aria-label="simple table" size='small'>
             <TableHead>
@@ -101,7 +83,7 @@ export const ItemTable = ({className}: ItemTableProps) => {
                     <TableSortLabel
                       active={orderBy === headCell.id}
                       direction={orderBy === headCell.id ? orderDirection : 'asc'}
-                      onClick={() => sortHandler(headCell.id)}
+                      onClick={() => onSortChange(headCell.id)}
                     >
                       {headCell.label}
                     </TableSortLabel>
@@ -111,13 +93,18 @@ export const ItemTable = ({className}: ItemTableProps) => {
             </TableHead>
 
             <TableBody>
-            {rows.map((row) => (
-                <TableRow key={row.Name} className={classes.row}>
-                    <TableCell>
-                        {row.Name}
-                    </TableCell>
-                    <TableCell align="right">{row.Horsepower}</TableCell>
-                </TableRow>
+            {data.map((row) => (
+              <TableRow key={row.id} className={classes.row}>
+                {headCells.map((headCell) => (
+                  <TableCell
+                    className={classes.headCell}
+                    key={headCell.id}
+                    align={headCell.numeric ? 'right' : 'left'}
+                  >
+                    {row[headCell.id]}
+                  </TableCell>
+                ))}
+              </TableRow>
             ))}
             </TableBody>
           </Table>
@@ -125,11 +112,11 @@ export const ItemTable = ({className}: ItemTableProps) => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
-          rowsPerPage={5}
-          page={0}
-          onChangePage={(_, page) => console.log(page)}
-          onChangeRowsPerPage={(event) => console.log(parseInt(event.target.value, 10))}
+          count={data.length}
+          rowsPerPage={perPage}
+          page={page}
+          onChangePage={(_, page) => onPageChange(page)}
+          onChangeRowsPerPage={(event) => onPerPageChange(parseInt(event.target.value, 10))}
         />
       </Paper>
     </section>
