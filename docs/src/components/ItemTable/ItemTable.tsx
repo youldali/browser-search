@@ -68,7 +68,7 @@ export const ItemTable = <T extends {id: string}>({
 
   return (
     <section className={className}>
-      <Paper className={classes.paper}>ß
+      <Paper className={classes.paper}>
         <TableContainer component={Paper}>
           <Table aria-label="simple table" size='small'>
             <TableHead>
@@ -95,15 +95,17 @@ export const ItemTable = <T extends {id: string}>({
             <TableBody>
             {data.map((row) => (
               <TableRow key={row.id} className={classes.row}>
-                {headCells.map((headCell) => (
+                {headCells.map((headCell) => {
+                  const columnValue = row[headCell.id];
+                  return (
                   <TableCell
-                    className={classes.headCell}
                     key={headCell.id}
                     align={headCell.numeric ? 'right' : 'left'}
                   >
-                    {row[headCell.id]}
+                    {Array.isArray(columnValue) ? columnValue.join() : columnValue}
                   </TableCell>
-                ))}
+                )})}
+                
               </TableRow>
             ))}
             </TableBody>

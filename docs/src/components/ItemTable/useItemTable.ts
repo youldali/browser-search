@@ -12,7 +12,7 @@ type UseItemTableProps<T extends TableData> = {
 
 export const useItemTable = <T extends TableData>({
   perPage: initialPerPage = 5,
-  page: initialPage = 1,
+  page: initialPage = 0,
   orderBy: initialOrderBy = undefined,
   orderDirection: initialOrderDirection = 'asc',
   data: initialData,

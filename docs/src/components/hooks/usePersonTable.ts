@@ -10,7 +10,7 @@ type UsePersonTableProps = {
   orderDirection?: OrderDirection;
 }
 
-export const usePersontable = (personTableProps: UsePersonTableProps) => {
+export const usePersonTable = (personTableProps?: UsePersonTableProps) => {
   const itemTableProps = useItemTable({
     data: personsData,
     headCells,
@@ -25,9 +25,9 @@ const headCells: HeadCell<Person>[] = [
   { id: 'age', numeric: true, label: 'Age' },
   { id: 'country', numeric: false, label: 'Country' },
   { id: 'email', numeric: false, label: 'Email' },
-  { id: 'profession', numeric: true, label: 'Profession' },
+  { id: 'profession', numeric: false, label: 'Profession' },
   { id: 'salary', numeric: true, label: 'Salary' },
-  { id: 'favoriteColours', numeric: true, label: 'Favorite colours' },
+  { id: 'favoriteColours', numeric: false, label: 'Favorite colours' },
 ];
 
 const personsData: Person[] = 

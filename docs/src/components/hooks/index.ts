@@ -1,1 +1,1 @@
-export { useItemTable } from './useItemTable';
+export { usePersonTable } from './usePersonTable';

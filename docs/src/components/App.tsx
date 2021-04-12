@@ -5,7 +5,7 @@ import { AppBar } from './AppBar';
 import { ItemTable } from './ItemTable';
 import { FilterPanel } from './FilterPanel';
 import { personGenerator } from '../modules';
-import { useItemTable } from './hooks';
+import { usePersonTable } from './hooks';
 
 console.log(personGenerator.generatePersons(10));
 
@@ -20,9 +20,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function App() {
+export const App = () => {
   const classes = useStyles();
-  const itemTableProps = useItemTable();
+  const personTableProps = usePersonTable({});
   return (
     <>
       <CssBaseline />
@@ -31,11 +31,9 @@ function App() {
           <FilterPanel />
           <ItemTable 
             className={classes.itemTable} 
-            {...itemTableProps}
+            {...personTableProps}
           />
       </main>
     </>
   );
 }
-
-export default App;
