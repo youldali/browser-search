@@ -1,6 +1,6 @@
 import { Request } from 'controllers/request.model';
 import { functionToWorkerURL } from 'helpers/worker.util';
-export { addDataToStore, createStore } from 'apis/storage.util';
+import * as storage from 'apis/storage.util';
 
 const workerFunction = () => {
   //@worker
@@ -14,3 +14,22 @@ export const processRequest = (request: Request) => {
 };
 
 export const check = () => {console.log('check !')};
+
+export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => (
+  storage.createStore(storeName)(indexConfig)(keyPath)
+    .run()
+)
+
+export const addDataToStore = (storeName: string) => (data: object[]) => (
+  storage.addDataToStore(storeName)(data)
+    .run()
+)
+
+export const getAllValuesOfProperty = (storeName: string) => (propertyName: string) => (
+  storage.getAllUniqueKeysForIndex(storeName)(propertyName)
+)
+
+export const deleteStore = (storeName: string) => (
+  storage.deleteStore(storeName)
+    .run()
+)

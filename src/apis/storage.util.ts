@@ -11,7 +11,7 @@ enum IndexType {
     array = 'array',
 }
 
-interface SimplifiedIndexConfig {
+export interface SimplifiedIndexConfig {
     [key: string]: IndexType;
 }
 
@@ -79,9 +79,14 @@ export const createStore =
     )
 }
 
+export const deleteStore = (storeName: string): EitherAsync<Error, void> => {
+    const command: IDBCommand = db => liftEither(Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(db)));
+    return execute(command);
+}
+
 export const addDataToStore = 
 (storeName: string) =>
-(data: Object[]): EitherAsync<Error, void> => {
+(data: object[]): EitherAsync<Error, void> => {
     const command: IDBCommand = db => liftPromise(() => idb.addDataToStore(storeName)(db)(data));
     return execute(command);
 }
@@ -114,6 +119,14 @@ export const getAllPrimaryKeysForIndex =
     const command: IDBCommand = db => liftPromise(() => idb.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
     return execute(command);
 }
+
+export const getAllUniqueKeysForIndex = 
+(storeName: string) => 
+(indexName: string): EitherAsync<Error, StringOrNumber[]> => {
+    const command: IDBCommand = db => liftPromise(() => idb.getAllUniqueKeysForIndex(db)(storeName)(indexName));
+    return execute(command);
+}
+
 
 export const getItems = 
 (storeName: string) => 
