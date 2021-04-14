@@ -31,7 +31,6 @@ self.onmessage = (event: RequestEvent) => {
 
 
 const processRequest = (request: Request) => {
-
     const eitherFilterConfigData = buildFilterConfigData(request.filterConfig)(request.filtersApplied);
 
     const eitherFilterStatisticData = eitherFilterConfigData
@@ -51,14 +50,17 @@ const processRequest = (request: Request) => {
 
 const postItems = (items: Item[]) => {
     self.postMessage({ 
-        type: 'items', 
-        payload: {items},
+        outcome: 'success', 
+        payload: {
+            type: 'items',
+            data: items
+        },
     });
 };
 
 const postError = (error: Error) => {
     self.postMessage({ 
-        type: 'error', 
-        error: error,
+        outcome: 'error', 
+        reason: error,
     });
 };

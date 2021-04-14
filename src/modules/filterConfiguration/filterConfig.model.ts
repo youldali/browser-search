@@ -8,7 +8,7 @@ import { isNil, mergeAll, reject } from 'ramda';
  * Example:
  * [ // FilterConfig
  *   [ // GroupOfFilters
- *     { id: 'priceMin', field: 'price', operator: 'lg', operand: 200 }, // Filter
+ *     { id: 'priceMin', field: 'price', operator: 'lt', operand: 200 }, // Filter
  *   ],
  * 	 [
  *     { id: 'priceMax', field: 'price', operator: 'gt', operand: 500}

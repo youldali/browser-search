@@ -1,3 +1,4 @@
+import { identity } from 'ramda';
 import { Request } from 'controllers/request.model';
 import { functionToWorkerURL } from 'helpers/worker.util';
 import * as storage from 'apis/storage.util';
@@ -7,13 +8,17 @@ const workerFunction = () => {
 }
 
 const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
-applicationWorker.onmessage = (e) => console.log('received', e.data);
 
 export const processRequest = (request: Request) => {
-  applicationWorker.postMessage({data: request});
-};
+  applicationWorker.postMessage(request);
 
-export const check = () => {console.log('check !')};
+  return new Promise((resolve, reject) => {
+    applicationWorker.onmessage = (event) => {
+      const result = event.data;
+      result.outcome === 'error' ? reject(result.reason) : resolve(result.payload);
+    }
+  })
+};
 
 export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => (
   storage.createStore(storeName)(indexConfig)(keyPath)
@@ -25,8 +30,15 @@ export const addDataToStore = (storeName: string) => (data: object[]) => (
     .run()
 )
 
-export const getAllValuesOfProperty = (storeName: string) => (propertyName: string) => (
+export const getAllValuesOfProperty = (storeName: string) => (propertyName: string): Promise<unknown> => (
   storage.getAllUniqueKeysForIndex(storeName)(propertyName)
+    .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
 )
 
 export const deleteStore = (storeName: string) => (

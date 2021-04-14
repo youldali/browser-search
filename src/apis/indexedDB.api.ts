@@ -170,7 +170,7 @@ export const getAllUniqueKeysForIndex =
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(keyList);
-        transaction.onerror = () => reject('error fetching key list ' + transaction?.error?.message);
+        transaction.onerror = () => reject(new Error('Error fetching key list ' + transaction?.error?.message));
     });
 };
 
