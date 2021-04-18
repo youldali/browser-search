@@ -9,9 +9,11 @@ export type StoreId = string;
 
 
 export interface Request {
+    storeId: StoreId,
     filterConfig: FilterConfig
 	filtersApplied: FiltersApplied,
-	orderBy: string,
-    page: number,
-    storeId: StoreId,
+	orderBy?: string,
+	orderDirection?: 'ASC' | 'DESC',
+    page?: number,
+    perPage?: number,
 };

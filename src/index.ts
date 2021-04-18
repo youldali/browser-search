@@ -1,7 +1,7 @@
 import { identity } from 'ramda';
-import { Request } from 'controllers/request.model';
-import { functionToWorkerURL } from 'helpers/worker.util';
-import * as storage from 'apis/storage.util';
+import { Request } from './controllers/request.model';
+import { functionToWorkerURL } from './helpers/worker.util';
+import * as storage from './apis/storage.util';
 
 const workerFunction = () => {
   //@worker
