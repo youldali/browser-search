@@ -1,4 +1,4 @@
-import { FilterGroupId, FilterId } from 'modules/filterConfiguration'
+import { GroupId, FilterId } from 'modules/filterConfiguration'
 import { FilteredItemStatus } from 'modules/filteringStatus'
 import { FilterConfigData } from 'modules/filterConfiguration'
 import { findIntersectionOfSortedArrays } from 'helpers/array.util'
@@ -16,15 +16,15 @@ export type FilteringStat = {
 
 export interface FilteringData {
     getItemsIdsModifiedByFilter: (filterId: FilterId) => FilteringStat,
-    getItemsIdsRejectedByOneGroup: (groupId: FilterGroupId) => ItemId[],
+    getItemsIdsRejectedByGroupId: (groupId: GroupId) => ItemId[],
     getItemsIdsRejectedByMultipleFilters: () => ItemId[],
     getItemsIdsValidated: () => ItemId[],
 }
 
-type ItemIdsByFilteringStatus = Map<FilterGroupId | boolean, ItemId[]>;
+type ItemIdsByFilteringStatus = Map<GroupId | boolean, ItemId[]>;
 
 export const createFilteringData = 
-    (filterConfigData: FilterConfigData) =>
+    <T>(filterConfigData: FilterConfigData<T>) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) => {
         const initMapStructure = (): ItemIdsByFilteringStatus => {
             const itemIdsByFilteringStatus: ItemIdsByFilteringStatus = new Map();
@@ -40,7 +40,7 @@ export const createFilteringData =
             itemIds.push(id);      
         };
 
-        const addItemIdToRejectedGroup = (group: FilterGroupId, id: ItemId) => {
+        const addItemIdToRejectedGroup = (group: GroupId, id: ItemId) => {
             const listForGroup = itemIdsByFilteringStatus.get(group);
             listForGroup 
                 ? listForGroup.push(id)
@@ -76,7 +76,7 @@ export const createFilteringData =
 
 
 const getFilteringData = 
-    (filterConfigData: FilterConfigData) =>
+    <T>(filterConfigData: FilterConfigData<T>) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) =>
     (itemIdsByFilteringStatus: ItemIdsByFilteringStatus): FilteringData => {
 
@@ -84,8 +84,8 @@ const getFilteringData =
          * If 1 filter of the group has been checked, we are in this case:
          * the filter will actually add some new items since the logical operation is an OR with the other filters in the group
          */
-        const getItemIdsAddedByFilter = (filterId: FilterId, filterGroupId: FilterGroupId): FilteringStat => {
-            const itemsIdsRejectedByFilterGroup = itemIdsByFilteringStatus.get(filterGroupId) as ItemId[];
+        const getItemIdsAddedByFilter = (filterId: FilterId, GroupId: GroupId): FilteringStat => {
+            const itemsIdsRejectedByFilterGroup = itemIdsByFilteringStatus.get(GroupId) as ItemId[];
             const itemIdsMatchingFilterId = filterIdToMatchingItemIds[filterId]; 
             const itemIdsAddedIfFilterIsChecked = findIntersectionOfSortedArrays(itemIdsMatchingFilterId)(itemsIdsRejectedByFilterGroup);
 
@@ -112,15 +112,15 @@ const getFilteringData =
 
 
         const getItemsIdsModifiedByFilter = (filterId: FilterId): FilteringStat => {
-            const filterGroupId = filterConfigData.getGroupIdForFilter(filterId);
-            return itemIdsByFilteringStatus.get(filterGroupId) === undefined 
+            const groupId = filterConfigData.getGroupIdForFilter(filterId);
+            return itemIdsByFilteringStatus.get(groupId) === undefined 
                 ? getItemIdsNarrowedByFilter(filterId)
-                : getItemIdsAddedByFilter(filterId, filterGroupId)
+                : getItemIdsAddedByFilter(filterId, groupId)
         }
 
         return {
             getItemsIdsModifiedByFilter,
-            getItemsIdsRejectedByOneGroup: (filterGroupId: FilterGroupId) => itemIdsByFilteringStatus.get(filterGroupId) ?? [],
+            getItemsIdsRejectedByGroupId: (groupId: GroupId) => itemIdsByFilteringStatus.get(groupId) ?? [],
             getItemsIdsRejectedByMultipleFilters: () => itemIdsByFilteringStatus.get(false) ?? [],
             getItemsIdsValidated: () => itemIdsByFilteringStatus.get(true) ?? [],
         }

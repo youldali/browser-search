@@ -1,4 +1,4 @@
-import { FilterGroupId,} from 'modules/filterConfiguration';
+import { GroupId,} from 'modules/filterConfiguration';
 import { 
 	FilterFunction, 
 	FilteringFunctionsData,
@@ -6,25 +6,8 @@ import {
 
 export interface FilteredItemStatus {
 	readonly pass: boolean,
-	readonly filterGroupRejected?: FilterGroupId
+	readonly filterGroupRejected?: GroupId
 };
-
-/**
- * Receives a group of filters represented by an array of boolean functions
- * Filters an object against the group of filter using || operator
- * Returns true if object passes at least one of the filters
- */
-const filterObjectAgainstFilterGroup = 
-(filterFunctionList: FilterFunction[]) => (target: Object): boolean => 
-(function evaluateNextFilterFunction(iterator: Iterator<FilterFunction>): boolean{
-	const currentIteratorState = iterator.next();
-		if(currentIteratorState.done)
-			return false;
-
-	const filterFunction = currentIteratorState.value;
-	return filterFunction(target) || evaluateNextFilterFunction(iterator);
-
-})(filterFunctionList[Symbol.iterator]());
 
 /**
  * 
@@ -33,29 +16,31 @@ const filterObjectAgainstFilterGroup =
  * The filterGroup is only mentioned if the item is rejected by ONE AND ONLY ONE group (for stats purposes)
  */
 export const getFilterStatusForItem = 
-(filteringFunctionsData: FilteringFunctionsData) =>
-(target: Object): FilteredItemStatus =>
+<T>(filteringFunctionsData: FilteringFunctionsData<T>) =>
+(target: T): FilteredItemStatus =>
 {
 	const iteratorOnFilter = (
-		function* evaluateNextGroupOfFilterFunctions(iterator: Iterator<FilterFunction[]>): 
-			Generator<FilteredItemStatus, any, Iterator<FilterFunction[]>> {
-				const currentIteratorState = iterator.next();
-				if(currentIteratorState.done){
+		function* evaluateNextGroupOfFilterFunctions(iterator: Iterator<FilterFunction<T>[]>): 
+			// @ts-ignore: downlevel iteration
+			Generator<FilteredItemStatus, FilteredItemStatus | undefined, Iterator<FilterFunction<T>[]>> {
+				const filterFunctionsCollectionsIteratorResult = iterator.next();
+
+				// all filtering functions have passed
+				if(filterFunctionsCollectionsIteratorResult.done){
 					yield { pass: true };
-					return;
+					return { pass: true };
 				};
 	
-			const filterFunctionsForOneGroup = currentIteratorState.value;
+			const filterFunctions = filterFunctionsCollectionsIteratorResult.value;
 
-			if(!filterObjectAgainstFilterGroup(filterFunctionsForOneGroup)(target))
-				yield {pass: false, filterGroupRejected: filteringFunctionsData.getFilterGroupFromFilterFunctions(filterFunctionsForOneGroup)};
+			if(!filterObjectAgainstFilterFunctions(filterFunctions)(target))
+				yield {pass: false, filterGroupRejected: filteringFunctionsData.getGroupIdFromFilterFunctions(filterFunctions)};
 			
-			// @ts-ignore: downlevel iteration
 			yield* evaluateNextGroupOfFilterFunctions(iterator);
 		}
-	)(filteringFunctionsData.getFilterFunctionsCollection()[Symbol.iterator]());
+	)(filteringFunctionsData.getFilterFunctionsCollections()[Symbol.iterator]());
 
-	const filteringStatus = iteratorOnFilter.next().value || { pass: true };
+	const filteringStatus = iteratorOnFilter.next().value ?? { pass: true };
 	const filteringStatus2 = iteratorOnFilter.next().value;
 
 	//case 1: the object pass => we return the 1st iteration {pass: true}
@@ -67,3 +52,20 @@ export const getFilterStatusForItem =
 		: { pass: false } 
 	);
 };
+
+/**
+ * Receives a group of filters represented by an array of boolean functions
+ * Filters an object against the group of filter using || operator
+ * Returns true if object passes at least one of the filters
+ */
+ const filterObjectAgainstFilterFunctions = 
+ <T>(filterFunctionList: FilterFunction<T>[]) => (target: T): boolean => 
+ (function evaluateNextFilterFunction(iterator: Iterator<FilterFunction<T>>): boolean{
+	 const filterFunctionsIteratorResult = iterator.next();
+		 if(filterFunctionsIteratorResult.done)
+			 return false; // mempty for || operator
+ 
+	 const filterFunction = filterFunctionsIteratorResult.value;
+	 return filterFunction(target) || evaluateNextFilterFunction(iterator);
+ 
+ })(filterFunctionList[Symbol.iterator]());

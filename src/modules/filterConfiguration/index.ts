@@ -4,13 +4,13 @@ import { EitherAsync } from 'purify-ts/EitherAsync';
 
 export {
     Filter,
-    FilterGroupId,
+    GroupId,
     FilterId,
     FilterConfig,
     FilterConfigData,
     FilterOperand,
     FiltersApplied,
-    FiltersByGroup,
+    GroupDictionary,
 } from './filterConfig.model' 
 
 export {
@@ -19,14 +19,8 @@ export {
 } from './operators' 
 
 export const buildFilterConfigData =
-    (filterConfig: any) =>
-    (filterIdsApplied: F.FiltersApplied): EitherAsync<Error, F.FilterConfigData> => {
-        const eitherFilterConfig = validateFilterConfig(filterConfig);
-        
-        const eitherFilterConfigData = eitherFilterConfig.map(filterConfig => {
-            const filterConfigData = F.buildFilterConfigData(filterConfig)(filterIdsApplied);
-            return filterConfigData;
-        });
-
-        return eitherFilterConfigData;
-}
+    <T>(filterConfig: any) =>
+    (filterIdsApplied: F.FiltersApplied): EitherAsync<Error, F.FilterConfigData<T>> => (
+      validateFilterConfig<T>(filterConfig)
+        .map(filterConfig => (F.buildFilterConfigData(filterConfig)(filterIdsApplied)))
+  )

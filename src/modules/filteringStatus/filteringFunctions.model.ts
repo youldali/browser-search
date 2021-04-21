@@ -1,105 +1,83 @@
 import { compose, sort } from 'ramda';
 import { 
 	Filter, 
-	FilterGroupId,
+	GroupId,
 	FilterConfigData,
 	Operators,
 	operatorToFunction,
 } from 'modules/filterConfiguration';
 
-export type FilterFunction = (target: Object) => boolean;
-export type FilterFunctionsCollection = FilterFunction[][];
-export type FilterGroupToFilterFunctions = Dictionary<FilterFunction[]>;
-export type FilterFunctionsToFilterGroup = Map<FilterFunction[], FilterGroupId>
+export type FilterFunction<T> = (target: T) => boolean;
+export type FilterFunctionsCollections<T> = FilterFunction<T>[][];
+export type GroupIdToFilterFunctions<T> = Dictionary<FilterFunction<T>[]>;
+export type FilterFunctionsToGroupId<T> = Map<FilterFunction<T>[], GroupId>
 
-export interface FilteringFunctionsData {
-	getFilterFunctionsFromFilterGroup: (filterGroup: FilterGroupId) => FilterFunction[],
-	getFilterGroupFromFilterFunctions: (filterFunctions: FilterFunction[]) => string | undefined,
-	getFilterFunctionsCollection: () => FilterFunctionsCollection,
+export interface FilteringFunctionsData<T> {
+	getFilterFunctionsFromGroup: (group: GroupId) => FilterFunction<T>[],
+	getGroupIdFromFilterFunctions: (filterFunctions: FilterFunction<T>[]) => string | undefined,
+	getFilterFunctionsCollections: () => FilterFunctionsCollections<T>,
 }
 
-export type ObjectFiltered = Dictionary<any>
-
-export const getFilteringFunctionsData = (filterConfigData: FilterConfigData): FilteringFunctionsData => {
+export const getFilteringFunctionsData = <T>(filterConfigData: FilterConfigData<T>): FilteringFunctionsData<T> => {
 	const appliedFilters = filterConfigData.getFiltersApplied();
-	const filterDataBuilder = createFilterDataBuilder();
+	const filterDataBuilder = createFilterDataBuilder<T>();
 
 	appliedFilters.forEach(filter => {
 		const filterFunction = evaluateCriteria(filter);
-		const filterGroup = filterConfigData.getGroupIdForFilter(filter.id);
+		const groupId = filterConfigData.getGroupIdForFilter(filter.id);
 
-		filterDataBuilder.addFilterFunction(filterFunction, filterGroup);
+		filterDataBuilder.addFilterFunction(filterFunction, groupId);
 	});
 
-	return filterDataBuilder.getFilteringData();
+	return filterDataBuilder.done();
 };
 
-const evaluateCriteria = 
-	(filter: Filter) => 
-	(target: ObjectFiltered): boolean => {
-		const { field, operand, operator } = filter;
-		const operatorFunction = operatorToFunction[Operators[operator]]
-		return target[field] !== undefined && operatorFunction(target[field], operand);
+const createFilterDataBuilder = <T>() => {
+	const groupIdToFilterFunctions: GroupIdToFilterFunctions<T> = {};
+	const	filterFunctionsToGroupId: FilterFunctionsToGroupId<T> = new Map();
+	const	groupIds: GroupId[] = [];
+
+	const	addFilterFunctionToNewGroup = (filterFunction: FilterFunction<T>, groupId: GroupId) => {
+		const functionCollection = [filterFunction];
+		groupIdToFilterFunctions[groupId] = functionCollection;
+		filterFunctionsToGroupId.set(functionCollection, groupId);
+		groupIds.push(groupId);
 	};
 
-interface FilterDataParams {
-    filterGroups: FilterGroupId[],
-    filterGroupToFilterFunctions: FilterGroupToFilterFunctions,
-    filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup
-    filterFunctionsCollection: FilterFunctionsCollection,
-};
-
-const buildFilterData = (filterParams: FilterDataParams): FilteringFunctionsData => {
-    const getFilterFunctionsFromFilterGroup = (filterGroup: FilterGroupId) => filterParams.filterGroupToFilterFunctions[filterGroup];
-    const getFilterGroupFromFilterFunctions = (filterFunctions: FilterFunction[]) => filterParams.filterFunctionsToFilterGroup.get(filterFunctions);
-    const getFilterFunctionsCollection = () => filterParams.filterFunctionsCollection;
-
-    return {
-        getFilterFunctionsFromFilterGroup,
-        getFilterGroupFromFilterFunctions,
-        getFilterFunctionsCollection,
-    }
-};
-
-const createFilterDataBuilder = () => {
-	const 
-		filterGroupToFilterFunctions: FilterGroupToFilterFunctions = {},
-		filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Map(),
-		filterGroups: FilterGroupId[] = [],
-
-		addFilterFunctionToNewGroup = (filterFunction: FilterFunction, filterGroup: FilterGroupId) => {
-			const filterGroupFunctionCollection = [filterFunction];
-			filterGroupToFilterFunctions[filterGroup] = filterGroupFunctionCollection;
-			filterFunctionsToFilterGroup.set(filterGroupFunctionCollection, filterGroup);
-			filterGroups.push(filterGroup);
-		},
-		saveFilterFunctionIntoGroup = (filterFunction: FilterFunction, filterGroup: FilterGroupId) => filterGroupToFilterFunctions[filterGroup].push(filterFunction);
+	const	saveFilterFunctionIntoGroup = (filterFunction: FilterFunction<T>, group: GroupId) => groupIdToFilterFunctions[group].push(filterFunction);
 
 	return {
-		addFilterFunction(filterFunction: FilterFunction, filterGroup: FilterGroupId) {
-			filterGroupToFilterFunctions[filterGroup] ? saveFilterFunctionIntoGroup(filterFunction, filterGroup) : 
-			addFilterFunctionToNewGroup(filterFunction, filterGroup);
+		addFilterFunction(filterFunction: FilterFunction<T>, groupId: GroupId) {
+			groupIdToFilterFunctions[groupId] 
+			? saveFilterFunctionIntoGroup(filterFunction, groupId) 
+			: addFilterFunctionToNewGroup(filterFunction, groupId);
 			
 			return this;
 		},
 
-		getFilteringData() {
+		done(): FilteringFunctionsData<T> {
 			/**
-			 * We sort the function collection by length so that the groups with the least "OR" functions get matched first to optimize
+			 * We sort the function collection by length so that the groups with the least "OR" functions get matched first to optimize performance
 			 */
-			const 
-				sorterByLength = (a: any[], b: any[]) => a.length - b.length,
-				filterFunctionsCollection: FilterFunctionsCollection = compose(
+			const sorterByLength = (a: any[], b: any[]) => a.length - b.length;
+			const filterFunctionsCollections: FilterFunctionsCollections<T> = compose(
 						sort(sorterByLength), 
 						Object.values
-					)(filterGroupToFilterFunctions);
+					)(groupIdToFilterFunctions);
 
-			return buildFilterData({
-                filterGroups,
-                filterGroupToFilterFunctions,
-                filterFunctionsToFilterGroup,
-				filterFunctionsCollection,
-			})
+			return {
+				getFilterFunctionsFromGroup: (group: GroupId) => groupIdToFilterFunctions[group],
+				getGroupIdFromFilterFunctions: (filterFunctions: FilterFunction<T>[]) => filterFunctionsToGroupId.get(filterFunctions),
+				getFilterFunctionsCollections: () => filterFunctionsCollections,
+			}
 		}
 	};
 };
+
+const evaluateCriteria = 
+	<T>(filter: Filter<T>) => 
+	(target: T): boolean => {
+		const { field, operand, operator } = filter;
+		const operatorFunction = operatorToFunction[Operators[operator]]
+		return target[field] !== undefined && operatorFunction(target[field], operand);
+	};

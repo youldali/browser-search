@@ -1,6 +1,6 @@
 import { FilterConfigData } from 'modules/filterConfiguration';
 import { getFilteringFunctionsData } from './filteringFunctions.model';
-import { getFilterStatusForItem } from './filteringStatus.model';
+import { getFilterStatusForItem, FilteredItemStatus } from './filteringStatus.model';
 
 export {
     FilteredItemStatus,
@@ -8,13 +8,13 @@ export {
 
 export {
     FilterFunction,
-    FilterFunctionsCollection,
-    FilterGroupToFilterFunctions,
-    FilterFunctionsToFilterGroup,
+    FilterFunctionsCollections,
+    GroupIdToFilterFunctions,
+    FilterFunctionsToGroupId,
 } from './filteringFunctions.model';
 
 export const getFilterStatusFromFilterConfig = 
-(filterConfigData: FilterConfigData) => {
+<T>(filterConfigData: FilterConfigData<T>): (target: T) => FilteredItemStatus => {
     const filteringFunctionsData = getFilteringFunctionsData(filterConfigData);
     return getFilterStatusForItem(filteringFunctionsData);
 }

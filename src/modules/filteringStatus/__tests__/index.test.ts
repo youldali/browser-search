@@ -1,7 +1,4 @@
-import { getFilterStatusForItem } from '../filteringStatus.model';
-import { 
-  getFilteringFunctionsData, 
-} from '../filteringFunctions.model';
+import { getFilterStatusFromFilterConfig } from '../index';
 import { eitherAsyncFilterConfigDataFixture, itemsFixture, Item } from './__fixtures__/fixtures';
 import { FilterConfigData } from 'modules/filterConfiguration';
 
@@ -18,9 +15,8 @@ describe('getFilterStatusForItem', () => {
 
 	itemsFixture.forEach( item => {
 		test(`correct filterStatus for item: ${JSON.stringify(item)}`, () => {
-			const filteringFunctionsData = getFilteringFunctionsData(filterConfigDataFixture);
-			const getFilterStatusForItems = getFilterStatusForItem(filteringFunctionsData);
-			expect(getFilterStatusForItems(item)).toMatchSnapshot();
+			const getFilterStatusForItem = getFilterStatusFromFilterConfig(filterConfigDataFixture);
+			expect(getFilterStatusForItem(item)).toMatchSnapshot();
 		});
 	})
 });

@@ -19,7 +19,7 @@ describe('createFilteringData', () => {
     
     fixtures.filterConfigData.getAllFilterGroupIds().forEach(filterGroupId => {
         test(`Should give all the items id rejected by group "${filterGroupId}"`, () => {
-            expect(filteringStatisticsData.getItemsIdsRejectedByOneGroup(filterGroupId)).toMatchSnapshot();
+            expect(filteringStatisticsData.getItemsIdsRejectedByGroupId(filterGroupId)).toMatchSnapshot();
         });
     });
 

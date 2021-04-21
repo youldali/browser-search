@@ -1,7 +1,7 @@
 import { buildFilterConfigData } from '../filterConfig.model';
-import * as fixtures from 'modules/__fixtures__/fixtures'
+import * as fixtures from './__fixtures__/fixtures'
 
-describe('buildFilterConfigData', function(){
+describe.only('buildFilterConfigData', function(){
     const filterConfigData = buildFilterConfigData(fixtures.filterConfig)(fixtures.filtersIdsApplied);
     
 	test('it should return a dictionary of all filters', () => {
@@ -33,7 +33,7 @@ describe('buildFilterConfigData', function(){
     });
 
     test('it should return a dictionary of groupOfFilter by key of group', () => {
-        expect(filterConfigData.getFiltersByGroup()).toMatchSnapshot();
+        expect(filterConfigData.getGroupDictionary()).toMatchSnapshot();
     });
 
     Object.keys(fixtures.filterDictionary).forEach(filterId => {

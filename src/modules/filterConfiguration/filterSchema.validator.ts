@@ -27,12 +27,12 @@ const filterSchema = yup.object({
 const groupOfFiltersSchema = yup.array().of(filterSchema).min(1, filterSchemaErrorMessage).required();
 const filterConfigSchema = yup.array().of(groupOfFiltersSchema).min(1, filterConfigSchemaErrorMessage).required();
 
-export const validateFilterConfig = (filterConfig: any): EitherAsync<Error, FilterConfig> => {
+export const validateFilterConfig = <T>(filterConfig: any): EitherAsync<Error, FilterConfig<T>> => {
 	const validation = filterConfigSchema.validate(filterConfig, {
 		strict: true,
 		stripUnknown: true,
 	})
-	.then( (value) => Right(value as FilterConfig))
+	.then( (value) => Right(value as FilterConfig<T>))
 	.catch(err => Left(new Error(err.errors)))
 
 

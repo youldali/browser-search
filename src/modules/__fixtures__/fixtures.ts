@@ -2,7 +2,7 @@ import {
     buildFilterConfigData, 
     Filter, 
     FilterConfig,
-    FiltersByGroup,
+    GroupDictionary,
 } from '../filterConfiguration/filterConfig.model';
 import { Operators, operatorToFunction } from '../filterConfiguration/operators';
 import { 
@@ -14,8 +14,15 @@ import {
 } from 'modules/filteringStatus';
 import { createFilteringData, FilterIdToMatchingItemIds } from '../filteringData';
 
+type ItemActivity = 'swimming' | 'tennis' | 'football' | 'golfing';
+interface Item {
+  id: number;
+  price: number;
+  numberOfPeople: number;
+  activity: ItemActivity[];
+}
 
-export const items: any[] = [
+export const items: Item[] = [
     { id: 0, price: 250, numberOfPeople: 1, activity: ['swimming', 'tennis']},
     { id: 1, price: 1000, numberOfPeople: 2, activity: ['football', 'swimming', 'tennis', 'golfing']},
     { id: 2, price: 20, numberOfPeople: 5, activity: ['swimming', 'tennis'] },
@@ -26,7 +33,7 @@ export const items: any[] = [
 /**
  * FilterConfiguration Module
  */
-export const filterDictionary: Dictionary<Filter> = {
+export const filterDictionary: Dictionary<Filter<Item>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: Operators.gt, operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: Operators.lt, operand: 500 },
     numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: Operators.equals, operand: 2 },
@@ -35,14 +42,14 @@ export const filterDictionary: Dictionary<Filter> = {
     "activity-3": { id: 'activity-3', field: 'activity', operator: Operators.contains, operand: 'golfing' },
 };
 
-export const filterByGroup: FiltersByGroup = {
+export const filterByGroup: GroupDictionary<Item> = {
     '0': [filterDictionary.priceMin],
     '1': [filterDictionary.priceMax],
     '2': [filterDictionary.numberOfPeople],
     '3': [filterDictionary['activity-1'], filterDictionary['activity-2'], filterDictionary['activity-3']],
 }
 
-export const filterConfig: FilterConfig = [
+export const filterConfig: FilterConfig<Item> = [
     [filterDictionary.priceMin],
     [filterDictionary.priceMax],
     [filterDictionary.numberOfPeople],
