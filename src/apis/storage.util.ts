@@ -85,15 +85,15 @@ export const deleteStore = (storeName: string): EitherAsync<Error, void> => {
 }
 
 export const addDataToStore = 
-(storeName: string) =>
-(data: object[]): EitherAsync<Error, void> => {
+<T>(storeName: string) =>
+(data: T[]): EitherAsync<Error, void> => {
     const command: IDBCommand = db => liftPromise(() => idb.addDataToStore(storeName)(db)(data));
     return execute(command);
 }
 
 export const iterateOverStore = 
-(storeName: string) =>
-(callback: (primaryKey: StringOrNumber, item: Object) => void): EitherAsync<Error, void> => {
+<T>(storeName: string) =>
+(callback: (primaryKey: StringOrNumber, item: T) => void): EitherAsync<Error, void> => {
     const command: IDBCommand = db => liftPromise(() => idb.iterateOverStore(storeName)(db)(callback));
     return execute(command);
 }
@@ -129,8 +129,8 @@ export const getAllUniqueKeysForIndex =
 
 
 export const getItems = 
-(storeName: string) => 
-(itemIds: StringOrNumber[]): EitherAsync<Error, Object[]> => {
+<T>(storeName: string) => 
+(itemIds: StringOrNumber[]): EitherAsync<Error, T[]> => {
     const command: IDBCommand = db => liftPromise(() => idb.getItems(db)(storeName)(itemIds));
     return execute(command);
 };

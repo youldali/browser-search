@@ -13,18 +13,18 @@ export interface FilteringStatisticsResponse {
     numberOfMatchingItems: number,
     totalNumberOfItems: number,
 };
-interface RequestEvent extends MessageEvent {
-    data: Request,
+interface RequestEvent<T> extends MessageEvent {
+    data: Request<T>,
 }
 
-self.onmessage = (event: RequestEvent) => {
+self.onmessage = <T>(event: RequestEvent<T>) => {
     const requestData = event.data;
     console.log('from worker, received data: ', requestData);
     processRequest(requestData);
 };
 
 
-const processRequest = (request: Request) => {
+const processRequest = <T>(request: Request<T>) => {
     const eitherFilterConfigData = buildFilterConfigData(request.filterConfig)(request.filtersApplied);
 
     const eitherFilterStatisticData = eitherFilterConfigData

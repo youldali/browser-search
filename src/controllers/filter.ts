@@ -10,22 +10,22 @@ import { StoreId } from './request.model';
 
 
 export const getFilterStatitics = 
-(storeId: StoreId) =>
-<T>(filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilteringData> => {
+<T>(storeId: StoreId) =>
+(filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilteringData> => {
     const getFilterStatus = getFilterStatusFromFilterConfig(filterConfigData);
 
     const saveItemFilterStatus = 
-        (savingFunction: (filteredItemStatus: FilteredItemStatus, itemId: StringOrNumber) => void) => 
-        (itemId: StringOrNumber, item: Object): void =>  {
+        (saveStatus: (filteredItemStatus: FilteredItemStatus, itemId: StringOrNumber) => void) => 
+        (itemId: StringOrNumber, item: T): void =>  {
             const status = getFilterStatus(item);
-            savingFunction(status, itemId);
+            saveStatus(status, itemId);
         };
 
     const eitherFilteringData = 
         getFilterIdToMatchingItemIds(storeId)(filterConfigData)
         .map(createFilteringData(filterConfigData))
         .chain(filteringData => (
-            iterateOverStore(storeId)(saveItemFilterStatus(filteringData.addFilteredObjectStatus))
+            iterateOverStore<T>(storeId)(saveItemFilterStatus(filteringData.addFilteredObjectStatus))
                 .map(_ => filteringData.done())
         ))
 
@@ -39,7 +39,7 @@ const getFilterIdToMatchingItemIds = (storeName: string) => <T>(filterConfigData
     const filtersIds = filterConfigData.getAllFilterIds();
 
     const eitherAsyncItemsIdsMatchingFiltersList = allEitherAsyncs( 
-        filters.map( filter => getPrimaryKeysMatchingOperator(storeName)(filter.field)(filter.operator)(filter.operand) )
+        filters.map( filter => getPrimaryKeysMatchingOperator(storeName)(filter.field as string)(filter.operator)(filter.operand) )
     );
    
     const eitherAsyncItemsIdsMatchingFilters = 

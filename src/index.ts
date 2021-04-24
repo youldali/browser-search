@@ -9,7 +9,7 @@ const workerFunction = () => {
 
 const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
 
-export const processRequest = (request: Request) => {
+export const processRequest = <T>(request: Request<T>) => {
   applicationWorker.postMessage(request);
 
   return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ export const createStore = (storeName: string) => (indexConfig: storage.Simplifi
     .run()
 )
 
-export const addDataToStore = (storeName: string) => (data: object[]) => (
+export const addDataToStore = <T>(storeName: string) => (data: T[]) => (
   storage.addDataToStore(storeName)(data)
     .run()
 )

@@ -6,16 +6,16 @@ import { liftEither } from 'purify-ts/EitherAsync'
 import { Right } from 'purify-ts/Either'
 import { isNil } from 'ramda'
 
-type Props = Required<Pick<Request, 'storeId' | 'orderBy' | 'orderDirection'>>
+type Props<T> = Required<Pick<Request<T>, 'storeId' | 'orderBy' | 'orderDirection'>>
 
-export const getOrderFromRequest = (request: Request) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> {
+export const getOrderFromRequest = <T>(request: Request<T>) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => {
     const { orderBy, orderDirection } = request;
     return isNil(orderBy) 
     ? getDefaultOrder(itemsIdsToSort)
     : getOrderedItemIds({...request, orderBy, orderDirection: orderDirection ?? 'ASC'})(itemsIdsToSort);
 }
 
-const getOrderedItemIds = ({ storeId, orderBy, orderDirection}: Props) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => {
+const getOrderedItemIds = <T>({ storeId, orderBy, orderDirection}: Props<T>) => (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => {
     const isReversed = orderDirection === 'DESC';
     
     const itemsIdsToSortmap = transformIntoObject(itemsIdsToSort);
