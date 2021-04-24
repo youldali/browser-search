@@ -1,9 +1,9 @@
 import { Operators } from 'modules/filterConfiguration/operators';
 
-export const emptyFilterConfig: any = [
+export const emptyFilterConfigFixture: any = [
 ];
 
-export const emptyGroupOfFilters: any = [
+export const emptyGroupOfFiltersFixture: any = [
     [ 
         { id: 'priceMin', field: 'price', operator: Operators.gt, operand: 200 }, 
     ],
@@ -11,14 +11,14 @@ export const emptyGroupOfFilters: any = [
     ]
 ];
 
-export const incompleteFilter: any = [
+export const incompleteFilterFixture: any = [
     [ 
         { field: 'price', operator: Operators.gt, operand: 200 }, 
         { id: 'priceMax', field: 'price', operator: Operators.lt, operand: 500 }, 
     ],
 ];
 
-export const invalidOperator: any = [
+export const invalidOperatorFixture: any = [
     [ 
         { field: 'price', operator: '.....', operand: 200 }, 
     ],

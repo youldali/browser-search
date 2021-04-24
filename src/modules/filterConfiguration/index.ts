@@ -1,8 +1,9 @@
 import { validateFilterConfig } from './filterSchema.validator';
-import * as F from './filterConfig.model';
+import { buildFilterConfigData as buildFilterConfigDataFromFilterConfig, FiltersApplied, FilterConfigData } from './filterConfig.model';
 import { EitherAsync } from 'purify-ts/EitherAsync';
 
 export {
+    buildFilterConfigData as buildFilterConfigDataFromFilterConfig,
     Filter,
     GroupId,
     FilterId,
@@ -19,8 +20,8 @@ export {
 } from './operators' 
 
 export const buildFilterConfigData =
-    <T>(filterConfig: any) =>
-    (filterIdsApplied: F.FiltersApplied): EitherAsync<Error, F.FilterConfigData<T>> => (
-      validateFilterConfig<T>(filterConfig)
-        .map(filterConfig => (F.buildFilterConfigData(filterConfig)(filterIdsApplied)))
+    <T>(filterConfigDraft: any) =>
+    (filterIdsApplied: FiltersApplied): EitherAsync<Error, FilterConfigData<T>> => (
+      validateFilterConfig<T>(filterConfigDraft)
+        .map(filterConfig => (buildFilterConfigDataFromFilterConfig(filterConfig)(filterIdsApplied)))
   )

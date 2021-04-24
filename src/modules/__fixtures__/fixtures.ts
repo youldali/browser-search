@@ -6,9 +6,9 @@ import {
 } from '../filterConfiguration/filterConfig.model';
 import { Operators, operatorToFunction } from '../filterConfiguration/operators';
 import { 
-    FilterFunctionsCollection,
-    FilterGroupToFilterFunctions,
-    FilterFunctionsToFilterGroup,
+    FilterFunctionsCollections,
+    GroupIdToFilterFunctions,
+    FilterFunctionsToGroupId,
     FilteredItemStatus,
     getFilterStatusFromFilterConfig,
 } from 'modules/filteringStatus';
@@ -72,17 +72,17 @@ const activity1FilterFunction = (target: any) =>
 const activity2FilterFunction = (target: any) => 
     operatorToFunction[filterDictionary['activity-2'].operator](target?.[filterDictionary['activity-2'].field], filterDictionary['activity-2'].operand);
 
-export const filterFunctionsCollection: FilterFunctionsCollection = [
+export const filterFunctionsCollection: FilterFunctionsCollections<any> = [
     [priceMinFilterFunction],
     [activity1FilterFunction, activity2FilterFunction]
 ];
 
-export const filterGroupToFilterFunctions: FilterGroupToFilterFunctions = {
+export const filterGroupToFilterFunctions: GroupIdToFilterFunctions<any> = {
     '0': filterFunctionsCollection[0],
     '3': filterFunctionsCollection[1],
 }
 
-export const filterFunctionsToFilterGroup: FilterFunctionsToFilterGroup = new Map([
+export const filterFunctionsToFilterGroup: FilterFunctionsToGroupId<any> = new Map([
     [filterGroupToFilterFunctions['0'], '0'],
     [filterGroupToFilterFunctions['3'], '3'],
 ]);

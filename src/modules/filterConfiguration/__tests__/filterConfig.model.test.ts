@@ -1,11 +1,11 @@
 import { buildFilterConfigData } from '../filterConfig.model';
-import * as fixtures from './__fixtures__/fixtures'
+import { filtersIdsAppliedFixture, filterDictionaryFixture, filterConfigFixture } from './__fixtures__/fixtures'
 
 describe.only('buildFilterConfigData', function(){
-    const filterConfigData = buildFilterConfigData(fixtures.filterConfig)(fixtures.filtersIdsApplied);
+    const filterConfigData = buildFilterConfigData(filterConfigFixture)(filtersIdsAppliedFixture);
     
 	test('it should return a dictionary of all filters', () => {
-		expect(filterConfigData.getFilterDictionary()).toEqual(fixtures.filterDictionary);
+		expect(filterConfigData.getFilterDictionary()).toEqual(filterDictionaryFixture);
     });
 
     test('it should return all the filter ids', () => {
@@ -17,7 +17,7 @@ describe.only('buildFilterConfigData', function(){
     });
 
     test('it should return only the filter ids applied', () => {
-        expect(filterConfigData.getFilterIdsApplied()).toEqual(fixtures.filtersIdsApplied);
+        expect(filterConfigData.getFilterIdsApplied()).toEqual(filtersIdsAppliedFixture);
     });
 
     test('it should return only the filter ids not applied', () => {
@@ -36,7 +36,7 @@ describe.only('buildFilterConfigData', function(){
         expect(filterConfigData.getGroupDictionary()).toMatchSnapshot();
     });
 
-    Object.keys(fixtures.filterDictionary).forEach(filterId => {
+    Object.keys(filterDictionaryFixture).forEach(filterId => {
         test(`it should return the filterGroupId associated to the filter ${filterId}`, () => {
             expect(filterConfigData.getGroupIdForFilter(filterId)).toMatchSnapshot();
         }); 

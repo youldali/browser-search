@@ -11,7 +11,7 @@ import { StoreId } from './request.model';
 
 export const getFilterStatitics = 
 (storeId: StoreId) =>
-(filterConfigData: FilterConfigData): EitherAsync<Error, FilteringData> => {
+<T>(filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilteringData> => {
     const getFilterStatus = getFilterStatusFromFilterConfig(filterConfigData);
 
     const saveItemFilterStatus = 
@@ -34,7 +34,7 @@ export const getFilterStatitics =
 
 
 
-const getFilterIdToMatchingItemIds = (storeName: string) => (filterConfigData: FilterConfigData): EitherAsync<Error, FilterIdToMatchingItemIds> => {
+const getFilterIdToMatchingItemIds = (storeName: string) => <T>(filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilterIdToMatchingItemIds> => {
     const filters = Object.values(filterConfigData.getFilterDictionary());
     const filtersIds = filterConfigData.getAllFilterIds();
 

@@ -6,7 +6,7 @@ import { findIntersectionOfSortedArrays } from 'helpers/array.util'
 type ItemId = string | number;
 
 export interface FilterIdToMatchingItemIds {
-    [key: string]: ItemId[];
+    [key: string]: ItemId[]; // key is FilterId
 }
 
 export type FilteringStat = {
@@ -15,42 +15,43 @@ export type FilteringStat = {
 }
 
 export interface FilteringData {
-    getItemsIdsModifiedByFilter: (filterId: FilterId) => FilteringStat,
+    getFilteringStatsByNonAppliedFilterId: () => Dictionary<FilteringStat>
+    getFilteringStatForFilterId: (filterId: FilterId) => FilteringStat,
     getItemsIdsRejectedByGroupId: (groupId: GroupId) => ItemId[],
     getItemsIdsRejectedByMultipleFilters: () => ItemId[],
     getItemsIdsValidated: () => ItemId[],
 }
 
-type ItemIdsByFilteringStatus = Map<GroupId | boolean, ItemId[]>;
+type FilteringStatusToItemIds = Map<GroupId | boolean, ItemId[]>;
 
 export const createFilteringData = 
     <T>(filterConfigData: FilterConfigData<T>) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) => {
-        const initMapStructure = (): ItemIdsByFilteringStatus => {
-            const itemIdsByFilteringStatus: ItemIdsByFilteringStatus = new Map();
-            itemIdsByFilteringStatus
+        const initMapStructure = (): FilteringStatusToItemIds => {
+            const filteringStatusToItemIds: FilteringStatusToItemIds = new Map();
+            filteringStatusToItemIds
                 .set(true, [])
                 .set(false, []);
 
-            return itemIdsByFilteringStatus;
+            return filteringStatusToItemIds;
         };
 
         const addItemIdToBoolean = (hasPassed: boolean, id: ItemId) => {
-            const itemIds = itemIdsByFilteringStatus.get(hasPassed) as ItemId[];
+            const itemIds = filteringStatusToItemIds.get(hasPassed) as ItemId[];
             itemIds.push(id);      
         };
 
         const addItemIdToRejectedGroup = (group: GroupId, id: ItemId) => {
-            const listForGroup = itemIdsByFilteringStatus.get(group);
+            const listForGroup = filteringStatusToItemIds.get(group);
             listForGroup 
                 ? listForGroup.push(id)
-                : itemIdsByFilteringStatus.set(group, [id]);
+                : filteringStatusToItemIds.set(group, [id]);
         };
 
-        const itemIdsByFilteringStatus = initMapStructure();
+        const filteringStatusToItemIds = initMapStructure();
 
         return {
-            addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, itemId: ItemId) {
+            addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, itemId: ItemId): void {
                 return (
                     filteredItemStatus.pass 
                         ? addItemIdToBoolean(true, itemId) :
@@ -60,16 +61,14 @@ export const createFilteringData =
                 );
             },
 
-            setStatusValue(filteredItemStatus: FilteredItemStatus, idList: ItemId[]) {
+            setStatusValue(filteredItemStatus: FilteredItemStatus, idList: ItemId[]): void {
                 filteredItemStatus.filterGroupRejected 
-                    ? itemIdsByFilteringStatus.set(filteredItemStatus.filterGroupRejected, idList) 
-                    : itemIdsByFilteringStatus.set(filteredItemStatus.pass, idList);
-
-                return this;
+                    ? filteringStatusToItemIds.set(filteredItemStatus.filterGroupRejected, idList) 
+                    : filteringStatusToItemIds.set(filteredItemStatus.pass, idList);
             },
 
             done(): FilteringData {
-                return getFilteringData(filterConfigData)(filterIdToMatchingItemIds)(itemIdsByFilteringStatus);
+                return getFilteringData(filterConfigData)(filterIdToMatchingItemIds)(filteringStatusToItemIds);
             }
         };
     };
@@ -78,14 +77,14 @@ export const createFilteringData =
 const getFilteringData = 
     <T>(filterConfigData: FilterConfigData<T>) =>
     (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) =>
-    (itemIdsByFilteringStatus: ItemIdsByFilteringStatus): FilteringData => {
+    (filteringStatusToItemIds: FilteringStatusToItemIds): FilteringData => {
 
         /**
          * If 1 filter of the group has been checked, we are in this case:
          * the filter will actually add some new items since the logical operation is an OR with the other filters in the group
          */
-        const getItemIdsAddedByFilter = (filterId: FilterId, GroupId: GroupId): FilteringStat => {
-            const itemsIdsRejectedByFilterGroup = itemIdsByFilteringStatus.get(GroupId) as ItemId[];
+        const getItemIdsAddedByFilter = (filterId: FilterId, groupId: GroupId): FilteringStat => {
+            const itemsIdsRejectedByFilterGroup = filteringStatusToItemIds.get(groupId) as ItemId[];
             const itemIdsMatchingFilterId = filterIdToMatchingItemIds[filterId]; 
             const itemIdsAddedIfFilterIsChecked = findIntersectionOfSortedArrays(itemIdsMatchingFilterId)(itemsIdsRejectedByFilterGroup);
 
@@ -101,7 +100,7 @@ const getFilteringData =
          */
         const getItemIdsNarrowedByFilter = (filterId: FilterId): FilteringStat => {
             const itemIdsMatchingFilterId = filterIdToMatchingItemIds[filterId];
-            const itemIdsValidated = itemIdsByFilteringStatus.get(true) as ItemId[];
+            const itemIdsValidated = filteringStatusToItemIds.get(true) as ItemId[];
             const itemIdsLeftIfFilterIsChecked = findIntersectionOfSortedArrays(itemIdsMatchingFilterId)(itemIdsValidated);
 
             return {
@@ -111,17 +110,29 @@ const getFilteringData =
         }
 
 
-        const getItemsIdsModifiedByFilter = (filterId: FilterId): FilteringStat => {
+        const getFilteringStatForFilterId = (filterId: FilterId): FilteringStat => {
             const groupId = filterConfigData.getGroupIdForFilter(filterId);
-            return itemIdsByFilteringStatus.get(groupId) === undefined 
+            return filteringStatusToItemIds.get(groupId) === undefined 
                 ? getItemIdsNarrowedByFilter(filterId)
                 : getItemIdsAddedByFilter(filterId, groupId)
         }
 
+        const getFilteringStatsByNonAppliedFilterId = (): Dictionary<FilteringStat> => {
+            const filterIdsNotApplied = filterConfigData.getFilterIdsNotApplied();
+            const filteringStatsByNonAppliedFilterId = filterIdsNotApplied.reduce((filteringStatDictionary: Dictionary<FilteringStat>, filterId) => {
+                const filteringStat = getFilteringStatForFilterId(filterId);
+                filteringStatDictionary[filterId] = filteringStat;
+                return filteringStatDictionary;
+            }, {});
+
+            return filteringStatsByNonAppliedFilterId;
+        }
+
         return {
-            getItemsIdsModifiedByFilter,
-            getItemsIdsRejectedByGroupId: (groupId: GroupId) => itemIdsByFilteringStatus.get(groupId) ?? [],
-            getItemsIdsRejectedByMultipleFilters: () => itemIdsByFilteringStatus.get(false) ?? [],
-            getItemsIdsValidated: () => itemIdsByFilteringStatus.get(true) ?? [],
+            getFilteringStatsByNonAppliedFilterId,
+            getFilteringStatForFilterId,
+            getItemsIdsRejectedByGroupId: (groupId: GroupId) => filteringStatusToItemIds.get(groupId) ?? [],
+            getItemsIdsRejectedByMultipleFilters: () => filteringStatusToItemIds.get(false) ?? [],
+            getItemsIdsValidated: () => filteringStatusToItemIds.get(true) ?? [],
         }
     }

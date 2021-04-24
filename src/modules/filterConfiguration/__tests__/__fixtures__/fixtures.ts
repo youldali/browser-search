@@ -1,5 +1,4 @@
 import { 
-    buildFilterConfigData, 
     Filter, 
     FilterConfig,
 } from '../../filterConfig.model';
@@ -13,7 +12,7 @@ interface Item {
   activity: ItemActivity[];
 }
 
-export const filterDictionary: Dictionary<Filter<Item>> = {
+export const filterDictionaryFixture: Dictionary<Filter<Item>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: Operators.gt, operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: Operators.lt, operand: 500 },
     numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: Operators.equals, operand: 2 },
@@ -22,12 +21,11 @@ export const filterDictionary: Dictionary<Filter<Item>> = {
     "activity-3": { id: 'activity-3', field: 'activity', operator: Operators.contains, operand: 'golfing' },
 };
 
-export const filterConfig: FilterConfig<Item> = [
-    [filterDictionary.priceMin],
-    [filterDictionary.priceMax],
-    [filterDictionary.numberOfPeople],
-    [filterDictionary['activity-1'], filterDictionary['activity-2'], filterDictionary['activity-3']]
+export const filterConfigFixture: FilterConfig<Item> = [
+    [filterDictionaryFixture.priceMin],
+    [filterDictionaryFixture.priceMax],
+    [filterDictionaryFixture.numberOfPeople],
+    [filterDictionaryFixture['activity-1'], filterDictionaryFixture['activity-2'], filterDictionaryFixture['activity-3']]
 ];
 
-export const filtersIdsApplied = ['priceMin', 'activity-1', 'activity-2'];
-export const filterConfigData = buildFilterConfigData(filterConfig)(filtersIdsApplied);
+export const filtersIdsAppliedFixture = ['priceMin', 'activity-1', 'activity-2'];

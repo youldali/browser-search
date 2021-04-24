@@ -4,13 +4,12 @@ import {
     FilterConfig,
     Operators,
 } from 'modules/filterConfiguration';
-import { 
-    FilterFunctionsCollections,
-    GroupIdToFilterFunctions,
-    FilterFunctionsToGroupId,
-  } from '../../filteringFunctions.model';
 
-import { operatorToFunction } from 'modules/filterConfiguration';
+import { FilterIdToMatchingItemIds } from '../../filteringData.model'
+import { 
+  FilteredItemStatus,
+  getFilterStatusFromFilterConfig
+} from 'modules/filteringStatus';
 
 type ItemActivity = 'swimming' | 'tennis' | 'football' | 'golfing';
 
@@ -48,26 +47,20 @@ export const filterConfigFixture: FilterConfig<Item> = [
 export const filtersIdsAppliedFixture = ['activity-1', 'priceMin', 'activity-2'];
 export const filterConfigDataFixture = buildFilterConfigDataFromFilterConfig<Item>(filterConfigFixture)(filtersIdsAppliedFixture);
 
-const priceMinFilterFunction = (target: Item) => 
-  operatorToFunction[filterDictionaryFixture.priceMin.operator](target?.[filterDictionaryFixture.priceMin.field], filterDictionaryFixture.priceMin.operand);
-
-const activity1FilterFunction = (target: Item) => 
-  operatorToFunction[filterDictionaryFixture['activity-1'].operator](target?.[filterDictionaryFixture['activity-1'].field], filterDictionaryFixture['activity-1'].operand);
-
-const activity2FilterFunction = (target: Item) => 
-  operatorToFunction[filterDictionaryFixture['activity-2'].operator](target?.[filterDictionaryFixture['activity-2'].field], filterDictionaryFixture['activity-2'].operand);
-
-export const filterFunctionsCollectionsFixture: FilterFunctionsCollections<Item> = [
-  [priceMinFilterFunction],
-  [activity1FilterFunction, activity2FilterFunction]
-];
-
-export const filterGroupToFilterFunctionsFixture: GroupIdToFilterFunctions<Item> = {
-  '0': filterFunctionsCollectionsFixture[0],
-  '3': filterFunctionsCollectionsFixture[1],
+export const filterIdToMatchingItemIdsFixture: FilterIdToMatchingItemIds = {
+  [filterDictionaryFixture.priceMin.id]: [0, 1, 3],
+  [filterDictionaryFixture.priceMax.id]: [0, 2, 4],
+  [filterDictionaryFixture.numberOfPeople.id]: [1, 4],
+  [filterDictionaryFixture['activity-1'].id]: [0, 1, 2],
+  [filterDictionaryFixture['activity-2'].id]: [0, 1, 2],
+  [filterDictionaryFixture['activity-3'].id]: [1, 3],
 }
 
-export const filterFunctionsToFilterGroupFixture: FilterFunctionsToGroupId<Item> = new Map([
-  [filterFunctionsCollectionsFixture[0], '0'],
-  [filterFunctionsCollectionsFixture[1], '3'],
-]);
+export const getFilterStatusForItem = getFilterStatusFromFilterConfig(filterConfigDataFixture);
+
+export const itemToFilteringStatusFixture:  Map<any, FilteredItemStatus> = new Map (
+  itemsFixture.map( item => [
+      item,
+      getFilterStatusForItem(item),
+  ])
+);

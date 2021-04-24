@@ -1,21 +1,11 @@
 import { getFilterStatusFromFilterConfig } from '../index';
-import { eitherAsyncFilterConfigDataFixture, itemsFixture, Item } from './__fixtures__/fixtures';
-import { FilterConfigData } from 'modules/filterConfiguration';
+import { filterConfigDataFixture, itemsFixture } from './__fixtures__/fixtures';
 
 describe('getFilterStatusForItem', () => {
-	let filterConfigDataFixture: FilterConfigData<Item>;
-
-  beforeAll( () => (
-    eitherAsyncFilterConfigDataFixture
-      .run()
-      .then(eitherFilterConfigDataFixture => {
-        filterConfigDataFixture = eitherFilterConfigDataFixture.extract() as FilterConfigData<Item>;
-      })
-  ));
+	const getFilterStatusForItem = getFilterStatusFromFilterConfig(filterConfigDataFixture);
 
 	itemsFixture.forEach( item => {
 		test(`correct filterStatus for item: ${JSON.stringify(item)}`, () => {
-			const getFilterStatusForItem = getFilterStatusFromFilterConfig(filterConfigDataFixture);
 			expect(getFilterStatusForItem(item)).toMatchSnapshot();
 		});
 	})

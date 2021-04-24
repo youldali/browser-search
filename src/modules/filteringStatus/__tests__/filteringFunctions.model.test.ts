@@ -1,55 +1,16 @@
 import { 
   getFilteringFunctionsData, 
-  FilteringFunctionsData,
-  FilterFunctionsCollections,
-  GroupIdToFilterFunctions,
-  FilterFunctionsToGroupId,
 } from '../filteringFunctions.model';
-import { eitherAsyncFilterConfigDataFixture, itemsFixture, filterDictionaryFixture, Item } from './__fixtures__/fixtures';
-import { operatorToFunction, FilterConfigData } from 'modules/filterConfiguration';
-
-const priceMinFilterFunction = (target: Item) => 
-  operatorToFunction[filterDictionaryFixture.priceMin.operator](target?.[filterDictionaryFixture.priceMin.field], filterDictionaryFixture.priceMin.operand);
-
-const activity1FilterFunction = (target: Item) => 
-  operatorToFunction[filterDictionaryFixture['activity-1'].operator](target?.[filterDictionaryFixture['activity-1'].field], filterDictionaryFixture['activity-1'].operand);
-
-const activity2FilterFunction = (target: Item) => 
-  operatorToFunction[filterDictionaryFixture['activity-2'].operator](target?.[filterDictionaryFixture['activity-2'].field], filterDictionaryFixture['activity-2'].operand);
-
-const filterFunctionsCollectionsFixture: FilterFunctionsCollections<Item> = [
-  [priceMinFilterFunction],
-  [activity1FilterFunction, activity2FilterFunction]
-];
-
-const filterGroupToFilterFunctionsFixture: GroupIdToFilterFunctions<Item> = {
-  '0': filterFunctionsCollectionsFixture[0],
-  '3': filterFunctionsCollectionsFixture[1],
-}
-
-const filterFunctionsToFilterGroupFixture: FilterFunctionsToGroupId<Item> = new Map([
-  [filterFunctionsCollectionsFixture[0], '0'],
-  [filterFunctionsCollectionsFixture[1], '3'],
-]);
+import { filterConfigDataFixture, itemsFixture, filterFunctionsCollectionsFixture, filterGroupToFilterFunctionsFixture, filterFunctionsToFilterGroupFixture } from './__fixtures__/fixtures';
 
 describe('getFilteringData', () => {
-  let filterConfigDataFixture: FilterConfigData<Item>;
-  let filteringFunctionsData: FilteringFunctionsData<Item>;
+  const filteringFunctionsData = getFilteringFunctionsData(filterConfigDataFixture);
 
-  beforeAll( () => (
-    eitherAsyncFilterConfigDataFixture
-      .run()
-      .then(eitherFilterConfigDataFixture => {
-        filterConfigDataFixture = eitherFilterConfigDataFixture.extract() as FilterConfigData<Item>;
-        filteringFunctionsData = getFilteringFunctionsData(filterConfigDataFixture);
-      })
-  ));
 
   test('Should return a sorted FiltersFunctionCollections by group length (number of filtering function per group)', () => {
     const filterFunctionsCollections = filteringFunctionsData.getFilterFunctionsCollections();
     for (let i = 0; i < filterFunctionsCollections.length; i++) {
       expect(filterFunctionsCollections[i].length).toBe(filterFunctionsCollectionsFixture[i].length);
-      expect(filterFunctionsCollections[i].toString()).toMatchSnapshot();
     }
   });
 
