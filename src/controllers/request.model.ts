@@ -1,12 +1,16 @@
 import { 
     FiltersApplied,
     FilterConfig,
-} from 'modules/filterConfiguration'
+} from '../modules/filterConfiguration'
 
 export type ItemId = StringOrNumber;
 export type Item = Object;
 export type StoreId = string;
 export type OrderDirection = 'ASC' | 'DESC';
+export { 
+    FiltersApplied,
+    FilterConfig,
+} from '../modules/filterConfiguration'
 
 export interface Request<T> {
     storeId: StoreId;

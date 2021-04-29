@@ -3,6 +3,9 @@ import { Request } from './controllers/request.model';
 import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
 
+export * from './controllers/request.model'; 
+export { Operators } from './modules/filterConfiguration'
+
 const workerFunction = () => {
   //@worker
 }
@@ -45,3 +48,4 @@ export const deleteStore = (storeName: string) => (
   storage.deleteStore(storeName)
     .run()
 )
+

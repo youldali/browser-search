@@ -7,7 +7,7 @@
   "scripts": {
     "test": "start-server-and-test start-server http://localhost:8081 jest",
     "start-server": "http-server . -p 8081",
-    "jest": "jest"
+    "jest": "TEST_URL=http://localhost:8081 jest"
   },
   "dependencies": {
     "cypress": "^7.0.0",
@@ -16,5 +16,11 @@
     "jest-puppeteer": "^5.0.2",
     "puppeteer": "^9.0.0",
     "start-server-and-test": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/jest-environment-puppeteer": "^4.4.1",
+    "ts-jest": "^26.5.5",
+    "typescript": "^4.2.4"
   }
 }
