@@ -1,11 +1,10 @@
-import { Operators } from 'modules/filterConfiguration/operators';
 
 export const emptyFilterConfig: any = [
 ];
 
 export const emptyGroupOfFilters: any = [
     [ 
-        { id: 'priceMin', field: 'price', operator: Operators.gt, operand: 200 }, 
+        { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 }, 
     ],
     [ 
     ]
@@ -13,8 +12,8 @@ export const emptyGroupOfFilters: any = [
 
 export const incompleteFilter: any = [
     [ 
-        { field: 'price', operator: Operators.gt, operand: 200 }, 
-        { id: 'priceMax', field: 'price', operator: Operators.lt, operand: 500 }, 
+        { field: 'price', operator: 'gt', operand: 200 }, 
+        { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 }, 
     ],
 ];
 

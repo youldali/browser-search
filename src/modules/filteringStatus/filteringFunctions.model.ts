@@ -3,7 +3,6 @@ import {
 	Filter, 
 	GroupId,
 	FilterConfigData,
-	Operators,
 	operatorToFunction,
 } from 'modules/filterConfiguration';
 
@@ -78,6 +77,6 @@ const evaluateCriteria =
 	<T>(filter: Filter<T>) => 
 	(target: T): boolean => {
 		const { field, operand, operator } = filter;
-		const operatorFunction = operatorToFunction[Operators[operator]]
+		const operatorFunction = operatorToFunction[operator];
 		return target[field] !== undefined && operatorFunction(target[field], operand);
 	};

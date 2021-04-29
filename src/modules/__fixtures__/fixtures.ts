@@ -4,7 +4,7 @@ import {
     FilterConfig,
     GroupDictionary,
 } from '../filterConfiguration/filterConfig.model';
-import { Operators, operatorToFunction } from '../filterConfiguration/operators';
+import { operatorToFunction } from '../filterConfiguration/operators';
 import { 
     FilterFunctionsCollections,
     GroupIdToFilterFunctions,
@@ -34,12 +34,12 @@ export const items: Item[] = [
  * FilterConfiguration Module
  */
 export const filterDictionary: Dictionary<Filter<Item>> = {
-    priceMin: { id: 'priceMin', field: 'price', operator: Operators.gt, operand: 200 },
-    priceMax: { id: 'priceMax', field: 'price', operator: Operators.lt, operand: 500 },
-    numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: Operators.equals, operand: 2 },
-    "activity-1": { id: 'activity-1', field: 'activity', operator: Operators.contains, operand: 'swimming' },
-    "activity-2": { id: 'activity-2', field: 'activity', operator: Operators.contains, operand: 'tennis' },
-    "activity-3": { id: 'activity-3', field: 'activity', operator: Operators.contains, operand: 'golfing' },
+    priceMin: { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 },
+    priceMax: { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 },
+    numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: 'equals', operand: 2 },
+    "activity-1": { id: 'activity-1', field: 'activity', operator: 'contains', operand: 'swimming' },
+    "activity-2": { id: 'activity-2', field: 'activity', operator: 'contains', operand: 'tennis' },
+    "activity-3": { id: 'activity-3', field: 'activity', operator: 'contains', operand: 'golfing' },
 };
 
 export const filterByGroup: GroupDictionary<Item> = {

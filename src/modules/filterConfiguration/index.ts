@@ -15,7 +15,8 @@ export {
 } from './filterConfig.model' 
 
 export {
-    Operators,
+    Operator,
+    operators,
     operatorToFunction,
 } from './operators' 
 

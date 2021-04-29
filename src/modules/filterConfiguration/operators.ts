@@ -1,18 +1,7 @@
 import { findElementIndexInSortedArray } from 'helpers/array.util';
 
-export enum Operators {
-	lt = 'lt',
-	lte = 'lte',
-	gt = 'gt',
-	gte = 'gte',
-	equals = 'equals',
-	inRangeClosed = 'inRangeClosed',
-	inRangeOpen = 'inRangeOpen',
-	inRangeOpenClosed = 'inRangeOpenClosed',
-	inRangeClosedOpen = 'inRangeClosedOpen',
-	containsOptimized = 'containsOptimized',
-	contains = 'contains',
-}
+export const operators = ['lt', 'lte', 'gt', 'gte', 'equals', 'inRangeClosed', 'inRangeOpen', 'inRangeOpenClosed', 'inRangeClosedOpen', 'containsOptimized', 'contains'] as const;
+export type Operator = typeof operators[number];
 
 type OperatorFunction = (targetValue: any, operandValue: any) => boolean;
 
@@ -49,18 +38,22 @@ const containsOptimized: OperatorFunction = (a: Array<StringOrNumber>, b: String
 export
 const contains: OperatorFunction = (a: Array<StringOrNumber>, b: StringOrNumber): boolean => a.includes(b);
 
-export const operatorToFunction =
+
+type OperatorToFunction = {
+	[key in Operator]: OperatorFunction;
+}
+export const operatorToFunction: OperatorToFunction =
 {
-	[Operators.lt]: lt,
-	[Operators.lte]: lte,
-	[Operators.gt]: gt,
-	[Operators.gte]: gte,
-	[Operators.equals]: equal,
-	[Operators.inRangeClosed]: inRangeClosed,
-	[Operators.inRangeOpen]: inRangeOpen,
-	[Operators.inRangeClosedOpen]: inRangeClosedOpen,
-	[Operators.inRangeOpenClosed]: inRangeOpenClosed,
-	[Operators.contains]: contains,
-	[Operators.containsOptimized]: containsOptimized,
+	lt: lt,
+	lte: lte,
+	gt: gt,
+	gte: gte,
+	equals: equal,
+	inRangeClosed: inRangeClosed,
+	inRangeOpen: inRangeOpen,
+	inRangeClosedOpen: inRangeClosedOpen,
+	inRangeOpenClosed: inRangeOpenClosed,
+	contains: contains,
+	containsOptimized: containsOptimized,
 };
 

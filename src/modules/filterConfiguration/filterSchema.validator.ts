@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { Operators } from './operators'
+import { operators } from './operators'
 import { FilterConfig } from './filterConfig.model'
 import { fromPromise, EitherAsync } from 'purify-ts/EitherAsync'
 import { Left, Right } from 'purify-ts/Either'
@@ -21,7 +21,7 @@ const idNameRequiredErrorMessage = 'Id is required';
 const filterSchema = yup.object({
 	id: yup.string().required(idNameRequiredErrorMessage),
 	field: yup.string().matches(alphanumRegex, fieldNameErrorMessage).required(fieldNameRequiredErrorMessage),
-	operator: yup.string().oneOf(Object.values(Operators), filterConfigInvalidOperatorErrorMessage).required(),
+	operator: yup.string().oneOf(Object.values(operators), filterConfigInvalidOperatorErrorMessage).required(),
 	operand: yup.mixed().required(),
 }).required();
 const groupOfFiltersSchema = yup.array().of(filterSchema).min(1, filterSchemaErrorMessage).required();

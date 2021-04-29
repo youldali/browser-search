@@ -1,4 +1,4 @@
-import { Operators } from './operators'
+import { Operator } from './operators'
 import { Interval } from 'dataStructures/interval'
 import { isNil, mergeAll, reject, uniq } from 'ramda';
 
@@ -26,7 +26,7 @@ export type FilterOperand = number | string | number[] | string[] | Interval;
 export interface Filter<T> {
 	id: string,
 	field: keyof T,
-	operator: Operators,
+	operator: Operator,
 	operand: FilterOperand,
 };
 export type GroupOfFilters<T> = Filter<T>[];

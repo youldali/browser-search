@@ -2,7 +2,7 @@ import * as idb from './indexedDB.api'
 import { isNil, map } from 'ramda'
 import { Either } from 'purify-ts/Either';
 import { EitherAsync, liftPromise, liftEither } from 'purify-ts/EitherAsync'
-import { Operators } from 'modules/filterConfiguration/operators';
+import { Operator } from 'modules/filterConfiguration/operators';
 
 const databaseId = "browser-search";
 
@@ -101,7 +101,7 @@ export const iterateOverStore =
 export const getPrimaryKeysMatchingOperator = 
 (storeName: string) => 
 (indexName: string) =>
-(operator: Operators) =>
+(operator: Operator) =>
 (value: any): EitherAsync<Error, StringOrNumber[]> => {
     const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(value));
 
@@ -136,27 +136,27 @@ export const getItems =
 };
 
 export const getKeyRangeMatchingOperator = 
-    (operator: Operators) => 
+    (operator: Operator) => 
     (value: any): IDBKeyRange  => {
         switch(operator){
-            case Operators.equals:
-            case Operators.contains:
+            case 'equals':
+            case 'contains':
                 return IDBKeyRange.only(value);
-            case Operators.lt:
+            case 'lt':
                 return IDBKeyRange.upperBound(value, true);
-            case Operators.lte:
+            case 'lte':
                 return IDBKeyRange.upperBound(value);
-            case Operators.gt:
+            case 'gt':
                 return IDBKeyRange.lowerBound(value, true);
-            case Operators.gte:
+            case 'gte':
                 return IDBKeyRange.lowerBound(value);
-            case Operators.inRangeClosed:
+            case 'inRangeClosed':
                 return IDBKeyRange.bound(value[0], value[1]);
-            case Operators.inRangeOpen:
+            case 'inRangeOpen':
                 return IDBKeyRange.bound(value[0], value[1], true, true);
-            case Operators.inRangeOpenClosed:
+            case 'inRangeOpenClosed':
                 return IDBKeyRange.bound(value[0], value[1], true, false);
-            case Operators.inRangeClosedOpen:
+            case 'inRangeClosedOpen':
                 return IDBKeyRange.bound(value[0], value[1], false, true);
         }
 
