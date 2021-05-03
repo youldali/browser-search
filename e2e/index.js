@@ -2253,17 +2253,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getAllPrimaryKeysForIndex": () => (/* binding */ getAllPrimaryKeysForIndex),
 /* harmony export */   "getAllUniqueKeysForIndex": () => (/* binding */ getAllUniqueKeysForIndex),
 /* harmony export */   "getItems": () => (/* binding */ getItems),
+/* harmony export */   "getItemsCount": () => (/* binding */ getItemsCount),
 /* harmony export */   "getKeyRangeMatchingOperator": () => (/* binding */ getKeyRangeMatchingOperator)
 /* harmony export */ });
 /* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ "./src/apis/indexedDB.api.ts");
-/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/map.js");
-/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/isNil.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! modules/filterConfiguration/operators */ "./src/modules/filterConfiguration/operators.ts");
-
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/map.js");
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/isNil.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
@@ -2277,10 +2276,10 @@ var IndexType;
 const simplifiedIndexToIndexConfig = (simplifiedIndex) => {
     const arrayConfig = { multiEntry: true, unique: false };
     const defaultConfig = { multiEntry: false, unique: false };
-    return (0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)((indexType) => indexType === IndexType.array ? arrayConfig : defaultConfig, (simplifiedIndex));
+    return (0,ramda__WEBPACK_IMPORTED_MODULE_1__.default)((indexType) => indexType === IndexType.array ? arrayConfig : defaultConfig, (simplifiedIndex));
 };
-const openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));
-const closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
+const openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));
+const closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
 const execute = (...commands) => {
     let dbInstance = null;
     const openDatabaseCommand = openDatabase()
@@ -2297,7 +2296,7 @@ const execute = (...commands) => {
         return result;
     })
         .mapLeft(error => {
-        !(0,ramda__WEBPACK_IMPORTED_MODULE_4__.default)(dbInstance) && closeDatabase(dbInstance).run();
+        !(0,ramda__WEBPACK_IMPORTED_MODULE_3__.default)(dbInstance) && closeDatabase(dbInstance).run();
         return error;
     });
     return commandsToExecuteWithDbClosing;
@@ -2305,62 +2304,66 @@ const execute = (...commands) => {
 const createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);
     const createObjectStore = (database) => {
-        purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(database));
-        purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(storeName)(indexConfig)(keyPath)(database));
+        purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(database));
+        purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(storeName)(indexConfig)(keyPath)(database));
     };
-    return ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.upgradeDatabase(databaseId)(createObjectStore))
-        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db))));
+    return ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.upgradeDatabase(databaseId)(createObjectStore))
+        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db))));
 };
 const deleteStore = (storeName) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftEither)(purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(db)));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftEither)(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(db)));
     return execute(command);
 };
 const addDataToStore = (storeName) => (data) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDataToStore(storeName)(db)(data));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDataToStore(storeName)(db)(data));
     return execute(command);
 };
 const iterateOverStore = (storeName) => (callback) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(storeName)(db)(callback));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(storeName)(db)(callback));
     return execute(command);
 };
 const getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (value) => {
-    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => getKeyRangeMatchingOperator(operator)(value));
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftEither)(eitherKeyRange)
-        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
+    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => getKeyRangeMatchingOperator(operator)(value));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftEither)(eitherKeyRange)
+        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
     return execute(command);
 };
 const getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
     return execute(command);
 };
 const getAllUniqueKeysForIndex = (storeName) => (indexName) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));
     return execute(command);
 };
 const getItems = (storeName) => (itemIds) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getItems(db)(storeName)(itemIds));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getItems(db)(storeName)(itemIds));
+    return execute(command);
+};
+const getItemsCount = (storeName) => {
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfItemsInStore(storeName)(db));
     return execute(command);
 };
 const getKeyRangeMatchingOperator = (operator) => (value) => {
     switch (operator) {
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.equals:
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.contains:
+        case 'equals':
+        case 'contains':
             return IDBKeyRange.only(value);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.lt:
+        case 'lt':
             return IDBKeyRange.upperBound(value, true);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.lte:
+        case 'lte':
             return IDBKeyRange.upperBound(value);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.gt:
+        case 'gt':
             return IDBKeyRange.lowerBound(value, true);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.gte:
+        case 'gte':
             return IDBKeyRange.lowerBound(value);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeClosed:
+        case 'inRangeClosed':
             return IDBKeyRange.bound(value[0], value[1]);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeOpen:
+        case 'inRangeOpen':
             return IDBKeyRange.bound(value[0], value[1], true, true);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeOpenClosed:
+        case 'inRangeOpenClosed':
             return IDBKeyRange.bound(value[0], value[1], true, false);
-        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeClosedOpen:
+        case 'inRangeClosedOpen':
             return IDBKeyRange.bound(value[0], value[1], false, true);
     }
     throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;
@@ -2369,85 +2372,15 @@ const getKeyRangeMatchingOperator = (operator) => (value) => {
 
 /***/ }),
 
-/***/ "./src/helpers/array.util.ts":
-/*!***********************************!*\
-  !*** ./src/helpers/array.util.ts ***!
-  \***********************************/
+/***/ "./src/controllers/request.model.ts":
+/*!******************************************!*\
+  !*** ./src/controllers/request.model.ts ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "findHighestValueInObjects": () => (/* binding */ findHighestValueInObjects),
-/* harmony export */   "findIntersectionOfSortedArrays": () => (/* binding */ findIntersectionOfSortedArrays),
-/* harmony export */   "getHasOneInCommon": () => (/* binding */ getHasOneInCommon),
-/* harmony export */   "findElementIndexInSortedArray": () => (/* binding */ findElementIndexInSortedArray),
-/* harmony export */   "transformIntoObject": () => (/* binding */ transformIntoObject),
-/* harmony export */   "filterAgainstObjectKeys": () => (/* binding */ filterAgainstObjectKeys),
-/* harmony export */   "liftInArray": () => (/* binding */ liftInArray)
-/* harmony export */ });
-// string(key) -> [object] -> any(field value)
-const findHighestValueInObjects = (field) => (collection) => (collection.reduce((accumulator, currentObject) => accumulator > currentObject[field] ? accumulator : currentObject[field], collection[0][field]));
-//[a] -> [a] -> [a]
-const findIntersectionOfSortedArrays = (a) => (b) => {
-    const length1 = a.length, length2 = b.length, intersection = [];
-    let i = 0, j = 0;
-    while (i < length1 && j < length2) {
-        let aI = a[i], bJ = b[j];
-        if (aI > bJ)
-            j++;
-        else if (aI < bJ)
-            i++;
-        else {
-            intersection.push(aI);
-            i++;
-            j++;
-        }
-    }
-    return intersection;
-};
-// [a] -> [a] -> boolean
-const getHasOneInCommon = (a) => (b) => {
-    const length1 = a.length, length2 = b.length;
-    let i = 0, j = 0;
-    while (i < length1 && j < length2) {
-        let aI = a[i], bJ = b[j];
-        if (aI > bJ)
-            j++;
-        else if (aI < bJ)
-            i++;
-        else {
-            return true;
-        }
-    }
-    return false;
-};
-//[a] -> a -> number
-const findElementIndexInSortedArray = (a) => (searchedElement) => {
-    let startIndex = 0, endIndex = a.length - 1;
-    while (startIndex <= endIndex) {
-        let middleIndex = Math.floor((endIndex - startIndex) / 2 + startIndex);
-        let middleElement = a[middleIndex];
-        if (searchedElement > middleElement)
-            startIndex = middleIndex + 1;
-        else if (searchedElement < middleElement)
-            endIndex = middleIndex - 1;
-        else
-            return middleIndex;
-    }
-    return -1;
-};
-// [string | number] -> { [string] : string | number}
-const transformIntoObject = (array) => {
-    const reducer = (accumulator, currentValue) => {
-        accumulator[currentValue] = currentValue;
-        return accumulator;
-    };
-    return array.reduce(reducer, {});
-};
-// [string | number] -> { [string | number] : string | number} -> [string | number]
-const filterAgainstObjectKeys = (array) => (object) => array.filter(itemId => object[itemId] !== undefined);
-// a | [a] -> [a]
-const liftInArray = (a) => Array.isArray(a) ? a : [a];
+;
+
 
 
 /***/ }),
@@ -2466,72 +2399,6 @@ function functionToWorkerURL(fn) {
     var blob = new Blob(['(' + fn.toString() + ')()'], { type: 'application/javascript' });
     return URL.createObjectURL(blob);
 }
-
-
-/***/ }),
-
-/***/ "./src/modules/filterConfiguration/operators.ts":
-/*!******************************************************!*\
-  !*** ./src/modules/filterConfiguration/operators.ts ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Operators": () => (/* binding */ Operators),
-/* harmony export */   "lt": () => (/* binding */ lt),
-/* harmony export */   "lte": () => (/* binding */ lte),
-/* harmony export */   "gt": () => (/* binding */ gt),
-/* harmony export */   "gte": () => (/* binding */ gte),
-/* harmony export */   "equal": () => (/* binding */ equal),
-/* harmony export */   "inRangeClosed": () => (/* binding */ inRangeClosed),
-/* harmony export */   "inRangeOpen": () => (/* binding */ inRangeOpen),
-/* harmony export */   "inRangeOpenClosed": () => (/* binding */ inRangeOpenClosed),
-/* harmony export */   "inRangeClosedOpen": () => (/* binding */ inRangeClosedOpen),
-/* harmony export */   "containsOptimized": () => (/* binding */ containsOptimized),
-/* harmony export */   "contains": () => (/* binding */ contains),
-/* harmony export */   "operatorToFunction": () => (/* binding */ operatorToFunction)
-/* harmony export */ });
-/* harmony import */ var helpers_array_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! helpers/array.util */ "./src/helpers/array.util.ts");
-
-var Operators;
-(function (Operators) {
-    Operators["lt"] = "lt";
-    Operators["lte"] = "lte";
-    Operators["gt"] = "gt";
-    Operators["gte"] = "gte";
-    Operators["equals"] = "equals";
-    Operators["inRangeClosed"] = "inRangeClosed";
-    Operators["inRangeOpen"] = "inRangeOpen";
-    Operators["inRangeOpenClosed"] = "inRangeOpenClosed";
-    Operators["inRangeClosedOpen"] = "inRangeClosedOpen";
-    Operators["containsOptimized"] = "containsOptimized";
-    Operators["contains"] = "contains";
-})(Operators || (Operators = {}));
-const lt = (a, b) => a < b;
-const lte = (a, b) => a <= b;
-const gt = (a, b) => a > b;
-const gte = (a, b) => a >= b;
-const equal = (a, b) => a === b;
-const inRangeClosed = (a, b) => a >= b[0] && a <= b[1];
-const inRangeOpen = (a, b) => a > b[0] && a < b[1];
-const inRangeOpenClosed = (a, b) => a > b[0] && a <= b[1];
-const inRangeClosedOpen = (a, b) => a >= b[0] && a < b[1];
-const containsOptimized = (a, b) => (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.findElementIndexInSortedArray)(a)(b) >= 0;
-const contains = (a, b) => a.includes(b);
-const operatorToFunction = {
-    [Operators.lt]: lt,
-    [Operators.lte]: lte,
-    [Operators.gt]: gt,
-    [Operators.gte]: gte,
-    [Operators.equals]: equal,
-    [Operators.inRangeClosed]: inRangeClosed,
-    [Operators.inRangeOpen]: inRangeOpen,
-    [Operators.inRangeClosedOpen]: inRangeClosedOpen,
-    [Operators.inRangeOpenClosed]: inRangeOpenClosed,
-    [Operators.contains]: contains,
-    [Operators.containsOptimized]: containsOptimized,
-};
 
 
 /***/ }),
@@ -2890,11 +2757,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "createStore": () => (/* binding */ createStore),
 /* harmony export */   "addDataToStore": () => (/* binding */ addDataToStore),
 /* harmony export */   "getAllValuesOfProperty": () => (/* binding */ getAllValuesOfProperty),
+/* harmony export */   "getCount": () => (/* binding */ getCount),
 /* harmony export */   "deleteStore": () => (/* binding */ deleteStore)
 /* harmony export */ });
-/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/identity.js");
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/identity.js");
 /* harmony import */ var _helpers_worker_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers/worker.util */ "./src/helpers/worker.util.ts");
 /* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./apis/storage.util */ "./src/apis/storage.util.ts");
+/* harmony import */ var _controllers_request_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./controllers/request.model */ "./src/controllers/request.model.ts");
+
 
 
 
@@ -5050,7 +4920,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createStore\": () => (/* binding */ createStore),\n/* harmony export */   \"deleteStore\": () => (/* binding */ deleteStore),\n/* harmony export */   \"addDataToStore\": () => (/* binding */ addDataToStore),\n/* harmony export */   \"iterateOverStore\": () => (/* binding */ iterateOverStore),\n/* harmony export */   \"getPrimaryKeysMatchingOperator\": () => (/* binding */ getPrimaryKeysMatchingOperator),\n/* harmony export */   \"getAllPrimaryKeysForIndex\": () => (/* binding */ getAllPrimaryKeysForIndex),\n/* harmony export */   \"getAllUniqueKeysForIndex\": () => (/* binding */ getAllUniqueKeysForIndex),\n/* harmony export */   \"getItems\": () => (/* binding */ getItems),\n/* harmony export */   \"getKeyRangeMatchingOperator\": () => (/* binding */ getKeyRangeMatchingOperator)\n/* harmony export */ });\n/* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ \"./src/apis/indexedDB.api.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! modules/filterConfiguration/operators */ \"./src/modules/filterConfiguration/operators.ts\");\n\n\n\n\n\nconst databaseId = \"browser-search\";\nvar IndexType;\n(function (IndexType) {\n    IndexType[\"simple\"] = \"simple\";\n    IndexType[\"array\"] = \"array\";\n})(IndexType || (IndexType = {}));\nconst simplifiedIndexToIndexConfig = (simplifiedIndex) => {\n    const arrayConfig = { multiEntry: true, unique: false };\n    const defaultConfig = { multiEntry: false, unique: false };\n    return (0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)((indexType) => indexType === IndexType.array ? arrayConfig : defaultConfig, (simplifiedIndex));\n};\nconst openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));\nconst closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\nconst execute = (...commands) => {\n    let dbInstance = null;\n    const openDatabaseCommand = openDatabase()\n        .map(db => {\n        dbInstance = db;\n        return db;\n    });\n    const commandsToExecute = commands.reduce((commandsAcc, command) => {\n        return commandsAcc.chain(() => command(dbInstance));\n    }, openDatabaseCommand);\n    const commandsToExecuteWithDbClosing = commandsToExecute\n        .map((result) => {\n        closeDatabase(dbInstance).run();\n        return result;\n    })\n        .mapLeft(error => {\n        !(0,ramda__WEBPACK_IMPORTED_MODULE_4__.default)(dbInstance) && closeDatabase(dbInstance).run();\n        return error;\n    });\n    return commandsToExecuteWithDbClosing;\n};\nconst createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    const createObjectStore = (database) => {\n        purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(database));\n        purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(storeName)(indexConfig)(keyPath)(database));\n    };\n    return ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.upgradeDatabase(databaseId)(createObjectStore))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db))));\n};\nconst deleteStore = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftEither)(purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(db)));\n    return execute(command);\n};\nconst addDataToStore = (storeName) => (data) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDataToStore(storeName)(db)(data));\n    return execute(command);\n};\nconst iterateOverStore = (storeName) => (callback) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(storeName)(db)(callback));\n    return execute(command);\n};\nconst getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (value) => {\n    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_5__.Either.encase(() => getKeyRangeMatchingOperator(operator)(value));\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftEither)(eitherKeyRange)\n        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));\n    return execute(command);\n};\nconst getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));\n    return execute(command);\n};\nconst getAllUniqueKeysForIndex = (storeName) => (indexName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));\n    return execute(command);\n};\nconst getItems = (storeName) => (itemIds) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getItems(db)(storeName)(itemIds));\n    return execute(command);\n};\nconst getKeyRangeMatchingOperator = (operator) => (value) => {\n    switch (operator) {\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.equals:\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.contains:\n            return IDBKeyRange.only(value);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.lt:\n            return IDBKeyRange.upperBound(value, true);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.lte:\n            return IDBKeyRange.upperBound(value);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.gt:\n            return IDBKeyRange.lowerBound(value, true);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.gte:\n            return IDBKeyRange.lowerBound(value);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeClosed:\n            return IDBKeyRange.bound(value[0], value[1]);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeOpen:\n            return IDBKeyRange.bound(value[0], value[1], true, true);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeOpenClosed:\n            return IDBKeyRange.bound(value[0], value[1], true, false);\n        case modules_filterConfiguration_operators__WEBPACK_IMPORTED_MODULE_1__.Operators.inRangeClosedOpen:\n            return IDBKeyRange.bound(value[0], value[1], false, true);\n    }\n    throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;\n};\n\n\n//# sourceURL=webpack://browser-search/./src/apis/storage.util.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createStore\": () => (/* binding */ createStore),\n/* harmony export */   \"deleteStore\": () => (/* binding */ deleteStore),\n/* harmony export */   \"addDataToStore\": () => (/* binding */ addDataToStore),\n/* harmony export */   \"iterateOverStore\": () => (/* binding */ iterateOverStore),\n/* harmony export */   \"getPrimaryKeysMatchingOperator\": () => (/* binding */ getPrimaryKeysMatchingOperator),\n/* harmony export */   \"getAllPrimaryKeysForIndex\": () => (/* binding */ getAllPrimaryKeysForIndex),\n/* harmony export */   \"getAllUniqueKeysForIndex\": () => (/* binding */ getAllUniqueKeysForIndex),\n/* harmony export */   \"getItems\": () => (/* binding */ getItems),\n/* harmony export */   \"getItemsCount\": () => (/* binding */ getItemsCount),\n/* harmony export */   \"getKeyRangeMatchingOperator\": () => (/* binding */ getKeyRangeMatchingOperator)\n/* harmony export */ });\n/* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ \"./src/apis/indexedDB.api.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nconst databaseId = \"browser-search\";\nvar IndexType;\n(function (IndexType) {\n    IndexType[\"simple\"] = \"simple\";\n    IndexType[\"array\"] = \"array\";\n})(IndexType || (IndexType = {}));\nconst simplifiedIndexToIndexConfig = (simplifiedIndex) => {\n    const arrayConfig = { multiEntry: true, unique: false };\n    const defaultConfig = { multiEntry: false, unique: false };\n    return (0,ramda__WEBPACK_IMPORTED_MODULE_1__.default)((indexType) => indexType === IndexType.array ? arrayConfig : defaultConfig, (simplifiedIndex));\n};\nconst openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));\nconst closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\nconst execute = (...commands) => {\n    let dbInstance = null;\n    const openDatabaseCommand = openDatabase()\n        .map(db => {\n        dbInstance = db;\n        return db;\n    });\n    const commandsToExecute = commands.reduce((commandsAcc, command) => {\n        return commandsAcc.chain(() => command(dbInstance));\n    }, openDatabaseCommand);\n    const commandsToExecuteWithDbClosing = commandsToExecute\n        .map((result) => {\n        closeDatabase(dbInstance).run();\n        return result;\n    })\n        .mapLeft(error => {\n        !(0,ramda__WEBPACK_IMPORTED_MODULE_3__.default)(dbInstance) && closeDatabase(dbInstance).run();\n        return error;\n    });\n    return commandsToExecuteWithDbClosing;\n};\nconst createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    const createObjectStore = (database) => {\n        purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(database));\n        purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(storeName)(indexConfig)(keyPath)(database));\n    };\n    return ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.upgradeDatabase(databaseId)(createObjectStore))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db))));\n};\nconst deleteStore = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftEither)(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(storeName)(db)));\n    return execute(command);\n};\nconst addDataToStore = (storeName) => (data) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDataToStore(storeName)(db)(data));\n    return execute(command);\n};\nconst iterateOverStore = (storeName) => (callback) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(storeName)(db)(callback));\n    return execute(command);\n};\nconst getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (value) => {\n    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => getKeyRangeMatchingOperator(operator)(value));\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftEither)(eitherKeyRange)\n        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));\n    return execute(command);\n};\nconst getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));\n    return execute(command);\n};\nconst getAllUniqueKeysForIndex = (storeName) => (indexName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));\n    return execute(command);\n};\nconst getItems = (storeName) => (itemIds) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getItems(db)(storeName)(itemIds));\n    return execute(command);\n};\nconst getItemsCount = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.liftPromise)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfItemsInStore(storeName)(db));\n    return execute(command);\n};\nconst getKeyRangeMatchingOperator = (operator) => (value) => {\n    switch (operator) {\n        case 'equals':\n        case 'contains':\n            return IDBKeyRange.only(value);\n        case 'lt':\n            return IDBKeyRange.upperBound(value, true);\n        case 'lte':\n            return IDBKeyRange.upperBound(value);\n        case 'gt':\n            return IDBKeyRange.lowerBound(value, true);\n        case 'gte':\n            return IDBKeyRange.lowerBound(value);\n        case 'inRangeClosed':\n            return IDBKeyRange.bound(value[0], value[1]);\n        case 'inRangeOpen':\n            return IDBKeyRange.bound(value[0], value[1], true, true);\n        case 'inRangeOpenClosed':\n            return IDBKeyRange.bound(value[0], value[1], true, false);\n        case 'inRangeClosedOpen':\n            return IDBKeyRange.bound(value[0], value[1], false, true);\n    }\n    throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;\n};\n\n\n//# sourceURL=webpack://browser-search/./src/apis/storage.util.ts?");
 
 /***/ }),
 
@@ -5138,7 +5008,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"validateFilterConfig\": () => (/* binding */ validateFilterConfig)\n/* harmony export */ });\n/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ \"./node_modules/yup/es/index.js\");\n/* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./operators */ \"./src/modules/filterConfiguration/operators.ts\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nconst alphanumRegex = /^[A-Za-z0-9]+$/;\n/**\n * Validates the JSON filter config passed to the library\n * If invalid, returns a Left(error)\n */\nconst filterSchemaErrorMessage = 'Group of filters cannot be empty';\nconst filterConfigSchemaErrorMessage = 'Filter configuration cannot be empty';\nconst filterConfigInvalidOperatorErrorMessage = 'The operator is invalid';\nconst fieldNameErrorMessage = 'Field name must be alpha-numeric';\nconst fieldNameRequiredErrorMessage = 'Field name is required';\nconst idNameRequiredErrorMessage = 'Id is required';\nconst filterSchema = yup__WEBPACK_IMPORTED_MODULE_0__.object({\n    id: yup__WEBPACK_IMPORTED_MODULE_0__.string().required(idNameRequiredErrorMessage),\n    field: yup__WEBPACK_IMPORTED_MODULE_0__.string().matches(alphanumRegex, fieldNameErrorMessage).required(fieldNameRequiredErrorMessage),\n    operator: yup__WEBPACK_IMPORTED_MODULE_0__.string().oneOf(Object.values(_operators__WEBPACK_IMPORTED_MODULE_1__.Operators), filterConfigInvalidOperatorErrorMessage).required(),\n    operand: yup__WEBPACK_IMPORTED_MODULE_0__.mixed().required(),\n}).required();\nconst groupOfFiltersSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().of(filterSchema).min(1, filterSchemaErrorMessage).required();\nconst filterConfigSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().of(groupOfFiltersSchema).min(1, filterConfigSchemaErrorMessage).required();\nconst validateFilterConfig = (filterConfig) => {\n    const validation = filterConfigSchema.validate(filterConfig, {\n        strict: true,\n        stripUnknown: true,\n    })\n        .then((value) => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__.Right)(value))\n        .catch(err => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__.Left)(new Error(err.errors)));\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.fromPromise)(() => validation);\n};\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filterConfiguration/filterSchema.validator.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"validateFilterConfig\": () => (/* binding */ validateFilterConfig)\n/* harmony export */ });\n/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ \"./node_modules/yup/es/index.js\");\n/* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./operators */ \"./src/modules/filterConfiguration/operators.ts\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nconst alphanumRegex = /^[A-Za-z0-9]+$/;\n/**\n * Validates the JSON filter config passed to the library\n * If invalid, returns a Left(error)\n */\nconst filterSchemaErrorMessage = 'Group of filters cannot be empty';\nconst filterConfigSchemaErrorMessage = 'Filter configuration cannot be empty';\nconst filterConfigInvalidOperatorErrorMessage = 'The operator is invalid';\nconst fieldNameErrorMessage = 'Field name must be alpha-numeric';\nconst fieldNameRequiredErrorMessage = 'Field name is required';\nconst idNameRequiredErrorMessage = 'Id is required';\nconst filterSchema = yup__WEBPACK_IMPORTED_MODULE_0__.object({\n    id: yup__WEBPACK_IMPORTED_MODULE_0__.string().required(idNameRequiredErrorMessage),\n    field: yup__WEBPACK_IMPORTED_MODULE_0__.string().matches(alphanumRegex, fieldNameErrorMessage).required(fieldNameRequiredErrorMessage),\n    operator: yup__WEBPACK_IMPORTED_MODULE_0__.string().oneOf(Object.values(_operators__WEBPACK_IMPORTED_MODULE_1__.operators), filterConfigInvalidOperatorErrorMessage).required(),\n    operand: yup__WEBPACK_IMPORTED_MODULE_0__.mixed().required(),\n}).required();\nconst groupOfFiltersSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().of(filterSchema).min(1, filterSchemaErrorMessage).required();\nconst filterConfigSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().of(groupOfFiltersSchema).min(1, filterConfigSchemaErrorMessage).required();\nconst validateFilterConfig = (filterConfig) => {\n    const validation = filterConfigSchema.validate(filterConfig, {\n        strict: true,\n        stripUnknown: true,\n    })\n        .then((value) => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__.Right)(value))\n        .catch(err => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_2__.Left)(new Error(err.errors)));\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.fromPromise)(() => validation);\n};\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filterConfiguration/filterSchema.validator.ts?");
 
 /***/ }),
 
@@ -5149,7 +5019,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"buildFilterConfigDataFromFilterConfig\": () => (/* reexport safe */ _filterConfig_model__WEBPACK_IMPORTED_MODULE_1__.buildFilterConfigData),\n/* harmony export */   \"Operators\": () => (/* reexport safe */ _operators__WEBPACK_IMPORTED_MODULE_2__.Operators),\n/* harmony export */   \"operatorToFunction\": () => (/* reexport safe */ _operators__WEBPACK_IMPORTED_MODULE_2__.operatorToFunction),\n/* harmony export */   \"buildFilterConfigData\": () => (/* binding */ buildFilterConfigData)\n/* harmony export */ });\n/* harmony import */ var _filterSchema_validator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filterSchema.validator */ \"./src/modules/filterConfiguration/filterSchema.validator.ts\");\n/* harmony import */ var _filterConfig_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filterConfig.model */ \"./src/modules/filterConfiguration/filterConfig.model.ts\");\n/* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./operators */ \"./src/modules/filterConfiguration/operators.ts\");\n\n\n\n\nconst buildFilterConfigData = (filterConfigDraft) => (filterIdsApplied) => ((0,_filterSchema_validator__WEBPACK_IMPORTED_MODULE_0__.validateFilterConfig)(filterConfigDraft)\n    .map(filterConfig => ((0,_filterConfig_model__WEBPACK_IMPORTED_MODULE_1__.buildFilterConfigData)(filterConfig)(filterIdsApplied))));\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filterConfiguration/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"buildFilterConfigDataFromFilterConfig\": () => (/* reexport safe */ _filterConfig_model__WEBPACK_IMPORTED_MODULE_1__.buildFilterConfigData),\n/* harmony export */   \"operators\": () => (/* reexport safe */ _operators__WEBPACK_IMPORTED_MODULE_2__.operators),\n/* harmony export */   \"operatorToFunction\": () => (/* reexport safe */ _operators__WEBPACK_IMPORTED_MODULE_2__.operatorToFunction),\n/* harmony export */   \"buildFilterConfigData\": () => (/* binding */ buildFilterConfigData)\n/* harmony export */ });\n/* harmony import */ var _filterSchema_validator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filterSchema.validator */ \"./src/modules/filterConfiguration/filterSchema.validator.ts\");\n/* harmony import */ var _filterConfig_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filterConfig.model */ \"./src/modules/filterConfiguration/filterConfig.model.ts\");\n/* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./operators */ \"./src/modules/filterConfiguration/operators.ts\");\n\n\n\n\nconst buildFilterConfigData = (filterConfigDraft) => (filterIdsApplied) => ((0,_filterSchema_validator__WEBPACK_IMPORTED_MODULE_0__.validateFilterConfig)(filterConfigDraft)\n    .map(filterConfig => ((0,_filterConfig_model__WEBPACK_IMPORTED_MODULE_1__.buildFilterConfigData)(filterConfig)(filterIdsApplied))));\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filterConfiguration/index.ts?");
 
 /***/ }),
 
@@ -5160,7 +5030,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Operators\": () => (/* binding */ Operators),\n/* harmony export */   \"lt\": () => (/* binding */ lt),\n/* harmony export */   \"lte\": () => (/* binding */ lte),\n/* harmony export */   \"gt\": () => (/* binding */ gt),\n/* harmony export */   \"gte\": () => (/* binding */ gte),\n/* harmony export */   \"equal\": () => (/* binding */ equal),\n/* harmony export */   \"inRangeClosed\": () => (/* binding */ inRangeClosed),\n/* harmony export */   \"inRangeOpen\": () => (/* binding */ inRangeOpen),\n/* harmony export */   \"inRangeOpenClosed\": () => (/* binding */ inRangeOpenClosed),\n/* harmony export */   \"inRangeClosedOpen\": () => (/* binding */ inRangeClosedOpen),\n/* harmony export */   \"containsOptimized\": () => (/* binding */ containsOptimized),\n/* harmony export */   \"contains\": () => (/* binding */ contains),\n/* harmony export */   \"operatorToFunction\": () => (/* binding */ operatorToFunction)\n/* harmony export */ });\n/* harmony import */ var helpers_array_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! helpers/array.util */ \"./src/helpers/array.util.ts\");\n\nvar Operators;\n(function (Operators) {\n    Operators[\"lt\"] = \"lt\";\n    Operators[\"lte\"] = \"lte\";\n    Operators[\"gt\"] = \"gt\";\n    Operators[\"gte\"] = \"gte\";\n    Operators[\"equals\"] = \"equals\";\n    Operators[\"inRangeClosed\"] = \"inRangeClosed\";\n    Operators[\"inRangeOpen\"] = \"inRangeOpen\";\n    Operators[\"inRangeOpenClosed\"] = \"inRangeOpenClosed\";\n    Operators[\"inRangeClosedOpen\"] = \"inRangeClosedOpen\";\n    Operators[\"containsOptimized\"] = \"containsOptimized\";\n    Operators[\"contains\"] = \"contains\";\n})(Operators || (Operators = {}));\nconst lt = (a, b) => a < b;\nconst lte = (a, b) => a <= b;\nconst gt = (a, b) => a > b;\nconst gte = (a, b) => a >= b;\nconst equal = (a, b) => a === b;\nconst inRangeClosed = (a, b) => a >= b[0] && a <= b[1];\nconst inRangeOpen = (a, b) => a > b[0] && a < b[1];\nconst inRangeOpenClosed = (a, b) => a > b[0] && a <= b[1];\nconst inRangeClosedOpen = (a, b) => a >= b[0] && a < b[1];\nconst containsOptimized = (a, b) => (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.findElementIndexInSortedArray)(a)(b) >= 0;\nconst contains = (a, b) => a.includes(b);\nconst operatorToFunction = {\n    [Operators.lt]: lt,\n    [Operators.lte]: lte,\n    [Operators.gt]: gt,\n    [Operators.gte]: gte,\n    [Operators.equals]: equal,\n    [Operators.inRangeClosed]: inRangeClosed,\n    [Operators.inRangeOpen]: inRangeOpen,\n    [Operators.inRangeClosedOpen]: inRangeClosedOpen,\n    [Operators.inRangeOpenClosed]: inRangeOpenClosed,\n    [Operators.contains]: contains,\n    [Operators.containsOptimized]: containsOptimized,\n};\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filterConfiguration/operators.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"operators\": () => (/* binding */ operators),\n/* harmony export */   \"lt\": () => (/* binding */ lt),\n/* harmony export */   \"lte\": () => (/* binding */ lte),\n/* harmony export */   \"gt\": () => (/* binding */ gt),\n/* harmony export */   \"gte\": () => (/* binding */ gte),\n/* harmony export */   \"equal\": () => (/* binding */ equal),\n/* harmony export */   \"inRangeClosed\": () => (/* binding */ inRangeClosed),\n/* harmony export */   \"inRangeOpen\": () => (/* binding */ inRangeOpen),\n/* harmony export */   \"inRangeOpenClosed\": () => (/* binding */ inRangeOpenClosed),\n/* harmony export */   \"inRangeClosedOpen\": () => (/* binding */ inRangeClosedOpen),\n/* harmony export */   \"containsOptimized\": () => (/* binding */ containsOptimized),\n/* harmony export */   \"contains\": () => (/* binding */ contains),\n/* harmony export */   \"operatorToFunction\": () => (/* binding */ operatorToFunction)\n/* harmony export */ });\n/* harmony import */ var helpers_array_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! helpers/array.util */ \"./src/helpers/array.util.ts\");\n\nconst operators = ['lt', 'lte', 'gt', 'gte', 'equals', 'inRangeClosed', 'inRangeOpen', 'inRangeOpenClosed', 'inRangeClosedOpen', 'containsOptimized', 'contains'];\nconst lt = (a, b) => a < b;\nconst lte = (a, b) => a <= b;\nconst gt = (a, b) => a > b;\nconst gte = (a, b) => a >= b;\nconst equal = (a, b) => a === b;\nconst inRangeClosed = (a, b) => a >= b[0] && a <= b[1];\nconst inRangeOpen = (a, b) => a > b[0] && a < b[1];\nconst inRangeOpenClosed = (a, b) => a > b[0] && a <= b[1];\nconst inRangeClosedOpen = (a, b) => a >= b[0] && a < b[1];\nconst containsOptimized = (a, b) => (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.findElementIndexInSortedArray)(a)(b) >= 0;\nconst contains = (a, b) => a.includes(b);\nconst operatorToFunction = {\n    lt: lt,\n    lte: lte,\n    gt: gt,\n    gte: gte,\n    equals: equal,\n    inRangeClosed: inRangeClosed,\n    inRangeOpen: inRangeOpen,\n    inRangeClosedOpen: inRangeClosedOpen,\n    inRangeOpenClosed: inRangeOpenClosed,\n    contains: contains,\n    containsOptimized: containsOptimized,\n};\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filterConfiguration/operators.ts?");
 
 /***/ }),
 
@@ -5193,7 +5063,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getFilteringFunctionsData\": () => (/* binding */ getFilteringFunctionsData)\n/* harmony export */ });\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/compose.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/sort.js\");\n/* harmony import */ var modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n\n\nconst getFilteringFunctionsData = (filterConfigData) => {\n    const appliedFilters = filterConfigData.getFiltersApplied();\n    const filterDataBuilder = createFilterDataBuilder();\n    appliedFilters.forEach(filter => {\n        const filterFunction = evaluateCriteria(filter);\n        const groupId = filterConfigData.getGroupIdForFilter(filter.id);\n        filterDataBuilder.addFilterFunction(filterFunction, groupId);\n    });\n    return filterDataBuilder.done();\n};\nconst createFilterDataBuilder = () => {\n    const groupIdToFilterFunctions = {};\n    const filterFunctionsToGroupId = new Map();\n    const groupIds = [];\n    const addFilterFunctionToNewGroup = (filterFunction, groupId) => {\n        const functionCollection = [filterFunction];\n        groupIdToFilterFunctions[groupId] = functionCollection;\n        filterFunctionsToGroupId.set(functionCollection, groupId);\n        groupIds.push(groupId);\n    };\n    const saveFilterFunctionIntoGroup = (filterFunction, group) => groupIdToFilterFunctions[group].push(filterFunction);\n    return {\n        addFilterFunction(filterFunction, groupId) {\n            groupIdToFilterFunctions[groupId]\n                ? saveFilterFunctionIntoGroup(filterFunction, groupId)\n                : addFilterFunctionToNewGroup(filterFunction, groupId);\n            return this;\n        },\n        done() {\n            /**\n             * We sort the function collection by length so that the groups with the least \"OR\" functions get matched first to optimize performance\n             */\n            const sorterByLength = (a, b) => a.length - b.length;\n            const filterFunctionsCollections = (0,ramda__WEBPACK_IMPORTED_MODULE_1__.default)((0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(sorterByLength), Object.values)(groupIdToFilterFunctions);\n            return {\n                getFilterFunctionsFromGroup: (group) => groupIdToFilterFunctions[group],\n                getGroupIdFromFilterFunctions: (filterFunctions) => filterFunctionsToGroupId.get(filterFunctions),\n                getFilterFunctionsCollections: () => filterFunctionsCollections,\n            };\n        }\n    };\n};\nconst evaluateCriteria = (filter) => (target) => {\n    const { field, operand, operator } = filter;\n    const operatorFunction = modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.operatorToFunction[modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.Operators[operator]];\n    return target[field] !== undefined && operatorFunction(target[field], operand);\n};\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filteringStatus/filteringFunctions.model.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getFilteringFunctionsData\": () => (/* binding */ getFilteringFunctionsData)\n/* harmony export */ });\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/compose.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/sort.js\");\n/* harmony import */ var modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n\n\nconst getFilteringFunctionsData = (filterConfigData) => {\n    const appliedFilters = filterConfigData.getFiltersApplied();\n    const filterDataBuilder = createFilterDataBuilder();\n    appliedFilters.forEach(filter => {\n        const filterFunction = evaluateCriteria(filter);\n        const groupId = filterConfigData.getGroupIdForFilter(filter.id);\n        filterDataBuilder.addFilterFunction(filterFunction, groupId);\n    });\n    return filterDataBuilder.done();\n};\nconst createFilterDataBuilder = () => {\n    const groupIdToFilterFunctions = {};\n    const filterFunctionsToGroupId = new Map();\n    const groupIds = [];\n    const addFilterFunctionToNewGroup = (filterFunction, groupId) => {\n        const functionCollection = [filterFunction];\n        groupIdToFilterFunctions[groupId] = functionCollection;\n        filterFunctionsToGroupId.set(functionCollection, groupId);\n        groupIds.push(groupId);\n    };\n    const saveFilterFunctionIntoGroup = (filterFunction, group) => groupIdToFilterFunctions[group].push(filterFunction);\n    return {\n        addFilterFunction(filterFunction, groupId) {\n            groupIdToFilterFunctions[groupId]\n                ? saveFilterFunctionIntoGroup(filterFunction, groupId)\n                : addFilterFunctionToNewGroup(filterFunction, groupId);\n            return this;\n        },\n        done() {\n            /**\n             * We sort the function collection by length so that the groups with the least \"OR\" functions get matched first to optimize performance\n             */\n            const sorterByLength = (a, b) => a.length - b.length;\n            const filterFunctionsCollections = (0,ramda__WEBPACK_IMPORTED_MODULE_1__.default)((0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(sorterByLength), Object.values)(groupIdToFilterFunctions);\n            return {\n                getFilterFunctionsFromGroup: (group) => groupIdToFilterFunctions[group],\n                getGroupIdFromFilterFunctions: (filterFunctions) => filterFunctionsToGroupId.get(filterFunctions),\n                getFilterFunctionsCollections: () => filterFunctionsCollections,\n            };\n        }\n    };\n};\nconst evaluateCriteria = (filter) => (target) => {\n    const { field, operand, operator } = filter;\n    const operatorFunction = modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.operatorToFunction[operator];\n    return target[field] !== undefined && operatorFunction(target[field], operand);\n};\n\n\n//# sourceURL=webpack://browser-search/./src/modules/filteringStatus/filteringFunctions.model.ts?");
 
 /***/ }),
 
@@ -5635,7 +5505,13 @@ const getAllValuesOfProperty = (storeName) => (propertyName) => (_apis_storage_u
     .run()
     .then(eitherValues => (eitherValues.caseOf({
     Left: error => { throw error; },
-    Right: ramda__WEBPACK_IMPORTED_MODULE_2__.default
+    Right: ramda__WEBPACK_IMPORTED_MODULE_3__.default
+}))));
+const getCount = (storeName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getItemsCount(storeName)
+    .run()
+    .then(eitherValues => (eitherValues.caseOf({
+    Left: error => { throw error; },
+    Right: ramda__WEBPACK_IMPORTED_MODULE_3__.default
 }))));
 const deleteStore = (storeName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStore(storeName)
     .run());

@@ -44,6 +44,17 @@ export const getAllValuesOfProperty = (storeName: string) => (propertyName: stri
     ))
 )
 
+export const getCount = (storeName: string): Promise<number> => (
+  storage.getItemsCount(storeName)
+    .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
+)
+
 export const deleteStore = (storeName: string) => (
   storage.deleteStore(storeName)
     .run()

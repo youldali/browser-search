@@ -6,8 +6,10 @@
   "license": "MIT",
   "scripts": {
     "test": "start-server-and-test start-server http://localhost:8081 jest",
+    "test:update": "start-server-and-test start-server http://localhost:8081 jest:update",
     "start-server": "http-server . -p 8081",
-    "jest": "TEST_URL=http://localhost:8081 jest"
+    "jest": "TEST_URL=http://localhost:8081 jest",
+    "jest:update": "TEST_URL=http://localhost:8081 jest -u"
   },
   "dependencies": {
     "cypress": "^7.0.0",

@@ -1,0 +1,1121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Browser Search performs a search with 1 filter 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 18,
+      "country": "Taiwan",
+      "email": "losuh@olaga.vc",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "16842fce-5775-5ee0-9173-0617d7216720",
+      "name": "Philip Anderson",
+      "profession": "Recruiter",
+      "salary": 86023,
+    },
+    Object {
+      "age": 22,
+      "country": "Bulgaria",
+      "email": "tigki@du.mr",
+      "favoriteColours": Array [
+        "pink",
+        "red",
+        "purple",
+        "yellow",
+      ],
+      "id": "889f8cf9-d1a3-5276-8af5-0600bc8954e7",
+      "name": "Mark Maxwell",
+      "profession": "Chiropractor",
+      "salary": 79637,
+    },
+    Object {
+      "age": 20,
+      "country": "Cape Verde",
+      "email": "cuw@ege.hr",
+      "favoriteColours": Array [
+        "purple",
+        "white",
+        "pink",
+      ],
+      "id": "9317f72f-9582-563b-8b48-da724c2af540",
+      "name": "Emma Bridges",
+      "profession": "Office Manager",
+      "salary": 63775,
+    },
+    Object {
+      "age": 18,
+      "country": "Israel",
+      "email": "ci@adutujno.sa",
+      "favoriteColours": Array [
+        "dark",
+      ],
+      "id": "eff140aa-6ea3-5ea6-ac3b-c07a8ce01f63",
+      "name": "Hettie Ward",
+      "profession": "Office Manager",
+      "salary": 95544,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search returns all items 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+    Object {
+      "age": 50,
+      "country": "Dominican Republic",
+      "email": "nul@ko.vc",
+      "favoriteColours": Array [],
+      "id": "12cf4edc-bdb0-5a8e-869f-638bf4990e07",
+      "name": "Gavin Adkins",
+      "profession": "Private Banker",
+      "salary": 60744,
+    },
+    Object {
+      "age": 18,
+      "country": "Taiwan",
+      "email": "losuh@olaga.vc",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "16842fce-5775-5ee0-9173-0617d7216720",
+      "name": "Philip Anderson",
+      "profession": "Recruiter",
+      "salary": 86023,
+    },
+    Object {
+      "age": 64,
+      "country": "Djibouti",
+      "email": "ag@litsu.ar",
+      "favoriteColours": Array [
+        "brown",
+        "white",
+      ],
+      "id": "17a3b9f6-0348-54ae-9090-9861bdcaaaf1",
+      "name": "Linnie McGuire",
+      "profession": "Fund Raiser",
+      "salary": 64126,
+    },
+    Object {
+      "age": 32,
+      "country": "French Southern Territories",
+      "email": "kotuligen@jopme.dk",
+      "favoriteColours": Array [
+        "white",
+      ],
+      "id": "1c7cf27a-8fce-57f9-9e90-03273e63dd3a",
+      "name": "Randall Fields",
+      "profession": "Production Engineer",
+      "salary": 82114,
+    },
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+    Object {
+      "age": 33,
+      "country": "Barbados",
+      "email": "erupu@pafo.sl",
+      "favoriteColours": Array [
+        "red",
+        "green",
+      ],
+      "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+      "name": "Howard Bishop",
+      "profession": "Franchise Management",
+      "salary": 86221,
+    },
+    Object {
+      "age": 56,
+      "country": "Saudi Arabia",
+      "email": "apemedop@suhe.ye",
+      "favoriteColours": Array [
+        "yellow",
+      ],
+      "id": "84b1d734-52da-5009-855e-ad7e2a610b20",
+      "name": "Josie Baldwin",
+      "profession": "Executive Recruiter",
+      "salary": 90167,
+    },
+    Object {
+      "age": 48,
+      "country": "Paraguay",
+      "email": "zesedbuw@fec.al",
+      "favoriteColours": Array [
+        "dark",
+        "blue",
+      ],
+      "id": "87e83681-7cd7-5200-b50b-493fd7bbabb5",
+      "name": "Josephine Holland",
+      "profession": "Corporate Planner",
+      "salary": 23682,
+    },
+    Object {
+      "age": 22,
+      "country": "Bulgaria",
+      "email": "tigki@du.mr",
+      "favoriteColours": Array [
+        "pink",
+        "red",
+        "purple",
+        "yellow",
+      ],
+      "id": "889f8cf9-d1a3-5276-8af5-0600bc8954e7",
+      "name": "Mark Maxwell",
+      "profession": "Chiropractor",
+      "salary": 79637,
+    },
+    Object {
+      "age": 20,
+      "country": "Cape Verde",
+      "email": "cuw@ege.hr",
+      "favoriteColours": Array [
+        "purple",
+        "white",
+        "pink",
+      ],
+      "id": "9317f72f-9582-563b-8b48-da724c2af540",
+      "name": "Emma Bridges",
+      "profession": "Office Manager",
+      "salary": 63775,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 50,
+      "country": "Tajikistan",
+      "email": "votdumbi@napedocu.us",
+      "favoriteColours": Array [
+        "purple",
+        "blue",
+        "brown",
+        "pink",
+      ],
+      "id": "cb841649-bcf9-5acd-a85b-763da24ec749",
+      "name": "Jose Matthews",
+      "profession": "Quality Control Engineer",
+      "salary": 96922,
+    },
+    Object {
+      "age": 18,
+      "country": "Israel",
+      "email": "ci@adutujno.sa",
+      "favoriteColours": Array [
+        "dark",
+      ],
+      "id": "eff140aa-6ea3-5ea6-ac3b-c07a8ce01f63",
+      "name": "Hettie Ward",
+      "profession": "Office Manager",
+      "salary": 95544,
+    },
+    Object {
+      "age": 48,
+      "country": "Finland",
+      "email": "ebgoh@gaaw.cy",
+      "favoriteColours": Array [
+        "brown",
+        "red",
+      ],
+      "id": "f569f9cd-9d4a-5753-9310-ba239f59f175",
+      "name": "Pauline Walters",
+      "profession": "Relocation Manager",
+      "salary": 20408,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search returns all people who like the red / blue / green colour 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+    Object {
+      "age": 18,
+      "country": "Taiwan",
+      "email": "losuh@olaga.vc",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "16842fce-5775-5ee0-9173-0617d7216720",
+      "name": "Philip Anderson",
+      "profession": "Recruiter",
+      "salary": 86023,
+    },
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+    Object {
+      "age": 33,
+      "country": "Barbados",
+      "email": "erupu@pafo.sl",
+      "favoriteColours": Array [
+        "red",
+        "green",
+      ],
+      "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+      "name": "Howard Bishop",
+      "profession": "Franchise Management",
+      "salary": 86221,
+    },
+    Object {
+      "age": 48,
+      "country": "Paraguay",
+      "email": "zesedbuw@fec.al",
+      "favoriteColours": Array [
+        "dark",
+        "blue",
+      ],
+      "id": "87e83681-7cd7-5200-b50b-493fd7bbabb5",
+      "name": "Josephine Holland",
+      "profession": "Corporate Planner",
+      "salary": 23682,
+    },
+    Object {
+      "age": 22,
+      "country": "Bulgaria",
+      "email": "tigki@du.mr",
+      "favoriteColours": Array [
+        "pink",
+        "red",
+        "purple",
+        "yellow",
+      ],
+      "id": "889f8cf9-d1a3-5276-8af5-0600bc8954e7",
+      "name": "Mark Maxwell",
+      "profession": "Chiropractor",
+      "salary": 79637,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 50,
+      "country": "Tajikistan",
+      "email": "votdumbi@napedocu.us",
+      "favoriteColours": Array [
+        "purple",
+        "blue",
+        "brown",
+        "pink",
+      ],
+      "id": "cb841649-bcf9-5acd-a85b-763da24ec749",
+      "name": "Jose Matthews",
+      "profession": "Quality Control Engineer",
+      "salary": 96922,
+    },
+    Object {
+      "age": 48,
+      "country": "Finland",
+      "email": "ebgoh@gaaw.cy",
+      "favoriteColours": Array [
+        "brown",
+        "red",
+      ],
+      "id": "f569f9cd-9d4a-5753-9310-ba239f59f175",
+      "name": "Pauline Walters",
+      "profession": "Relocation Manager",
+      "salary": 20408,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search returns all people who like the red / blue / green colour AND are old 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search returns all people who like the red colour 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+    Object {
+      "age": 18,
+      "country": "Taiwan",
+      "email": "losuh@olaga.vc",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "16842fce-5775-5ee0-9173-0617d7216720",
+      "name": "Philip Anderson",
+      "profession": "Recruiter",
+      "salary": 86023,
+    },
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+    Object {
+      "age": 33,
+      "country": "Barbados",
+      "email": "erupu@pafo.sl",
+      "favoriteColours": Array [
+        "red",
+        "green",
+      ],
+      "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+      "name": "Howard Bishop",
+      "profession": "Franchise Management",
+      "salary": 86221,
+    },
+    Object {
+      "age": 22,
+      "country": "Bulgaria",
+      "email": "tigki@du.mr",
+      "favoriteColours": Array [
+        "pink",
+        "red",
+        "purple",
+        "yellow",
+      ],
+      "id": "889f8cf9-d1a3-5276-8af5-0600bc8954e7",
+      "name": "Mark Maxwell",
+      "profession": "Chiropractor",
+      "salary": 79637,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 48,
+      "country": "Finland",
+      "email": "ebgoh@gaaw.cy",
+      "favoriteColours": Array [
+        "brown",
+        "red",
+      ],
+      "id": "f569f9cd-9d4a-5753-9310-ba239f59f175",
+      "name": "Pauline Walters",
+      "profession": "Relocation Manager",
+      "salary": 20408,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search returns all the colours available 1`] = `
+Array [
+  "blue",
+  "brown",
+  "dark",
+  "green",
+  "pink",
+  "purple",
+  "red",
+  "white",
+  "yellow",
+]
+`;
+
+exports[`Browser Search returns all the countries available 1`] = `
+Array [
+  "Barbados",
+  "Belarus",
+  "Bulgaria",
+  "Cape Verde",
+  "Djibouti",
+  "Dominican Republic",
+  "Finland",
+  "French Southern Territories",
+  "Israel",
+  "Niger",
+  "Norfolk Island",
+  "Paraguay",
+  "Saudi Arabia",
+  "Taiwan",
+  "Tajikistan",
+]
+`;
+
+exports[`Browser Search returns empty array when no criteria is met 1`] = `
+Object {
+  "data": Array [],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search returns the number of items in the store 1`] = `15`;
+
+exports[`Browser Search search for the engineer profession 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 32,
+      "country": "French Southern Territories",
+      "email": "kotuligen@jopme.dk",
+      "favoriteColours": Array [
+        "white",
+      ],
+      "id": "1c7cf27a-8fce-57f9-9e90-03273e63dd3a",
+      "name": "Randall Fields",
+      "profession": "Production Engineer",
+      "salary": 82114,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search sorts by name ASC 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+    Object {
+      "age": 20,
+      "country": "Cape Verde",
+      "email": "cuw@ege.hr",
+      "favoriteColours": Array [
+        "purple",
+        "white",
+        "pink",
+      ],
+      "id": "9317f72f-9582-563b-8b48-da724c2af540",
+      "name": "Emma Bridges",
+      "profession": "Office Manager",
+      "salary": 63775,
+    },
+    Object {
+      "age": 50,
+      "country": "Dominican Republic",
+      "email": "nul@ko.vc",
+      "favoriteColours": Array [],
+      "id": "12cf4edc-bdb0-5a8e-869f-638bf4990e07",
+      "name": "Gavin Adkins",
+      "profession": "Private Banker",
+      "salary": 60744,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 18,
+      "country": "Israel",
+      "email": "ci@adutujno.sa",
+      "favoriteColours": Array [
+        "dark",
+      ],
+      "id": "eff140aa-6ea3-5ea6-ac3b-c07a8ce01f63",
+      "name": "Hettie Ward",
+      "profession": "Office Manager",
+      "salary": 95544,
+    },
+    Object {
+      "age": 33,
+      "country": "Barbados",
+      "email": "erupu@pafo.sl",
+      "favoriteColours": Array [
+        "red",
+        "green",
+      ],
+      "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+      "name": "Howard Bishop",
+      "profession": "Franchise Management",
+      "salary": 86221,
+    },
+    Object {
+      "age": 50,
+      "country": "Tajikistan",
+      "email": "votdumbi@napedocu.us",
+      "favoriteColours": Array [
+        "purple",
+        "blue",
+        "brown",
+        "pink",
+      ],
+      "id": "cb841649-bcf9-5acd-a85b-763da24ec749",
+      "name": "Jose Matthews",
+      "profession": "Quality Control Engineer",
+      "salary": 96922,
+    },
+    Object {
+      "age": 48,
+      "country": "Paraguay",
+      "email": "zesedbuw@fec.al",
+      "favoriteColours": Array [
+        "dark",
+        "blue",
+      ],
+      "id": "87e83681-7cd7-5200-b50b-493fd7bbabb5",
+      "name": "Josephine Holland",
+      "profession": "Corporate Planner",
+      "salary": 23682,
+    },
+    Object {
+      "age": 56,
+      "country": "Saudi Arabia",
+      "email": "apemedop@suhe.ye",
+      "favoriteColours": Array [
+        "yellow",
+      ],
+      "id": "84b1d734-52da-5009-855e-ad7e2a610b20",
+      "name": "Josie Baldwin",
+      "profession": "Executive Recruiter",
+      "salary": 90167,
+    },
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+    Object {
+      "age": 64,
+      "country": "Djibouti",
+      "email": "ag@litsu.ar",
+      "favoriteColours": Array [
+        "brown",
+        "white",
+      ],
+      "id": "17a3b9f6-0348-54ae-9090-9861bdcaaaf1",
+      "name": "Linnie McGuire",
+      "profession": "Fund Raiser",
+      "salary": 64126,
+    },
+    Object {
+      "age": 22,
+      "country": "Bulgaria",
+      "email": "tigki@du.mr",
+      "favoriteColours": Array [
+        "pink",
+        "red",
+        "purple",
+        "yellow",
+      ],
+      "id": "889f8cf9-d1a3-5276-8af5-0600bc8954e7",
+      "name": "Mark Maxwell",
+      "profession": "Chiropractor",
+      "salary": 79637,
+    },
+    Object {
+      "age": 48,
+      "country": "Finland",
+      "email": "ebgoh@gaaw.cy",
+      "favoriteColours": Array [
+        "brown",
+        "red",
+      ],
+      "id": "f569f9cd-9d4a-5753-9310-ba239f59f175",
+      "name": "Pauline Walters",
+      "profession": "Relocation Manager",
+      "salary": 20408,
+    },
+    Object {
+      "age": 18,
+      "country": "Taiwan",
+      "email": "losuh@olaga.vc",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "16842fce-5775-5ee0-9173-0617d7216720",
+      "name": "Philip Anderson",
+      "profession": "Recruiter",
+      "salary": 86023,
+    },
+    Object {
+      "age": 32,
+      "country": "French Southern Territories",
+      "email": "kotuligen@jopme.dk",
+      "favoriteColours": Array [
+        "white",
+      ],
+      "id": "1c7cf27a-8fce-57f9-9e90-03273e63dd3a",
+      "name": "Randall Fields",
+      "profession": "Production Engineer",
+      "salary": 82114,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+    Object {
+      "age": 20,
+      "country": "Cape Verde",
+      "email": "cuw@ege.hr",
+      "favoriteColours": Array [
+        "purple",
+        "white",
+        "pink",
+      ],
+      "id": "9317f72f-9582-563b-8b48-da724c2af540",
+      "name": "Emma Bridges",
+      "profession": "Office Manager",
+      "salary": 63775,
+    },
+    Object {
+      "age": 50,
+      "country": "Dominican Republic",
+      "email": "nul@ko.vc",
+      "favoriteColours": Array [],
+      "id": "12cf4edc-bdb0-5a8e-869f-638bf4990e07",
+      "name": "Gavin Adkins",
+      "profession": "Private Banker",
+      "salary": 60744,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 18,
+      "country": "Israel",
+      "email": "ci@adutujno.sa",
+      "favoriteColours": Array [
+        "dark",
+      ],
+      "id": "eff140aa-6ea3-5ea6-ac3b-c07a8ce01f63",
+      "name": "Hettie Ward",
+      "profession": "Office Manager",
+      "salary": 95544,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 33,
+      "country": "Barbados",
+      "email": "erupu@pafo.sl",
+      "favoriteColours": Array [
+        "red",
+        "green",
+      ],
+      "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+      "name": "Howard Bishop",
+      "profession": "Franchise Management",
+      "salary": 86221,
+    },
+    Object {
+      "age": 50,
+      "country": "Tajikistan",
+      "email": "votdumbi@napedocu.us",
+      "favoriteColours": Array [
+        "purple",
+        "blue",
+        "brown",
+        "pink",
+      ],
+      "id": "cb841649-bcf9-5acd-a85b-763da24ec749",
+      "name": "Jose Matthews",
+      "profession": "Quality Control Engineer",
+      "salary": 96922,
+    },
+    Object {
+      "age": 48,
+      "country": "Paraguay",
+      "email": "zesedbuw@fec.al",
+      "favoriteColours": Array [
+        "dark",
+        "blue",
+      ],
+      "id": "87e83681-7cd7-5200-b50b-493fd7bbabb5",
+      "name": "Josephine Holland",
+      "profession": "Corporate Planner",
+      "salary": 23682,
+    },
+    Object {
+      "age": 56,
+      "country": "Saudi Arabia",
+      "email": "apemedop@suhe.ye",
+      "favoriteColours": Array [
+        "yellow",
+      ],
+      "id": "84b1d734-52da-5009-855e-ad7e2a610b20",
+      "name": "Josie Baldwin",
+      "profession": "Executive Recruiter",
+      "salary": 90167,
+    },
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+  ],
+  "type": "items",
+}
+`;
+
+exports[`Browser Search sorts by name DESC 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "age": 32,
+      "country": "French Southern Territories",
+      "email": "kotuligen@jopme.dk",
+      "favoriteColours": Array [
+        "white",
+      ],
+      "id": "1c7cf27a-8fce-57f9-9e90-03273e63dd3a",
+      "name": "Randall Fields",
+      "profession": "Production Engineer",
+      "salary": 82114,
+    },
+    Object {
+      "age": 18,
+      "country": "Taiwan",
+      "email": "losuh@olaga.vc",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "16842fce-5775-5ee0-9173-0617d7216720",
+      "name": "Philip Anderson",
+      "profession": "Recruiter",
+      "salary": 86023,
+    },
+    Object {
+      "age": 48,
+      "country": "Finland",
+      "email": "ebgoh@gaaw.cy",
+      "favoriteColours": Array [
+        "brown",
+        "red",
+      ],
+      "id": "f569f9cd-9d4a-5753-9310-ba239f59f175",
+      "name": "Pauline Walters",
+      "profession": "Relocation Manager",
+      "salary": 20408,
+    },
+    Object {
+      "age": 22,
+      "country": "Bulgaria",
+      "email": "tigki@du.mr",
+      "favoriteColours": Array [
+        "pink",
+        "red",
+        "purple",
+        "yellow",
+      ],
+      "id": "889f8cf9-d1a3-5276-8af5-0600bc8954e7",
+      "name": "Mark Maxwell",
+      "profession": "Chiropractor",
+      "salary": 79637,
+    },
+    Object {
+      "age": 64,
+      "country": "Djibouti",
+      "email": "ag@litsu.ar",
+      "favoriteColours": Array [
+        "brown",
+        "white",
+      ],
+      "id": "17a3b9f6-0348-54ae-9090-9861bdcaaaf1",
+      "name": "Linnie McGuire",
+      "profession": "Fund Raiser",
+      "salary": 64126,
+    },
+    Object {
+      "age": 64,
+      "country": "Niger",
+      "email": "nanefse@bazuvoric.tt",
+      "favoriteColours": Array [
+        "blue",
+        "red",
+      ],
+      "id": "68200794-220b-509b-b367-7c769f05767d",
+      "name": "Katie Lambert",
+      "profession": "Fraud Investigator",
+      "salary": 45390,
+    },
+    Object {
+      "age": 56,
+      "country": "Saudi Arabia",
+      "email": "apemedop@suhe.ye",
+      "favoriteColours": Array [
+        "yellow",
+      ],
+      "id": "84b1d734-52da-5009-855e-ad7e2a610b20",
+      "name": "Josie Baldwin",
+      "profession": "Executive Recruiter",
+      "salary": 90167,
+    },
+    Object {
+      "age": 48,
+      "country": "Paraguay",
+      "email": "zesedbuw@fec.al",
+      "favoriteColours": Array [
+        "dark",
+        "blue",
+      ],
+      "id": "87e83681-7cd7-5200-b50b-493fd7bbabb5",
+      "name": "Josephine Holland",
+      "profession": "Corporate Planner",
+      "salary": 23682,
+    },
+    Object {
+      "age": 50,
+      "country": "Tajikistan",
+      "email": "votdumbi@napedocu.us",
+      "favoriteColours": Array [
+        "purple",
+        "blue",
+        "brown",
+        "pink",
+      ],
+      "id": "cb841649-bcf9-5acd-a85b-763da24ec749",
+      "name": "Jose Matthews",
+      "profession": "Quality Control Engineer",
+      "salary": 96922,
+    },
+    Object {
+      "age": 33,
+      "country": "Barbados",
+      "email": "erupu@pafo.sl",
+      "favoriteColours": Array [
+        "red",
+        "green",
+      ],
+      "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+      "name": "Howard Bishop",
+      "profession": "Franchise Management",
+      "salary": 86221,
+    },
+    Object {
+      "age": 18,
+      "country": "Israel",
+      "email": "ci@adutujno.sa",
+      "favoriteColours": Array [
+        "dark",
+      ],
+      "id": "eff140aa-6ea3-5ea6-ac3b-c07a8ce01f63",
+      "name": "Hettie Ward",
+      "profession": "Office Manager",
+      "salary": 95544,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 50,
+      "country": "Dominican Republic",
+      "email": "nul@ko.vc",
+      "favoriteColours": Array [],
+      "id": "12cf4edc-bdb0-5a8e-869f-638bf4990e07",
+      "name": "Gavin Adkins",
+      "profession": "Private Banker",
+      "salary": 60744,
+    },
+    Object {
+      "age": 20,
+      "country": "Cape Verde",
+      "email": "cuw@ege.hr",
+      "favoriteColours": Array [
+        "purple",
+        "white",
+        "pink",
+      ],
+      "id": "9317f72f-9582-563b-8b48-da724c2af540",
+      "name": "Emma Bridges",
+      "profession": "Office Manager",
+      "salary": 63775,
+    },
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+  ],
+  "type": "items",
+}
+`;

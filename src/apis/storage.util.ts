@@ -135,6 +135,12 @@ export const getItems =
     return execute(command);
 };
 
+export const getItemsCount = 
+(storeName: string) : EitherAsync<Error, number> => {
+    const command: IDBCommand = db => liftPromise(() => idb.getNumberOfItemsInStore(storeName)(db));
+    return execute(command);
+};
+
 export const getKeyRangeMatchingOperator = 
     (operator: Operator) => 
     (value: any): IDBKeyRange  => {
