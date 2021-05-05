@@ -60,3 +60,14 @@ export const deleteStore = (storeName: string) => (
     .run()
 )
 
+export const doesStoreExist = (storeName: string) => (
+  storage.doesStoreExist(storeName)
+    .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
+)
+
