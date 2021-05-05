@@ -1,0 +1,11 @@
+import { Request } from './controllers/request.model';
+import * as storage from './apis/storage.util';
+export * from './controllers/request.model';
+export { Operator } from './modules/filterConfiguration';
+export declare const processRequest: <T>(request: Request<T>) => Promise<unknown>;
+export declare const createStore: (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => Promise<import("purify-ts/Either").Either<Error, void>>;
+export declare const addDataToStore: <T>(storeName: string) => (data: T[]) => Promise<import("purify-ts/Either").Either<Error, void>>;
+export declare const getAllValuesOfProperty: (storeName: string) => (propertyName: string) => Promise<unknown>;
+export declare const getCount: (storeName: string) => Promise<number>;
+export declare const deleteStore: (storeName: string) => Promise<import("purify-ts/Either").Either<Error, void>>;
+export declare const doesStoreExist: (storeName: string) => Promise<boolean>;

@@ -12,10 +12,10 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "yarn test && webpack --config ./webpack.worker-config.js && webpack",
-    "build:fast": "webpack --config ./webpack.worker-config.js && webpack",
+    "build": "yarn test && build:fast",
+    "build:fast": "webpack --config ./webpack.worker-config.js && webpack && node ./postBuild.js",
     "test": "jest",
-    "lint": "yarn run eslint src --fix-dry-run  "
+    "lint": "yarn run eslint src --fix-dry-run "
   },
   "peerDependencies": {},
   "husky": {
