@@ -21,10 +21,11 @@ const filterConfig: FilterConfig<Person> = [
 ];
 
 describe('Browser Search', () => {
+  let browser: puppeteer.Browser;
   let page: puppeteer.Page;
 
   beforeAll(async () => {
-    const browser = await puppeteer.launch({headless: false});
+    browser = await puppeteer.launch({headless: false});
     page = await browser.newPage();
     await page.goto(process.env['TEST_URL'] as string);
 
@@ -259,6 +260,24 @@ describe('Browser Search', () => {
     })
   })
   
+  describe.only('search error', async () => {
+    it('returns an error when the filter config is undefined', async () => {
+      try {
+        await page.evaluate(({storeId}) => window.browserSearch.processRequest<Person>({
+          filterConfig: undefined as any,
+          filtersApplied: [],
+          storeId,
+          page: 2,
+          perPage: 5,
+        }), { storeId } as any
+        );
+      }
+      catch(e) {
+        expect(e).toBe('error');
+      }
+    })
+  })
+
   afterAll(async () => {
     await page.evaluate(({storeId}) => window.browserSearch.deleteStore(storeId),
       {storeId} as any
@@ -268,5 +287,9 @@ describe('Browser Search', () => {
       {keyPath, indexConfig, storeId}
     );
     expect(doesStoreExist).toBe(false);
+
+    await page.close();
+    await browser.close();
   })
 })
+
