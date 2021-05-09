@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import { operators } from './operators'
 import { FilterConfig } from './filterConfig.model'
+import { errors } from './error';
 import { fromPromise, EitherAsync } from 'purify-ts/EitherAsync'
 import { Left, Right } from 'purify-ts/Either'
 import { uniq } from 'ramda';
@@ -11,27 +12,14 @@ const alphanumRegex = /^[A-Za-z0-9]+$/;
  * If invalid, returns a Left(error)
  */
 
-const emptyFilterConfigErrorMessage = 'Filter Config Error: The filter configuration cannot be empty';
-const emptyGroupErrorMessage = 'Filter Config Error: A group of filters cannot be empty';
-
-const invalidOperatorErrorMessage = 'Filter Config Error: An operator is invalid. Valid operators are: ' + operators.toString();
-const invalidFieldNameErrorMessage = 'Filter Config Error: All field names must be alpha-numeric. They should match a key of the object stored';
-const invalidIdErrorMessage = 'Filter Config Error: All Ids must be alpha-numeric. They should uniquely identify a filter';
-
-const fieldNameRequiredErrorMessage = 'Filter Config Error: A field name is missing';
-const idNameRequiredErrorMessage = 'Filter Config Error: A filter Id is missing';
-const operatorRequiredErrorMessage = 'Filter Config Error: An operator is missing';
-
-const uniqueIdsErrorMessage = 'Filter Config Error: Ids of filters must be unique';
-
 const filterSchema = yup.object({
-	id: yup.string().typeError(invalidIdErrorMessage).required(idNameRequiredErrorMessage),
-	field: yup.string().typeError(invalidFieldNameErrorMessage).matches(alphanumRegex, invalidFieldNameErrorMessage).required(fieldNameRequiredErrorMessage),
-	operator: yup.string().oneOf(Object.values(operators), invalidOperatorErrorMessage).required(operatorRequiredErrorMessage),
+	id: yup.string().typeError(errors['FilterConfig/InvalidId']).required(errors['FilterConfig/MissingId']),
+	field: yup.string().typeError(errors['FilterConfig/InvalidFieldName']).matches(alphanumRegex, errors['FilterConfig/InvalidFieldName']).required(errors['FilterConfig/MissingFieldName']),
+	operator: yup.string().oneOf(Object.values(operators), errors['FilterConfig/InvalidOperator']).required(errors['FilterConfig/MissingOperator']),
 	operand: yup.mixed(),
 }).required();
-const groupOfFiltersSchema = yup.array().of(filterSchema).min(1, emptyGroupErrorMessage).required();
-const filterConfigSchema = yup.array().of(groupOfFiltersSchema).min(1, emptyFilterConfigErrorMessage)
+const groupOfFiltersSchema = yup.array().of(filterSchema).min(1, errors['FilterConfig/EmptyGroup']).required();
+const filterConfigSchema = yup.array().of(groupOfFiltersSchema).min(1, errors['FilterConfig/Empty'])
 
 export const validateFilterConfig = <T>(filterConfig: any): EitherAsync<Error, FilterConfig<T>> => {
 	const validation = filterConfigSchema.validate(filterConfig, {
@@ -41,7 +29,7 @@ export const validateFilterConfig = <T>(filterConfig: any): EitherAsync<Error, F
 	.then( (filterConfig) => (
 		testFilterConfigUniqueIds(filterConfig as FilterConfig<T>) 
 		? Right(filterConfig as FilterConfig<T>)
-		: Left(new Error(uniqueIdsErrorMessage))
+		: Left(new Error(errors['FilterConfig/DuplicateOperator']))
 	))
 	.catch(err => Left(new Error(err.errors)))
 
