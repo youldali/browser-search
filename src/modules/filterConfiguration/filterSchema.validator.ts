@@ -18,8 +18,8 @@ const filterSchema = yup.object({
 	operator: yup.string().oneOf(Object.values(operators), errors['FilterConfig/InvalidOperator']).required(errors['FilterConfig/MissingOperator']),
 	operand: yup.mixed(),
 }).required();
-const groupOfFiltersSchema = yup.array().of(filterSchema).min(1, errors['FilterConfig/EmptyGroup']).required();
-const filterConfigSchema = yup.array().of(groupOfFiltersSchema).min(1, errors['FilterConfig/Empty'])
+const groupOfFiltersSchema = yup.array().typeError(errors['FilterConfig/InvalidGroup']).of(filterSchema).min(1, errors['FilterConfig/EmptyGroup']).required(errors['FilterConfig/EmptyGroup']);
+const filterConfigSchema = yup.array().typeError(errors['FilterConfig/Invalid']).of(groupOfFiltersSchema).min(1, errors['FilterConfig/Empty']).required(errors['FilterConfig/Empty']);
 
 export const validateFilterConfig = <T>(filterConfig: any): EitherAsync<Error, FilterConfig<T>> => {
 	const validation = filterConfigSchema.validate(filterConfig, {

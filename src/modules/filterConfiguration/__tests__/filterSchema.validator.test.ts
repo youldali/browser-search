@@ -102,4 +102,31 @@ describe('validateFilterConfig', () => {
 			expect((eitherFilterConfig.extract() as Error).message).toMatchSnapshot();
 		})
 	));
+
+	test('it should reject the filterConfig if undefined', () => (
+		validateFilterConfig(undefined)
+		.run()
+		.then(eitherFilterConfig => {
+			expect(eitherFilterConfig.isLeft()).toBe(true);
+			expect((eitherFilterConfig.extract() as Error).message).toMatchSnapshot();
+		})
+	));
+
+	test('it should reject the filterConfig if wrong type', () => (
+		validateFilterConfig({})
+		.run()
+		.then(eitherFilterConfig => {
+			expect(eitherFilterConfig.isLeft()).toBe(true);
+			expect((eitherFilterConfig.extract() as Error).message).toMatchSnapshot();
+		})
+	));
+
+	test('it should reject the filterConfig if wrong filter group type', () => (
+		validateFilterConfig([{}])
+		.run()
+		.then(eitherFilterConfig => {
+			expect(eitherFilterConfig.isLeft()).toBe(true);
+			expect((eitherFilterConfig.extract() as Error).message).toMatchSnapshot();
+		})
+	));
 });

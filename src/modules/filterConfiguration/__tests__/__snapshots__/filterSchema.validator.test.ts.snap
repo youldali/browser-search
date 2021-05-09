@@ -18,6 +18,12 @@ exports[`validateFilterConfig it should reject the filterConfig if the field nam
 
 exports[`validateFilterConfig it should reject the filterConfig if the operator is missing 1`] = `"Filter Config Error: An operator is missing"`;
 
+exports[`validateFilterConfig it should reject the filterConfig if undefined 1`] = `"Filter Config Error: The filter configuration cannot be empty"`;
+
+exports[`validateFilterConfig it should reject the filterConfig if wrong filter group type 1`] = `"Filter Config Error: The filter configuration must be an array of arrays"`;
+
+exports[`validateFilterConfig it should reject the filterConfig if wrong type 1`] = `"Filter Config Error: The filter configuration must be an array of arrays"`;
+
 exports[`validateFilterConfig it should return the filterConfig is the validation succeeds 1`] = `
 Array [
   Array [
