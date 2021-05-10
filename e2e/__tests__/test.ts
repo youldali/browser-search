@@ -260,7 +260,7 @@ describe('Browser Search', () => {
     })
   })
   
-  describe.only('search error', async () => {
+  describe.only('search error', () => {
     it('returns an error when the filter config is undefined', async () => {
       try {
         await page.evaluate(({storeId}) => window.browserSearch.processRequest<Person>({
@@ -273,9 +273,59 @@ describe('Browser Search', () => {
         );
       }
       catch(e) {
-        expect(e).toBe('error');
+        console.log('message: ', e.message)
+        expect(e.message).toMatchSnapshot();
       }
     })
+
+    it('returns an error when the store does not exist', async () => {
+      try {
+        await page.evaluate(({filterConfig}) => window.browserSearch.processRequest<Person>({
+          filterConfig,
+          filtersApplied: [],
+          storeId: 'unknown',
+          page: 2,
+          perPage: 5,
+        }), { filterConfig } as any
+        );
+      }
+      catch(e) {
+        expect(e.message).toMatchSnapshot();
+      }
+    })
+
+    it.only('returns an error when the filter to apply does not exist', async () => {
+      try {
+        await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
+          filterConfig,
+          filtersApplied: ['unknown'],
+          storeId,
+          page: 2,
+          perPage: 5,
+        }), { filterConfig, storeId } as any
+        );
+      }
+      catch(e) {
+        expect(e.message).toMatchSnapshot();
+      }
+    })
+
+    it.only('returns an error when the page has the wrong format', async () => {
+      try {
+        await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
+          filterConfig,
+          filtersApplied: ['unknown'],
+          storeId,
+          page: -5,
+          perPage: 5,
+        }), { filterConfig, storeId } as any
+        );
+      }
+      catch(e) {
+        expect(e.message).toMatchSnapshot();
+      }
+    })
+
   })
 
   afterAll(async () => {
