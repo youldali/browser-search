@@ -13,7 +13,7 @@ import {
 } from './__fixtures__/wrongFilterConfig.fixture';
 
 describe('validateFilterConfig', () => {
-	test('it should return the filterConfig is the validation succeeds', () => (
+	test('it should return the filterConfig if the validation succeeds', () => (
 		validateFilterConfig(filterConfigFixture)
 		.run()
 		.then(eitherFilterConfig => {
