@@ -2,7 +2,7 @@ import {
     Filter, 
     FilterConfig,
 } from '../../filterConfig.model';
-//import { createFixture } from '/src/helpers/fixture.util.ts';
+import { createFixture, createArrayFixture } from 'helpers/fixture.util';
 
 type ItemActivity = 'swimming' | 'tennis' | 'football' | 'golfing';
 interface Item {
@@ -12,7 +12,7 @@ interface Item {
   activity: ItemActivity[];
 }
 
-export const filterDictionaryFixture: Dictionary<Filter<Item>> = {
+const filterDictionaryFixture: Dictionary<Filter<Item>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 },
     numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: 'equals', operand: 2 },
@@ -20,12 +20,14 @@ export const filterDictionaryFixture: Dictionary<Filter<Item>> = {
     "activity-2": { id: 'activity-2', field: 'activity', operator: 'contains', operand: 'tennis' },
     "activity-3": { id: 'activity-3', field: 'activity', operator: 'contains', operand: 'golfing' },
 };
+export const getFilterDictionaryFixture = createFixture(filterDictionaryFixture);
 
-export const filterConfigFixture: FilterConfig<Item> = [
+const filterConfigFixture: FilterConfig<Item> = [
     [filterDictionaryFixture.priceMin],
     [filterDictionaryFixture.priceMax],
     [filterDictionaryFixture.numberOfPeople],
     [filterDictionaryFixture['activity-1'], filterDictionaryFixture['activity-2'], filterDictionaryFixture['activity-3']]
 ];
+export const getFilterConfigFixture = createArrayFixture(filterConfigFixture);
 
-export const filtersIdsAppliedFixture = ['priceMin', 'activity-1', 'activity-2'];
+export const getFiltersIdsAppliedFixture = createArrayFixture(['priceMin', 'activity-1', 'activity-2']);

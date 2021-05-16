@@ -1,20 +1,10 @@
 import { validateFilterConfig } from '../filterConfig.validator';
-import { filterConfigFixture } from './__fixtures__/fixtures';
-import { 
-	missingIdFixture, 
-	missingFieldFixture,
-	missingOperatorFixture,
-	emptyFilterConfigFixture, 
-	emptyGroupOfFiltersFixture, 
-	invalidOperatorFixture,
-	invalidFieldFixture,
-	invalidIdFixture,
-	nonUniqueIdsFixture,
-} from './__fixtures__/wrongFilterConfig.fixture';
+import { getFilterConfigFixture } from './__fixtures__/fixtures';
+
 
 describe('validateFilterConfig', () => {
 	test('it should return the filterConfig if the validation succeeds', () => (
-		validateFilterConfig(filterConfigFixture)
+		validateFilterConfig(getFilterConfigFixture())
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isRight()).toBe(true);
@@ -23,7 +13,7 @@ describe('validateFilterConfig', () => {
 	));
 
   test('it should reject the filterConfig if it is empty', () => (
-		validateFilterConfig(emptyFilterConfigFixture)
+		validateFilterConfig([])
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -32,7 +22,7 @@ describe('validateFilterConfig', () => {
 	));
 
   test('it should reject the filterConfig if a group of filter is empty', () => (
-		validateFilterConfig(emptyGroupOfFiltersFixture)
+		validateFilterConfig(getFilterConfigFixture([[]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -41,7 +31,7 @@ describe('validateFilterConfig', () => {
 	));
 
   test('it should reject the filterConfig if an operator is invalid', () => (
-		validateFilterConfig(invalidOperatorFixture)
+		validateFilterConfig(getFilterConfigFixture([[{ id: 'priceMin', field: 'price', operator: '.....', operand: 200 } as any]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -50,7 +40,7 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if a field is invalid', () => (
-		validateFilterConfig(invalidFieldFixture)
+		validateFilterConfig(getFilterConfigFixture([[{ id: 'priceMin', field: 2, operator: 'gt', operand: 200 } as any]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -59,7 +49,7 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if an Id is invalid', () => (
-		validateFilterConfig(invalidIdFixture)
+		validateFilterConfig(getFilterConfigFixture([[{ id: 33, field: 'price', operator: 'gt', operand: 200 } as any]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -68,7 +58,7 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if the field Id is missing', () => (
-		validateFilterConfig(missingIdFixture)
+		validateFilterConfig(getFilterConfigFixture([[{ field: 'price', operator: 'gt', operand: 200 } as any]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -77,7 +67,7 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if the field name is missing', () => (
-		validateFilterConfig(missingFieldFixture)
+		validateFilterConfig(getFilterConfigFixture([[{ id: 'priceMin', operator: 'gt', operand: 200 } as any]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -86,7 +76,7 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if the operator is missing', () => (
-		validateFilterConfig(missingOperatorFixture)
+		validateFilterConfig(getFilterConfigFixture([[{ id: 'priceMin', field: 'price', operand: 200 } as any]]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -95,7 +85,16 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if the Ids are not uniq', () => (
-		validateFilterConfig(nonUniqueIdsFixture)
+		validateFilterConfig(getFilterConfigFixture(
+			[
+				[ 
+						{ id: 'priceMin', field: 'price', operator: 'gt', operand: 200 }, 
+				],
+				[ 
+						{ id: 'priceMin', field: 'price', operator: 'lt', operand: 100 }, 
+				],
+			]
+		))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
@@ -122,7 +121,7 @@ describe('validateFilterConfig', () => {
 	));
 
 	test('it should reject the filterConfig if wrong filter group type', () => (
-		validateFilterConfig([{}])
+		validateFilterConfig(getFilterConfigFixture([{} as any]))
 		.run()
 		.then(eitherFilterConfig => {
 			expect(eitherFilterConfig.isLeft()).toBe(true);
