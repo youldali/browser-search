@@ -2,6 +2,8 @@
 
 exports[`validateRequest it should return an error when filterApplied is invalid 1`] = `[Error: filtersApplied[0] must be a \`string\` type, but the final value was: \`33\`.]`;
 
+exports[`validateRequest it should return an error when filterConfig is invalid 1`] = `[Error: Filter Config Error: The filter configuration cannot be empty]`;
+
 exports[`validateRequest it should return an error when order by is invalid 1`] = `[Error: Request Error: The order by property must be a string matching an indexed property name of your object]`;
 
 exports[`validateRequest it should return an error when order direction is invalid 1`] = `[Error: Request Error: The order direction property must be either "ASC" | "DESC"]`;
@@ -14,7 +16,7 @@ exports[`validateRequest it should return an error when per page is invalid numb
 
 exports[`validateRequest it should return an error when per page is invalid number 2`] = `[Error: Request Error: The page property must be a natural number]`;
 
-exports[`validateRequest it should return an error when storeId is invalid 1`] = `[Error: Reques Error: The store Id must be a string.]`;
+exports[`validateRequest it should return an error when storeId is invalid 1`] = `[Error: Request Error: The store Id must be a string.]`;
 
 exports[`validateRequest it should return the request when the validation succeeds (optional fields are omitted) 1`] = `
 Object {

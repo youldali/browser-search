@@ -95,4 +95,13 @@ describe('validateRequest', () => {
 		})
 	));
 
+	test('it should return an error when filterConfig is invalid', () => (		
+		validateRequest(getRequestFixture({filterConfig: []} as any))
+		.run()
+		.then(eitherRequestFixture => {
+			expect(eitherRequestFixture.isLeft()).toBe(true);
+			expect(eitherRequestFixture.extract()).toMatchSnapshot();
+		})
+	));
+
 });

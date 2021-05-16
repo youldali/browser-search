@@ -1,7 +1,7 @@
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { transformIntoObject, filterAgainstObjectKeys } from 'helpers/array.util';
 import { getAllPrimaryKeysForIndex } from 'apis/storage.util';
-import { ItemId, Request } from './request.model';
+import { ItemId, Request } from './models';
 import { liftEither } from 'purify-ts/EitherAsync'
 import { Right } from 'purify-ts/Either'
 import { isNil } from 'ramda'

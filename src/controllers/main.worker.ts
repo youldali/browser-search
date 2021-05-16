@@ -1,5 +1,5 @@
 import { buildFilterConfigData } from 'modules/filterConfiguration'
-import { Item, ItemId, Request } from './request.model';
+import { Item, ItemId, Request, validateRequest } from './models/';
 import { getFilterStatitics } from './filter';
 import { getOrderFromRequest } from './order';
 import { getPaginatedItems } from './pagination';
@@ -25,7 +25,9 @@ self.onmessage = <T>(event: RequestEvent<T>) => {
 
 
 const processRequest = <T>(request: Request<T>) => {
-    const eitherFilterConfigData = buildFilterConfigData(request.filterConfig)(request.filtersApplied);
+    const eitherAsyncRequest = validateRequest<T>(request);
+    const eitherFilterConfigData = eitherAsyncRequest.map(request => 
+    buildFilterConfigData(request.filterConfig)(request.filtersApplied));
 
     const eitherFilterStatisticData = eitherFilterConfigData
       .chain(getFilterStatitics(request.storeId));

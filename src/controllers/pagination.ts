@@ -1,6 +1,6 @@
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { getItems } from 'apis/storage.util';
-import { Item, ItemId, Request } from './request.model';
+import { Item, ItemId, Request } from './models';
 
 const DEFAULT_ITEMS_PER_PAGE = 20;
 const DEFAULT_PAGE = 1;

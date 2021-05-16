@@ -3,7 +3,7 @@ export type RequestErrors = 'Request/InvalidStoreId' | 'Request/StoreDoesNotExis
 'Request/InvalidFiltersApplied' | 'Request/InvalidOrderBy';
 
 export const requestErrors: Record<RequestErrors, string> = {
-  'Request/InvalidStoreId': 'Reques Error: The store Id must be a string.',
+  'Request/InvalidStoreId': 'Request Error: The store Id must be a string.',
   'Request/StoreDoesNotExist': 'Request Error: The store Id does not exist. You must create it first',
   'Request/InvalidPerPage': 'Request Error: The per page property must be a natural number',
   'Request/InvalidPage': 'Request Error: The page property must be a natural number',

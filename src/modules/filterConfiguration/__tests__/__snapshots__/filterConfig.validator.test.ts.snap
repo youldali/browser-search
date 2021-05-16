@@ -24,7 +24,7 @@ exports[`validateFilterConfig it should reject the filterConfig if wrong filter 
 
 exports[`validateFilterConfig it should reject the filterConfig if wrong type 1`] = `"Filter Config Error: The filter configuration must be an array of arrays"`;
 
-exports[`validateFilterConfig it should return the filterConfig is the validation succeeds 1`] = `
+exports[`validateFilterConfig it should return the filterConfig if the validation succeeds 1`] = `
 Array [
   Array [
     Object {

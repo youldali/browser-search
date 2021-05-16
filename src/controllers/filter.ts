@@ -5,7 +5,7 @@ import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'm
 import { fromPairs, zip } from 'ramda';
 import { getPrimaryKeysMatchingOperator, iterateOverStore } from 'apis/storage.util';
 import { allEitherAsyncs } from 'helpers/purify.util';
-import { StoreId } from './request.model';
+import { StoreId } from './models';
 
 
 

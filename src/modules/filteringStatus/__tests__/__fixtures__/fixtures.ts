@@ -1,5 +1,5 @@
 import { 
-    buildFilterConfigDataFromFilterConfig, 
+    buildFilterConfigData, 
     Filter, 
     FilterConfig,
 } from 'modules/filterConfiguration';
@@ -45,7 +45,7 @@ export const filterConfigFixture: FilterConfig<Item> = [
 ];
 
 export const filtersIdsAppliedFixture = ['activity-1', 'priceMin', 'activity-2'];
-export const filterConfigDataFixture = buildFilterConfigDataFromFilterConfig<Item>(filterConfigFixture)(filtersIdsAppliedFixture);
+export const filterConfigDataFixture = buildFilterConfigData<Item>(filterConfigFixture)(filtersIdsAppliedFixture);
 
 const priceMinFilterFunction = (target: Item) => 
   operatorToFunction[filterDictionaryFixture.priceMin.operator](target?.[filterDictionaryFixture.priceMin.field], filterDictionaryFixture.priceMin.operand);

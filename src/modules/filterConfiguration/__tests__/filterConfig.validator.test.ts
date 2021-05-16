@@ -1,4 +1,4 @@
-import { validateFilterConfig } from '../filterSchema.validator';
+import { validateFilterConfig } from '../filterConfig.validator';
 import { filterConfigFixture } from './__fixtures__/fixtures';
 import { 
 	missingIdFixture, 
