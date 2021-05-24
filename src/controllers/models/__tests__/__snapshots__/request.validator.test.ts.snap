@@ -18,6 +18,8 @@ exports[`validateRequest it should return an error when per page is invalid numb
 
 exports[`validateRequest it should return an error when storeId is invalid 1`] = `[Error: Request Error: The store Id must be a string.]`;
 
+exports[`validateRequest it should return an error when the store does not exist 1`] = `[Error: Request Error: The store Id does not exist. You must create it first]`;
+
 exports[`validateRequest it should return the request when the validation succeeds (optional fields are omitted) 1`] = `
 Object {
   "filterConfig": Array [

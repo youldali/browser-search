@@ -1,8 +1,8 @@
 import * as yup from 'yup';
-import { fromPromise, EitherAsync } from 'purify-ts/EitherAsync'
+import { EitherAsync } from 'purify-ts/EitherAsync'
 import { Left, Right } from 'purify-ts/Either'
 import { requestErrors } from './requestErrors';
-import { Request } from './request.model';
+import { Request, StoreId } from './request.model';
 import { validateFilterConfig } from '../../modules/filterConfiguration'
 
 const requestSchema = yup.object({
@@ -14,12 +14,17 @@ const requestSchema = yup.object({
 	orderBy: yup.string().typeError(requestErrors['Request/InvalidOrderBy']).optional(),
 }).required();
 
-export const validateRequest = <T>(request: any): EitherAsync<Error, Request<T>> => (
+export interface ExtraValidators {
+	getStoreExist: (storeId: StoreId) => EitherAsync<Error, boolean>;
+}
+
+export const validateRequest = <T>(extraValidators: ExtraValidators) => (request: any) : EitherAsync<Error, Request<T>> =>  (
 	validateBaseRequest(request)
 	.chain(baseRequest => (
 		validateFilterConfig(request.filterConfig)
 		.map(filterConfig => ({...baseRequest, filterConfig}))
 	))
+	.chain(request => validateStoreExistence(extraValidators.getStoreExist)(request))
 )
 
 type BaseRequest<T> = Omit<Request<T>, 'filterConfig'>
@@ -31,5 +36,15 @@ const validateBaseRequest = <T>(request: any): EitherAsync<Error, BaseRequest<T>
 	.then( (request) => Right(request as Request<T>))
 	.catch(err => Left(new Error(err.errors)))
 
-	return fromPromise(() => validation);
+	return EitherAsync.fromPromise(() => validation);
 }
+
+const validateStoreExistence = <T>(getStoreExist: ExtraValidators['getStoreExist']) => (request: Request<T>): EitherAsync<Error, Request<T>> => (
+	getStoreExist(request.storeId)
+	.map(doesStoreExist => {
+		if(doesStoreExist) {
+			return request;
+		}
+		throw new Error(requestErrors['Request/StoreDoesNotExist'])
+	})
+)

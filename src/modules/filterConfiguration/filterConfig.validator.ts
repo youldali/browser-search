@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import { operators } from './operators'
 import { FilterConfig } from './filterConfig.model'
 import { errors } from './error';
-import { fromPromise, EitherAsync } from 'purify-ts/EitherAsync'
+import { EitherAsync } from 'purify-ts/EitherAsync'
 import { Left, Right } from 'purify-ts/Either'
 import { uniq } from 'ramda';
 
@@ -34,7 +34,7 @@ export const validateFilterConfig = <T>(filterConfig: any): EitherAsync<Error, F
 	.catch(err => Left(new Error(err.errors)))
 
 
-	return fromPromise(() => validation);
+	return EitherAsync.fromPromise(() => validation);
 }
 
 const testFilterConfigUniqueIds = (filterConfig: FilterConfig<any>): boolean => {
