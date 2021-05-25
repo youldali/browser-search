@@ -1,7 +1,7 @@
 import * as idb from './indexedDB.api'
 import { isNil, map } from 'ramda'
-import { Either } from 'purify-ts/Either';
-import { EitherAsync, liftPromise, liftEither } from 'purify-ts/EitherAsync'
+import { Either, Right, Left } from 'purify-ts/Either';
+import { EitherAsync } from 'purify-ts/EitherAsync'
 import { Operator } from 'modules/filterConfiguration/operators';
 
 const databaseId = "browser-search";
@@ -24,13 +24,12 @@ const simplifiedIndexToIndexConfig = (simplifiedIndex: SimplifiedIndexConfig): i
         (simplifiedIndex)
     );
 }
-
 const openDatabase = (): EitherAsync<Error, IDBDatabase> => (
-    liftPromise(() => idb.openDatabaseLatestVersion(databaseId))
+    EitherAsync(() => idb.openDatabaseLatestVersion(databaseId))
 );
 
 const closeDatabase = (db: IDBDatabase): EitherAsync<Error, void> => (
-    liftPromise(() => idb.closeDatabase(db))
+    EitherAsync(() => idb.closeDatabase(db))
 );
 
 type IDBCommand = (db: IDBDatabase) => EitherAsync<Error, any>;
@@ -72,29 +71,29 @@ export const createStore =
             Either.encase(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(database));
         
     }
-
+    
     return (
-        liftPromise(() => idb.upgradeDatabase(databaseId)(createObjectStore))
-        .chain(db => liftPromise(() => idb.closeDatabase(db)))
+        EitherAsync(() => idb.upgradeDatabase(databaseId)(createObjectStore))
+        .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
     )
 }
 
 export const deleteStore = (storeName: string): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => liftEither(Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(db)));
+    const command: IDBCommand = db => EitherAsync.liftEither(Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(db)));
     return execute(command);
 }
 
 export const addDataToStore = 
 <T>(storeName: string) =>
 (data: T[]): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => liftPromise(() => idb.addDataToStore(storeName)(db)(data));
+    const command: IDBCommand = db => EitherAsync(() => idb.addDataToStore(storeName)(db)(data));
     return execute(command);
 }
 
 export const iterateOverStore = 
 <T>(storeName: string) =>
 (callback: (primaryKey: StringOrNumber, item: T) => void): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => liftPromise(() => idb.iterateOverStore(storeName)(db)(callback));
+    const command: IDBCommand = db => EitherAsync(() => idb.iterateOverStore(storeName)(db)(callback));
     return execute(command);
 }
 
@@ -106,8 +105,8 @@ export const getPrimaryKeysMatchingOperator =
     const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(value));
 
     const command: IDBCommand = db => 
-        liftEither(eitherKeyRange)
-            .chain (keyRange => liftPromise(() => idb.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
+        EitherAsync.liftEither(eitherKeyRange)
+            .chain (keyRange => EitherAsync(() => idb.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
 
     return execute(command);
 }
@@ -116,14 +115,14 @@ export const getAllPrimaryKeysForIndex =
 (storeName: string) => 
 (indexName: string) => 
 (reverseDirection: boolean): EitherAsync<Error, StringOrNumber[]> => {
-    const command: IDBCommand = db => liftPromise(() => idb.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
+    const command: IDBCommand = db => EitherAsync(() => idb.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
     return execute(command);
 }
 
 export const getAllUniqueKeysForIndex = 
 (storeName: string) => 
 (indexName: string): EitherAsync<Error, StringOrNumber[]> => {
-    const command: IDBCommand = db => liftPromise(() => idb.getAllUniqueKeysForIndex(db)(storeName)(indexName));
+    const command: IDBCommand = db => EitherAsync(() => idb.getAllUniqueKeysForIndex(db)(storeName)(indexName));
     return execute(command);
 }
 
@@ -131,19 +130,19 @@ export const getAllUniqueKeysForIndex =
 export const getItems = 
 <T>(storeName: string) => 
 (itemIds: StringOrNumber[]): EitherAsync<Error, T[]> => {
-    const command: IDBCommand = db => liftPromise(() => idb.getItems(db)(storeName)(itemIds));
+    const command: IDBCommand = db => EitherAsync(() => idb.getItems(db)(storeName)(itemIds));
     return execute(command);
 };
 
 export const getItemsCount = 
 (storeName: string) : EitherAsync<Error, number> => {
-    const command: IDBCommand = db => liftPromise(() => idb.getNumberOfItemsInStore(storeName)(db));
+    const command: IDBCommand = db => EitherAsync(() => idb.getNumberOfItemsInStore(storeName)(db));
     return execute(command);
 };
 
 export const doesStoreExist = 
 (storeName: string) : EitherAsync<Error, boolean> => {
-    const command: IDBCommand = db => liftPromise(() => Promise.resolve(idb.doesStoreExist(storeName)(db)));
+    const command: IDBCommand = db => EitherAsync(() => Promise.resolve(idb.doesStoreExist(storeName)(db)));
     return execute(command);
 };
 

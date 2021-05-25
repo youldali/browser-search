@@ -4,7 +4,6 @@ import { getFilterStatusFromFilterConfig, FilteredItemStatus } from 'modules/fil
 import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'modules/filteringData';
 import { fromPairs, zip } from 'ramda';
 import { getPrimaryKeysMatchingOperator, iterateOverStore } from 'apis/storage.util';
-import { allEitherAsyncs } from 'helpers/purify.util';
 import { StoreId } from './models';
 
 
@@ -38,7 +37,7 @@ const getFilterIdToMatchingItemIds = (storeName: string) => <T>(filterConfigData
     const filters = Object.values(filterConfigData.getFilterDictionary());
     const filtersIds = filterConfigData.getAllFilterIds();
 
-    const eitherAsyncItemsIdsMatchingFiltersList = allEitherAsyncs( 
+    const eitherAsyncItemsIdsMatchingFiltersList = EitherAsync.sequence( 
         filters.map( filter => getPrimaryKeysMatchingOperator(storeName)(filter.field as string)(filter.operator)(filter.operand) )
     );
    
