@@ -260,7 +260,7 @@ describe('Browser Search', () => {
     })
   })
   
-  describe.only('search error', () => {
+  describe('search error', () => {
     it('returns an error when the filter config is undefined', async () => {
       try {
         await page.evaluate(({storeId}) => window.browserSearch.processRequest<Person>({
@@ -294,7 +294,7 @@ describe('Browser Search', () => {
       }
     })
 
-    it.only('returns an error when the filter to apply does not exist', async () => {
+    it('returns an error when the filter to apply does not exist', async () => {
       try {
         await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
           filterConfig,
@@ -310,7 +310,7 @@ describe('Browser Search', () => {
       }
     })
 
-    it.only('returns an error when the page has the wrong format', async () => {
+    it('returns an error when the page has the wrong format', async () => {
       try {
         await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
           filterConfig,

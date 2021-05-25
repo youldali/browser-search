@@ -1,9 +1,9 @@
 import { identity } from 'ramda';
-import { Request } from './controllers/request.model';
+import { Request } from './controllers';
 import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
 
-export * from './controllers/request.model'; 
+export * from './controllers'; 
 export { Operator } from './modules/filterConfiguration'
 
 const workerFunction = () => {

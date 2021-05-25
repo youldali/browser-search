@@ -38,10 +38,18 @@ Array [
 
 exports[`Browser Search search error returns an error when the filter config is undefined 1`] = `
 "Evaluation failed: Error: Filter Config Error: The filter configuration cannot be empty
-    at eval (webpack://browser-search/./src/modules/filterConfiguration/filterSchema.validator.ts?:40:78)"
+    at eval (webpack://browser-search/./src/modules/filterConfiguration/filterConfig.validator.ts?:40:78)"
 `;
 
-exports[`Browser Search search error returns an error when the store does not exist 1`] = `"Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found."`;
+exports[`Browser Search search error returns an error when the page has the wrong format 1`] = `
+"Evaluation failed: Error: Request Error: The page property must be a natural number
+    at eval (webpack://browser-search/./src/controllers/models/request.validator.ts?:35:78)"
+`;
+
+exports[`Browser Search search error returns an error when the store does not exist 1`] = `
+"Evaluation failed: Error: Request Error: The store Id does not exist. You must create it first
+    at eval (webpack://browser-search/./src/controllers/models/request.validator.ts?:43:11)"
+`;
 
 exports[`Browser Search search performs a search with 1 filter 1`] = `
 Object {

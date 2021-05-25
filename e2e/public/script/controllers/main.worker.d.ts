@@ -1,4 +1,4 @@
-import { Item, ItemId } from './request.model';
+import { Item, ItemId } from './models/';
 export interface FilteringResponse {
     itemIds: ItemId[];
     items: Item[];

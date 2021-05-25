@@ -3,6 +3,7 @@ import { Item, ItemId, Request, validateRequest } from './models/';
 import { getFilterStatitics } from './filter';
 import { getOrderFromRequest } from './order';
 import { getPaginatedItems } from './pagination';
+import { doesStoreExist } from '../apis/storage.util'
 export interface FilteringResponse {
     itemIds: ItemId[],
     items: Item[],
@@ -25,7 +26,7 @@ self.onmessage = <T>(event: RequestEvent<T>) => {
 
 
 const processRequest = <T>(request: Request<T>) => {
-    const eitherAsyncRequest = validateRequest<T>(request);
+    const eitherAsyncRequest = validateRequest<T>({getStoreExist: doesStoreExist})(request);
     const eitherFilterConfigData = eitherAsyncRequest.map(request => 
     buildFilterConfigData(request.filterConfig)(request.filtersApplied));
 

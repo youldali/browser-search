@@ -2,7 +2,6 @@ import { EitherAsync } from 'purify-ts/EitherAsync'
 import { transformIntoObject, filterAgainstObjectKeys } from 'helpers/array.util';
 import { getAllPrimaryKeysForIndex } from 'apis/storage.util';
 import { ItemId, Request } from './models';
-import { liftEither } from 'purify-ts/EitherAsync'
 import { Right } from 'purify-ts/Either'
 import { isNil } from 'ramda'
 
@@ -29,5 +28,5 @@ const getOrderedItemIds = <T>({ storeId, orderBy, orderDirection}: OrderParams<T
 
 
 const getDefaultOrder = (itemsIdsToSort: ItemId[]): EitherAsync<Error, ItemId[]> => (
-    liftEither(Right(itemsIdsToSort)) 
+    EitherAsync.liftEither(Right(itemsIdsToSort)) 
 )

@@ -1,6 +1,6 @@
 import * as idb from './indexedDB.api'
 import { isNil, map } from 'ramda'
-import { Either, Right, Left } from 'purify-ts/Either';
+import { Either } from 'purify-ts/Either';
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { Operator } from 'modules/filterConfiguration/operators';
 

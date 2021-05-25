@@ -1,9 +1,0 @@
-export declare const emptyFilterConfigFixture: any;
-export declare const emptyGroupOfFiltersFixture: any;
-export declare const invalidOperatorFixture: any;
-export declare const invalidFieldFixture: any;
-export declare const invalidIdFixture: any;
-export declare const missingIdFixture: any;
-export declare const missingFieldFixture: any;
-export declare const missingOperatorFixture: any;
-export declare const nonUniqueIdsFixture: any;
