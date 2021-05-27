@@ -26,11 +26,23 @@ export const processRequest = <T>(request: Request<T>) => {
 export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => (
   storage.createStore(storeName)(indexConfig)(keyPath)
     .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
 )
 
 export const addDataToStore = <T>(storeName: string) => (data: T[]) => (
   storage.addDataToStore(storeName)(data)
     .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
 )
 
 export const getAllValuesOfProperty = (storeName: string) => (propertyName: string): Promise<unknown> => (
@@ -58,6 +70,34 @@ export const getCount = (storeName: string): Promise<number> => (
 export const deleteStore = (storeName: string) => (
   storage.deleteStore(storeName)
     .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
+)
+
+export const deleteStoreIfExist = (storeName: string) => (
+  storage.deleteStoreIfExist(storeName)
+    .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
+)
+
+export const deleteDatabase = () => (
+  storage.deleteDatabase()
+    .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
 )
 
 export const doesStoreExist = (storeName: string) => (

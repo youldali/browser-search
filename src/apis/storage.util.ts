@@ -80,6 +80,14 @@ export const deleteStore = (storeName: string): EitherAsync<Error, void> => (
     EitherAsync((() => idb.deleteObjectStore(storeName)(databaseId)))
 )
 
+export const deleteStoreIfExist = (storeName: string): EitherAsync<Error, void> => (
+    EitherAsync((() => idb.deleteObjectStoreIfExist(storeName)(databaseId)))
+)
+
+export const deleteDatabase = (): EitherAsync<Error, void> => (
+    EitherAsync((() => idb.deleteDatabase(databaseId)))
+)
+
 export const addDataToStore = 
 <T>(storeName: string) =>
 (data: T[]): EitherAsync<Error, void> => {

@@ -222,3 +222,14 @@ export const getItems =
         transaction.onerror = () => reject('error fetching the items ' + transaction?.error?.message);
     });
 };
+
+export const deleteDatabase = 
+(dbName: string): Promise<void> => {
+    const databaseDeleteRequest = indexedDB.deleteDatabase(dbName);
+
+    return new Promise((resolve, reject) => {
+        databaseDeleteRequest.onsuccess = () => resolve();
+        databaseDeleteRequest.onerror = () => reject(`Couldn't delete the database ${dbName}: ${databaseDeleteRequest.error}`);
+    });
+};
+
