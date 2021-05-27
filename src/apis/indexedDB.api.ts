@@ -46,11 +46,13 @@ export const createObjectStore =
 (storeName: string) =>
 (indexConfig: IndexConfig) => 
 (keyPath: string) => 
-(db: IDBDatabase) => {
-    const objectStore = db.createObjectStore(storeName, { keyPath });
-    Object.entries(indexConfig)
+(dbName: string): Promise<IDBDatabase> => (
+    upgradeDatabase(dbName)(db => {
+        const objectStore = db.createObjectStore(storeName, { keyPath });
+        Object.entries(indexConfig)
         .forEach( ([indexName, indexConfig]) => objectStore.createIndex(indexName, indexName, indexConfig || {}) );
-}
+    })
+)
 
 export const deleteObjectStoreIfExist = 
 (storeName: string) =>

@@ -9,6 +9,8 @@ export interface SimplifiedIndexConfig {
 }
 export declare const createStore: (storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig) => (keyPath: string) => EitherAsync<Error, void>;
 export declare const deleteStore: (storeName: string) => EitherAsync<Error, void>;
+export declare const deleteStoreIfExist: (storeName: string) => EitherAsync<Error, void>;
+export declare const deleteDatabase: () => EitherAsync<Error, void>;
 export declare const addDataToStore: <T>(storeName: string) => (data: T[]) => EitherAsync<Error, void>;
 export declare const iterateOverStore: <T>(storeName: string) => (callback: (primaryKey: StringOrNumber, item: T) => void) => EitherAsync<Error, void>;
 export declare const getPrimaryKeysMatchingOperator: (storeName: string) => (indexName: string) => (operator: Operator) => (value: any) => EitherAsync<Error, StringOrNumber[]>;

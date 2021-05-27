@@ -65,13 +65,10 @@ export const createStore =
     (simplifiedIndexConfig: SimplifiedIndexConfig) => 
     (keyPath: string): EitherAsync<Error, void> => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
-    const createObjectStore = (database: IDBDatabase) => {
-        Either.encase(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(database));
-    }
-    
+
     return (
         EitherAsync(() => idb.deleteObjectStoreIfExist(storeName)(databaseId))
-        .chain (() => EitherAsync(() => idb.upgradeDatabase(databaseId)(createObjectStore)))
+        .chain (() => EitherAsync(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(databaseId)))
         .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
     )
 }
