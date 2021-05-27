@@ -9,7 +9,8 @@ export declare const openDatabaseLatestVersion: (dbName: string) => Promise<IDBD
 export declare const createOrOpenDatabase: (dbName: string) => (dbVersion: number) => (onUpgradeCallback: OnUpgradeCallback) => Promise<IDBDatabase>;
 export declare const upgradeDatabase: (dbName: string) => (createObjectStore: OnUpgradeCallback) => Promise<IDBDatabase>;
 export declare const createObjectStore: (storeName: string) => (indexConfig: IndexConfig) => (keyPath: string) => (db: IDBDatabase) => void;
-export declare const deleteObjectStore: (storeName: string) => (db: IDBDatabase) => IDBDatabase;
+export declare const deleteObjectStoreIfExist: (storeName: string) => (dbName: string) => Promise<void>;
+export declare const deleteObjectStore: (storeName: string) => (dbName: string) => Promise<void>;
 export declare const doesStoreExist: (storeName: string) => (db: IDBDatabase) => boolean;
 export declare const getNumberOfItemsInStore: (storeName: string) => (db: IDBDatabase) => Promise<number>;
 export declare const addDataToStore: (storeName: string) => (db: IDBDatabase) => (data: Object[]) => Promise<IDBDatabase>;

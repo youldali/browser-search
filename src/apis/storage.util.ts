@@ -66,22 +66,19 @@ export const createStore =
     (keyPath: string): EitherAsync<Error, void> => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
     const createObjectStore = (database: IDBDatabase) => {
-
-            Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(database));
-            Either.encase(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(database));
-        
+        Either.encase(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(database));
     }
     
     return (
-        EitherAsync(() => idb.upgradeDatabase(databaseId)(createObjectStore))
+        EitherAsync(() => idb.deleteObjectStoreIfExist(storeName)(databaseId))
+        .chain (() => EitherAsync(() => idb.upgradeDatabase(databaseId)(createObjectStore)))
         .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
     )
 }
 
-export const deleteStore = (storeName: string): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => EitherAsync.liftEither(Either.encase<Error, void>(() => idb.deleteObjectStore(storeName)(db)));
-    return execute(command);
-}
+export const deleteStore = (storeName: string): EitherAsync<Error, void> => (
+    EitherAsync((() => idb.deleteObjectStore(storeName)(databaseId)))
+)
 
 export const addDataToStore = 
 <T>(storeName: string) =>

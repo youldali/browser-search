@@ -273,7 +273,6 @@ describe('Browser Search', () => {
         );
       }
       catch(e) {
-        console.log('message: ', e.message)
         expect(e.message).toMatchSnapshot();
       }
     })
@@ -314,7 +313,7 @@ describe('Browser Search', () => {
       try {
         await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
           filterConfig,
-          filtersApplied: ['unknown'],
+          filtersApplied: [],
           storeId,
           page: -5,
           perPage: 5,

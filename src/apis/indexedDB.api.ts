@@ -52,20 +52,30 @@ export const createObjectStore =
         .forEach( ([indexName, indexConfig]) => objectStore.createIndex(indexName, indexName, indexConfig || {}) );
 }
 
-export const deleteObjectStore = 
+export const deleteObjectStoreIfExist = 
 (storeName: string) =>
-(db: IDBDatabase) => {
-    if(doesStoreExist(storeName)(db)) {
+async (dbName: string): Promise<void> => {
+    const db = await openDatabaseLatestVersion(dbName);
+    const storeExist = doesStoreExist(storeName)(db);
+    await closeDatabase(db);
+
+    if(storeExist) {
         try {
-            db.deleteObjectStore(storeName);
-            return db;
+            await deleteObjectStore(storeName)(dbName);
         }
         catch (exception) {
             throw (`Couldn't delete object store ${storeName}: ${exception}`)
         }
     }
-    return db;
 }
+
+export const deleteObjectStore = 
+(storeName: string) =>
+(dbName: string): Promise<void> => (
+    upgradeDatabase(dbName)((db) => db.deleteObjectStore(storeName))
+    .catch(exception => { throw (`Couldn't delete object store ${storeName}: ${exception}`) } )
+    .then(closeDatabase)
+)
 
 export const doesStoreExist = 
 (storeName: string) =>
