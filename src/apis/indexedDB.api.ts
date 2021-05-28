@@ -8,13 +8,13 @@ type OnUpgradeCallback = (db: IDBDatabase) => void
 export type IndexValue = { multiEntry?: boolean, unique?: boolean };
 export type IndexConfig = Dictionary<IndexValue>;
 
-export const closeDatabase = (db: IDBDatabase): Promise<void>  => (Promise.resolve(db.close()))
+export const closeDatabase = (db: IDBDatabase): Promise<void> => Promise.resolve(db.close())
 
 export const openDatabaseLatestVersion = (dbName: string): Promise<IDBDatabase>  => {
     const openDBRequest = indexedDB.open(dbName);
 
     return new Promise((resolve, reject) => {
-        openDBRequest.onerror = () => reject(`error opening DB ${dbName}: ${openDBRequest.error}`);
+        openDBRequest.onerror = () => reject(new Error(`An error occured when opening Database ${dbName}: ${openDBRequest.error}`));
         openDBRequest.onsuccess = () => resolve(openDBRequest.result);
     });
 }
@@ -26,7 +26,7 @@ export const createOrOpenDatabase =
     const openDBRequest = indexedDB.open(dbName, dbVersion);
 
     return new Promise((resolve, reject) => {
-        openDBRequest.onerror = () => reject(`error opening DB ${dbName}: ${openDBRequest.error}`);
+        openDBRequest.onerror = () => reject(new Error(`An error occured when opening Database ${dbName}: ${openDBRequest.error}`));
         openDBRequest.onsuccess = () => resolve(openDBRequest.result);
         openDBRequest.onupgradeneeded = () => onUpgradeCallback(openDBRequest.result);
     });
@@ -34,19 +34,19 @@ export const createOrOpenDatabase =
 
 export const upgradeDatabase = 
 (dbName: string) => 
-async (createObjectStore: OnUpgradeCallback): Promise<IDBDatabase> => {
+async (onUpgradeCallback: OnUpgradeCallback): Promise<IDBDatabase> => {
     const db = await openDatabaseLatestVersion(dbName);
     const latestVersion = db.version;
     db.close();
 
-    return createOrOpenDatabase(dbName)(latestVersion + 1)(createObjectStore);
+    return createOrOpenDatabase(dbName)(latestVersion + 1)(onUpgradeCallback);
 }
 
 export const createObjectStore = 
+(dbName: string) =>
 (storeName: string) =>
 (indexConfig: IndexConfig) => 
-(keyPath: string) => 
-(dbName: string): Promise<IDBDatabase> => (
+(keyPath: string): Promise<IDBDatabase> => (
     upgradeDatabase(dbName)(db => {
         const objectStore = db.createObjectStore(storeName, { keyPath });
         Object.entries(indexConfig)
@@ -55,38 +55,33 @@ export const createObjectStore =
 )
 
 export const deleteObjectStoreIfExist = 
-(storeName: string) =>
-async (dbName: string): Promise<void> => {
+(dbName: string) =>
+async (storeName: string): Promise<void> => {
     const db = await openDatabaseLatestVersion(dbName);
-    const storeExist = doesStoreExist(storeName)(db);
+    const storeExist = doesStoreExist(db)(storeName);
     await closeDatabase(db);
 
     if(storeExist) {
-        try {
-            await deleteObjectStore(storeName)(dbName);
-        }
-        catch (exception) {
-            throw (`Couldn't delete object store ${storeName}: ${exception}`)
-        }
+        await deleteObjectStore(storeName)(dbName);
     }
 }
 
 export const deleteObjectStore = 
-(storeName: string) =>
-(dbName: string): Promise<void> => (
+(dbName: string) =>
+(storeName: string): Promise<void> => (
     upgradeDatabase(dbName)((db) => db.deleteObjectStore(storeName))
-    .catch(exception => { throw (`Couldn't delete object store ${storeName}: ${exception}`) } )
+    .catch(exception => { throw (new Error(`An error occured when deleting store ${storeName}: ${exception}`)) } )
     .then(closeDatabase)
 )
 
 export const doesStoreExist = 
-(storeName: string) =>
-(db: IDBDatabase): boolean => (db.objectStoreNames.contains(storeName));
+(db: IDBDatabase) =>
+(storeName: string): boolean => (db.objectStoreNames.contains(storeName));
 
 
 export const getNumberOfItemsInStore = 
-(storeName: string) =>
-(db: IDBDatabase): Promise<number> => {
+(db: IDBDatabase) =>
+(storeName: string): Promise<number> => {
     const 
         transaction = db.transaction([storeName], 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -94,17 +89,18 @@ export const getNumberOfItemsInStore =
 
     return new Promise((resolve, reject) => {
         countRequest.onsuccess = () => resolve(countRequest.result);
-        countRequest.onerror = () => reject('error fetching data: ' + countRequest?.error?.message);
+        countRequest.onerror = () => reject(new Error('An error occured when getting the number of items: ' + transaction?.error?.message));
     });
 }
 
 
 export const addDataToStore = 
-(storeName: string) =>
+<T>
 (db: IDBDatabase) =>
-(data: Object[]): Promise<IDBDatabase> => {
-    if(!doesStoreExist(storeName)(db)){
-        Promise.reject(`Store ${storeName} does not exist !`);
+(storeName: string) =>
+(data: T[]): Promise<IDBDatabase> => {
+    if(!doesStoreExist(db)(storeName)){
+        Promise.reject(new Error(`Error when adding data to store: Store "${storeName}" does not exist !`));
     }
 
     const 
@@ -114,7 +110,7 @@ export const addDataToStore =
     data.forEach( row => objectStore.add(row) );
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(db);
-        transaction.onerror = () => reject(`error inserting data for store ${storeName}:`);
+        transaction.onerror = () => reject(new Error(`An error occured when inserting data for store ${storeName}: ${transaction?.error?.message}`));
     });
 };
 
@@ -123,28 +119,30 @@ export const getPrimaryKeysMatchingRange =
 (db: IDBDatabase) => 
 (storeName: string) => 
 (indexName: string) => 
-(keyRange: IDBKeyRange): Promise<unknown[]> => {
+(keyRange: IDBKeyRange): Promise<IDBValidKey[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
         index = objectStore.index(indexName),
-        request: IDBRequest = index.getAllKeys(keyRange);
+        request = index.getAllKeys(keyRange);
 
     return new Promise((resolve, reject) => {
         request.onsuccess = () => resolve(keyRange.lower === keyRange.upper ? request.result : request.result.sort());
-        request.onerror = () => reject('error fetching data: ' + request?.error?.message);
+        request.onerror = () => reject(new Error(`An error occured when getting the primary keys from store "${storeName}": ${transaction?.error?.message}`));
     });
 };
 
 
+type  IteratorOnStoreCallback<T> = (itemKey: IDBValidKey, item: T) => void;
 export const iterateOverStore = 
+<T>
+(db: IDBDatabase) =>
 (storeName: string) => 
-(db: IDBDatabase) => 
-(callBack: Function): Promise<IDBDatabase> => {
+(callBack: IteratorOnStoreCallback<T>): Promise<IDBDatabase> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
-        request: IDBRequest = objectStore.openCursor();
+        request = objectStore.openCursor();
 
     request.onsuccess = event => {
         const cursor: IDBCursorWithValue = (event.target as IDBRequest).result;
@@ -156,7 +154,7 @@ export const iterateOverStore =
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(db);
-        transaction.onerror = () => reject('error fetching data: ' + transaction?.error?.message);
+        transaction.onerror = () => reject(new Error(`An error occured when getting the data from the store "${storeName}": ${transaction?.error?.message}`));
     });
 };
 
@@ -164,14 +162,14 @@ export const iterateOverStore =
 export const getAllUniqueKeysForIndex = 
 (db: IDBDatabase) => 
 (storeName: string) =>
-(indexName: string) => {
+(indexName: string): Promise<IDBValidKey[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
         index = objectStore.index(indexName),
         request = index.openKeyCursor(null, 'nextunique');
 
-    const keyList: Array<unknown> = [];
+    const keyList: IDBValidKey[] = [];
     request.onsuccess = event => {
         const cursor = (event.target as IDBRequest).result;
         if(cursor) {
@@ -182,7 +180,7 @@ export const getAllUniqueKeysForIndex =
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(keyList);
-        transaction.onerror = () => reject(new Error('Error fetching key list ' + transaction?.error?.message));
+        transaction.onerror = () => reject(new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}":  ${transaction?.error?.message}`));
     });
 };
 
@@ -200,19 +198,20 @@ export const getAllPrimaryKeysForIndex =
 
     return new Promise((resolve, reject) => {
         request.onsuccess = () => resolve( reverseDirection ? reverse(request.result) : request.result );
-        request.onerror = () => reject('error fetching data: ' + request?.error?.message);
+        request.onerror = () => reject(new Error(`An error occured when getting the primary keys for store "${storeName}", index "${indexName}" :  ${request?.error?.message}`));
     });
 };
 
 
 export const getItems = 
+<T>
 (db: IDBDatabase) => 
 (storeName: string) => 
-(itemIds: StringOrNumber[]): Promise<any> => {
+(itemIds: IDBValidKey[]): Promise<T[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
-        items: Array<unknown> = [];
+        items: T[] = [];
 
     itemIds.forEach( id => {
         const request = objectStore.get(id);
@@ -221,7 +220,7 @@ export const getItems =
 
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve(items);
-        transaction.onerror = () => reject('error fetching the items ' + transaction?.error?.message);
+        transaction.onerror = () => reject(new Error(`An error occured when getting the items of store "${storeName}": ${transaction?.error?.message}`));
     });
 };
 
@@ -231,7 +230,7 @@ export const deleteDatabase =
 
     return new Promise((resolve, reject) => {
         databaseDeleteRequest.onsuccess = () => resolve();
-        databaseDeleteRequest.onerror = () => reject(`Couldn't delete the database ${dbName}: ${databaseDeleteRequest.error}`);
+        databaseDeleteRequest.onerror = () => reject(new Error(`An error occured when deleting database ${dbName}: ${databaseDeleteRequest.error}`));
     });
 };
 

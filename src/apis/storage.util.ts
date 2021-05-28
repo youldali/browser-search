@@ -67,18 +67,18 @@ export const createStore =
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
 
     return (
-        EitherAsync(() => idb.deleteObjectStoreIfExist(storeName)(databaseId))
-        .chain (() => EitherAsync(() => idb.createObjectStore(storeName)(indexConfig)(keyPath)(databaseId)))
+        EitherAsync(() => idb.deleteObjectStoreIfExist(databaseId)(storeName))
+        .chain (() => EitherAsync(() => idb.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))
         .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
     )
 }
 
 export const deleteStore = (storeName: string): EitherAsync<Error, void> => (
-    EitherAsync((() => idb.deleteObjectStore(storeName)(databaseId)))
+    EitherAsync((() => idb.deleteObjectStore(databaseId)(storeName)))
 )
 
 export const deleteStoreIfExist = (storeName: string): EitherAsync<Error, void> => (
-    EitherAsync((() => idb.deleteObjectStoreIfExist(storeName)(databaseId)))
+    EitherAsync((() => idb.deleteObjectStoreIfExist(databaseId)(storeName)))
 )
 
 export const deleteDatabase = (): EitherAsync<Error, void> => (
@@ -86,16 +86,18 @@ export const deleteDatabase = (): EitherAsync<Error, void> => (
 )
 
 export const addDataToStore = 
-<T>(storeName: string) =>
+<T>
+(storeName: string) =>
 (data: T[]): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.addDataToStore(storeName)(db)(data));
+    const command: IDBCommand = db => EitherAsync(() => idb.addDataToStore(db)(storeName)(data));
     return execute(command);
 }
 
 export const iterateOverStore = 
-<T>(storeName: string) =>
-(callback: (primaryKey: StringOrNumber, item: T) => void): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.iterateOverStore(storeName)(db)(callback));
+<T>
+(storeName: string) =>
+(callback: (primaryKey: IDBValidKey, item: T) => void): EitherAsync<Error, void> => {
+    const command: IDBCommand = db => EitherAsync(() => idb.iterateOverStore<T>(db)(storeName)(callback));
     return execute(command);
 }
 
@@ -103,8 +105,8 @@ export const getPrimaryKeysMatchingOperator =
 (storeName: string) => 
 (indexName: string) =>
 (operator: Operator) =>
-(value: any): EitherAsync<Error, StringOrNumber[]> => {
-    const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(value));
+(operand: any): EitherAsync<Error, IDBValidKey[]> => {
+    const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));
 
     const command: IDBCommand = db => 
         EitherAsync.liftEither(eitherKeyRange)
@@ -116,35 +118,36 @@ export const getPrimaryKeysMatchingOperator =
 export const getAllPrimaryKeysForIndex = 
 (storeName: string) => 
 (indexName: string) => 
-(reverseDirection: boolean): EitherAsync<Error, StringOrNumber[]> => {
+(reverseDirection: boolean): EitherAsync<Error, IDBValidKey[]> => {
     const command: IDBCommand = db => EitherAsync(() => idb.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
     return execute(command);
 }
 
 export const getAllUniqueKeysForIndex = 
 (storeName: string) => 
-(indexName: string): EitherAsync<Error, StringOrNumber[]> => {
+(indexName: string): EitherAsync<Error, IDBValidKey[]> => {
     const command: IDBCommand = db => EitherAsync(() => idb.getAllUniqueKeysForIndex(db)(storeName)(indexName));
     return execute(command);
 }
 
 
 export const getItems = 
-<T>(storeName: string) => 
-(itemIds: StringOrNumber[]): EitherAsync<Error, T[]> => {
+<T>
+(storeName: string) => 
+(itemIds: IDBValidKey[]): EitherAsync<Error, T[]> => {
     const command: IDBCommand = db => EitherAsync(() => idb.getItems(db)(storeName)(itemIds));
     return execute(command);
 };
 
 export const getItemsCount = 
 (storeName: string) : EitherAsync<Error, number> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.getNumberOfItemsInStore(storeName)(db));
+    const command: IDBCommand = db => EitherAsync(() => idb.getNumberOfItemsInStore(db)(storeName));
     return execute(command);
 };
 
 export const doesStoreExist = 
 (storeName: string) : EitherAsync<Error, boolean> => {
-    const command: IDBCommand = db => EitherAsync(() => Promise.resolve(idb.doesStoreExist(storeName)(db)));
+    const command: IDBCommand = db => EitherAsync(() => Promise.resolve(idb.doesStoreExist(db)(storeName)));
     return execute(command);
 };
 
