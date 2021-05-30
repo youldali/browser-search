@@ -1,7 +1,7 @@
 import { GroupId, FilterId } from 'modules/filterConfiguration';
 import { FilteredItemStatus } from 'modules/filteringStatus';
 import { FilterConfigData } from 'modules/filterConfiguration';
-declare type ItemId = string | number;
+declare type ItemId = StringOrNumber;
 export interface FilterIdToMatchingItemIds {
     [key: string]: ItemId[];
 }

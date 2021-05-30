@@ -1,5 +1,5 @@
 import { FiltersApplied, FilterConfig } from '../../modules/filterConfiguration';
-export declare type ItemId = StringOrNumber;
+export declare type ItemId = ItemKey;
 export declare type Item = Object;
 export declare type StoreId = string;
 export declare type OrderDirection = 'ASC' | 'DESC';

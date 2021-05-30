@@ -96,8 +96,8 @@ export const addDataToStore =
 export const iterateOverStore = 
 <T>
 (storeName: string) =>
-(callback: (primaryKey: IDBValidKey, item: T) => void): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.iterateOverStore<T>(db)(storeName)(callback));
+(callback: (primaryKey: ItemKey, item: T) => void): EitherAsync<Error, void> => {
+    const command: IDBCommand = db => EitherAsync(() => idb.iterateOverStore<T, ItemKey>(db)(storeName)(callback));
     return execute(command);
 }
 
@@ -105,7 +105,7 @@ export const getPrimaryKeysMatchingOperator =
 (storeName: string) => 
 (indexName: string) =>
 (operator: Operator) =>
-(operand: any): EitherAsync<Error, IDBValidKey[]> => {
+(operand: any): EitherAsync<Error, ItemKey[]> => {
     const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));
 
     const command: IDBCommand = db => 
@@ -118,15 +118,16 @@ export const getPrimaryKeysMatchingOperator =
 export const getAllPrimaryKeysForIndex = 
 (storeName: string) => 
 (indexName: string) => 
-(reverseDirection: boolean): EitherAsync<Error, IDBValidKey[]> => {
+(reverseDirection: boolean): EitherAsync<Error, ItemKey[]> => {
     const command: IDBCommand = db => EitherAsync(() => idb.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
     return execute(command);
 }
 
 export const getAllUniqueKeysForIndex = 
+<K extends IDBValidKey>
 (storeName: string) => 
-(indexName: string): EitherAsync<Error, IDBValidKey[]> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.getAllUniqueKeysForIndex(db)(storeName)(indexName));
+(indexName: string): EitherAsync<Error, K[]> => {
+    const command: IDBCommand = db => EitherAsync(() => idb.getAllUniqueKeysForIndex<K>(db)(storeName)(indexName));
     return execute(command);
 }
 

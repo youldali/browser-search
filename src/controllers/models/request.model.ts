@@ -3,7 +3,7 @@ import {
     FilterConfig,
 } from '../../modules/filterConfiguration'
 
-export type ItemId = StringOrNumber;
+export type ItemId = ItemKey;
 export type Item = Object;
 export type StoreId = string;
 export type OrderDirection = 'ASC' | 'DESC';

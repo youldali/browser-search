@@ -4,7 +4,7 @@ import { getFilterStatusFromFilterConfig, FilteredItemStatus } from 'modules/fil
 import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'modules/filteringData';
 import { fromPairs, zip } from 'ramda';
 import { getPrimaryKeysMatchingOperator, iterateOverStore } from 'apis/storage.util';
-import { StoreId } from './models';
+import { ItemId, StoreId } from './models';
 
 
 
@@ -14,8 +14,8 @@ export const getFilterStatitics =
     const getFilterStatus = getFilterStatusFromFilterConfig(filterConfigData);
 
     const saveItemFilterStatus = 
-        (saveStatus: (filteredItemStatus: FilteredItemStatus, itemId: StringOrNumber) => void) => 
-        (itemId: StringOrNumber, item: T): void =>  {
+        (saveStatus: (filteredItemStatus: FilteredItemStatus, itemId: ItemId) => void) => 
+        (itemId: ItemId, item: T): void =>  {
             const status = getFilterStatus(item);
             saveStatus(status, itemId);
         };

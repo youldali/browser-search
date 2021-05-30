@@ -23,7 +23,7 @@ export const processRequest = <T>(request: Request<T>) => {
   })
 };
 
-export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => (
+export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string): Promise<void> => (
   storage.createStore(storeName)(indexConfig)(keyPath)
     .run()
     .then(eitherValues => (
@@ -34,7 +34,7 @@ export const createStore = (storeName: string) => (indexConfig: storage.Simplifi
     ))
 )
 
-export const addDataToStore = <T>(storeName: string) => (data: T[]) => (
+export const addDataToStore = <T>(storeName: string) => (data: T[]): Promise<void> => (
   storage.addDataToStore(storeName)(data)
     .run()
     .then(eitherValues => (
@@ -45,8 +45,8 @@ export const addDataToStore = <T>(storeName: string) => (data: T[]) => (
     ))
 )
 
-export const getAllValuesOfProperty = (storeName: string) => (propertyName: string): Promise<unknown> => (
-  storage.getAllUniqueKeysForIndex(storeName)(propertyName)
+export const getAllValuesOfProperty = <T extends IDBValidKey>(storeName: string) => (propertyName: string): Promise<T[]> => (
+  storage.getAllUniqueKeysForIndex<T>(storeName)(propertyName)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -67,7 +67,7 @@ export const getCount = (storeName: string): Promise<number> => (
     ))
 )
 
-export const deleteStore = (storeName: string) => (
+export const deleteStore = (storeName: string): Promise<void> => (
   storage.deleteStore(storeName)
     .run()
     .then(eitherValues => (
@@ -78,7 +78,7 @@ export const deleteStore = (storeName: string) => (
     ))
 )
 
-export const deleteStoreIfExist = (storeName: string) => (
+export const deleteStoreIfExist = (storeName: string): Promise<void> => (
   storage.deleteStoreIfExist(storeName)
     .run()
     .then(eitherValues => (
@@ -89,7 +89,7 @@ export const deleteStoreIfExist = (storeName: string) => (
     ))
 )
 
-export const deleteDatabase = () => (
+export const deleteDatabase = (): Promise<void> => (
   storage.deleteDatabase()
     .run()
     .then(eitherValues => (
@@ -100,7 +100,7 @@ export const deleteDatabase = () => (
     ))
 )
 
-export const doesStoreExist = (storeName: string) => (
+export const doesStoreExist = (storeName: string): Promise<boolean> => (
   storage.doesStoreExist(storeName)
     .run()
     .then(eitherValues => (

@@ -116,10 +116,11 @@ export const addDataToStore =
 
 
 export const getPrimaryKeysMatchingRange = 
+<K extends IDBValidKey> 
 (db: IDBDatabase) => 
 (storeName: string) => 
 (indexName: string) => 
-(keyRange: IDBKeyRange): Promise<IDBValidKey[]> => {
+(keyRange: IDBKeyRange): Promise<K[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -127,18 +128,18 @@ export const getPrimaryKeysMatchingRange =
         request = index.getAllKeys(keyRange);
 
     return new Promise((resolve, reject) => {
-        request.onsuccess = () => resolve(keyRange.lower === keyRange.upper ? request.result : request.result.sort());
+        request.onsuccess = () => resolve(keyRange.lower === keyRange.upper ? request.result as K[] : request.result.sort() as K[]);
         request.onerror = () => reject(new Error(`An error occured when getting the primary keys from store "${storeName}": ${transaction?.error?.message}`));
     });
 };
 
 
-type  IteratorOnStoreCallback<T> = (itemKey: IDBValidKey, item: T) => void;
+type  IteratorOnStoreCallback<T, K extends IDBValidKey> = (itemKey: K, item: T) => void;
 export const iterateOverStore = 
-<T>
+<T, K extends IDBValidKey>
 (db: IDBDatabase) =>
 (storeName: string) => 
-(callBack: IteratorOnStoreCallback<T>): Promise<IDBDatabase> => {
+(callBack: IteratorOnStoreCallback<T, K>): Promise<IDBDatabase> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -147,7 +148,7 @@ export const iterateOverStore =
     request.onsuccess = event => {
         const cursor: IDBCursorWithValue = (event.target as IDBRequest).result;
         if(cursor) {
-            callBack(cursor.primaryKey, cursor.value);
+            callBack(cursor.primaryKey as K, cursor.value);
             cursor.continue();
         }
     };
@@ -160,20 +161,21 @@ export const iterateOverStore =
 
 
 export const getAllUniqueKeysForIndex = 
+<K extends IDBValidKey>
 (db: IDBDatabase) => 
 (storeName: string) =>
-(indexName: string): Promise<IDBValidKey[]> => {
+(indexName: string): Promise<K[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
         index = objectStore.index(indexName),
         request = index.openKeyCursor(null, 'nextunique');
 
-    const keyList: IDBValidKey[] = [];
+    const keyList: K[] = [];
     request.onsuccess = event => {
-        const cursor = (event.target as IDBRequest).result;
+        const cursor: IDBCursor = (event.target as IDBRequest).result;
         if(cursor) {
-            keyList.push(cursor.key);
+            keyList.push(cursor.key as K);
             cursor.continue();
         }
     };
@@ -186,10 +188,11 @@ export const getAllUniqueKeysForIndex =
 
 
 export const getAllPrimaryKeysForIndex = 
+<K extends IDBValidKey>
 (db: IDBDatabase) => 
 (storeName: string) => 
 (indexName: string) => 
-(reverseDirection: boolean): Promise<IDBValidKey[]> => {
+(reverseDirection: boolean): Promise<K[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
@@ -197,7 +200,7 @@ export const getAllPrimaryKeysForIndex =
         request = index.getAllKeys();
 
     return new Promise((resolve, reject) => {
-        request.onsuccess = () => resolve( reverseDirection ? reverse(request.result) : request.result );
+        request.onsuccess = () => resolve( reverseDirection ? reverse(request.result) as K[] : request.result as K[] );
         request.onerror = () => reject(new Error(`An error occured when getting the primary keys for store "${storeName}", index "${indexName}" :  ${request?.error?.message}`));
     });
 };
