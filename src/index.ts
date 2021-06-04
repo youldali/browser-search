@@ -67,6 +67,17 @@ export const getCount = (storeName: string): Promise<number> => (
     ))
 )
 
+export const getItems = <T>(storeName: string) => (itemIds: IDBValidKey[]): Promise<T[]> => (
+  storage.getItems<T>(storeName)(itemIds)
+    .run()
+    .then(eitherValues => (
+      eitherValues.caseOf({ 
+        Left: error => {throw error}, 
+        Right: identity
+      })
+    ))
+)
+
 export const deleteStore = (storeName: string): Promise<void> => (
   storage.deleteStore(storeName)
     .run()
@@ -89,7 +100,7 @@ export const deleteStoreIfExist = (storeName: string): Promise<void> => (
     ))
 )
 
-export const deleteDatabase = (): Promise<void> => (
+export const deleteAllStores = (): Promise<void> => (
   storage.deleteDatabase()
     .run()
     .then(eitherValues => (

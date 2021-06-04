@@ -1,4 +1,4 @@
-import { reverse } from 'ramda';
+import { isNil, reverse } from 'ramda';
 
 //eslint-disable-next-line
 const globalScope = typeof window !== "undefined" ? window : self;
@@ -62,7 +62,7 @@ async (storeName: string): Promise<void> => {
     await closeDatabase(db);
 
     if(storeExist) {
-        await deleteObjectStore(storeName)(dbName);
+        await deleteObjectStore(dbName)(storeName);
     }
 }
 
@@ -70,7 +70,7 @@ export const deleteObjectStore =
 (dbName: string) =>
 (storeName: string): Promise<void> => (
     upgradeDatabase(dbName)((db) => db.deleteObjectStore(storeName))
-    .catch(exception => { throw (new Error(`An error occured when deleting store ${storeName}: ${exception}`)) } )
+    .catch(exception => { throw (new Error(`An error occured when deleting store "${storeName}": ${exception.message}`)) } )
     .then(closeDatabase)
 )
 
@@ -100,17 +100,23 @@ export const addDataToStore =
 (storeName: string) =>
 (data: T[]): Promise<IDBDatabase> => {
     if(!doesStoreExist(db)(storeName)){
-        Promise.reject(new Error(`Error when adding data to store: Store "${storeName}" does not exist !`));
+        return Promise.reject(new Error(`Error when adding data to store: Store "${storeName}" does not exist !`));
     }
 
     const 
-        transaction = db.transaction([storeName], "readwrite"),
+        transaction: IDBTransaction = db.transaction([storeName], "readwrite"),
         objectStore = transaction.objectStore(storeName);
     
-    data.forEach( row => objectStore.add(row) );
     return new Promise((resolve, reject) => {
+        try {
+            data.forEach( row => objectStore.add(row) );
+        }
+        catch(error) {
+            reject(new Error(`An error occured when inserting data for store ${storeName}: ${error}`))
+        }
+
         transaction.oncomplete = () => resolve(db);
-        transaction.onerror = () => reject(new Error(`An error occured when inserting data for store ${storeName}: ${transaction?.error?.message}`));
+        transaction.onerror = (event) => reject(new Error(`An error occured when inserting data for store ${storeName}: ${(event.target as IDBRequest)?.error}`));
     });
 };
 
@@ -218,7 +224,14 @@ export const getItems =
 
     itemIds.forEach( id => {
         const request = objectStore.get(id);
-        request.onsuccess = () => items.push(request.result);
+        request.onsuccess = () => {
+            if(!isNil(request.result)) {
+                items.push(request.result);
+            }
+            else {
+                console.warn(`getItems warning: item "${id}" does not exist`)
+            } 
+        }
     });
 
     return new Promise((resolve, reject) => {

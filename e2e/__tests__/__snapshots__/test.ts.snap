@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Browser Search count returns the number of items in the store 1`] = `15`;
+exports[`Browser Search addDataToStore fails when the store does not exist 1`] = `
+"Evaluation failed: Error: Error when adding data to store: Store \\"unknown\\" does not exist !
+    at http://localhost:8081/script/index.js:9330:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9494:173)
+    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
+    at step (http://localhost:8081/script/index.js:5891:23)
+    at Object.next (http://localhost:8081/script/index.js:5872:53)
+    at http://localhost:8081/script/index.js:5866:71
+    at new Promise (<anonymous>)
+    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
+    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
+`;
+
+exports[`Browser Search deleteStore failures returns an error when the store to delete does not exist 1`] = `
+"Evaluation failed: Error: An error occured when deleting store \\"unknown\\": An error occured when opening Database browser-search: AbortError: Version change transaction was aborted in upgradeneeded event handler.
+    at http://localhost:8081/script/index.js:9318:34"
+`;
 
 exports[`Browser Search getAllValuesOfProperty returns all the colours available 1`] = `
 Array [
@@ -36,22 +53,36 @@ Array [
 ]
 `;
 
-exports[`Browser Search search error returns an error when the filter config is undefined 1`] = `
+exports[`Browser Search getItems failures returns an error when the store does not exist 1`] = `
+[Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at http://localhost:8081/script/index.js:9388:28
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9516:167)
+    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
+    at step (http://localhost:8081/script/index.js:5891:23)
+    at Object.next (http://localhost:8081/script/index.js:5872:53)
+    at http://localhost:8081/script/index.js:5866:71
+    at new Promise (<anonymous>)
+    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
+    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)]
+`;
+
+exports[`Browser Search search Failures returns an error when the filter config is undefined 1`] = `
 "Evaluation failed: Error: Filter Config Error: The filter configuration cannot be empty
     at eval (webpack://browser-search/./src/modules/filterConfiguration/filterConfig.validator.ts?:40:78)"
 `;
 
-exports[`Browser Search search error returns an error when the page has the wrong format 1`] = `
+exports[`Browser Search search Failures returns an error when the page has the wrong format 1`] = `
 "Evaluation failed: Error: Request Error: The page property must be a natural number
     at eval (webpack://browser-search/./src/controllers/models/request.validator.ts?:35:78)"
 `;
 
-exports[`Browser Search search error returns an error when the store does not exist 1`] = `
+exports[`Browser Search search Failures returns an error when the store does not exist 1`] = `
 "Evaluation failed: Error: Request Error: The store Id does not exist. You must create it first
     at eval (webpack://browser-search/./src/controllers/models/request.validator.ts?:43:11)"
 `;
 
-exports[`Browser Search search performs a search with 1 filter 1`] = `
+exports[`Browser Search search successes performs a search with 1 filter 1`] = `
 Object {
   "data": Array [
     Object {
@@ -112,7 +143,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search returns all items 1`] = `
+exports[`Browser Search search successes returns all items 1`] = `
 Object {
   "data": Array [
     Object {
@@ -313,7 +344,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search returns all people who like the red / blue / green colour 1`] = `
+exports[`Browser Search search successes returns all people who like the red / blue / green colour 1`] = `
 Object {
   "data": Array [
     Object {
@@ -441,7 +472,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search returns all people who like the red / blue / green colour AND are old 1`] = `
+exports[`Browser Search search successes returns all people who like the red / blue / green colour AND are old 1`] = `
 Object {
   "data": Array [
     Object {
@@ -462,7 +493,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search returns all people who like the red colour 1`] = `
+exports[`Browser Search search successes returns all people who like the red colour 1`] = `
 Object {
   "data": Array [
     Object {
@@ -562,14 +593,14 @@ Object {
 }
 `;
 
-exports[`Browser Search search returns empty array when no criteria is met 1`] = `
+exports[`Browser Search search successes returns empty array when no criteria is met 1`] = `
 Object {
   "data": Array [],
   "type": "items",
 }
 `;
 
-exports[`Browser Search search search for the engineer profession 1`] = `
+exports[`Browser Search search successes search for the engineer profession 1`] = `
 Object {
   "data": Array [
     Object {
@@ -589,7 +620,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search sorts by name ASC 1`] = `
+exports[`Browser Search search successes sorts by name ASC 1`] = `
 Object {
   "data": Array [
     Object {
@@ -790,7 +821,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
+exports[`Browser Search search successes sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
 Object {
   "data": Array [
     Object {
@@ -860,7 +891,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
+exports[`Browser Search search successes sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
 Object {
   "data": Array [
     Object {
@@ -934,7 +965,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search sorts by name DESC 1`] = `
+exports[`Browser Search search successes sorts by name DESC 1`] = `
 Object {
   "data": Array [
     Object {
