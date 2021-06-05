@@ -12,19 +12,24 @@ const workerFunction = () => {
 
 
 
-export const processRequest = <T>(request: Request<T>) => {
+export const processRequest = <T>(request: Request<T>): [Promise<any>, () => void] => {
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 
+  let rejectResult: (reason?: any) => void;
   const result = new Promise((resolve, reject) => {
+    rejectResult = reject;
     applicationWorker.onmessage = (event) => {
       const result = event.data;
       result.outcome === 'error' ? reject(result.reason) : resolve(result.payload);
     }
   });
 
-  const abort = () => applicationWorker.terminate();
-
+  const abort = () => {
+    rejectResult(new Error('The search request was aborted'));
+    applicationWorker.terminate();
+  }
+  
   return [result, abort];
 };
 

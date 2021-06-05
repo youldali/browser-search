@@ -60,13 +60,13 @@ describe('Browser Search', () => {
 
       it('returns all items', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: [],
             storeId,
             perPage: 100,
           })
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -75,13 +75,13 @@ describe('Browser Search', () => {
     
       it('performs a search with 1 filter', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['lowAged'],
             storeId,
             perPage: 100,
           })
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -90,7 +90,7 @@ describe('Browser Search', () => {
     
       it('sorts by name ASC', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -98,7 +98,7 @@ describe('Browser Search', () => {
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -107,7 +107,7 @@ describe('Browser Search', () => {
     
       it('sorts by name DESC', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -115,7 +115,7 @@ describe('Browser Search', () => {
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -124,7 +124,7 @@ describe('Browser Search', () => {
     
       it('sorts by name ASC, gets the first 5 persons (page 1)', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -133,7 +133,7 @@ describe('Browser Search', () => {
             page: 1,
             perPage: 5,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -142,7 +142,7 @@ describe('Browser Search', () => {
     
       it('sorts by name ASC, gets the next 5 persons (page 2)', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -151,7 +151,7 @@ describe('Browser Search', () => {
             page: 2,
             perPage: 5,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -160,13 +160,13 @@ describe('Browser Search', () => {
     
       it('search for the engineer profession', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['engineer'],
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -175,13 +175,13 @@ describe('Browser Search', () => {
     
       it('returns empty array when no criteria is met', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['engineer', 'lowAged'],
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -190,13 +190,13 @@ describe('Browser Search', () => {
     
       it('returns all people who like the red colour', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['red'],
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -205,13 +205,13 @@ describe('Browser Search', () => {
     
       it('returns all people who like the red / blue / green colour', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['red', 'blue', 'green'],
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -220,13 +220,13 @@ describe('Browser Search', () => {
     
       it('returns all people who like the red / blue / green colour AND are old', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const results = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['red', 'blue', 'green', 'highAged'],
             storeId,
             perPage: 100,
           });
-          return results[0];
+          return results;
         }, { filterConfig, storeId } as any
         );
     
@@ -234,9 +234,8 @@ describe('Browser Search', () => {
       })
 
       it('runs 2 concurrents searches', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => {
-          
-          const resultsA = window.browserSearch.processRequest<Person>({
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const [resultsA] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['red'],
             orderBy: 'name',
@@ -244,7 +243,7 @@ describe('Browser Search', () => {
             storeId,
             perPage: 3,
           });
-          const resultsB = window.browserSearch.processRequest<Person>({
+          const [resultsB] = window.browserSearch.processRequest<Person>({
             filterConfig,
             filtersApplied: ['blue'],
             orderBy: 'name',
@@ -253,16 +252,35 @@ describe('Browser Search', () => {
             perPage: 3,
           });
 
-          return Promise.all([resultsA[0], resultsB[0]]);
+          return Promise.all([resultsA, resultsB]);
         }
         , { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     })
     
     describe('Failures', () => {
+      it('aborts the search', async () => {
+        try {
+          const documents = await page.evaluate(({filterConfig, storeId}) => {
+            const [results, abort] = window.browserSearch.processRequest<Person>({
+              filterConfig,
+              filtersApplied: [],
+              storeId,
+              perPage: 5,
+            });
+            abort();
+            return results;
+          }, { filterConfig, storeId } as any
+          );
+        }
+        catch(e) {
+          expect(e.message).toMatchSnapshot();
+        }
+      })
+
       it('returns an error when the filter config is undefined', async () => {
         try {
           await page.evaluate(({storeId}) => window.browserSearch.processRequest<Person>({

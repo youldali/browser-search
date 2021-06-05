@@ -15979,13 +15979,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 const processRequest = (request) => {
     const applicationWorker = new Worker((0,_helpers_worker_util__WEBPACK_IMPORTED_MODULE_0__.functionToWorkerURL)(workerFunction));
     applicationWorker.postMessage(request);
+    let rejectResult;
     const result = new Promise((resolve, reject) => {
+        rejectResult = reject;
         applicationWorker.onmessage = (event) => {
             const result = event.data;
             result.outcome === 'error' ? reject(result.reason) : resolve(result.payload);
         };
     });
-    const abort = () => applicationWorker.terminate();
+    const abort = () => {
+        rejectResult(new Error('The search request was aborted'));
+        applicationWorker.terminate();
+    };
     return [result, abort];
 };
 const createStore = (storeName) => (indexConfig) => (keyPath) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.createStore(storeName)(indexConfig)(keyPath)
