@@ -85,11 +85,11 @@ export const deleteDatabase = (): EitherAsync<Error, void> => (
     EitherAsync((() => idb.deleteDatabase(databaseId)))
 )
 
-export const addDataToStore = 
+export const addDocumentsToStore = 
 <T>
 (storeName: string) =>
 (data: T[]): EitherAsync<Error, void> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.addDataToStore(db)(storeName)(data));
+    const command: IDBCommand = db => EitherAsync(() => idb.addDocumentsToStore(db)(storeName)(data));
     return execute(command);
 }
 
@@ -132,17 +132,17 @@ export const getAllUniqueKeysForIndex =
 }
 
 
-export const getItems = 
+export const getDocuments = 
 <T>
 (storeName: string) => 
 (itemIds: IDBValidKey[]): EitherAsync<Error, T[]> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.getItems(db)(storeName)(itemIds));
+    const command: IDBCommand = db => EitherAsync(() => idb.getDocuments(db)(storeName)(itemIds));
     return execute(command);
 };
 
-export const getItemsCount = 
+export const getNumberOfDocumentsInStore = 
 (storeName: string) : EitherAsync<Error, number> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.getNumberOfItemsInStore(db)(storeName));
+    const command: IDBCommand = db => EitherAsync(() => idb.getNumberOfDocumentsInStore(db)(storeName));
     return execute(command);
 };
 

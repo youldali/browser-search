@@ -12,7 +12,7 @@ const workerFunction = () => {
 
 
 
-export const processRequest = <T>(request: Request<T>): [Promise<any>, () => void] => {
+export const searchStore = <T>(request: Request<T>): [Promise<any>, () => void] => {
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 
@@ -44,8 +44,8 @@ export const createStore = (storeName: string) => (indexConfig: storage.Simplifi
     ))
 )
 
-export const addDataToStore = <T>(storeName: string) => (data: T[]): Promise<void> => (
-  storage.addDataToStore(storeName)(data)
+export const addDocumentsToStore = <T>(storeName: string) => (data: T[]): Promise<void> => (
+  storage.addDocumentsToStore(storeName)(data)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -66,8 +66,8 @@ export const getAllValuesOfProperty = <T extends IDBValidKey>(storeName: string)
     ))
 )
 
-export const getCount = (storeName: string): Promise<number> => (
-  storage.getItemsCount(storeName)
+export const getNumberOfDocumentsInStore = (storeName: string): Promise<number> => (
+  storage.getNumberOfDocumentsInStore(storeName)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -77,8 +77,8 @@ export const getCount = (storeName: string): Promise<number> => (
     ))
 )
 
-export const getItems = <T>(storeName: string) => (itemIds: IDBValidKey[]): Promise<T[]> => (
-  storage.getItems<T>(storeName)(itemIds)
+export const getDocuments = <T>(storeName: string) => (itemIds: IDBValidKey[]): Promise<T[]> => (
+  storage.getDocuments<T>(storeName)(itemIds)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 

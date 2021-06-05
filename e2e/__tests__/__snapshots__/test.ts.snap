@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Browser Search addDocumentsToStore failures fails when the store does not exist 1`] = `
+"Evaluation failed: Error: Error when adding data to store: Store \\"unknown\\" does not exist !
+    at http://localhost:8081/script/index.js:9335:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9504:178)
+    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
+    at step (http://localhost:8081/script/index.js:5891:23)
+    at Object.next (http://localhost:8081/script/index.js:5872:53)
+    at http://localhost:8081/script/index.js:5866:71
+    at new Promise (<anonymous>)
+    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
+    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
+`;
+
 exports[`Browser Search deleteStore failures returns an error when the store to delete does not exist 1`] = `
 "Evaluation failed: Error: An error occured when deleting store \\"unknown\\": An error occured when opening Database browser-search: AbortError: Version change transaction was aborted in upgradeneeded event handler.
     at http://localhost:8081/script/index.js:9318:34"
@@ -7,8 +21,8 @@ exports[`Browser Search deleteStore failures returns an error when the store to 
 
 exports[`Browser Search getAllValuesOfProperty failures fails when the property is not indexed 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"persons\\", index \\"unknown\\". Make sure the store and the index exist. Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.
-    at http://localhost:8081/script/index.js:9382:15
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9517:183)
+    at http://localhost:8081/script/index.js:9387:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9522:183)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
     at step (http://localhost:8081/script/index.js:5891:23)
     at Object.next (http://localhost:8081/script/index.js:5872:53)
@@ -21,8 +35,8 @@ exports[`Browser Search getAllValuesOfProperty failures fails when the property 
 
 exports[`Browser Search getAllValuesOfProperty failures fails when the store does not exist 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"unknown\\", index \\"country\\". Make sure the store and the index exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9382:15
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9517:183)
+    at http://localhost:8081/script/index.js:9387:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9522:183)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
     at step (http://localhost:8081/script/index.js:5891:23)
     at Object.next (http://localhost:8081/script/index.js:5872:53)
@@ -67,24 +81,10 @@ Array [
 ]
 `;
 
-exports[`Browser Search getCount fails when the store does not exist 1`] = `
-"Evaluation failed: Error: An error occured when getting the number of items of store \\"unknown\\". Make sure the store exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9330:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9530:171)
-    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
-    at step (http://localhost:8081/script/index.js:5891:23)
-    at Object.next (http://localhost:8081/script/index.js:5872:53)
-    at http://localhost:8081/script/index.js:5866:71
-    at new Promise (<anonymous>)
-    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
-    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
-`;
-
-exports[`Browser Search getItems failures returns an error when the store does not exist 1`] = `
+exports[`Browser Search getDocuments failures returns an error when the store does not exist 1`] = `
 [Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9388:28
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9516:167)
+    at http://localhost:8081/script/index.js:9398:28
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9526:171)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
     at step (http://localhost:8081/script/index.js:5891:23)
     at Object.next (http://localhost:8081/script/index.js:5872:53)
@@ -95,13 +95,27 @@ exports[`Browser Search getItems failures returns an error when the store does n
     at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)]
 `;
 
-exports[`Browser Search search Failures aborts the search 1`] = `
+exports[`Browser Search getNumberOfDocumentsInStore fails when the store does not exist 1`] = `
+"Evaluation failed: Error: An error occured when getting the number of documents in store \\"unknown\\". Make sure the store exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at http://localhost:8081/script/index.js:9330:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9530:175)
+    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
+    at step (http://localhost:8081/script/index.js:5891:23)
+    at Object.next (http://localhost:8081/script/index.js:5872:53)
+    at http://localhost:8081/script/index.js:5866:71
+    at new Promise (<anonymous>)
+    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
+    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
+`;
+
+exports[`Browser Search searchStore Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
-    at abort (http://localhost:8081/script/index.js:15991:22)
+    at abort (http://localhost:8081/script/index.js:16001:22)
     at __puppeteer_evaluation_script__:9:37"
 `;
 
-exports[`Browser Search search successes performs a search with 1 filter 1`] = `
+exports[`Browser Search searchStore successes performs a search with 1 filter 1`] = `
 Object {
   "data": Array [
     Object {
@@ -162,7 +176,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes returns all items 1`] = `
+exports[`Browser Search searchStore successes returns all items 1`] = `
 Object {
   "data": Array [
     Object {
@@ -363,7 +377,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes returns all people who like the red / blue / green colour 1`] = `
+exports[`Browser Search searchStore successes returns all people who like the red / blue / green colour 1`] = `
 Object {
   "data": Array [
     Object {
@@ -491,7 +505,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes returns all people who like the red / blue / green colour AND are old 1`] = `
+exports[`Browser Search searchStore successes returns all people who like the red / blue / green colour AND are old 1`] = `
 Object {
   "data": Array [
     Object {
@@ -512,7 +526,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes returns all people who like the red colour 1`] = `
+exports[`Browser Search searchStore successes returns all people who like the red colour 1`] = `
 Object {
   "data": Array [
     Object {
@@ -612,14 +626,14 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes returns empty array when no criteria is met 1`] = `
+exports[`Browser Search searchStore successes returns empty array when no criteria is met 1`] = `
 Object {
   "data": Array [],
   "type": "items",
 }
 `;
 
-exports[`Browser Search search successes runs 2 concurrents searches 1`] = `
+exports[`Browser Search searchStore successes runs 2 concurrents searches 1`] = `
 Array [
   Object {
     "data": Array [
@@ -714,7 +728,7 @@ Array [
 ]
 `;
 
-exports[`Browser Search search successes search for the engineer profession 1`] = `
+exports[`Browser Search searchStore successes search for the engineer profession 1`] = `
 Object {
   "data": Array [
     Object {
@@ -734,7 +748,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes sorts by name ASC 1`] = `
+exports[`Browser Search searchStore successes sorts by name ASC 1`] = `
 Object {
   "data": Array [
     Object {
@@ -935,7 +949,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
+exports[`Browser Search searchStore successes sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
 Object {
   "data": Array [
     Object {
@@ -1005,7 +1019,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
+exports[`Browser Search searchStore successes sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
 Object {
   "data": Array [
     Object {
@@ -1079,7 +1093,7 @@ Object {
 }
 `;
 
-exports[`Browser Search search successes sorts by name DESC 1`] = `
+exports[`Browser Search searchStore successes sorts by name DESC 1`] = `
 Object {
   "data": Array [
     Object {

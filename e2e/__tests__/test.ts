@@ -30,8 +30,8 @@ describe('Browser Search', () => {
     );
   }
 
-  const addDataToStore = async () => {
-    await page.evaluate(({persons, storeId}) => window.browserSearch.addDataToStore(storeId)(persons),
+  const addDocumentsToStore = async () => {
+    await page.evaluate(({persons, storeId}) => window.browserSearch.addDocumentsToStore(storeId)(persons),
       {persons, storeId} as any
     );
   }
@@ -49,18 +49,18 @@ describe('Browser Search', () => {
     await page.evaluate(() => window.browserSearch.deleteAllStores());
   })
 
-  describe('search', () => {
+  describe('searchStore', () => {
 
     beforeEach(async () => {
       await createStore();
-      await addDataToStore();
+      await addDocumentsToStore();
     })
 
     describe('successes', () => {
 
       it('returns all items', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             storeId,
@@ -75,7 +75,7 @@ describe('Browser Search', () => {
     
       it('performs a search with 1 filter', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['lowAged'],
             storeId,
@@ -90,7 +90,7 @@ describe('Browser Search', () => {
     
       it('sorts by name ASC', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -107,7 +107,7 @@ describe('Browser Search', () => {
     
       it('sorts by name DESC', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -124,7 +124,7 @@ describe('Browser Search', () => {
     
       it('sorts by name ASC, gets the first 5 persons (page 1)', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -142,7 +142,7 @@ describe('Browser Search', () => {
     
       it('sorts by name ASC, gets the next 5 persons (page 2)', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             orderBy: 'name',
@@ -160,7 +160,7 @@ describe('Browser Search', () => {
     
       it('search for the engineer profession', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['engineer'],
             storeId,
@@ -175,7 +175,7 @@ describe('Browser Search', () => {
     
       it('returns empty array when no criteria is met', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['engineer', 'lowAged'],
             storeId,
@@ -190,7 +190,7 @@ describe('Browser Search', () => {
     
       it('returns all people who like the red colour', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['red'],
             storeId,
@@ -205,7 +205,7 @@ describe('Browser Search', () => {
     
       it('returns all people who like the red / blue / green colour', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['red', 'blue', 'green'],
             storeId,
@@ -220,7 +220,7 @@ describe('Browser Search', () => {
     
       it('returns all people who like the red / blue / green colour AND are old', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = window.browserSearch.processRequest<Person>({
+          const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['red', 'blue', 'green', 'highAged'],
             storeId,
@@ -235,7 +235,7 @@ describe('Browser Search', () => {
 
       it('runs 2 concurrents searches', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [resultsA] = window.browserSearch.processRequest<Person>({
+          const [resultsA] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['red'],
             orderBy: 'name',
@@ -243,7 +243,7 @@ describe('Browser Search', () => {
             storeId,
             perPage: 3,
           });
-          const [resultsB] = window.browserSearch.processRequest<Person>({
+          const [resultsB] = window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['blue'],
             orderBy: 'name',
@@ -265,7 +265,7 @@ describe('Browser Search', () => {
       it('aborts the search', async () => {
         try {
           const documents = await page.evaluate(({filterConfig, storeId}) => {
-            const [results, abort] = window.browserSearch.processRequest<Person>({
+            const [results, abort] = window.browserSearch.searchStore<Person>({
               filterConfig,
               filtersApplied: [],
               storeId,
@@ -283,7 +283,7 @@ describe('Browser Search', () => {
 
       it('returns an error when the filter config is undefined', async () => {
         try {
-          await page.evaluate(({storeId}) => window.browserSearch.processRequest<Person>({
+          await page.evaluate(({storeId}) => window.browserSearch.searchStore<Person>({
             filterConfig: undefined as any,
             filtersApplied: [],
             storeId,
@@ -299,7 +299,7 @@ describe('Browser Search', () => {
   
       it('returns an error when the store does not exist', async () => {
         try {
-          await page.evaluate(({filterConfig}) => window.browserSearch.processRequest<Person>({
+          await page.evaluate(({filterConfig}) => window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             storeId: 'unknown',
@@ -315,7 +315,7 @@ describe('Browser Search', () => {
   
       it('returns an error when the filter to apply does not exist', async () => {
         try {
-          await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
+          await page.evaluate(({filterConfig, storeId}) => window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: ['unknown'],
             storeId,
@@ -331,7 +331,7 @@ describe('Browser Search', () => {
   
       it('returns an error when the page has the wrong format', async () => {
         try {
-          await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
+          await page.evaluate(({filterConfig, storeId}) => window.browserSearch.searchStore<Person>({
             filterConfig,
             filtersApplied: [],
             storeId,
@@ -382,7 +382,7 @@ describe('Browser Search', () => {
     });
   });
 
-  describe('addDataToStore', () => {
+  describe('addDocumentsToStore', () => {
 
     beforeEach(async () => {
       await createStore();
@@ -392,12 +392,12 @@ describe('Browser Search', () => {
       it('succeeds when the data is matching the store', async () => {
 
         await page.evaluate(
-          ({storeId, persons}) => window.browserSearch.addDataToStore(storeId)(persons)
+          ({storeId, persons}) => window.browserSearch.addDocumentsToStore(storeId)(persons)
           ,{ storeId, persons } as any
         );
   
         const results = await page.evaluate(
-          ({storeId, persons}) => window.browserSearch.getItems<Person>(storeId)([persons[0].id])
+          ({storeId, persons}) => window.browserSearch.getDocuments<Person>(storeId)([persons[0].id])
           ,{ storeId, persons } as any
         );
   
@@ -411,8 +411,8 @@ describe('Browser Search', () => {
           
           await page.evaluate(
             ({storeId, persons}) => {
-              window.browserSearch.addDataToStore(storeId)(persons);
-              window.browserSearch.addDataToStore(storeId)(persons);
+              window.browserSearch.addDocumentsToStore(storeId)(persons);
+              window.browserSearch.addDocumentsToStore(storeId)(persons);
             }
             ,{ storeId, persons: [persons[0]]} as any
           );
@@ -426,7 +426,7 @@ describe('Browser Search', () => {
       it('fails when the store does not exist', async () => {
         try {
           await page.evaluate(
-            ({persons}) => window.browserSearch.addDataToStore('unknown')(persons)
+            ({persons}) => window.browserSearch.addDocumentsToStore('unknown')(persons)
             ,{ persons: [persons[0]]} as any
           );
         }
@@ -443,7 +443,7 @@ describe('Browser Search', () => {
     
     beforeEach(async () => {
       await createStore();
-      await addDataToStore();
+      await addDocumentsToStore();
     })
 
     describe('successes', () => {
@@ -494,15 +494,15 @@ describe('Browser Search', () => {
   })
   
 
-  describe.only('getCount', () => {
+  describe('getNumberOfDocumentsInStore', () => {
 
     beforeEach(async () => {
       await createStore();
-      await addDataToStore();
+      await addDocumentsToStore();
     })
 
     it('returns the number of items in the store', async () => {
-      const results = await page.evaluate(({storeId}) => window.browserSearch.getCount(
+      const results = await page.evaluate(({storeId}) => window.browserSearch.getNumberOfDocumentsInStore(
         storeId,
       ), { storeId } as any
      );
@@ -512,7 +512,7 @@ describe('Browser Search', () => {
 
     it('fails when the store does not exist', async () => {
       try {
-        await page.evaluate(() => window.browserSearch.getCount(
+        await page.evaluate(() => window.browserSearch.getNumberOfDocumentsInStore(
           'unknown',
         )
       );
@@ -524,16 +524,16 @@ describe('Browser Search', () => {
     })
   })
   
-  describe('getItems', () => {
+  describe('getDocuments', () => {
 
     beforeEach(async () => {
       await createStore();
-      await addDataToStore();
+      await addDocumentsToStore();
     })
 
     describe('successes', () => {
       it('returns the items matching the ids', async () => {
-        const results = await page.evaluate(({storeId, personsIds}) => window.browserSearch.getItems(
+        const results = await page.evaluate(({storeId, personsIds}) => window.browserSearch.getDocuments(
           storeId,
         )(personsIds), { storeId, personsIds: [persons[0].id, persons[2].id, persons[3].id] } as any
       );
@@ -542,7 +542,7 @@ describe('Browser Search', () => {
       })
 
       it('filters out items that do not exist', async () => {
-        const results = await page.evaluate(({storeId, personsIds}) => window.browserSearch.getItems(
+        const results = await page.evaluate(({storeId, personsIds}) => window.browserSearch.getDocuments(
           storeId, 
         )(personsIds), { storeId, personsIds: [persons[0].id, 'giberrish']} as any
       );
@@ -554,7 +554,7 @@ describe('Browser Search', () => {
     describe('failures', () => {
       it('returns an error when the store does not exist', async () => {
         try {
-          const results = await page.evaluate(({storeId, personsIds}) => window.browserSearch.getItems(
+          const results = await page.evaluate(({storeId, personsIds}) => window.browserSearch.getDocuments(
             storeId, 
             )(personsIds), { storeId: 'unknown', personsIds: [persons[0].id]} as any
           );
@@ -622,7 +622,7 @@ describe('Browser Search', () => {
 
   })
 
-  describe('deleteDatabase', () => {
+  describe('deleteAllStores', () => {
 
     beforeEach(async () => {
       await createStore();

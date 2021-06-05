@@ -79,7 +79,7 @@ export const doesStoreExist =
 (storeName: string): boolean => (db.objectStoreNames.contains(storeName));
 
 
-export const getNumberOfItemsInStore = 
+export const getNumberOfDocumentsInStore = 
 (db: IDBDatabase) =>
 (storeName: string): Promise<number> => {
     try {
@@ -90,16 +90,16 @@ export const getNumberOfItemsInStore =
 
         return new Promise((resolve, reject) => {
             countRequest.onsuccess = () => resolve(countRequest.result);
-            countRequest.onerror = () => reject(new Error('An error occured when getting the number of items of store "${storeName}": ' + transaction?.error?.message));
+            countRequest.onerror = () => reject(new Error('An error occured when getting the number of documents in store "${storeName}": ' + transaction?.error?.message));
         });
     }
     catch(e) {
-        return Promise.reject(new Error(`An error occured when getting the number of items of store "${storeName}". Make sure the store exist. Error: ${e.message}`))
+        return Promise.reject(new Error(`An error occured when getting the number of documents in store "${storeName}". Make sure the store exist. Error: ${e.message}`))
     }
 }
 
 
-export const addDataToStore = 
+export const addDocumentsToStore = 
 <T>
 (db: IDBDatabase) =>
 (storeName: string) =>
@@ -222,7 +222,7 @@ export const getAllPrimaryKeysForIndex =
 };
 
 
-export const getItems = 
+export const getDocuments = 
 <T>
 (db: IDBDatabase) => 
 (storeName: string) => 
@@ -239,7 +239,7 @@ export const getItems =
                 items.push(request.result);
             }
             else {
-                console.warn(`getItems warning: item "${id}" does not exist`)
+                console.warn(`getDocuments warning: item "${id}" does not exist`)
             } 
         }
     });
