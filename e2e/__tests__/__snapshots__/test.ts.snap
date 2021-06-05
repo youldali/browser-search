@@ -600,6 +600,101 @@ Object {
 }
 `;
 
+exports[`Browser Search search successes runs 2 concurrents searches 1`] = `
+Array [
+  Object {
+    "data": Array [
+      Object {
+        "age": 30,
+        "country": "Norfolk Island",
+        "email": "tojedwo@dewpupi.pw",
+        "favoriteColours": Array [
+          "red",
+          "blue",
+          "white",
+        ],
+        "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+        "name": "Alfred Rhodes",
+        "profession": "Organizational Development Manager",
+        "salary": 53462,
+      },
+      Object {
+        "age": 40,
+        "country": "Belarus",
+        "email": "dumoov@igiiva.bf",
+        "favoriteColours": Array [
+          "red",
+        ],
+        "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+        "name": "George Marsh",
+        "profession": "Compensation Analyst",
+        "salary": 77502,
+      },
+      Object {
+        "age": 33,
+        "country": "Barbados",
+        "email": "erupu@pafo.sl",
+        "favoriteColours": Array [
+          "red",
+          "green",
+        ],
+        "id": "7aa57520-19ad-5fcb-aa7e-0a80b388cd80",
+        "name": "Howard Bishop",
+        "profession": "Franchise Management",
+        "salary": 86221,
+      },
+    ],
+    "type": "items",
+  },
+  Object {
+    "data": Array [
+      Object {
+        "age": 64,
+        "country": "Niger",
+        "email": "nanefse@bazuvoric.tt",
+        "favoriteColours": Array [
+          "blue",
+          "red",
+        ],
+        "id": "68200794-220b-509b-b367-7c769f05767d",
+        "name": "Katie Lambert",
+        "profession": "Fraud Investigator",
+        "salary": 45390,
+      },
+      Object {
+        "age": 48,
+        "country": "Paraguay",
+        "email": "zesedbuw@fec.al",
+        "favoriteColours": Array [
+          "dark",
+          "blue",
+        ],
+        "id": "87e83681-7cd7-5200-b50b-493fd7bbabb5",
+        "name": "Josephine Holland",
+        "profession": "Corporate Planner",
+        "salary": 23682,
+      },
+      Object {
+        "age": 50,
+        "country": "Tajikistan",
+        "email": "votdumbi@napedocu.us",
+        "favoriteColours": Array [
+          "purple",
+          "blue",
+          "brown",
+          "pink",
+        ],
+        "id": "cb841649-bcf9-5acd-a85b-763da24ec749",
+        "name": "Jose Matthews",
+        "profession": "Quality Control Engineer",
+        "salary": 96922,
+      },
+    ],
+    "type": "items",
+  },
+]
+`;
+
 exports[`Browser Search search successes search for the engineer profession 1`] = `
 Object {
   "data": Array [

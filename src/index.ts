@@ -10,17 +10,22 @@ const workerFunction = () => {
   //@worker
 }
 
-const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
+
 
 export const processRequest = <T>(request: Request<T>) => {
+  const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 
-  return new Promise((resolve, reject) => {
+  const result = new Promise((resolve, reject) => {
     applicationWorker.onmessage = (event) => {
       const result = event.data;
       result.outcome === 'error' ? reject(result.reason) : resolve(result.payload);
     }
-  })
+  });
+
+  const abort = () => applicationWorker.terminate();
+
+  return [result, abort];
 };
 
 export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string): Promise<void> => (

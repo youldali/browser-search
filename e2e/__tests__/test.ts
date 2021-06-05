@@ -53,192 +53,208 @@ describe('Browser Search', () => {
 
     beforeEach(async () => {
       await createStore();
-  
-      const doesStoreExist = await page.evaluate(({storeId}) => window.browserSearch.doesStoreExist(storeId),
-        {keyPath, indexConfig, storeId}
-      );
-      expect(doesStoreExist).toBe(true);
-  
-      const numberOfItems = await page.evaluate(({storeId}) => window.browserSearch.getCount(
-          storeId,
-        ), { storeId } as any
-      );
-      expect(numberOfItems).toBe(0);
-  
-      await page.evaluate(({persons, storeId}) => window.browserSearch.addDataToStore(storeId)(persons),
-        {persons, storeId} as any
-      );
-  
-      const numberOfItems2 = await page.evaluate(({storeId}) => window.browserSearch.getCount(
-          storeId,
-        ), { storeId } as any
-      );
-      expect(numberOfItems2).toBe(persons.length);
+      await addDataToStore();
     })
 
-    describe('successes', () => {
+    describe.only('successes', () => {
 
       it('returns all items', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: [],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: [],
+            storeId,
+            perPage: 100,
+          })
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('performs a search with 1 filter', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: ['lowAged'],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['lowAged'],
+            storeId,
+            perPage: 100,
+          })
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('sorts by name ASC', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: [],
-          orderBy: 'name',
-          orderDirection: 'ASC',
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: [],
+            orderBy: 'name',
+            orderDirection: 'ASC',
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('sorts by name DESC', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: [],
-          orderBy: 'name',
-          orderDirection: 'DESC',
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: [],
+            orderBy: 'name',
+            orderDirection: 'DESC',
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('sorts by name ASC, gets the first 5 persons (page 1)', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: [],
-          orderBy: 'name',
-          orderDirection: 'ASC',
-          storeId,
-          page: 1,
-          perPage: 5,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: [],
+            orderBy: 'name',
+            orderDirection: 'ASC',
+            storeId,
+            page: 1,
+            perPage: 5,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('sorts by name ASC, gets the next 5 persons (page 2)', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: [],
-          orderBy: 'name',
-          orderDirection: 'ASC',
-          storeId,
-          page: 2,
-          perPage: 5,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: [],
+            orderBy: 'name',
+            orderDirection: 'ASC',
+            storeId,
+            page: 2,
+            perPage: 5,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('search for the engineer profession', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: ['engineer'],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['engineer'],
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('returns empty array when no criteria is met', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: ['engineer', 'lowAged'],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['engineer', 'lowAged'],
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('returns all people who like the red colour', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: ['red'],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['red'],
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('returns all people who like the red / blue / green colour', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: ['red', 'blue', 'green'],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['red', 'blue', 'green'],
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
     
       it('returns all people who like the red / blue / green colour AND are old', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => window.browserSearch.processRequest<Person>({
-          filterConfig,
-          filtersApplied: ['red', 'blue', 'green', 'highAged'],
-          storeId,
-          perPage: 100,
-        }), { filterConfig, storeId } as any
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const results = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['red', 'blue', 'green', 'highAged'],
+            storeId,
+            perPage: 100,
+          });
+          return results[0];
+        }, { filterConfig, storeId } as any
         );
     
-        expect(results).toMatchSnapshot();
+        expect(documents).toMatchSnapshot();
       })
 
-      xit('runs 2 concurrents searches', async () => {
-        const results = await page.evaluate(({filterConfig, storeId}) => Promise.all([
-            window.browserSearch.processRequest<Person>({
-              filterConfig,
-              filtersApplied: ['red'],
-              orderBy: 'name',
-              orderDirection: 'ASC',
-              storeId,
-              perPage: 5,
-            }),
-            window.browserSearch.processRequest<Person>({
-              filterConfig,
-              filtersApplied: ['blue'],
-              orderBy: 'name',
-              orderDirection: 'DESC',
-              storeId,
-              perPage: 5,
-            }),
-          ])
+      it('runs 2 concurrents searches', async () => {
+        const results = await page.evaluate(({filterConfig, storeId}) => {
+          
+          const resultsA = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['red'],
+            orderBy: 'name',
+            orderDirection: 'ASC',
+            storeId,
+            perPage: 3,
+          });
+          const resultsB = window.browserSearch.processRequest<Person>({
+            filterConfig,
+            filtersApplied: ['blue'],
+            orderBy: 'name',
+            orderDirection: 'DESC',
+            storeId,
+            perPage: 3,
+          });
+
+          return Promise.all([resultsA[0], resultsB[0]]);
+        }
         , { filterConfig, storeId } as any
         );
     
