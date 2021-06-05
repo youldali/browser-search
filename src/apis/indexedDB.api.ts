@@ -171,25 +171,30 @@ export const getAllUniqueKeysForIndex =
 (db: IDBDatabase) => 
 (storeName: string) =>
 (indexName: string): Promise<K[]> => {
-    const 
-        transaction = db.transaction(storeName, 'readonly'),
-        objectStore = transaction.objectStore(storeName),
-        index = objectStore.index(indexName),
-        request = index.openKeyCursor(null, 'nextunique');
+    try {
+        const 
+            transaction = db.transaction(storeName, 'readonly'),
+            objectStore = transaction.objectStore(storeName),
+            index = objectStore.index(indexName),
+            request = index.openKeyCursor(null, 'nextunique');
 
-    const keyList: K[] = [];
-    request.onsuccess = event => {
-        const cursor: IDBCursor = (event.target as IDBRequest).result;
-        if(cursor) {
-            keyList.push(cursor.key as K);
-            cursor.continue();
-        }
-    };
+        const keyList: K[] = [];
+        request.onsuccess = event => {
+            const cursor: IDBCursor = (event.target as IDBRequest).result;
+            if(cursor) {
+                keyList.push(cursor.key as K);
+                cursor.continue();
+            }
+        };
 
-    return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => resolve(keyList);
-        transaction.onerror = () => reject(new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}":  ${transaction?.error?.message}`));
-    });
+        return new Promise((resolve, reject) => {
+            transaction.oncomplete = () => resolve(keyList);
+            transaction.onerror = () => reject(new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}":  ${transaction?.error?.message}`));
+        });
+    }
+    catch(e) {
+        throw new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}". Make sure the store and the index exist. Error: ${e.message}`);
+    }
 };
 
 

@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Browser Search addDataToStore fails when the store does not exist 1`] = `
-"Evaluation failed: Error: Error when adding data to store: Store \\"unknown\\" does not exist !
-    at http://localhost:8081/script/index.js:9330:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9494:173)
+exports[`Browser Search deleteStore failures returns an error when the store to delete does not exist 1`] = `
+"Evaluation failed: Error: An error occured when deleting store \\"unknown\\": An error occured when opening Database browser-search: AbortError: Version change transaction was aborted in upgradeneeded event handler.
+    at http://localhost:8081/script/index.js:9318:34"
+`;
+
+exports[`Browser Search getAllValuesOfProperty failures fails when the property is not indexed 1`] = `
+"Evaluation failed: Error: An error occured when getting the unique keys for store \\"persons\\", index \\"unknown\\". Make sure the store and the index exist. Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.
+    at http://localhost:8081/script/index.js:9382:15
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9517:183)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
     at step (http://localhost:8081/script/index.js:5891:23)
     at Object.next (http://localhost:8081/script/index.js:5872:53)
@@ -14,12 +19,21 @@ exports[`Browser Search addDataToStore fails when the store does not exist 1`] =
     at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
 `;
 
-exports[`Browser Search deleteStore failures returns an error when the store to delete does not exist 1`] = `
-"Evaluation failed: Error: An error occured when deleting store \\"unknown\\": An error occured when opening Database browser-search: AbortError: Version change transaction was aborted in upgradeneeded event handler.
-    at http://localhost:8081/script/index.js:9318:34"
+exports[`Browser Search getAllValuesOfProperty failures fails when the store does not exist 1`] = `
+"Evaluation failed: Error: An error occured when getting the unique keys for store \\"unknown\\", index \\"country\\". Make sure the store and the index exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at http://localhost:8081/script/index.js:9382:15
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9517:183)
+    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
+    at step (http://localhost:8081/script/index.js:5891:23)
+    at Object.next (http://localhost:8081/script/index.js:5872:53)
+    at http://localhost:8081/script/index.js:5866:71
+    at new Promise (<anonymous>)
+    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
+    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
 `;
 
-exports[`Browser Search getAllValuesOfProperty returns all the colours available 1`] = `
+exports[`Browser Search getAllValuesOfProperty successes returns all the colours available 1`] = `
 Array [
   "blue",
   "brown",
@@ -33,7 +47,7 @@ Array [
 ]
 `;
 
-exports[`Browser Search getAllValuesOfProperty returns all the countries available 1`] = `
+exports[`Browser Search getAllValuesOfProperty successes returns all the countries available 1`] = `
 Array [
   "Barbados",
   "Belarus",
@@ -71,21 +85,6 @@ exports[`Browser Search search Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
     at abort (http://localhost:8081/script/index.js:15991:22)
     at __puppeteer_evaluation_script__:9:37"
-`;
-
-exports[`Browser Search search Failures returns an error when the filter config is undefined 1`] = `
-"Evaluation failed: Error: Filter Config Error: The filter configuration cannot be empty
-    at eval (webpack://browser-search/./src/modules/filterConfiguration/filterConfig.validator.ts?:40:78)"
-`;
-
-exports[`Browser Search search Failures returns an error when the page has the wrong format 1`] = `
-"Evaluation failed: Error: Request Error: The page property must be a natural number
-    at eval (webpack://browser-search/./src/controllers/models/request.validator.ts?:35:78)"
-`;
-
-exports[`Browser Search search Failures returns an error when the store does not exist 1`] = `
-"Evaluation failed: Error: Request Error: The store Id does not exist. You must create it first
-    at eval (webpack://browser-search/./src/controllers/models/request.validator.ts?:43:11)"
 `;
 
 exports[`Browser Search search successes performs a search with 1 filter 1`] = `

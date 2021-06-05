@@ -56,7 +56,7 @@ describe('Browser Search', () => {
       await addDataToStore();
     })
 
-    describe.only('successes', () => {
+    describe('successes', () => {
 
       it('returns all items', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
@@ -388,76 +388,108 @@ describe('Browser Search', () => {
       await createStore();
     })
 
-    it('succeeds when the data is matching the store', async () => {
+    describe('successes', () => {
+      it('succeeds when the data is matching the store', async () => {
 
-      await page.evaluate(
-        ({storeId, persons}) => window.browserSearch.addDataToStore(storeId)(persons)
-        ,{ storeId, persons } as any
-      );
-
-      const results = await page.evaluate(
-        ({storeId, persons}) => window.browserSearch.getItems<Person>(storeId)([persons[0].id])
-        ,{ storeId, persons } as any
-      );
-
-      expect(results).toEqual([persons[0]]);
-    });
-
-    it('fails when the key already exists', async () => {
-      try {
+        await page.evaluate(
+          ({storeId, persons}) => window.browserSearch.addDataToStore(storeId)(persons)
+          ,{ storeId, persons } as any
+        );
+  
+        const results = await page.evaluate(
+          ({storeId, persons}) => window.browserSearch.getItems<Person>(storeId)([persons[0].id])
+          ,{ storeId, persons } as any
+        );
+  
+        expect(results).toEqual([persons[0]]);
+      });
+    })
+    
+    describe('failures', () => {
+      it('fails when the key already exists', async () => {
+        try {
+          
+          await page.evaluate(
+            ({storeId, persons}) => {
+              window.browserSearch.addDataToStore(storeId)(persons);
+              window.browserSearch.addDataToStore(storeId)(persons);
+            }
+            ,{ storeId, persons: [persons[0]]} as any
+          );
+        }
+        catch(e) {
+          expect(e.message).toMatchSnapshot();
+        }
         
-        await page.evaluate(
-          ({storeId, persons}) => {
-            window.browserSearch.addDataToStore(storeId)(persons);
-            window.browserSearch.addDataToStore(storeId)(persons);
-          }
-          ,{ storeId, persons: [persons[0]]} as any
-        );
-      }
-      catch(e) {
-        expect(e.message).toMatchSnapshot();
-      }
-      
-    });
-
-    it('fails when the store does not exist', async () => {
-      try {
-        await page.evaluate(
-          ({persons}) => window.browserSearch.addDataToStore('unknown')(persons)
-          ,{ persons: [persons[0]]} as any
-        );
-      }
-      catch(e) {
-        expect(e.message).toMatchSnapshot();
-      }
-    });
-
+      });
+  
+      it('fails when the store does not exist', async () => {
+        try {
+          await page.evaluate(
+            ({persons}) => window.browserSearch.addDataToStore('unknown')(persons)
+            ,{ persons: [persons[0]]} as any
+          );
+        }
+        catch(e) {
+          expect(e.message).toMatchSnapshot();
+        }
+      });
+    })
+    
   });
 
 
-  describe('getAllValuesOfProperty', () => {
+  describe.only('getAllValuesOfProperty', () => {
     
     beforeEach(async () => {
       await createStore();
       await addDataToStore();
     })
 
-    it('returns all the colours available', async () => {
-      const results = await page.evaluate(({storeId}) => window.browserSearch.getAllValuesOfProperty(
-        storeId,
-      )('favoriteColours'), { storeId }
-     );
-  
-      expect(results).toMatchSnapshot();
+    describe('successes', () => {
+      it('returns all the colours available', async () => {
+        const results = await page.evaluate(({storeId}) => window.browserSearch.getAllValuesOfProperty(
+          storeId,
+        )('favoriteColours'), { storeId }
+      );
+    
+        expect(results).toMatchSnapshot();
+      })
+    
+      it('returns all the countries available', async () => {
+        const results = await page.evaluate(({storeId}) => window.browserSearch.getAllValuesOfProperty(
+          storeId,
+        )('country'), { storeId }
+      );
+    
+        expect(results).toMatchSnapshot();
+      })
     })
-  
-    it('returns all the countries available', async () => {
-      const results = await page.evaluate(({storeId}) => window.browserSearch.getAllValuesOfProperty(
-        storeId,
-      )('country'), { storeId }
-     );
-  
-      expect(results).toMatchSnapshot();
+
+    describe('failures', () => {
+      it('fails when the property is not indexed', async () => {
+        try {
+          await page.evaluate(({storeId}) => window.browserSearch.getAllValuesOfProperty(
+            storeId,
+          )('unknown'), { storeId }
+          );
+        }
+        catch(e) {
+          expect(e.message).toMatchSnapshot();
+        }
+      })
+
+      it('fails when the store does not exist', async () => {
+        try {
+          await page.evaluate(() => window.browserSearch.getAllValuesOfProperty(
+            'unknown',
+          )('country')
+          );
+        }
+        catch(e) {
+          expect(e.message).toMatchSnapshot();
+        }
+      })
     })
   })
   
@@ -594,20 +626,9 @@ describe('Browser Search', () => {
 
   })
 
-  
-
-  // afterAll(async () => {
-  //   await page.evaluate(({storeId}) => window.browserSearch.deleteStore(storeId),
-  //     {storeId} as any
-  //   );
-
-  //   const doesStoreExist = await page.evaluate(({storeId}) => window.browserSearch.doesStoreExist(storeId),
-  //     {keyPath, indexConfig, storeId}
-  //   );
-  //   expect(doesStoreExist).toBe(false);
-
-  //   await page.close();
-  //   await browser.close();
-  // })
+  afterAll(async () => {
+    await page.close();
+    await browser.close();
+  })
 })
 
