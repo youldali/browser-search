@@ -67,6 +67,20 @@ Array [
 ]
 `;
 
+exports[`Browser Search getCount fails when the store does not exist 1`] = `
+"Evaluation failed: Error: An error occured when getting the number of items of store \\"unknown\\". Make sure the store exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at http://localhost:8081/script/index.js:9330:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9530:171)
+    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6031:51)
+    at step (http://localhost:8081/script/index.js:5891:23)
+    at Object.next (http://localhost:8081/script/index.js:5872:53)
+    at http://localhost:8081/script/index.js:5866:71
+    at new Promise (<anonymous>)
+    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5862:12)
+    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6024:16)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5933:26)"
+`;
+
 exports[`Browser Search getItems failures returns an error when the store does not exist 1`] = `
 [Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
     at http://localhost:8081/script/index.js:9388:28

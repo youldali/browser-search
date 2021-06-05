@@ -439,7 +439,7 @@ describe('Browser Search', () => {
   });
 
 
-  describe.only('getAllValuesOfProperty', () => {
+  describe('getAllValuesOfProperty', () => {
     
     beforeEach(async () => {
       await createStore();
@@ -494,7 +494,7 @@ describe('Browser Search', () => {
   })
   
 
-  describe('getCount', () => {
+  describe.only('getCount', () => {
 
     beforeEach(async () => {
       await createStore();
@@ -508,6 +508,19 @@ describe('Browser Search', () => {
      );
   
       expect(results).toBe(persons.length);
+    })
+
+    it('fails when the store does not exist', async () => {
+      try {
+        await page.evaluate(() => window.browserSearch.getCount(
+          'unknown',
+        )
+      );
+      }
+      catch(e) {
+        expect(e.message).toMatchSnapshot();
+      }
+      
     })
   })
   

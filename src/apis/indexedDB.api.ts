@@ -82,15 +82,20 @@ export const doesStoreExist =
 export const getNumberOfItemsInStore = 
 (db: IDBDatabase) =>
 (storeName: string): Promise<number> => {
-    const 
-        transaction = db.transaction([storeName], 'readonly'),
-        objectStore = transaction.objectStore(storeName),
-        countRequest = objectStore.count();
+    try {
+        const 
+            transaction = db.transaction([storeName], 'readonly'),
+            objectStore = transaction.objectStore(storeName),
+            countRequest = objectStore.count();
 
-    return new Promise((resolve, reject) => {
-        countRequest.onsuccess = () => resolve(countRequest.result);
-        countRequest.onerror = () => reject(new Error('An error occured when getting the number of items: ' + transaction?.error?.message));
-    });
+        return new Promise((resolve, reject) => {
+            countRequest.onsuccess = () => resolve(countRequest.result);
+            countRequest.onerror = () => reject(new Error('An error occured when getting the number of items of store "${storeName}": ' + transaction?.error?.message));
+        });
+    }
+    catch(e) {
+        return Promise.reject(new Error(`An error occured when getting the number of items of store "${storeName}". Make sure the store exist. Error: ${e.message}`))
+    }
 }
 
 
@@ -193,7 +198,7 @@ export const getAllUniqueKeysForIndex =
         });
     }
     catch(e) {
-        throw new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}". Make sure the store and the index exist. Error: ${e.message}`);
+        return Promise.reject(new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}". Make sure the store and the index exist. Error: ${e.message}`));
     }
 };
 
