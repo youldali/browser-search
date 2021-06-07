@@ -4,6 +4,7 @@ import { getFilterStatitics } from './filter';
 import { getOrderFromRequest } from './order';
 import { getPaginatedItems } from './pagination';
 import { doesStoreExist } from '../apis/storage.util'
+import { FilteringStat } from '../modules/filteringData';
 export interface FilteringResponse {
     itemIds: ItemId[],
     items: Item[],
@@ -26,31 +27,48 @@ self.onmessage = <T>(event: RequestEvent<T>) => {
 
 
 const processRequest = <T>(request: Request<T>) => {
-    const eitherAsyncRequest = validateRequest<T>({getStoreExist: doesStoreExist})(request);
-    const eitherFilterConfigData = eitherAsyncRequest.map(request => 
-    buildFilterConfigData(request.filterConfig)(request.filtersApplied));
+    const eitherAsyncFilteringData = 
+      validateRequest<T>({getStoreExist: doesStoreExist})(request)
+        .map(request => buildFilterConfigData(request.filterConfig)(request.filtersApplied))
+        .chain(getFilterStatitics(request.storeId));
 
-    const eitherFilterStatisticData = eitherFilterConfigData
-      .chain(getFilterStatitics(request.storeId));
+    const eitherAsyncItems = 
+      eitherAsyncFilteringData
+        .chain(filteringData => getOrderFromRequest(request)(filteringData.getItemsIdsValidated()))
+        .chain(getPaginatedItems(request));
 
-    const items = eitherFilterStatisticData
-      .chain(filteringData => getOrderFromRequest(request)(filteringData.getItemsIdsValidated()))
-      .chain(getPaginatedItems(request));
-
-    items
-      .run()
-      .then( eitherItems => {
-          eitherItems.ifRight(postItems);
-          eitherItems.ifLeft(postError);
+    const eitherAsyncFilteringStats = 
+      eitherAsyncFilteringData
+        .map(filteringData => filteringData.getFilteringStatsByNonAppliedFilterId());
+      
+    Promise
+      .all([eitherAsyncFilteringStats.run(), eitherAsyncItems.run()])
+      .then(([eitherFilteringStats, eitherItems]) => {
+        if(eitherFilteringStats.isRight() && eitherItems.isRight()) {
+          const filteringStats = eitherFilteringStats.extract();
+          const items = eitherItems.extract();
+          postResult(items)(filteringStats);
+        }
+        else if (eitherItems.isLeft()) {
+          const error = eitherItems.extract();
+          postError(error);
+        }
+        else if (eitherFilteringStats.isLeft()) {
+          const error = eitherFilteringStats.extract();
+          postError(error);
+        }
       })
 }
 
-const postItems = (items: Item[]) => {
+const postResult = <T>(items: T[]) => (stats: Dictionary<FilteringStat>) => {
     self.postMessage({ 
         outcome: 'success', 
         payload: {
             type: 'items',
-            data: items
+            data: {
+              items,
+              stats,
+            }
         },
     });
 };
