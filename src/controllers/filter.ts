@@ -1,10 +1,10 @@
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { FilterConfigData } from 'modules/filterConfiguration'
 import { getFilterStatusFromFilterConfig, FilteredItemStatus } from 'modules/filteringStatus';
-import { createFilteringData, FilteringData, FilterIdToMatchingItemIds } from 'modules/filteringData';
+import { createFilteringData, FilteringData, FilterIdToMatchingDocumentIds } from 'modules/filteringData';
 import { fromPairs, zip } from 'ramda';
 import { getPrimaryKeysMatchingOperator, iterateOverStore } from 'apis/storage.util';
-import { ItemId, StoreId } from './models';
+import { DocumentId, StoreId } from './models';
 
 
 
@@ -14,14 +14,14 @@ export const getFilterStatitics =
     const getFilterStatus = getFilterStatusFromFilterConfig(filterConfigData);
 
     const saveItemFilterStatus = 
-        (saveStatus: (filteredItemStatus: FilteredItemStatus, itemId: ItemId) => void) => 
-        (itemId: ItemId, item: T): void =>  {
-            const status = getFilterStatus(item);
-            saveStatus(status, itemId);
+        (saveStatus: (filteredItemStatus: FilteredItemStatus, documentId: DocumentId) => void) => 
+        (documentId: DocumentId, document: T): void =>  {
+            const status = getFilterStatus(document);
+            saveStatus(status, documentId);
         };
 
     const eitherFilteringData = 
-        getFilterIdToMatchingItemIds(storeId)(filterConfigData)
+        getFilterIdToMatchingDocumentIds(storeId)(filterConfigData)
         .map(createFilteringData(filterConfigData))
         .chain(filteringData => (
             iterateOverStore<T>(storeId)(saveItemFilterStatus(filteringData.addFilteredObjectStatus))
@@ -33,7 +33,7 @@ export const getFilterStatitics =
 
 
 
-const getFilterIdToMatchingItemIds = (storeName: string) => <T>(filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilterIdToMatchingItemIds> => {
+const getFilterIdToMatchingDocumentIds = (storeName: string) => <T>(filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilterIdToMatchingDocumentIds> => {
     const filters = Object.values(filterConfigData.getFilterDictionary());
     const filtersIds = filterConfigData.getAllFilterIds();
 

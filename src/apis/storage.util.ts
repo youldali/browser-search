@@ -135,8 +135,8 @@ export const getAllUniqueKeysForIndex =
 export const getDocuments = 
 <T>
 (storeName: string) => 
-(itemIds: IDBValidKey[]): EitherAsync<Error, T[]> => {
-    const command: IDBCommand = db => EitherAsync(() => idb.getDocuments(db)(storeName)(itemIds));
+(documentIds: IDBValidKey[]): EitherAsync<Error, T[]> => {
+    const command: IDBCommand = db => EitherAsync(() => idb.getDocuments(db)(storeName)(documentIds));
     return execute(command);
 };
 

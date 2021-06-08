@@ -77,8 +77,8 @@ export const getNumberOfDocumentsInStore = (storeName: string): Promise<number> 
     ))
 )
 
-export const getDocuments = <T>(storeName: string) => (itemIds: IDBValidKey[]): Promise<T[]> => (
-  storage.getDocuments<T>(storeName)(itemIds)
+export const getDocuments = <T>(storeName: string) => (documentIds: IDBValidKey[]): Promise<T[]> => (
+  storage.getDocuments<T>(storeName)(documentIds)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 

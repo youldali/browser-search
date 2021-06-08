@@ -4,7 +4,7 @@ import {
     FilterConfig,
 } from 'modules/filterConfiguration';
 
-import { FilterIdToMatchingItemIds } from '../../filteringData.model'
+import { FilterIdToMatchingDocumentIds } from '../../filteringData.model'
 import { 
   FilteredItemStatus,
   getFilterStatusFromFilterConfig
@@ -46,7 +46,7 @@ export const filterConfigFixture: FilterConfig<Item> = [
 export const filtersIdsAppliedFixture = ['activity-1', 'priceMin', 'activity-2'];
 export const filterConfigDataFixture = buildFilterConfigData<Item>(filterConfigFixture)(filtersIdsAppliedFixture);
 
-export const filterIdToMatchingItemIdsFixture: FilterIdToMatchingItemIds = {
+export const filterIdToMatchingDocumentIdsFixture: FilterIdToMatchingDocumentIds = {
   [filterDictionaryFixture.priceMin.id]: [0, 1, 3],
   [filterDictionaryFixture.priceMax.id]: [0, 2, 4],
   [filterDictionaryFixture.numberOfPeople.id]: [1, 4],

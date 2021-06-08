@@ -1,14 +1,14 @@
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { getDocuments } from 'apis/storage.util';
-import { ItemId, Request } from './models';
+import { DocumentId, Request } from './models';
 
-const DEFAULT_ITEMS_PER_PAGE = 20;
+const DEFAULT_DOCUMENTS_PER_PAGE = 20;
 const DEFAULT_PAGE = 1;
 
-export const getPaginatedItems = <T>({storeId, page = DEFAULT_PAGE, perPage = DEFAULT_ITEMS_PER_PAGE}: Request<T>) =>  (itemIds: ItemId[]): EitherAsync<Error, T[]> => {
+export const getPaginatedDocuments = <T>({storeId, page = DEFAULT_PAGE, perPage = DEFAULT_DOCUMENTS_PER_PAGE}: Request<T>) =>  (documentIds: DocumentId[]): EitherAsync<Error, T[]> => {
     const begin = (page - 1) * perPage;
     const end = page * perPage;
-    const paginatedItemIds = itemIds.slice(begin, end);
+    const paginatedDocumentIds = documentIds.slice(begin, end);
 
-    return getDocuments<T>(storeId)(paginatedItemIds);
+    return getDocuments<T>(storeId)(paginatedDocumentIds);
 };

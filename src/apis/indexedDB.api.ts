@@ -226,27 +226,27 @@ export const getDocuments =
 <T>
 (db: IDBDatabase) => 
 (storeName: string) => 
-(itemIds: IDBValidKey[]): Promise<T[]> => {
+(documentIds: IDBValidKey[]): Promise<T[]> => {
     const 
         transaction = db.transaction(storeName, 'readonly'),
         objectStore = transaction.objectStore(storeName),
-        items: T[] = [];
+        documents: T[] = [];
 
-    itemIds.forEach( id => {
+    documentIds.forEach( id => {
         const request = objectStore.get(id);
         request.onsuccess = () => {
             if(!isNil(request.result)) {
-                items.push(request.result);
+                documents.push(request.result);
             }
             else {
-                console.warn(`getDocuments warning: item "${id}" does not exist`)
+                console.warn(`getDocuments warning: document "${id}" does not exist`)
             } 
         }
     });
 
     return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => resolve(items);
-        transaction.onerror = () => reject(new Error(`An error occured when getting the items of store "${storeName}": ${transaction?.error?.message}`));
+        transaction.oncomplete = () => resolve(documents);
+        transaction.onerror = () => reject(new Error(`An error occured when getting the documents of store "${storeName}": ${transaction?.error?.message}`));
     });
 };
 

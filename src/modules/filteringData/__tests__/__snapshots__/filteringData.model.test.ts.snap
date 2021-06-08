@@ -3,19 +3,19 @@
 exports[`createFilteringData Should give a dictionary of FilteringStat by filter non applied 1`] = `
 Object {
   "activity-3": Object {
-    "itemIds": Array [
+    "documentIds": Array [
       3,
     ],
     "type": "added",
   },
   "numberOfPeople": Object {
-    "itemIds": Array [
+    "documentIds": Array [
       1,
     ],
     "type": "narrowed",
   },
   "priceMax": Object {
-    "itemIds": Array [
+    "documentIds": Array [
       0,
     ],
     "type": "narrowed",
@@ -25,7 +25,7 @@ Object {
 
 exports[`createFilteringData Should give all the FilteringStat by filter "activity-3" 1`] = `
 Object {
-  "itemIds": Array [
+  "documentIds": Array [
     3,
   ],
   "type": "added",
@@ -34,7 +34,7 @@ Object {
 
 exports[`createFilteringData Should give all the FilteringStat by filter "numberOfPeople" 1`] = `
 Object {
-  "itemIds": Array [
+  "documentIds": Array [
     1,
   ],
   "type": "narrowed",
@@ -43,36 +43,36 @@ Object {
 
 exports[`createFilteringData Should give all the FilteringStat by filter "priceMax" 1`] = `
 Object {
-  "itemIds": Array [
+  "documentIds": Array [
     0,
   ],
   "type": "narrowed",
 }
 `;
 
-exports[`createFilteringData Should give all the items id rejected by group "0" 1`] = `
+exports[`createFilteringData Should give all the document id rejected by group "0" 1`] = `
 Array [
   2,
 ]
 `;
 
-exports[`createFilteringData Should give all the items id rejected by group "1" 1`] = `Array []`;
+exports[`createFilteringData Should give all the document id rejected by group "1" 1`] = `Array []`;
 
-exports[`createFilteringData Should give all the items id rejected by group "2" 1`] = `Array []`;
+exports[`createFilteringData Should give all the document id rejected by group "2" 1`] = `Array []`;
 
-exports[`createFilteringData Should give all the items id rejected by group "3" 1`] = `
+exports[`createFilteringData Should give all the document id rejected by group "3" 1`] = `
 Array [
   3,
 ]
 `;
 
-exports[`createFilteringData Should give all the items id rejected by multiple filters 1`] = `
+exports[`createFilteringData Should give all the document id rejected by multiple filters 1`] = `
 Array [
   4,
 ]
 `;
 
-exports[`createFilteringData Should give all the items id validated 1`] = `
+exports[`createFilteringData Should give all the document id validated 1`] = `
 Array [
   0,
   1,

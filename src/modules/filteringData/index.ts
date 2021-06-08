@@ -1,5 +1,5 @@
 export {
-    FilterIdToMatchingItemIds,
+    FilterIdToMatchingDocumentIds,
     FilteringStat,
     FilteringData,
     createFilteringData,

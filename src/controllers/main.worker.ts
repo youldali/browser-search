@@ -1,14 +1,11 @@
 import { buildFilterConfigData } from 'modules/filterConfiguration'
-import { Item, ItemId, Request, validateRequest } from './models/';
+import { Request, validateRequest } from './models/';
 import { getFilterStatitics } from './filter';
 import { getOrderFromRequest } from './order';
-import { getPaginatedItems } from './pagination';
+import { getPaginatedDocuments } from './pagination';
 import { doesStoreExist } from '../apis/storage.util'
 import { FilteringStat } from '../modules/filteringData';
-export interface FilteringResponse {
-    itemIds: ItemId[],
-    items: Item[],
-};
+
 
 export interface FilteringStatisticsResponse {
     filtersStatisticsDetailedByFilter: number,
@@ -34,8 +31,8 @@ const processRequest = <T>(request: Request<T>) => {
 
     const eitherAsyncItems = 
       eitherAsyncFilteringData
-        .chain(filteringData => getOrderFromRequest(request)(filteringData.getItemsIdsValidated()))
-        .chain(getPaginatedItems(request));
+        .chain(filteringData => getOrderFromRequest(request)(filteringData.getDocumentsIdsValidated()))
+        .chain(getPaginatedDocuments(request));
 
     const eitherAsyncFilteringStats = 
       eitherAsyncFilteringData
