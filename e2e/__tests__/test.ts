@@ -218,7 +218,7 @@ describe('Browser Search', () => {
         expect(documents).toMatchSnapshot();
       })
     
-      it('returns all people who like the red / blue / green colour AND are old', async () => {
+      it.only('returns all people who like the red / blue / green colour AND are old', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
           const [results] = window.browserSearch.searchStore<Person>({
             filterConfig,

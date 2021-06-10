@@ -16,7 +16,7 @@ export declare const iterateOverStore: <T>(storeName: string) => (callback: (pri
 export declare const getPrimaryKeysMatchingOperator: (storeName: string) => (indexName: string) => (operator: Operator) => (operand: any) => EitherAsync<Error, ItemKey[]>;
 export declare const getAllPrimaryKeysForIndex: (storeName: string) => (indexName: string) => (reverseDirection: boolean) => EitherAsync<Error, ItemKey[]>;
 export declare const getAllUniqueKeysForIndex: <K extends IDBValidKey>(storeName: string) => (indexName: string) => EitherAsync<Error, K[]>;
-export declare const getDocuments: <T>(storeName: string) => (itemIds: IDBValidKey[]) => EitherAsync<Error, T[]>;
+export declare const getDocuments: <T>(storeName: string) => (documentIds: IDBValidKey[]) => EitherAsync<Error, T[]>;
 export declare const getNumberOfDocumentsInStore: (storeName: string) => EitherAsync<Error, number>;
 export declare const doesStoreExist: (storeName: string) => EitherAsync<Error, boolean>;
 export declare const getKeyRangeMatchingOperator: (operator: Operator) => (value: any) => IDBKeyRange;

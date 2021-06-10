@@ -1,1 +1,1 @@
-export { FilterIdToMatchingItemIds, FilteringStat, FilteringData, createFilteringData, } from './filteringData.model';
+export { FilterIdToMatchingDocumentIds, NextFilterState, FilteringData, createFilteringData, } from './filteringData.model';

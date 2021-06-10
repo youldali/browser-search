@@ -1,11 +1,11 @@
 import { buildFilterConfigData } from 'modules/filterConfiguration'
-import { Request, validateRequest } from './models/';
+import { NextFilterStateStat, Request, ResponseSuccess, ResponseFailure, validateRequest } from './models/';
 import { getFilterStatitics } from './filter';
 import { getOrderFromRequest } from './order';
 import { getPaginatedDocuments } from './pagination';
 import { doesStoreExist } from '../apis/storage.util'
-import { FilteringStat } from '../modules/filteringData';
-
+import { NextFilterState } from '../modules/filteringData';
+import { map } from 'ramda';
 
 export interface FilteringStatisticsResponse {
     filtersStatisticsDetailedByFilter: number,
@@ -16,14 +16,14 @@ interface RequestEvent<T> extends MessageEvent {
     data: Request<T>,
 }
 
-self.onmessage = <T>(event: RequestEvent<T>) => {
+self.onmessage = <T>(event: RequestEvent<T>): void => {
     const requestData = event.data;
     console.log('from worker, received data: ', requestData);
     processRequest(requestData);
 };
 
 
-const processRequest = <T>(request: Request<T>) => {
+const processRequest = <T>(request: Request<T>): void => {
     const eitherAsyncFilteringData = 
       validateRequest<T>({getStoreExist: doesStoreExist})(request)
         .map(request => buildFilterConfigData(request.filterConfig)(request.filtersApplied))
@@ -36,7 +36,15 @@ const processRequest = <T>(request: Request<T>) => {
 
     const eitherAsyncFilteringStats = 
       eitherAsyncFilteringData
-        .map(filteringData => filteringData.getFilteringStatsByNonAppliedFilterId());
+        .map(filteringData => {
+          const nextFilterStates = filteringData.getNextFilterStatesForNonAppliedFilterId();
+          const nextFilterStatesStats = map<Dictionary<NextFilterState>, Dictionary<NextFilterStateStat>>(nextFilterState => ({type: nextFilterState.type, nextNumberOfDocuments: nextFilterState.documentIds.length}), nextFilterStates)
+          const matchingDocumentIds = filteringData.getDocumentsIdsValidated();
+          return {
+            stats: nextFilterStatesStats,
+            numberOfDocuments: matchingDocumentIds.length,
+          }
+        });
       
     Promise
       .all([eitherAsyncFilteringStats.run(), eitherAsyncItems.run()])
@@ -57,22 +65,25 @@ const processRequest = <T>(request: Request<T>) => {
       })
 }
 
-const postResult = <T>(items: T[]) => (stats: Dictionary<FilteringStat>) => {
-    self.postMessage({ 
-        outcome: 'success', 
-        payload: {
-            type: 'items',
-            data: {
-              items,
-              stats,
-            }
-        },
-    });
+type FilteringStats = {
+  stats: Dictionary<NextFilterStateStat>,
+  numberOfDocuments: number,
+}
+const postResult = <T>(documents: T[]) => (filteringStats: FilteringStats): void => {
+  const response: ResponseSuccess<T> = { 
+    outcome: 'success', 
+    payload: {
+      documents,
+      ...filteringStats,
+    },
+  }
+    self.postMessage(response);
 };
 
-const postError = (error: Error) => {
-    self.postMessage({ 
-        outcome: 'error', 
-        reason: error,
-    });
+const postError = (error: Error): void => {
+  const response: ResponseFailure = { 
+    outcome: 'error', 
+    reason: error,
+  }
+    self.postMessage(response);
 };

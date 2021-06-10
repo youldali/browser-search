@@ -1,6 +1,6 @@
 export {
     FilterIdToMatchingDocumentIds,
-    FilteringStat,
+    NextFilterState,
     FilteringData,
     createFilteringData,
 } from './filteringData.model';

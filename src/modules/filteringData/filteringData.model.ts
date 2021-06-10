@@ -8,14 +8,14 @@ export interface FilterIdToMatchingDocumentIds {
     [key: string]: DocumentId[]; // key is FilterId
 }
 
-export type FilteringStat = {
+export type NextFilterState = {
     type: 'added' | 'narrowed',
     documentIds: DocumentId[]
 }
 
 export interface FilteringData {
-    getFilteringStatsByNonAppliedFilterId: () => Dictionary<FilteringStat>
-    getFilteringStatForFilterId: (filterId: FilterId) => FilteringStat,
+    getNextFilterStatesForNonAppliedFilterId: () => Dictionary<NextFilterState>
+    getNextFilterStateForFilterId: (filterId: FilterId) => NextFilterState,
     getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => DocumentId[],
     getDocumentsIdsRejectedByMultipleFilters: () => DocumentId[],
     getDocumentsIdsValidated: () => DocumentId[],
@@ -82,7 +82,7 @@ const getFilteringData =
          * If 1 filter of the group has been checked, we are in this case:
          * the filter will actually add some new items since the logical operation is an OR with the other filters in the group
          */
-        const getDocumentIdsAddedByFilter = (filterId: FilterId, groupId: GroupId): FilteringStat => {
+        const getDocumentIdsAddedByFilter = (filterId: FilterId, groupId: GroupId): NextFilterState => {
             const documentIdsRejectedByFilterGroup = filteringStatusToDocumentsIds.get(groupId) as DocumentId[];
             const documentIdsMatchingFilterId = filterIdToMatchingDocumentIds[filterId]; 
             const documentIdsAddedIfFilterIsChecked = findIntersectionOfSortedArrays(documentIdsMatchingFilterId)(documentIdsRejectedByFilterGroup);
@@ -97,7 +97,7 @@ const getFilteringData =
          * If 0 filter of the group has been checked, we are in this case:
          * the filter will narrow the list of items since the logical operation is an AND with the rest of the filters
          */
-        const getDocumentIdsNarrowedByFilter = (filterId: FilterId): FilteringStat => {
+        const getDocumentIdsNarrowedByFilter = (filterId: FilterId): NextFilterState => {
             const documentIdsMatchingFilterId = filterIdToMatchingDocumentIds[filterId];
             const documentIdsValidated = filteringStatusToDocumentsIds.get(true) as DocumentId[];
             const documentIdsLeftIfFilterIsChecked = findIntersectionOfSortedArrays(documentIdsMatchingFilterId)(documentIdsValidated);
@@ -109,27 +109,27 @@ const getFilteringData =
         }
 
 
-        const getFilteringStatForFilterId = (filterId: FilterId): FilteringStat => {
+        const getNextFilterStateForFilterId = (filterId: FilterId): NextFilterState => {
             const groupId = filterConfigData.getGroupIdForFilter(filterId);
             return filteringStatusToDocumentsIds.get(groupId) === undefined 
                 ? getDocumentIdsNarrowedByFilter(filterId)
                 : getDocumentIdsAddedByFilter(filterId, groupId)
         }
 
-        const getFilteringStatsByNonAppliedFilterId = (): Dictionary<FilteringStat> => {
+        const getNextFilterStatesForNonAppliedFilterId = (): Dictionary<NextFilterState> => {
             const filterIdsNotApplied = filterConfigData.getFilterIdsNotApplied();
-            const filteringStatsByNonAppliedFilterId = filterIdsNotApplied.reduce((filteringStatDictionary: Dictionary<FilteringStat>, filterId) => {
-                const filteringStat = getFilteringStatForFilterId(filterId);
-                filteringStatDictionary[filterId] = filteringStat;
-                return filteringStatDictionary;
+            const filteringStatsByNonAppliedFilterId = filterIdsNotApplied.reduce((nextFilterStateDictionary: Dictionary<NextFilterState>, filterId) => {
+                const filteringStat = getNextFilterStateForFilterId(filterId);
+                nextFilterStateDictionary[filterId] = filteringStat;
+                return nextFilterStateDictionary;
             }, {});
 
             return filteringStatsByNonAppliedFilterId;
         }
 
         return {
-            getFilteringStatsByNonAppliedFilterId,
-            getFilteringStatForFilterId,
+            getNextFilterStatesForNonAppliedFilterId,
+            getNextFilterStateForFilterId,
             getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => filteringStatusToDocumentsIds.get(groupId) ?? [],
             getDocumentsIdsRejectedByMultipleFilters: () => filteringStatusToDocumentsIds.get(false) ?? [],
             getDocumentsIdsValidated: () => filteringStatusToDocumentsIds.get(true) ?? [],

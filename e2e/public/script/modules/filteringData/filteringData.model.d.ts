@@ -1,24 +1,24 @@
 import { GroupId, FilterId } from 'modules/filterConfiguration';
 import { FilteredItemStatus } from 'modules/filteringStatus';
 import { FilterConfigData } from 'modules/filterConfiguration';
-declare type ItemId = StringOrNumber;
-export interface FilterIdToMatchingItemIds {
-    [key: string]: ItemId[];
+declare type DocumentId = StringOrNumber;
+export interface FilterIdToMatchingDocumentIds {
+    [key: string]: DocumentId[];
 }
-export declare type FilteringStat = {
+export declare type NextFilterState = {
     type: 'added' | 'narrowed';
-    itemIds: ItemId[];
+    documentIds: DocumentId[];
 };
 export interface FilteringData {
-    getFilteringStatsByNonAppliedFilterId: () => Dictionary<FilteringStat>;
-    getFilteringStatForFilterId: (filterId: FilterId) => FilteringStat;
-    getItemsIdsRejectedByGroupId: (groupId: GroupId) => ItemId[];
-    getItemsIdsRejectedByMultipleFilters: () => ItemId[];
-    getItemsIdsValidated: () => ItemId[];
+    getNextFilterStatesForNonAppliedFilterId: () => Dictionary<NextFilterState>;
+    getNextFilterStateForFilterId: (filterId: FilterId) => NextFilterState;
+    getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => DocumentId[];
+    getDocumentsIdsRejectedByMultipleFilters: () => DocumentId[];
+    getDocumentsIdsValidated: () => DocumentId[];
 }
-export declare const createFilteringData: <T>(filterConfigData: FilterConfigData<T>) => (filterIdToMatchingItemIds: FilterIdToMatchingItemIds) => {
-    addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, itemId: ItemId): void;
-    setStatusValue(filteredItemStatus: FilteredItemStatus, idList: ItemId[]): void;
+export declare const createFilteringData: <T>(filterConfigData: FilterConfigData<T>) => (filterIdToMatchingDocumentIds: FilterIdToMatchingDocumentIds) => {
+    addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, documentId: DocumentId): void;
+    setStatusValue(filteredItemStatus: FilteredItemStatus, idList: DocumentId[]): void;
     done(): FilteringData;
 };
 export {};

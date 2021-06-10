@@ -19,6 +19,6 @@ declare type IteratorOnStoreCallback<T, K extends IDBValidKey> = (itemKey: K, it
 export declare const iterateOverStore: <T, K extends IDBValidKey>(db: IDBDatabase) => (storeName: string) => (callBack: IteratorOnStoreCallback<T, K>) => Promise<IDBDatabase>;
 export declare const getAllUniqueKeysForIndex: <K extends IDBValidKey>(db: IDBDatabase) => (storeName: string) => (indexName: string) => Promise<K[]>;
 export declare const getAllPrimaryKeysForIndex: <K extends IDBValidKey>(db: IDBDatabase) => (storeName: string) => (indexName: string) => (reverseDirection: boolean) => Promise<K[]>;
-export declare const getDocuments: <T>(db: IDBDatabase) => (storeName: string) => (itemIds: IDBValidKey[]) => Promise<T[]>;
+export declare const getDocuments: <T>(db: IDBDatabase) => (storeName: string) => (documentIds: IDBValidKey[]) => Promise<T[]>;
 export declare const deleteDatabase: (dbName: string) => Promise<void>;
 export {};

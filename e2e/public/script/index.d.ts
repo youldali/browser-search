@@ -7,7 +7,7 @@ export declare const createStore: (storeName: string) => (indexConfig: storage.S
 export declare const addDocumentsToStore: <T>(storeName: string) => (data: T[]) => Promise<void>;
 export declare const getAllValuesOfProperty: <T extends IDBValidKey>(storeName: string) => (propertyName: string) => Promise<T[]>;
 export declare const getNumberOfDocumentsInStore: (storeName: string) => Promise<number>;
-export declare const getDocuments: <T>(storeName: string) => (itemIds: IDBValidKey[]) => Promise<T[]>;
+export declare const getDocuments: <T>(storeName: string) => (documentIds: IDBValidKey[]) => Promise<T[]>;
 export declare const deleteStore: (storeName: string) => Promise<void>;
 export declare const deleteStoreIfExist: (storeName: string) => Promise<void>;
 export declare const deleteAllStores: () => Promise<void>;

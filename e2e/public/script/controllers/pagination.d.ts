@@ -1,3 +1,3 @@
 import { EitherAsync } from 'purify-ts/EitherAsync';
-import { ItemId, Request } from './models';
-export declare const getPaginatedItems: <T>({ storeId, page, perPage }: Request<T>) => (itemIds: ItemId[]) => EitherAsync<Error, T[]>;
+import { DocumentId, Request } from './models';
+export declare const getPaginatedDocuments: <T>({ storeId, page, perPage }: Request<T>) => (documentIds: DocumentId[]) => EitherAsync<Error, T[]>;

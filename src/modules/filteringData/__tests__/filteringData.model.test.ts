@@ -18,7 +18,7 @@ describe('createFilteringData', () => {
     });
 
     test('Should give a dictionary of FilteringStat by filter non applied', () => {
-        expect(filteringStatisticsData.getFilteringStatsByNonAppliedFilterId()).toMatchSnapshot();
+        expect(filteringStatisticsData.getNextFilterStatesForNonAppliedFilterId()).toMatchSnapshot();
     });
     
     filterConfigDataFixture.getAllFilterGroupIds().forEach(filterGroupId => {
@@ -29,7 +29,7 @@ describe('createFilteringData', () => {
 
     filterConfigDataFixture.getFilterIdsNotApplied().forEach(filterId => {
         test(`Should give all the FilteringStat by filter "${filterId}"`, () => {
-            expect(filteringStatisticsData.getFilteringStatForFilterId(filterId)).toMatchSnapshot();
+            expect(filteringStatisticsData.getNextFilterStateForFilterId(filterId)).toMatchSnapshot();
         });
     });
 });
