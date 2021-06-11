@@ -41,7 +41,7 @@ const processRequest = async <T>(request: Request<T>) => {
       liftedFilteringData
         .map(filteringData => {
           const nextFilterStates = filteringData.getNextFilterStatesForNonAppliedFilterId();
-          const nextFilterStatesStats = map<Dictionary<NextFilterState>, Dictionary<NextFilterStateStat>>(nextFilterState => ({type: nextFilterState.type, nextNumberOfDocuments: nextFilterState.documentIds.length}), nextFilterStates)
+          const nextFilterStatesStats = map<Dictionary<NextFilterState>, Dictionary<NextFilterStateStat>>(getNextFilterStateStat, nextFilterStates)
           const matchingDocumentIds = filteringData.getDocumentsIdsValidated();
           return {
             stats: nextFilterStatesStats,
@@ -67,6 +67,18 @@ const processRequest = async <T>(request: Request<T>) => {
         }
       })
 }
+
+const getNextFilterStateStat = (nextFilterState: NextFilterState): NextFilterStateStat => (
+  nextFilterState.type === 'added' ? 
+  {
+    type: nextFilterState.type,
+    nextDocumentsAdded: nextFilterState.documentIds.length,
+  } :
+  {
+    type: nextFilterState.type,
+    nextNumberOfDocuments: nextFilterState.documentIds.length,
+  }
+)
 
 type FilteringStats = {
   stats: Dictionary<NextFilterStateStat>,

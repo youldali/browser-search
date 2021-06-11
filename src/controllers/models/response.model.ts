@@ -1,6 +1,11 @@
-import { NextFilterState } from '../../modules/filteringData';
-
-export type NextFilterStateStat = Omit<NextFilterState, 'documentIds'> & {nextNumberOfDocuments: number};
+export type NextFilterStateStat = { 
+  type: 'added';
+  nextDocumentsAdded: number;
+} |
+{
+  type: 'narrowed';
+  nextNumberOfDocuments: number;
+};
 
 export type ResponseSuccess<T> = { 
   outcome: 'success', 
