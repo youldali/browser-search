@@ -8,7 +8,7 @@ import { DocumentId, StoreId } from './models';
 
 
 
-export const getFilterStatitics = 
+export const getFilteringData = 
 <T>(storeId: StoreId) =>
 (filterConfigData: FilterConfigData<T>): EitherAsync<Error, FilteringData> => {
     const getFilterStatus = getFilterStatusFromFilterConfig(filterConfigData);

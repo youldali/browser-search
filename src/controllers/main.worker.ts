@@ -1,11 +1,12 @@
 import { buildFilterConfigData } from 'modules/filterConfiguration'
 import { NextFilterStateStat, Request, ResponseSuccess, ResponseFailure, validateRequest } from './models/';
-import { getFilterStatitics } from './filter';
+import { getFilteringData } from './filter';
 import { getOrderFromRequest } from './order';
 import { getPaginatedDocuments } from './pagination';
 import { doesStoreExist } from '../apis/storage.util'
 import { NextFilterState } from '../modules/filteringData';
 import { map } from 'ramda';
+import { EitherAsync } from 'purify-ts/EitherAsync'
 
 export interface FilteringStatisticsResponse {
     filtersStatisticsDetailedByFilter: number,
@@ -23,19 +24,21 @@ self.onmessage = <T>(event: RequestEvent<T>): void => {
 };
 
 
-const processRequest = <T>(request: Request<T>): void => {
+const processRequest = async <T>(request: Request<T>) => {
     const eitherAsyncFilteringData = 
       validateRequest<T>({getStoreExist: doesStoreExist})(request)
         .map(request => buildFilterConfigData(request.filterConfig)(request.filtersApplied))
-        .chain(getFilterStatitics(request.storeId));
+        .chain(getFilteringData(request.storeId));
+
+    const liftedFilteringData = EitherAsync.liftEither(await eitherAsyncFilteringData.run());
 
     const eitherAsyncItems = 
-      eitherAsyncFilteringData
+      liftedFilteringData
         .chain(filteringData => getOrderFromRequest(request)(filteringData.getDocumentsIdsValidated()))
         .chain(getPaginatedDocuments(request));
 
     const eitherAsyncFilteringStats = 
-      eitherAsyncFilteringData
+      liftedFilteringData
         .map(filteringData => {
           const nextFilterStates = filteringData.getNextFilterStatesForNonAppliedFilterId();
           const nextFilterStatesStats = map<Dictionary<NextFilterState>, Dictionary<NextFilterStateStat>>(nextFilterState => ({type: nextFilterState.type, nextNumberOfDocuments: nextFilterState.documentIds.length}), nextFilterStates)
