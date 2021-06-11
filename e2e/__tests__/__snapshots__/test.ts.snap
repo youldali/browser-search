@@ -111,13 +111,13 @@ exports[`Browser Search getNumberOfDocumentsInStore fails when the store does no
 
 exports[`Browser Search searchStore Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
-    at abort (http://localhost:8081/script/index.js:16001:22)
+    at abort (http://localhost:8081/script/index.js:16027:22)
     at __puppeteer_evaluation_script__:9:37"
 `;
 
 exports[`Browser Search searchStore successes performs a search with 1 filter 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 18,
       "country": "Taiwan",
@@ -172,13 +172,39 @@ Object {
       "salary": 95544,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 4,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextDocumentsAdded": 3,
+      "type": "added",
+    },
+    "middleAged": Object {
+      "nextDocumentsAdded": 8,
+      "type": "added",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 2,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes returns all items 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 30,
       "country": "Norfolk Island",
@@ -373,13 +399,43 @@ Object {
       "salary": 20408,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 15,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 3,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 8,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 7,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes returns all people who like the red / blue / green colour 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 30,
       "country": "Norfolk Island",
@@ -501,13 +557,31 @@ Object {
       "salary": 20408,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 9,
+  "stats": Object {
+    "engineer": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 2,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 6,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes returns all people who like the red / blue / green colour AND are old 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 64,
       "country": "Niger",
@@ -522,13 +596,27 @@ Object {
       "salary": 45390,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 1,
+  "stats": Object {
+    "engineer": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextDocumentsAdded": 2,
+      "type": "added",
+    },
+    "middleAged": Object {
+      "nextDocumentsAdded": 6,
+      "type": "added",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes returns all people who like the red colour 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 30,
       "country": "Norfolk Island",
@@ -622,21 +710,69 @@ Object {
       "salary": 20408,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 7,
+  "stats": Object {
+    "blue": Object {
+      "nextDocumentsAdded": 2,
+      "type": "added",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextDocumentsAdded": 0,
+      "type": "added",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 2,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes returns empty array when no criteria is met 1`] = `
 Object {
-  "data": Array [],
-  "type": "items",
+  "documents": Array [],
+  "numberOfDocuments": 0,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextDocumentsAdded": 0,
+      "type": "added",
+    },
+    "middleAged": Object {
+      "nextDocumentsAdded": 1,
+      "type": "added",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes runs 2 concurrents searches 1`] = `
 Array [
   Object {
-    "data": Array [
+    "documents": Array [
       Object {
         "age": 30,
         "country": "Norfolk Island",
@@ -677,10 +813,36 @@ Array [
         "salary": 86221,
       },
     ],
-    "type": "items",
+    "numberOfDocuments": 7,
+    "stats": Object {
+      "blue": Object {
+        "nextDocumentsAdded": 2,
+        "type": "added",
+      },
+      "engineer": Object {
+        "nextNumberOfDocuments": 0,
+        "type": "narrowed",
+      },
+      "green": Object {
+        "nextDocumentsAdded": 0,
+        "type": "added",
+      },
+      "highAged": Object {
+        "nextNumberOfDocuments": 1,
+        "type": "narrowed",
+      },
+      "lowAged": Object {
+        "nextNumberOfDocuments": 2,
+        "type": "narrowed",
+      },
+      "middleAged": Object {
+        "nextNumberOfDocuments": 4,
+        "type": "narrowed",
+      },
+    },
   },
   Object {
-    "data": Array [
+    "documents": Array [
       Object {
         "age": 64,
         "country": "Niger",
@@ -723,14 +885,40 @@ Array [
         "salary": 96922,
       },
     ],
-    "type": "items",
+    "numberOfDocuments": 4,
+    "stats": Object {
+      "engineer": Object {
+        "nextNumberOfDocuments": 0,
+        "type": "narrowed",
+      },
+      "green": Object {
+        "nextDocumentsAdded": 1,
+        "type": "added",
+      },
+      "highAged": Object {
+        "nextNumberOfDocuments": 1,
+        "type": "narrowed",
+      },
+      "lowAged": Object {
+        "nextNumberOfDocuments": 0,
+        "type": "narrowed",
+      },
+      "middleAged": Object {
+        "nextNumberOfDocuments": 3,
+        "type": "narrowed",
+      },
+      "red": Object {
+        "nextDocumentsAdded": 5,
+        "type": "added",
+      },
+    },
   },
 ]
 `;
 
 exports[`Browser Search searchStore successes search for the engineer profession 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 32,
       "country": "French Southern Territories",
@@ -744,13 +932,39 @@ Object {
       "salary": 82114,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 1,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes sorts by name ASC 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 30,
       "country": "Norfolk Island",
@@ -945,13 +1159,43 @@ Object {
       "salary": 82114,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 15,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 3,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 8,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 7,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 30,
       "country": "Norfolk Island",
@@ -1015,13 +1259,43 @@ Object {
       "salary": 95544,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 15,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 3,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 8,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 7,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 33,
       "country": "Barbados",
@@ -1089,13 +1363,43 @@ Object {
       "salary": 45390,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 15,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 3,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 8,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 7,
+      "type": "narrowed",
+    },
+  },
 }
 `;
 
 exports[`Browser Search searchStore successes sorts by name DESC 1`] = `
 Object {
-  "data": Array [
+  "documents": Array [
     Object {
       "age": 32,
       "country": "French Southern Territories",
@@ -1290,6 +1594,36 @@ Object {
       "salary": 53462,
     },
   ],
-  "type": "items",
+  "numberOfDocuments": 15,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 3,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 8,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 7,
+      "type": "narrowed",
+    },
+  },
 }
 `;

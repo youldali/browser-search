@@ -1,5 +1,8 @@
-import { NextFilterState } from '../../modules/filteringData';
-export declare type NextFilterStateStat = Omit<NextFilterState, 'documentIds'> & {
+export declare type NextFilterStateStat = {
+    type: 'added';
+    nextDocumentsAdded: number;
+} | {
+    type: 'narrowed';
     nextNumberOfDocuments: number;
 };
 export declare type ResponseSuccess<T> = {
