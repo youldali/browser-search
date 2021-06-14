@@ -45,8 +45,10 @@
     "webpack-cli": "^4.1.0"
   },
   "dependencies": {
+    "@types/object-hash": "^2.1.0",
     "@types/ramda": "^0.27.39",
     "loglevel": "^1.7.0",
+    "object-hash": "^2.2.0",
     "purify-ts": "^0.16",
     "ramda": "^0.27.1",
     "yup": "^0.32.9"

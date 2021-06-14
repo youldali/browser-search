@@ -3,7 +3,7 @@ import { FilteredItemStatus } from 'modules/filteringStatus'
 import { FilterConfigData } from 'modules/filterConfiguration'
 import { findIntersectionOfSortedArrays } from 'helpers/array.util'
 
-type DocumentId = StringOrNumber;
+export type DocumentId = StringOrNumber;
 export interface FilterIdToMatchingDocumentIds {
     [key: string]: DocumentId[]; // key is FilterId
 }

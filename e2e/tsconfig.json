@@ -1,0 +1,21 @@
+{
+  "exclude": [
+    "node_modules",
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": ["dom", "esnext", "WebWorker"],
+    "importHelpers": true,
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "*": ["src/*", "node_modules/*"],      
+    },
+    "skipLibCheck": true,
+  }
+}
