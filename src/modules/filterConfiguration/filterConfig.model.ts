@@ -44,6 +44,7 @@ export interface FilterConfigData<T> {
 	getFilterIdsNotApplied: () => FilterId[],
 	getGroupDictionary: () => GroupDictionary<T> ,
 	getAllFilterGroupIds: () => GroupId[],
+	getGroupIdsApplied: () => GroupId[],
 	getGroupIdForFilter: (filterId: FilterId) => GroupId,
 }
 
@@ -52,6 +53,15 @@ export const buildFilterConfigData =
 	(filterIdsApplied: FiltersApplied): FilterConfigData<T> => {
 		const filterData = getFilterData(filterConfig)(filterIdsApplied);
 		const groupData = getGroupData(filterConfig);
+		const groupDictionaryOfFiltersApplied = filterData.uniqueFilterIdsApplied.reduce((groupDictionary: Dictionary<GroupId>, filterId: FilterId): Dictionary<GroupId> => {
+			const group = groupData.filterToGroup.get(filterId);
+			if(group) {
+				groupDictionary[group] = group;
+			}
+			return groupDictionary;
+		}, {});
+
+		const groupIdsApplied = Object.values(groupDictionaryOfFiltersApplied);
 
 		return {
 			getAllFilterIds: () => filterData.allFilterIds,
@@ -62,6 +72,7 @@ export const buildFilterConfigData =
 			getFilterIdsNotApplied: () => filterData.filterIdsNotApplied,
 			getGroupDictionary: () => groupData.groupDictionary,
 			getAllFilterGroupIds: () => groupData.allFilterGroupIds,
+			getGroupIdsApplied: () => groupIdsApplied,
 			getGroupIdForFilter: (filterId: FilterId) => groupData.filterToGroup.get(filterId) ?? 'default',
 		}
 	}
@@ -89,6 +100,7 @@ const getFilterData =
 		(filterId => filterIdsApplied.includes(filterId)),
 		allFilterIds
 	);
+
 	const filtersNotApplied = filterIdsNotApplied.map(filterId => filterDictionary[filterId]);
 	const filtersApplied = reject(
 		isNil,

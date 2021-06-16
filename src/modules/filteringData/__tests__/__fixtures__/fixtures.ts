@@ -30,6 +30,8 @@ export const itemsFixture: Item[] = [
 export const filterDictionaryFixture: Dictionary<Filter<Item>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 },
+    priceMin2: { id: 'priceMin2', field: 'price', operator: 'gt', operand: 500 },
+    priceMax2: { id: 'priceMax2', field: 'price', operator: 'lt', operand: 50000 },
     numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: 'equals', operand: 2 },
     "activity-1": { id: 'activity-1', field: 'activity', operator: 'contains', operand: 'swimming' },
     "activity-2": { id: 'activity-2', field: 'activity', operator: 'contains', operand: 'tennis' },
@@ -40,15 +42,18 @@ export const filterConfigFixture: FilterConfig<Item> = [
     [filterDictionaryFixture.priceMin],
     [filterDictionaryFixture.priceMax],
     [filterDictionaryFixture.numberOfPeople],
-    [filterDictionaryFixture['activity-1'], filterDictionaryFixture['activity-2'], filterDictionaryFixture['activity-3']]
+    [filterDictionaryFixture['activity-1'], filterDictionaryFixture['activity-2'], filterDictionaryFixture['activity-3']],
+    [filterDictionaryFixture.priceMin2, filterDictionaryFixture.priceMax2],
 ];
 
-export const filtersIdsAppliedFixture = ['activity-1', 'priceMin', 'activity-2'];
+export const filtersIdsAppliedFixture = ['activity-1', 'priceMin', 'activity-2', 'priceMax2'];
 export const filterConfigDataFixture = buildFilterConfigData<Item>(filterConfigFixture)(filtersIdsAppliedFixture);
 
 export const filterIdToMatchingDocumentIdsFixture: FilterIdToMatchingDocumentIds = {
   [filterDictionaryFixture.priceMin.id]: [0, 1, 3],
   [filterDictionaryFixture.priceMax.id]: [0, 2, 4],
+  [filterDictionaryFixture.priceMin2.id]: [1, 3],
+  [filterDictionaryFixture.priceMax2.id]: [0, 1, 2, 3, 4],
   [filterDictionaryFixture.numberOfPeople.id]: [1, 4],
   [filterDictionaryFixture['activity-1'].id]: [0, 1, 2],
   [filterDictionaryFixture['activity-2'].id]: [0, 1, 2],

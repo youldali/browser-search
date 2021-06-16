@@ -31,7 +31,6 @@ export const createFilteringData =
             filteringStatusToDocumentsIds
                 .set(true, [])
                 .set(false, []);
-
             return filteringStatusToDocumentsIds;
         };
 
@@ -83,7 +82,7 @@ const getFilteringData =
          * the filter will actually add some new items since the logical operation is an OR with the other filters in the group
          */
         const getDocumentIdsAddedByFilter = (filterId: FilterId, groupId: GroupId): NextFilterState => {
-            const documentIdsRejectedByFilterGroup = filteringStatusToDocumentsIds.get(groupId) as DocumentId[];
+            const documentIdsRejectedByFilterGroup = filteringStatusToDocumentsIds.get(groupId) ?? [];
             const documentIdsMatchingFilterId = filterIdToMatchingDocumentIds[filterId]; 
             const documentIdsAddedIfFilterIsChecked = findIntersectionOfSortedArrays(documentIdsMatchingFilterId)(documentIdsRejectedByFilterGroup);
 
@@ -111,9 +110,9 @@ const getFilteringData =
 
         const getNextFilterStateForFilterId = (filterId: FilterId): NextFilterState => {
             const groupId = filterConfigData.getGroupIdForFilter(filterId);
-            return filteringStatusToDocumentsIds.get(groupId) === undefined 
-                ? getDocumentIdsNarrowedByFilter(filterId)
-                : getDocumentIdsAddedByFilter(filterId, groupId)
+            return filterConfigData.getGroupIdsApplied().includes(groupId)
+                ? getDocumentIdsAddedByFilter(filterId, groupId)
+                : getDocumentIdsNarrowedByFilter(filterId);
         }
 
         const getNextFilterStatesForNonAppliedFilterId = (): Dictionary<NextFilterState> => {
