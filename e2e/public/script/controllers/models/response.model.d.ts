@@ -1,3 +1,4 @@
+export declare type CacheStatus = 'none' | 'partial' | 'total';
 export declare type NextFilterStateStat = {
     type: 'added';
     nextDocumentsAdded: number;
@@ -11,6 +12,7 @@ export declare type ResponseSuccess<T> = {
         documents: T[];
         stats: Dictionary<NextFilterStateStat>;
         numberOfDocuments: number;
+        _cacheStatus_: CacheStatus;
     };
 };
 export declare type ResponseFailure = {

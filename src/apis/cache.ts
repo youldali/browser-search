@@ -9,12 +9,17 @@ import { Left, Right } from 'purify-ts/Either'
 
 const storeName = '__cache__';
 
-export const set = (keyToHash: object, value: any): EitherAsync<Error, void> => {
+type CachedDocument<T> = {
+  key: string;
+  value: T
+}
+
+export const set = <T>(keyToHash: object, value: T): EitherAsync<Error, void> => {
   const key = hashObject(keyToHash);
 
   return (
     createCacheIfNotExist()
-      .chain( _ => storage.addDocumentsToStore(storeName)([{key, value}]))
+      .chain( _ => storage.addDocumentsToStore<CachedDocument<T>>(storeName)([{key, value}]))
   )
 }
 
@@ -23,10 +28,10 @@ export const get = <T>(keyToHash: object): EitherAsync<Error, T> => {
 
   return (
     storage
-      .getDocuments<T>(storeName)([key])
-      .chain(documents => 
-        documents.length > 0 
-        ? EitherAsync.liftEither(Right(documents[0])) 
+      .getDocuments<CachedDocument<T>>(storeName)([key])
+      .chain(storeValues => 
+        storeValues.length > 0 
+        ? EitherAsync.liftEither(Right(storeValues[0].value)) 
         : EitherAsync.liftEither(Left(new Error('Cache miss')))
       )
   );

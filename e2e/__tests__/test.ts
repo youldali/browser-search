@@ -259,6 +259,40 @@ describe('Browser Search', () => {
     
         expect(documents).toMatchSnapshot();
       })
+
+      it('retrieves the following queries with the same config from the cache', async () => {
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const [resultsA] = window.browserSearch.searchStore<Person>({
+            filterConfig,
+            filtersApplied: ['red'],
+            orderBy: 'name',
+            orderDirection: 'ASC',
+            storeId,
+            perPage: 2,
+            page: 1,
+          });
+
+          const resultsB = resultsA.then( _ => {
+            const [results] = window.browserSearch.searchStore<Person>({
+              filterConfig,
+              filtersApplied: ['red'],
+              orderBy: 'name',
+              orderDirection: 'DESC',
+              storeId,
+              perPage: 2,
+              page: 2
+            })
+            return results;
+          });
+
+          return Promise.all([resultsA, resultsB]);
+        }
+        , { filterConfig, storeId } as any
+        );
+    
+        expect(documents[0]['_cacheStatus_']).toBe('none');
+        expect(documents[1]['_cacheStatus_']).toBe('partial');
+      })
     })
     
     describe('Failures', () => {
