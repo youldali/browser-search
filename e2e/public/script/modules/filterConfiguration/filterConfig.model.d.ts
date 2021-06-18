@@ -40,6 +40,7 @@ export interface FilterConfigData<T> {
     getFilterIdsNotApplied: () => FilterId[];
     getGroupDictionary: () => GroupDictionary<T>;
     getAllFilterGroupIds: () => GroupId[];
+    getGroupIdsApplied: () => GroupId[];
     getGroupIdForFilter: (filterId: FilterId) => GroupId;
 }
 export declare const buildFilterConfigData: <T>(filterConfig: FilterConfig<T>) => (filterIdsApplied: FiltersApplied) => FilterConfigData<T>;

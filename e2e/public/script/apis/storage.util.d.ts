@@ -8,6 +8,7 @@ export interface SimplifiedIndexConfig {
     [key: string]: IndexType;
 }
 export declare const createStore: (storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig) => (keyPath: string) => EitherAsync<Error, void>;
+export declare const createStoreIfNotExist: (storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig) => (keyPath: string) => EitherAsync<Error, void>;
 export declare const deleteStore: (storeName: string) => EitherAsync<Error, void>;
 export declare const deleteStoreIfExist: (storeName: string) => EitherAsync<Error, void>;
 export declare const deleteDatabase: () => EitherAsync<Error, void>;

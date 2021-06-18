@@ -73,6 +73,18 @@ export const createStore =
     )
 }
 
+export const createStoreIfNotExist = 
+    (storeName: string) => 
+    (simplifiedIndexConfig: SimplifiedIndexConfig) => 
+    (keyPath: string): EitherAsync<Error, void> => {
+    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
+
+    return (
+        EitherAsync(() => idb.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))
+        .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
+    )
+}
+
 export const deleteStore = (storeName: string): EitherAsync<Error, void> => (
     EitherAsync((() => idb.deleteObjectStore(databaseId)(storeName)))
 )

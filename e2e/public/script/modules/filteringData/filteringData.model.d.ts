@@ -1,7 +1,7 @@
 import { GroupId, FilterId } from 'modules/filterConfiguration';
 import { FilteredItemStatus } from 'modules/filteringStatus';
 import { FilterConfigData } from 'modules/filterConfiguration';
-declare type DocumentId = StringOrNumber;
+export declare type DocumentId = StringOrNumber;
 export interface FilterIdToMatchingDocumentIds {
     [key: string]: DocumentId[];
 }
@@ -21,4 +21,3 @@ export declare const createFilteringData: <T>(filterConfigData: FilterConfigData
     setStatusValue(filteredItemStatus: FilteredItemStatus, idList: DocumentId[]): void;
     done(): FilteringData;
 };
-export {};

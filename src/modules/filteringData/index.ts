@@ -6,6 +6,7 @@ export {
 } from './filteringData.model';
 
 export {
+    SerializedFilteringData,
     serialize,
     deserialize,
 } from './serialize';

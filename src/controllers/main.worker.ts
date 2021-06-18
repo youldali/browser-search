@@ -5,9 +5,9 @@ import { getOrderFromRequest } from './order';
 import { getPaginatedDocuments } from './pagination';
 import { doesStoreExist } from '../apis/storage.util'
 import { NextFilterState } from '../modules/filteringData';
+import { setCachedFilteringData, getCachedFilteringData } from './cache';
 import { map } from 'ramda';
-import { EitherAsync } from 'purify-ts/EitherAsync'
-
+import { EitherAsync } from 'purify-ts/EitherAsync';
 export interface FilteringStatisticsResponse {
     filtersStatisticsDetailedByFilter: number,
     numberOfMatchingItems: number,
@@ -25,10 +25,23 @@ self.onmessage = <T>(event: RequestEvent<T>): void => {
 
 
 const processRequest = async <T>(request: Request<T>) => {
-    const eitherAsyncFilteringData = 
+    const eitherAsyncFilteringDataFromRequest = 
       validateRequest<T>({getStoreExist: doesStoreExist})(request)
         .map(request => buildFilterConfigData(request.filterConfig)(request.filtersApplied))
-        .chain(getFilteringData(request.storeId));
+        .chain(filterConfigData => (
+          getFilteringData<T>(request.storeId)(filterConfigData)
+          .map(
+            filteringData => {
+              setCachedFilteringData(request)(filterConfigData)(filteringData)
+                .run();
+              return filteringData;
+            }
+          )
+        ));
+  
+    const eitherAsyncFilteringDataFromCache = getCachedFilteringData(request).mapLeft(e => {console.log(e); return e;});
+
+    const eitherAsyncFilteringData = eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);
 
     const liftedFilteringData = EitherAsync.liftEither(await eitherAsyncFilteringData.run());
 

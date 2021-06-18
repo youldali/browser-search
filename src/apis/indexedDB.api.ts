@@ -54,6 +54,20 @@ export const createObjectStore =
     })
 )
 
+export const createObjectStoreIfNotExist = 
+(dbName: string) =>
+(storeName: string) =>
+(indexConfig: IndexConfig) => 
+async (keyPath: string): Promise<IDBDatabase> => {
+    const db = await openDatabaseLatestVersion(dbName);
+    if(doesStoreExist(db)(storeName)){
+        return db;
+    }
+
+    await closeDatabase(db);
+    return createObjectStore(dbName)(storeName)(indexConfig)(keyPath);
+}
+
 export const deleteObjectStoreIfExist = 
 (dbName: string) =>
 async (storeName: string): Promise<void> => {
