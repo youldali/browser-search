@@ -157,6 +157,24 @@ describe('Browser Search', () => {
     
         expect(documents).toMatchSnapshot();
       })
+
+      it.only('returns an empty array when the page is out of range', async () => {
+        const documents = await page.evaluate(({filterConfig, storeId}) => {
+          const [results] = window.browserSearch.searchStore<Person>({
+            filterConfig,
+            filtersApplied: [],
+            orderBy: 'name',
+            orderDirection: 'ASC',
+            storeId,
+            page: 250,
+            perPage: 5,
+          });
+          return results;
+        }, { filterConfig, storeId } as any
+        );
+    
+        expect(documents).toMatchSnapshot();
+      })
     
       it('search for the engineer profession', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {

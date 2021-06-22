@@ -45,8 +45,8 @@ export const createStore = (storeName: string) => (indexConfig: storage.Simplifi
     ))
 )
 
-export const addDocumentsToStore = <T>(storeName: string) => (data: T[]): Promise<void> => {
-  deleteCache().run();
+export const addDocumentsToStore = <T>(storeName: string) => async (data: T[]): Promise<void> => {
+  await deleteCache().run();
   return (
     storage.addDocumentsToStore(storeName)(data)
     .run()
@@ -92,8 +92,8 @@ export const getDocuments = <T>(storeName: string) => (documentIds: IDBValidKey[
     ))
 )
 
-export const deleteStore = (storeName: string): Promise<void> => {
-  deleteCache().run();
+export const deleteStore = async (storeName: string): Promise<void> => {
+  await deleteCache().run();
   return (
     storage.deleteStore(storeName)
       .run()
@@ -106,8 +106,8 @@ export const deleteStore = (storeName: string): Promise<void> => {
   )
 }
 
-export const deleteStoreIfExist = (storeName: string): Promise<void> => {
-  deleteCache().run();
+export const deleteStoreIfExist = async (storeName: string): Promise<void> => {
+  await deleteCache().run();
   return (
     storage.deleteStoreIfExist(storeName)
       .run()
@@ -120,8 +120,8 @@ export const deleteStoreIfExist = (storeName: string): Promise<void> => {
   )
 }
 
-export const deleteAllStores = (): Promise<void> => {
-  deleteCache().run();
+export const deleteAllStores = async (): Promise<void> => {
+  await deleteCache().run();
   return (
     storage.deleteDatabase()
       .run()

@@ -867,6 +867,44 @@ Object {
 }
 `;
 
+exports[`Browser Search searchStore successes returns an empty array when the page is out of range 1`] = `
+Object {
+  "_cacheStatus_": "none",
+  "documents": Array [],
+  "numberOfDocuments": 15,
+  "stats": Object {
+    "blue": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 3,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 8,
+      "type": "narrowed",
+    },
+    "red": Object {
+      "nextNumberOfDocuments": 7,
+      "type": "narrowed",
+    },
+  },
+}
+`;
+
 exports[`Browser Search searchStore successes returns empty array when no criteria is met 1`] = `
 Object {
   "_cacheStatus_": "none",
