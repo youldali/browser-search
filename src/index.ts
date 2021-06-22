@@ -2,6 +2,7 @@ import { identity } from 'ramda';
 import { Request } from './controllers';
 import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
+import { deleteCache } from './apis/cache';
 
 export * from './controllers'; 
 export { Operator } from './modules/filterConfiguration'
@@ -44,8 +45,10 @@ export const createStore = (storeName: string) => (indexConfig: storage.Simplifi
     ))
 )
 
-export const addDocumentsToStore = <T>(storeName: string) => (data: T[]): Promise<void> => (
-  storage.addDocumentsToStore(storeName)(data)
+export const addDocumentsToStore = <T>(storeName: string) => (data: T[]): Promise<void> => {
+  deleteCache().run();
+  return (
+    storage.addDocumentsToStore(storeName)(data)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -53,7 +56,8 @@ export const addDocumentsToStore = <T>(storeName: string) => (data: T[]): Promis
         Right: identity
       })
     ))
-)
+  )
+}
 
 export const getAllValuesOfProperty = <T extends IDBValidKey>(storeName: string) => (propertyName: string): Promise<T[]> => (
   storage.getAllUniqueKeysForIndex<T>(storeName)(propertyName)
@@ -88,38 +92,47 @@ export const getDocuments = <T>(storeName: string) => (documentIds: IDBValidKey[
     ))
 )
 
-export const deleteStore = (storeName: string): Promise<void> => (
-  storage.deleteStore(storeName)
-    .run()
-    .then(eitherValues => (
-      eitherValues.caseOf({ 
-        Left: error => {throw error}, 
-        Right: identity
-      })
-    ))
-)
+export const deleteStore = (storeName: string): Promise<void> => {
+  deleteCache().run();
+  return (
+    storage.deleteStore(storeName)
+      .run()
+      .then(eitherValues => (
+        eitherValues.caseOf({ 
+          Left: error => {throw error}, 
+          Right: identity
+        })
+      ))
+  )
+}
 
-export const deleteStoreIfExist = (storeName: string): Promise<void> => (
-  storage.deleteStoreIfExist(storeName)
-    .run()
-    .then(eitherValues => (
-      eitherValues.caseOf({ 
-        Left: error => {throw error}, 
-        Right: identity
-      })
-    ))
-)
+export const deleteStoreIfExist = (storeName: string): Promise<void> => {
+  deleteCache().run();
+  return (
+    storage.deleteStoreIfExist(storeName)
+      .run()
+      .then(eitherValues => (
+        eitherValues.caseOf({ 
+          Left: error => {throw error}, 
+          Right: identity
+        })
+      ))
+  )
+}
 
-export const deleteAllStores = (): Promise<void> => (
-  storage.deleteDatabase()
-    .run()
-    .then(eitherValues => (
-      eitherValues.caseOf({ 
-        Left: error => {throw error}, 
-        Right: identity
-      })
-    ))
-)
+export const deleteAllStores = (): Promise<void> => {
+  deleteCache().run();
+  return (
+    storage.deleteDatabase()
+      .run()
+      .then(eitherValues => (
+        eitherValues.caseOf({ 
+          Left: error => {throw error}, 
+          Right: identity
+        })
+      ))
+  );
+}
 
 export const doesStoreExist = (storeName: string): Promise<boolean> => (
   storage.doesStoreExist(storeName)

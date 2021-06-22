@@ -37,6 +37,10 @@ export const get = <T>(keyToHash: object): EitherAsync<Error, T> => {
   );
 }
 
+export const deleteCache = (): EitherAsync<Error, void> => (
+  storage.deleteStoreIfExist(storeName)
+)
+
 const createCacheIfNotExist = (): EitherAsync<Error, void> => (
   storage
     .createStoreIfNotExist(storeName)({})('key')

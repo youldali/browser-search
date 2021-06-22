@@ -115,6 +115,128 @@ exports[`Browser Search searchStore Failures aborts the search 1`] = `
     at __puppeteer_evaluation_script__:9:37"
 `;
 
+exports[`Browser Search searchStore cache does not retrieve the following queries from the cache if the store has changed 1`] = `
+Object {
+  "_cacheStatus_": "none",
+  "documents": Array [
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "c59be44f-7c6d-55a6-aec1-585da9645888",
+      "name": "George Marsh",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+  ],
+  "numberOfDocuments": 7,
+  "stats": Object {
+    "blue": Object {
+      "nextDocumentsAdded": 2,
+      "type": "added",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextDocumentsAdded": 0,
+      "type": "added",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 2,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 4,
+      "type": "narrowed",
+    },
+  },
+}
+`;
+
+exports[`Browser Search searchStore cache does not retrieve the following queries from the cache if the store has changed 2`] = `
+Object {
+  "_cacheStatus_": "none",
+  "documents": Array [
+    Object {
+      "age": 40,
+      "country": "Belarus",
+      "email": "dumoov@igiiva.bf",
+      "favoriteColours": Array [
+        "red",
+      ],
+      "id": "new",
+      "name": "AAA",
+      "profession": "Compensation Analyst",
+      "salary": 77502,
+    },
+    Object {
+      "age": 30,
+      "country": "Norfolk Island",
+      "email": "tojedwo@dewpupi.pw",
+      "favoriteColours": Array [
+        "red",
+        "blue",
+        "white",
+      ],
+      "id": "03330c3f-1142-52b5-a2e7-24f4b2349556",
+      "name": "Alfred Rhodes",
+      "profession": "Organizational Development Manager",
+      "salary": 53462,
+    },
+  ],
+  "numberOfDocuments": 8,
+  "stats": Object {
+    "blue": Object {
+      "nextDocumentsAdded": 2,
+      "type": "added",
+    },
+    "engineer": Object {
+      "nextNumberOfDocuments": 0,
+      "type": "narrowed",
+    },
+    "green": Object {
+      "nextDocumentsAdded": 0,
+      "type": "added",
+    },
+    "highAged": Object {
+      "nextNumberOfDocuments": 1,
+      "type": "narrowed",
+    },
+    "lowAged": Object {
+      "nextNumberOfDocuments": 2,
+      "type": "narrowed",
+    },
+    "middleAged": Object {
+      "nextNumberOfDocuments": 5,
+      "type": "narrowed",
+    },
+  },
+}
+`;
+
 exports[`Browser Search searchStore successes performs a search with 1 filter 1`] = `
 Object {
   "_cacheStatus_": "none",
