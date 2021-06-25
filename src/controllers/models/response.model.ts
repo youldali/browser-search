@@ -23,3 +23,5 @@ export type ResponseFailure = {
   outcome: 'error', 
   reason: Error,
 }
+
+export type Response<T> = ResponseSuccess<T> | ResponseFailure;

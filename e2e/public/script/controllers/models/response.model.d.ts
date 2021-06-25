@@ -19,3 +19,4 @@ export declare type ResponseFailure = {
     outcome: 'error';
     reason: Error;
 };
+export declare type Response<T> = ResponseSuccess<T> | ResponseFailure;

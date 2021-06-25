@@ -1,5 +1,5 @@
 import { identity } from 'ramda';
-import { Request } from './controllers';
+import { Request, ResponseSuccess } from './controllers';
 import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
 import { deleteCache } from './apis/cache';
@@ -11,14 +11,17 @@ const workerFunction = () => {
   //@worker
 }
 
+type RequestPreset<T> = Pick<Request<T>, 'storeId' | 'filterConfig'>;
+type RequestParams<T> = Omit<Request<T>, 'storeId' | 'filterConfig'>;
+type SearchResponse<T> = Pick<ResponseSuccess<T>, 'payload'>
 
-
-export const searchStore = <T>(request: Request<T>): [Promise<any>, () => void] => {
+export const searchStore = <T>(requestPreset: RequestPreset<T>) => (requestParams: RequestParams<T>): [Promise<SearchResponse<T>>, () => void] => {
+  const request: Request<T> = {...requestPreset, ...requestParams};
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 
   let rejectResult: (reason?: any) => void;
-  const result = new Promise((resolve, reject) => {
+  const result: Promise<SearchResponse<T>> = new Promise((resolve, reject) => {
     rejectResult = reject;
     applicationWorker.onmessage = (event) => {
       const result = event.data;

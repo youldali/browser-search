@@ -13312,11 +13312,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "deleteAllStores": () => (/* binding */ deleteAllStores),
 /* harmony export */   "doesStoreExist": () => (/* binding */ doesStoreExist)
 /* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/identity.js");
 /* harmony import */ var _helpers_worker_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers/worker.util */ "./src/helpers/worker.util.ts");
 /* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./apis/storage.util */ "./src/apis/storage.util.ts");
 /* harmony import */ var _apis_cache__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./apis/cache */ "./src/apis/cache.ts");
 /* harmony import */ var _controllers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controllers */ "./src/controllers/index.ts");
+
 
 
 
@@ -16150,7 +16152,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ })()
 ;
 };
-const searchStore = (request) => {
+const searchStore = (requestPreset) => (requestParams) => {
+    const request = Object.assign(Object.assign({}, requestPreset), requestParams);
     const applicationWorker = new Worker((0,_helpers_worker_util__WEBPACK_IMPORTED_MODULE_0__.functionToWorkerURL)(workerFunction));
     applicationWorker.postMessage(request);
     let rejectResult;
@@ -16173,15 +16176,15 @@ const createStore = (storeName) => (indexConfig) => (keyPath) => (_apis_storage_
     Left: error => { throw error; },
     Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
 }))));
-const addDocumentsToStore = (storeName) => (data) => {
-    (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
+const addDocumentsToStore = (storeName) => (data) => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+    yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.addDocumentsToStore(storeName)(data)
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
         Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
     }))));
-};
+});
 const getAllValuesOfProperty = (storeName) => (propertyName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getAllUniqueKeysForIndex(storeName)(propertyName)
     .run()
     .then(eitherValues => (eitherValues.caseOf({
@@ -16200,33 +16203,33 @@ const getDocuments = (storeName) => (documentIds) => (_apis_storage_util__WEBPAC
     Left: error => { throw error; },
     Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
 }))));
-const deleteStore = (storeName) => {
-    (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
+const deleteStore = (storeName) => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+    yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStore(storeName)
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
         Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
     }))));
-};
-const deleteStoreIfExist = (storeName) => {
-    (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
+});
+const deleteStoreIfExist = (storeName) => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+    yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStoreIfExist(storeName)
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
         Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
     }))));
-};
-const deleteAllStores = () => {
-    (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
+});
+const deleteAllStores = () => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+    yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteDatabase()
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
         Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
     }))));
-};
+});
 const doesStoreExist = (storeName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.doesStoreExist(storeName)
     .run()
     .then(eitherValues => (eitherValues.caseOf({

@@ -1,8 +1,11 @@
-import { Request } from './controllers';
+import { Request, ResponseSuccess } from './controllers';
 import * as storage from './apis/storage.util';
 export * from './controllers';
 export { Operator } from './modules/filterConfiguration';
-export declare const searchStore: <T>(request: Request<T>) => [Promise<any>, () => void];
+declare type RequestPreset<T> = Pick<Request<T>, 'storeId' | 'filterConfig'>;
+declare type RequestParams<T> = Omit<Request<T>, 'storeId' | 'filterConfig'>;
+declare type SearchResponse<T> = Pick<ResponseSuccess<T>, 'payload'>;
+export declare const searchStore: <T>(requestPreset: RequestPreset<T>) => (requestParams: RequestParams<T>) => [Promise<SearchResponse<T>>, () => void];
 export declare const createStore: (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => Promise<void>;
 export declare const addDocumentsToStore: <T>(storeName: string) => (data: T[]) => Promise<void>;
 export declare const getAllValuesOfProperty: <T extends IDBValidKey>(storeName: string) => (propertyName: string) => Promise<T[]>;
