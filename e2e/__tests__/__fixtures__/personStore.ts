@@ -211,11 +211,7 @@ export const persons: Person[] = [
 
 export const storeId = 'persons';
 export const indexConfig = {
-  name: 'simple',
-  age: 'simple',
-  salary: 'simple',
-  profession: 'simple',
-  country: 'simple',
-  favoriteColours: 'array'
+  simple: ['name', 'age', 'salary', 'profession', 'country'],
+  array: ['favoriteColours']
 };
 export const keyPath = 'id';

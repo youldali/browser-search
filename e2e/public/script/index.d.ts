@@ -6,7 +6,7 @@ declare type RequestPreset<T> = Pick<Request<T>, 'storeId' | 'filterConfig'>;
 declare type RequestParams<T> = Omit<Request<T>, 'storeId' | 'filterConfig'>;
 declare type SearchResponse<T> = Pick<ResponseSuccess<T>, 'payload'>;
 export declare const searchStore: <T>(requestPreset: RequestPreset<T>) => (requestParams: RequestParams<T>) => [Promise<SearchResponse<T>>, () => void];
-export declare const createStore: (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string) => Promise<void>;
+export declare const createStore: <T>(storeName: string) => (indexConfig: storage.SimplifiedIndexConfig<T>) => (keyPath: keyof T) => Promise<void>;
 export declare const addDocumentsToStore: <T>(storeName: string) => (data: T[]) => Promise<void>;
 export declare const getAllValuesOfProperty: <T extends IDBValidKey>(storeName: string) => (propertyName: string) => Promise<T[]>;
 export declare const getNumberOfDocumentsInStore: (storeName: string) => Promise<number>;

@@ -1,14 +1,11 @@
 import { EitherAsync } from 'purify-ts/EitherAsync';
 import { Operator } from 'modules/filterConfiguration/operators';
-declare enum IndexType {
-    simple = "simple",
-    array = "array"
+export interface SimplifiedIndexConfig<T> {
+    simple?: Array<keyof T>;
+    array?: Array<keyof T>;
 }
-export interface SimplifiedIndexConfig {
-    [key: string]: IndexType;
-}
-export declare const createStore: (storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig) => (keyPath: string) => EitherAsync<Error, void>;
-export declare const createStoreIfNotExist: (storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig) => (keyPath: string) => EitherAsync<Error, void>;
+export declare const createStore: <T>(storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig<T>) => (keyPath: keyof T) => EitherAsync<Error, void>;
+export declare const createStoreIfNotExist: <T>(storeName: string) => (simplifiedIndexConfig: SimplifiedIndexConfig<T>) => (keyPath: keyof T) => EitherAsync<Error, void>;
 export declare const deleteStore: (storeName: string) => EitherAsync<Error, void>;
 export declare const deleteStoreIfExist: (storeName: string) => EitherAsync<Error, void>;
 export declare const deleteDatabase: () => EitherAsync<Error, void>;
@@ -21,4 +18,3 @@ export declare const getDocuments: <T>(storeName: string) => (documentIds: IDBVa
 export declare const getNumberOfDocumentsInStore: (storeName: string) => EitherAsync<Error, number>;
 export declare const doesStoreExist: (storeName: string) => EitherAsync<Error, boolean>;
 export declare const getKeyRangeMatchingOperator: (operator: Operator) => (value: any) => IDBKeyRange;
-export {};

@@ -37,8 +37,8 @@ export const searchStore = <T>(requestPreset: RequestPreset<T>) => (requestParam
   return [result, abort];
 };
 
-export const createStore = (storeName: string) => (indexConfig: storage.SimplifiedIndexConfig) => (keyPath: string): Promise<void> => (
-  storage.createStore(storeName)(indexConfig)(keyPath)
+export const createStore = <T>(storeName: string) => (indexConfig: storage.SimplifiedIndexConfig<T>) => (keyPath: keyof T): Promise<void> => (
+  storage.createStore<T>(storeName)(indexConfig)(keyPath)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 

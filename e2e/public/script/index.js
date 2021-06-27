@@ -6907,82 +6907,6 @@ var bind =
 
 /***/ }),
 
-/***/ "./node_modules/ramda/es/curryN.js":
-/*!*****************************************!*\
-  !*** ./node_modules/ramda/es/curryN.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _internal_arity_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./internal/_arity.js */ "./node_modules/ramda/es/internal/_arity.js");
-/* harmony import */ var _internal_curry1_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./internal/_curry1.js */ "./node_modules/ramda/es/internal/_curry1.js");
-/* harmony import */ var _internal_curry2_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./internal/_curry2.js */ "./node_modules/ramda/es/internal/_curry2.js");
-/* harmony import */ var _internal_curryN_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./internal/_curryN.js */ "./node_modules/ramda/es/internal/_curryN.js");
-
-
-
-
-/**
- * Returns a curried equivalent of the provided function, with the specified
- * arity. The curried function has two unusual capabilities. First, its
- * arguments needn't be provided one at a time. If `g` is `R.curryN(3, f)`, the
- * following are equivalent:
- *
- *   - `g(1)(2)(3)`
- *   - `g(1)(2, 3)`
- *   - `g(1, 2)(3)`
- *   - `g(1, 2, 3)`
- *
- * Secondly, the special placeholder value [`R.__`](#__) may be used to specify
- * "gaps", allowing partial application of any combination of arguments,
- * regardless of their positions. If `g` is as above and `_` is [`R.__`](#__),
- * the following are equivalent:
- *
- *   - `g(1, 2, 3)`
- *   - `g(_, 2, 3)(1)`
- *   - `g(_, _, 3)(1)(2)`
- *   - `g(_, _, 3)(1, 2)`
- *   - `g(_, 2)(1)(3)`
- *   - `g(_, 2)(1, 3)`
- *   - `g(_, 2)(_, 3)(1)`
- *
- * @func
- * @memberOf R
- * @since v0.5.0
- * @category Function
- * @sig Number -> (* -> a) -> (* -> a)
- * @param {Number} length The arity for the returned function.
- * @param {Function} fn The function to curry.
- * @return {Function} A new, curried function.
- * @see R.curry
- * @example
- *
- *      const sumArgs = (...args) => R.sum(args);
- *
- *      const curriedAddFourNumbers = R.curryN(4, sumArgs);
- *      const f = curriedAddFourNumbers(1, 2);
- *      const g = f(3);
- *      g(4); //=> 10
- */
-
-var curryN =
-/*#__PURE__*/
-(0,_internal_curry2_js__WEBPACK_IMPORTED_MODULE_0__.default)(function curryN(length, fn) {
-  if (length === 1) {
-    return (0,_internal_curry1_js__WEBPACK_IMPORTED_MODULE_1__.default)(fn);
-  }
-
-  return (0,_internal_arity_js__WEBPACK_IMPORTED_MODULE_2__.default)(length, (0,_internal_curryN_js__WEBPACK_IMPORTED_MODULE_3__.default)(length, [], fn));
-});
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (curryN);
-
-/***/ }),
-
 /***/ "./node_modules/ramda/es/equals.js":
 /*!*****************************************!*\
   !*** ./node_modules/ramda/es/equals.js ***!
@@ -7560,64 +7484,6 @@ function _curry2(fn) {
           return fn(a, _b);
         }) : fn(a, b);
     }
-  };
-}
-
-/***/ }),
-
-/***/ "./node_modules/ramda/es/internal/_curryN.js":
-/*!***************************************************!*\
-  !*** ./node_modules/ramda/es/internal/_curryN.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _curryN)
-/* harmony export */ });
-/* harmony import */ var _arity_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_arity.js */ "./node_modules/ramda/es/internal/_arity.js");
-/* harmony import */ var _isPlaceholder_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_isPlaceholder.js */ "./node_modules/ramda/es/internal/_isPlaceholder.js");
-
-
-/**
- * Internal curryN function.
- *
- * @private
- * @category Function
- * @param {Number} length The arity of the curried function.
- * @param {Array} received An array of arguments received thus far.
- * @param {Function} fn The function to curry.
- * @return {Function} The curried function.
- */
-
-function _curryN(length, received, fn) {
-  return function () {
-    var combined = [];
-    var argsIdx = 0;
-    var left = length;
-    var combinedIdx = 0;
-
-    while (combinedIdx < received.length || argsIdx < arguments.length) {
-      var result;
-
-      if (combinedIdx < received.length && (!(0,_isPlaceholder_js__WEBPACK_IMPORTED_MODULE_0__.default)(received[combinedIdx]) || argsIdx >= arguments.length)) {
-        result = received[combinedIdx];
-      } else {
-        result = arguments[argsIdx];
-        argsIdx += 1;
-      }
-
-      combined[combinedIdx] = result;
-
-      if (!(0,_isPlaceholder_js__WEBPACK_IMPORTED_MODULE_0__.default)(result)) {
-        left -= 1;
-      }
-
-      combinedIdx += 1;
-    }
-
-    return left <= 0 ? fn.apply(this, combined) : (0,_arity_js__WEBPACK_IMPORTED_MODULE_1__.default)(left, _curryN(length, combined, fn));
   };
 }
 
@@ -8282,32 +8148,6 @@ function _isTransformer(obj) {
 
 /***/ }),
 
-/***/ "./node_modules/ramda/es/internal/_map.js":
-/*!************************************************!*\
-  !*** ./node_modules/ramda/es/internal/_map.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ _map)
-/* harmony export */ });
-function _map(fn, functor) {
-  var idx = 0;
-  var len = functor.length;
-  var result = Array(len);
-
-  while (idx < len) {
-    result[idx] = fn(functor[idx]);
-    idx += 1;
-  }
-
-  return result;
-}
-
-/***/ }),
-
 /***/ "./node_modules/ramda/es/internal/_objectAssign.js":
 /*!*********************************************************!*\
   !*** ./node_modules/ramda/es/internal/_objectAssign.js ***!
@@ -8534,50 +8374,6 @@ var _xfilter =
 
 /***/ }),
 
-/***/ "./node_modules/ramda/es/internal/_xmap.js":
-/*!*************************************************!*\
-  !*** ./node_modules/ramda/es/internal/_xmap.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _curry2_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_curry2.js */ "./node_modules/ramda/es/internal/_curry2.js");
-/* harmony import */ var _xfBase_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_xfBase.js */ "./node_modules/ramda/es/internal/_xfBase.js");
-
-
-
-var XMap =
-/*#__PURE__*/
-function () {
-  function XMap(f, xf) {
-    this.xf = xf;
-    this.f = f;
-  }
-
-  XMap.prototype['@@transducer/init'] = _xfBase_js__WEBPACK_IMPORTED_MODULE_0__.default.init;
-  XMap.prototype['@@transducer/result'] = _xfBase_js__WEBPACK_IMPORTED_MODULE_0__.default.result;
-
-  XMap.prototype['@@transducer/step'] = function (result, input) {
-    return this.xf['@@transducer/step'](result, this.f(input));
-  };
-
-  return XMap;
-}();
-
-var _xmap =
-/*#__PURE__*/
-(0,_curry2_js__WEBPACK_IMPORTED_MODULE_1__.default)(function _xmap(f, xf) {
-  return new XMap(f, xf);
-});
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_xmap);
-
-/***/ }),
-
 /***/ "./node_modules/ramda/es/internal/_xwrap.js":
 /*!**************************************************!*\
   !*** ./node_modules/ramda/es/internal/_xwrap.js ***!
@@ -8763,93 +8559,6 @@ var keys = typeof Object.keys === 'function' && !hasArgsEnumBug ?
   return ks;
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (keys);
-
-/***/ }),
-
-/***/ "./node_modules/ramda/es/map.js":
-/*!**************************************!*\
-  !*** ./node_modules/ramda/es/map.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _internal_curry2_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./internal/_curry2.js */ "./node_modules/ramda/es/internal/_curry2.js");
-/* harmony import */ var _internal_dispatchable_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./internal/_dispatchable.js */ "./node_modules/ramda/es/internal/_dispatchable.js");
-/* harmony import */ var _internal_map_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./internal/_map.js */ "./node_modules/ramda/es/internal/_map.js");
-/* harmony import */ var _internal_reduce_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./internal/_reduce.js */ "./node_modules/ramda/es/internal/_reduce.js");
-/* harmony import */ var _internal_xmap_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./internal/_xmap.js */ "./node_modules/ramda/es/internal/_xmap.js");
-/* harmony import */ var _curryN_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./curryN.js */ "./node_modules/ramda/es/curryN.js");
-/* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./keys.js */ "./node_modules/ramda/es/keys.js");
-
-
-
-
-
-
-
-/**
- * Takes a function and
- * a [functor](https://github.com/fantasyland/fantasy-land#functor),
- * applies the function to each of the functor's values, and returns
- * a functor of the same shape.
- *
- * Ramda provides suitable `map` implementations for `Array` and `Object`,
- * so this function may be applied to `[1, 2, 3]` or `{x: 1, y: 2, z: 3}`.
- *
- * Dispatches to the `map` method of the second argument, if present.
- *
- * Acts as a transducer if a transformer is given in list position.
- *
- * Also treats functions as functors and will compose them together.
- *
- * @func
- * @memberOf R
- * @since v0.1.0
- * @category List
- * @sig Functor f => (a -> b) -> f a -> f b
- * @param {Function} fn The function to be called on every element of the input `list`.
- * @param {Array} list The list to be iterated over.
- * @return {Array} The new list.
- * @see R.transduce, R.addIndex
- * @example
- *
- *      const double = x => x * 2;
- *
- *      R.map(double, [1, 2, 3]); //=> [2, 4, 6]
- *
- *      R.map(double, {x: 1, y: 2, z: 3}); //=> {x: 2, y: 4, z: 6}
- * @symb R.map(f, [a, b]) = [f(a), f(b)]
- * @symb R.map(f, { x: a, y: b }) = { x: f(a), y: f(b) }
- * @symb R.map(f, functor_o) = functor_o.map(f)
- */
-
-var map =
-/*#__PURE__*/
-(0,_internal_curry2_js__WEBPACK_IMPORTED_MODULE_0__.default)(
-/*#__PURE__*/
-(0,_internal_dispatchable_js__WEBPACK_IMPORTED_MODULE_1__.default)(['fantasy-land/map', 'map'], _internal_xmap_js__WEBPACK_IMPORTED_MODULE_2__.default, function map(fn, functor) {
-  switch (Object.prototype.toString.call(functor)) {
-    case '[object Function]':
-      return (0,_curryN_js__WEBPACK_IMPORTED_MODULE_3__.default)(functor.length, function () {
-        return fn.call(this, functor.apply(this, arguments));
-      });
-
-    case '[object Object]':
-      return (0,_internal_reduce_js__WEBPACK_IMPORTED_MODULE_4__.default)(function (acc, key) {
-        acc[key] = fn(functor[key]);
-        return acc;
-      }, {}, (0,_keys_js__WEBPACK_IMPORTED_MODULE_5__.default)(functor));
-
-    default:
-      return (0,_internal_map_js__WEBPACK_IMPORTED_MODULE_6__.default)(fn, functor);
-  }
-}));
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (map);
 
 /***/ }),
 
@@ -9515,29 +9224,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getKeyRangeMatchingOperator": () => (/* binding */ getKeyRangeMatchingOperator)
 /* harmony export */ });
 /* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ "./src/apis/indexedDB.api.ts");
-/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/map.js");
-/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/isNil.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/isNil.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
 
 const databaseId = "browser-search";
-var IndexType;
-(function (IndexType) {
-    IndexType["simple"] = "simple";
-    IndexType["array"] = "array";
-})(IndexType || (IndexType = {}));
 const simplifiedIndexToIndexConfig = (simplifiedIndex) => {
+    var _a, _b;
     const arrayConfig = { multiEntry: true, unique: false };
     const defaultConfig = { multiEntry: false, unique: false };
-    return (0,ramda__WEBPACK_IMPORTED_MODULE_1__.default)((indexType) => indexType === IndexType.array ? arrayConfig : defaultConfig, (simplifiedIndex));
+    const indexConfigSimpleProperties = (_a = simplifiedIndex.simple) === null || _a === void 0 ? void 0 : _a.reduce((indexConfig, property) => {
+        indexConfig[property] = defaultConfig;
+        return indexConfig;
+    }, {});
+    const indexConfigArrayProperties = (_b = simplifiedIndex.array) === null || _b === void 0 ? void 0 : _b.reduce((indexConfig, property) => {
+        indexConfig[property] = arrayConfig;
+        return indexConfig;
+    }, {});
+    const indexConfig = Object.assign(Object.assign({}, indexConfigSimpleProperties), indexConfigArrayProperties);
+    return indexConfig;
 };
-const openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));
-const closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
+const openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));
+const closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
 const execute = (...commands) => {
     let dbInstance = null;
     const openDatabaseCommand = openDatabase()
@@ -9554,57 +9267,57 @@ const execute = (...commands) => {
         return result;
     })
         .mapLeft(error => {
-        !(0,ramda__WEBPACK_IMPORTED_MODULE_3__.default)(dbInstance) && closeDatabase(dbInstance).run();
+        !(0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(dbInstance) && closeDatabase(dbInstance).run();
         return error;
     });
     return commandsToExecuteWithDbClosing;
 };
 const createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);
-    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))
-        .chain(() => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))
-        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
+    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))
+        .chain(() => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))
+        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
 };
 const createStoreIfNotExist = (storeName) => (simplifiedIndexConfig) => (keyPath) => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);
-    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))
-        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
+    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))
+        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));
 };
-const deleteStore = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(databaseId)(storeName))));
-const deleteStoreIfExist = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))));
-const deleteDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteDatabase(databaseId))));
+const deleteStore = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(databaseId)(storeName))));
+const deleteStoreIfExist = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))));
+const deleteDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteDatabase(databaseId))));
 const addDocumentsToStore = (storeName) => (data) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDocumentsToStore(db)(storeName)(data));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDocumentsToStore(db)(storeName)(data));
     return execute(command);
 };
 const iterateOverStore = (storeName) => (callback) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(db)(storeName)(callback));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(db)(storeName)(callback));
     return execute(command);
 };
 const getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (operand) => {
-    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));
-    const command = db => purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync.liftEither(eitherKeyRange)
-        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
+    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));
+    const command = db => purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync.liftEither(eitherKeyRange)
+        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
     return execute(command);
 };
 const getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));
     return execute(command);
 };
 const getAllUniqueKeysForIndex = (storeName) => (indexName) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));
     return execute(command);
 };
 const getDocuments = (storeName) => (documentIds) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getDocuments(db)(storeName)(documentIds));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getDocuments(db)(storeName)(documentIds));
     return execute(command);
 };
 const getNumberOfDocumentsInStore = (storeName) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfDocumentsInStore(db)(storeName));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfDocumentsInStore(db)(storeName));
     return execute(command);
 };
 const doesStoreExist = (storeName) => {
-    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => Promise.resolve(_indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.doesStoreExist(db)(storeName)));
+    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => Promise.resolve(_indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.doesStoreExist(db)(storeName)));
     return execute(command);
 };
 const getKeyRangeMatchingOperator = (operator) => (value) => {
@@ -15508,7 +15221,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createStore\": () => (/* binding */ createStore),\n/* harmony export */   \"createStoreIfNotExist\": () => (/* binding */ createStoreIfNotExist),\n/* harmony export */   \"deleteStore\": () => (/* binding */ deleteStore),\n/* harmony export */   \"deleteStoreIfExist\": () => (/* binding */ deleteStoreIfExist),\n/* harmony export */   \"deleteDatabase\": () => (/* binding */ deleteDatabase),\n/* harmony export */   \"addDocumentsToStore\": () => (/* binding */ addDocumentsToStore),\n/* harmony export */   \"iterateOverStore\": () => (/* binding */ iterateOverStore),\n/* harmony export */   \"getPrimaryKeysMatchingOperator\": () => (/* binding */ getPrimaryKeysMatchingOperator),\n/* harmony export */   \"getAllPrimaryKeysForIndex\": () => (/* binding */ getAllPrimaryKeysForIndex),\n/* harmony export */   \"getAllUniqueKeysForIndex\": () => (/* binding */ getAllUniqueKeysForIndex),\n/* harmony export */   \"getDocuments\": () => (/* binding */ getDocuments),\n/* harmony export */   \"getNumberOfDocumentsInStore\": () => (/* binding */ getNumberOfDocumentsInStore),\n/* harmony export */   \"doesStoreExist\": () => (/* binding */ doesStoreExist),\n/* harmony export */   \"getKeyRangeMatchingOperator\": () => (/* binding */ getKeyRangeMatchingOperator)\n/* harmony export */ });\n/* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ \"./src/apis/indexedDB.api.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nconst databaseId = \"browser-search\";\nvar IndexType;\n(function (IndexType) {\n    IndexType[\"simple\"] = \"simple\";\n    IndexType[\"array\"] = \"array\";\n})(IndexType || (IndexType = {}));\nconst simplifiedIndexToIndexConfig = (simplifiedIndex) => {\n    const arrayConfig = { multiEntry: true, unique: false };\n    const defaultConfig = { multiEntry: false, unique: false };\n    return (0,ramda__WEBPACK_IMPORTED_MODULE_1__.default)((indexType) => indexType === IndexType.array ? arrayConfig : defaultConfig, (simplifiedIndex));\n};\nconst openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));\nconst closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\nconst execute = (...commands) => {\n    let dbInstance = null;\n    const openDatabaseCommand = openDatabase()\n        .map(db => {\n        dbInstance = db;\n        return db;\n    });\n    const commandsToExecute = commands.reduce((commandsAcc, command) => {\n        return commandsAcc.chain(() => command(dbInstance));\n    }, openDatabaseCommand);\n    const commandsToExecuteWithDbClosing = commandsToExecute\n        .map((result) => {\n        closeDatabase(dbInstance).run();\n        return result;\n    })\n        .mapLeft(error => {\n        !(0,ramda__WEBPACK_IMPORTED_MODULE_3__.default)(dbInstance) && closeDatabase(dbInstance).run();\n        return error;\n    });\n    return commandsToExecuteWithDbClosing;\n};\nconst createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))\n        .chain(() => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst createStoreIfNotExist = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst deleteStore = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(databaseId)(storeName))));\nconst deleteStoreIfExist = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))));\nconst deleteDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteDatabase(databaseId))));\nconst addDocumentsToStore = (storeName) => (data) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDocumentsToStore(db)(storeName)(data));\n    return execute(command);\n};\nconst iterateOverStore = (storeName) => (callback) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(db)(storeName)(callback));\n    return execute(command);\n};\nconst getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (operand) => {\n    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));\n    const command = db => purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync.liftEither(eitherKeyRange)\n        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));\n    return execute(command);\n};\nconst getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));\n    return execute(command);\n};\nconst getAllUniqueKeysForIndex = (storeName) => (indexName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));\n    return execute(command);\n};\nconst getDocuments = (storeName) => (documentIds) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getDocuments(db)(storeName)(documentIds));\n    return execute(command);\n};\nconst getNumberOfDocumentsInStore = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfDocumentsInStore(db)(storeName));\n    return execute(command);\n};\nconst doesStoreExist = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync)(() => Promise.resolve(_indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.doesStoreExist(db)(storeName)));\n    return execute(command);\n};\nconst getKeyRangeMatchingOperator = (operator) => (value) => {\n    switch (operator) {\n        case 'equals':\n        case 'contains':\n            return IDBKeyRange.only(value);\n        case 'lt':\n            return IDBKeyRange.upperBound(value, true);\n        case 'lte':\n            return IDBKeyRange.upperBound(value);\n        case 'gt':\n            return IDBKeyRange.lowerBound(value, true);\n        case 'gte':\n            return IDBKeyRange.lowerBound(value);\n        case 'inRangeClosed':\n            return IDBKeyRange.bound(value[0], value[1]);\n        case 'inRangeOpen':\n            return IDBKeyRange.bound(value[0], value[1], true, true);\n        case 'inRangeOpenClosed':\n            return IDBKeyRange.bound(value[0], value[1], true, false);\n        case 'inRangeClosedOpen':\n            return IDBKeyRange.bound(value[0], value[1], false, true);\n    }\n    throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;\n};\n\n\n//# sourceURL=webpack://browser-search/./src/apis/storage.util.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createStore\": () => (/* binding */ createStore),\n/* harmony export */   \"createStoreIfNotExist\": () => (/* binding */ createStoreIfNotExist),\n/* harmony export */   \"deleteStore\": () => (/* binding */ deleteStore),\n/* harmony export */   \"deleteStoreIfExist\": () => (/* binding */ deleteStoreIfExist),\n/* harmony export */   \"deleteDatabase\": () => (/* binding */ deleteDatabase),\n/* harmony export */   \"addDocumentsToStore\": () => (/* binding */ addDocumentsToStore),\n/* harmony export */   \"iterateOverStore\": () => (/* binding */ iterateOverStore),\n/* harmony export */   \"getPrimaryKeysMatchingOperator\": () => (/* binding */ getPrimaryKeysMatchingOperator),\n/* harmony export */   \"getAllPrimaryKeysForIndex\": () => (/* binding */ getAllPrimaryKeysForIndex),\n/* harmony export */   \"getAllUniqueKeysForIndex\": () => (/* binding */ getAllUniqueKeysForIndex),\n/* harmony export */   \"getDocuments\": () => (/* binding */ getDocuments),\n/* harmony export */   \"getNumberOfDocumentsInStore\": () => (/* binding */ getNumberOfDocumentsInStore),\n/* harmony export */   \"doesStoreExist\": () => (/* binding */ doesStoreExist),\n/* harmony export */   \"getKeyRangeMatchingOperator\": () => (/* binding */ getKeyRangeMatchingOperator)\n/* harmony export */ });\n/* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ \"./src/apis/indexedDB.api.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\n\nconst databaseId = \"browser-search\";\nconst simplifiedIndexToIndexConfig = (simplifiedIndex) => {\n    var _a, _b;\n    const arrayConfig = { multiEntry: true, unique: false };\n    const defaultConfig = { multiEntry: false, unique: false };\n    const indexConfigSimpleProperties = (_a = simplifiedIndex.simple) === null || _a === void 0 ? void 0 : _a.reduce((indexConfig, property) => {\n        indexConfig[property] = defaultConfig;\n        return indexConfig;\n    }, {});\n    const indexConfigArrayProperties = (_b = simplifiedIndex.array) === null || _b === void 0 ? void 0 : _b.reduce((indexConfig, property) => {\n        indexConfig[property] = arrayConfig;\n        return indexConfig;\n    }, {});\n    const indexConfig = Object.assign(Object.assign({}, indexConfigSimpleProperties), indexConfigArrayProperties);\n    return indexConfig;\n};\nconst openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));\nconst closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\nconst execute = (...commands) => {\n    let dbInstance = null;\n    const openDatabaseCommand = openDatabase()\n        .map(db => {\n        dbInstance = db;\n        return db;\n    });\n    const commandsToExecute = commands.reduce((commandsAcc, command) => {\n        return commandsAcc.chain(() => command(dbInstance));\n    }, openDatabaseCommand);\n    const commandsToExecuteWithDbClosing = commandsToExecute\n        .map((result) => {\n        closeDatabase(dbInstance).run();\n        return result;\n    })\n        .mapLeft(error => {\n        !(0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(dbInstance) && closeDatabase(dbInstance).run();\n        return error;\n    });\n    return commandsToExecuteWithDbClosing;\n};\nconst createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))\n        .chain(() => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst createStoreIfNotExist = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst deleteStore = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(databaseId)(storeName))));\nconst deleteStoreIfExist = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))));\nconst deleteDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteDatabase(databaseId))));\nconst addDocumentsToStore = (storeName) => (data) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDocumentsToStore(db)(storeName)(data));\n    return execute(command);\n};\nconst iterateOverStore = (storeName) => (callback) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(db)(storeName)(callback));\n    return execute(command);\n};\nconst getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (operand) => {\n    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));\n    const command = db => purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync.liftEither(eitherKeyRange)\n        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));\n    return execute(command);\n};\nconst getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));\n    return execute(command);\n};\nconst getAllUniqueKeysForIndex = (storeName) => (indexName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));\n    return execute(command);\n};\nconst getDocuments = (storeName) => (documentIds) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getDocuments(db)(storeName)(documentIds));\n    return execute(command);\n};\nconst getNumberOfDocumentsInStore = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfDocumentsInStore(db)(storeName));\n    return execute(command);\n};\nconst doesStoreExist = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => Promise.resolve(_indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.doesStoreExist(db)(storeName)));\n    return execute(command);\n};\nconst getKeyRangeMatchingOperator = (operator) => (value) => {\n    switch (operator) {\n        case 'equals':\n        case 'contains':\n            return IDBKeyRange.only(value);\n        case 'lt':\n            return IDBKeyRange.upperBound(value, true);\n        case 'lte':\n            return IDBKeyRange.upperBound(value);\n        case 'gt':\n            return IDBKeyRange.lowerBound(value, true);\n        case 'gte':\n            return IDBKeyRange.lowerBound(value);\n        case 'inRangeClosed':\n            return IDBKeyRange.bound(value[0], value[1]);\n        case 'inRangeOpen':\n            return IDBKeyRange.bound(value[0], value[1], true, true);\n        case 'inRangeOpenClosed':\n            return IDBKeyRange.bound(value[0], value[1], true, false);\n        case 'inRangeClosedOpen':\n            return IDBKeyRange.bound(value[0], value[1], false, true);\n    }\n    throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;\n};\n\n\n//# sourceURL=webpack://browser-search/./src/apis/storage.util.ts?");
 
 /***/ }),
 

@@ -1,28 +1,32 @@
 import * as idb from './indexedDB.api'
-import { isNil, map } from 'ramda'
+import { isNil } from 'ramda'
 import { Either } from 'purify-ts/Either';
 import { EitherAsync } from 'purify-ts/EitherAsync'
 import { Operator } from 'modules/filterConfiguration/operators';
 
 const databaseId = "browser-search";
-
-enum IndexType {
-    simple = 'simple',
-    array = 'array',
+export interface SimplifiedIndexConfig<T> {
+    simple?: Array<keyof T>;
+    array?: Array<keyof T>;
 }
 
-export interface SimplifiedIndexConfig {
-    [key: string]: IndexType;
-}
-
-const simplifiedIndexToIndexConfig = (simplifiedIndex: SimplifiedIndexConfig): idb.IndexConfig => {
+const simplifiedIndexToIndexConfig = <T>(simplifiedIndex: SimplifiedIndexConfig<T>): idb.IndexConfig => {
     const arrayConfig = { multiEntry: true, unique: false };
     const defaultConfig = { multiEntry: false, unique: false };
 
-    return map( 
-        (indexType: IndexType) => indexType === IndexType.array ? arrayConfig : defaultConfig,
-        (simplifiedIndex)
-    );
+    const indexConfigSimpleProperties = simplifiedIndex.simple?.reduce((indexConfig: idb.IndexConfig, property: keyof T): idb.IndexConfig => {
+        indexConfig[property as string] = defaultConfig;
+        return indexConfig;
+    }, {});
+
+    const indexConfigArrayProperties = simplifiedIndex.array?.reduce((indexConfig: idb.IndexConfig, property: keyof T): idb.IndexConfig => {
+        indexConfig[property as string] = arrayConfig;
+        return indexConfig;
+    }, {});
+
+    const indexConfig: idb.IndexConfig = {...indexConfigSimpleProperties, ...indexConfigArrayProperties};
+
+    return indexConfig;
 }
 const openDatabase = (): EitherAsync<Error, IDBDatabase> => (
     EitherAsync(() => idb.openDatabaseLatestVersion(databaseId))
@@ -61,26 +65,27 @@ const execute = (...commands: IDBCommand[]): EitherAsync<Error, any> => {
 };
 
 export const createStore = 
-    (storeName: string) => 
-    (simplifiedIndexConfig: SimplifiedIndexConfig) => 
-    (keyPath: string): EitherAsync<Error, void> => {
+    <T>(storeName: string) => 
+    (simplifiedIndexConfig: SimplifiedIndexConfig<T>) => 
+    (keyPath: keyof T): EitherAsync<Error, void> => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
 
     return (
         EitherAsync(() => idb.deleteObjectStoreIfExist(databaseId)(storeName))
-        .chain (() => EitherAsync(() => idb.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))
+        .chain (() => EitherAsync(() => idb.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath as string)))
         .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
     )
 }
 
 export const createStoreIfNotExist = 
+    <T>
     (storeName: string) => 
-    (simplifiedIndexConfig: SimplifiedIndexConfig) => 
-    (keyPath: string): EitherAsync<Error, void> => {
+    (simplifiedIndexConfig: SimplifiedIndexConfig<T>) => 
+    (keyPath: keyof T): EitherAsync<Error, void> => {
     const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig)
 
     return (
-        EitherAsync(() => idb.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))
+        EitherAsync(() => idb.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath as string))
         .chain(db => EitherAsync(() => idb.closeDatabase(db))) as EitherAsync<Error, void>
     )
 }
