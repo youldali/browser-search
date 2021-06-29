@@ -25,7 +25,6 @@ export const useItemTable = <T extends TableData>({
   const [data, setData] = useState<T[]>(initialData);
 
   const onSortChange = (property: string) => {
-    console.log(property);
     const isAsc = orderBy === property && orderDirection === 'asc';
     setOrderDirection(isAsc ? 'desc' : 'asc');
     setOrderBy(property);

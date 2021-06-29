@@ -4,35 +4,21 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { AppBar } from './AppBar';
 import { ItemTable } from './ItemTable';
 import { FilterPanel } from './FilterPanel';
-import { personGenerator } from '../modules';
+import { personGenerator, Person } from '../modules';
 import { usePersonTable } from './hooks';
 import * as browserSearch from 'browser-search';
 
 
 
-const filterConfig = [ 
-    [ 
-      { id: 'lowAged', field: 'age', operator: 'lt', operand: 30 }, // Filter
-      { id: 'middleAged', field: 'age', operator: 'inRangeClosed', operand: [30, 50] }, // Filter
-      { id: 'highAged', field: 'age', operator: 'gt', operand: 50 }, // Filter
-    ],
-  	[
-      { id: 'professionDentist', field: 'profession', operator: 'equals', operand: 'Dentist'}
-    ]
-  ];
-
 const initStore = async () => {
   const persons  = personGenerator.generatePersons(1000);
-  await browserSearch.createStore('persons')({
-    name: 'simple',
-    age: 'simple',
-    salary: 'simple',
-    profession: 'simple',
-    country: 'simple',
-    favoriteColours: 'array'
+  await browserSearch.createStore<Person>('persons')({
+    simple: ['name', 'age', 'salary', 'profession', 'country'],
+    array: ['favoriteColours'],
   })('id');
-  await browserSearch.addDataToStore('persons')(persons);
+  await browserSearch.addDocumentsToStore<Person>('persons')(persons);
 }
+
 const search = async () => {
   try {
   const values = await browserSearch.getAllValuesOfProperty('persons')('favoriteColours');
@@ -43,12 +29,13 @@ const search = async () => {
   }
 
   try {
-    const results = await browserSearch.processRequest({
+    const results = await browserSearch.searchStore<Person>({
       filterConfig,
+      storeId: 'persons',
+    })({
       filtersApplied: ['lowAged'],
       orderBy: 'name',
-      page: 1,
-      storeId: 'persons',
+      page: 1
     });
     console.log(results);
   }

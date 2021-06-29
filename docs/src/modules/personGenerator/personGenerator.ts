@@ -1,9 +1,10 @@
 import { Chance } from 'chance';
 import {times} from 'ramda';
+import {Person} from './person.model';
 
 const chance = new Chance();
 
-export const generatePerson = () => (
+export const generatePerson = (): Person => (
   {
     id: chance.guid(),
     name: chance.name(),
