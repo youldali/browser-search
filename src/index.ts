@@ -11,12 +11,9 @@ const workerFunction = () => {
   //@worker
 }
 
-type RequestPreset<T> = Pick<Request<T>, 'storeId' | 'filterConfig'>;
-type RequestParams<T> = Omit<Request<T>, 'storeId' | 'filterConfig'>;
-type SearchResponse<T> = Pick<ResponseSuccess<T>, 'payload'>
+export type SearchResponse<T> = Pick<ResponseSuccess<T>, 'payload'>
 
-export const searchStore = <T>(requestPreset: RequestPreset<T>) => (requestParams: RequestParams<T>): [Promise<SearchResponse<T>>, () => void] => {
-  const request: Request<T> = {...requestPreset, ...requestParams};
+export const searchStore = <T>(request: Request<T>): [Promise<SearchResponse<T>>, () => void] => {
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 

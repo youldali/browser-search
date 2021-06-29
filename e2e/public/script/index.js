@@ -15865,8 +15865,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ })()
 ;
 };
-const searchStore = (requestPreset) => (requestParams) => {
-    const request = Object.assign(Object.assign({}, requestPreset), requestParams);
+const searchStore = (request) => {
     const applicationWorker = new Worker((0,_helpers_worker_util__WEBPACK_IMPORTED_MODULE_0__.functionToWorkerURL)(workerFunction));
     applicationWorker.postMessage(request);
     let rejectResult;

@@ -111,8 +111,8 @@ exports[`Browser Search getNumberOfDocumentsInStore fails when the store does no
 
 exports[`Browser Search searchStore Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
-    at abort (http://localhost:8081/script/index.js:15881:22)
-    at __puppeteer_evaluation_script__:7:37"
+    at abort (http://localhost:8081/script/index.js:15880:22)
+    at __puppeteer_evaluation_script__:9:37"
 `;
 
 exports[`Browser Search searchStore cache does not retrieve the following queries from the cache if the store has changed 1`] = `
