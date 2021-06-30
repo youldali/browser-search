@@ -15,31 +15,53 @@ const filterConfig: FilterConfig<Person> = [
 
 const storeId = 'persons';
 
-type State<T> = Omit<SearchResponse<T>['payload'], '_cacheStatus_'>
+type State<T> = Omit<SearchResponse<T>['payload'], '_cacheStatus_'> & {
+  status: 'idle' | 'loading' | 'success' | 'error';
+};
 
 type Action<T> =
   | { type: 'startSearch'; }
   | { type: 'searchComplete'; searchResponse: SearchResponse<T>; }
+  | { type: 'searchFailed'; }
   
 type SearchReducer<T> = Reducer<State<T>, Action<T>>;
-
-const reducer: SearchReducer<Person> = (state, action) => {
-  switch (action.type) {
-    case 'startSearch': {
-    }
-    case 'searchComplete': {
-
-    }
- 
-    default:
-      return state;
-};
 
 const initialState: State<Person> = {
   documents: [],
   stats: {},
   numberOfDocuments: 0,
+  status: 'idle',
+};
+
+const reducer: SearchReducer<Person> = (state, action) => {
+  switch (action.type) {
+    case 'startSearch': {
+      return {
+        ...state,
+        status: 'loading',
+      }
+    }
+
+    case 'searchComplete': {
+      return {
+        ...action.searchResponse.payload,
+        status: 'success',
+      }
+    }
+
+    case 'searchFailed': {
+      return {
+        ...initialState,
+        status: 'error',
+      }
+    }
+ 
+    default:
+      return state;
+  }
 }
+
+
 
 
 export const useSearchPersonStore = () => {
@@ -53,8 +75,17 @@ export const useSearchPersonStore = () => {
     initialState,
   );
 
-  return (requestParams: RequestParams<Person>) => {
-    searchStore_(requestParams)
+  const searchStore1 =(requestParams: RequestParams<Person>) => {
+    const [result, abort] = searchStore_(requestParams)
       
+    result.then(searchResponse => {
+      dispatch({type: 'searchComplete', searchResponse})
+    })
+    .catch(e => {
+      console.log(e);
+      dispatch({type: 'searchFailed'})
+    })
   }
+
+  return 
 } 
