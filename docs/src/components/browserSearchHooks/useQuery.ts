@@ -3,45 +3,74 @@ import { useContext, useEffect, useReducer, Reducer } from 'react';
 import { BrowserSearchContext } from './provider';
 
 
-type State<T> = Omit<BS.SearchResponse<T>['payload'], '_cacheStatus_'> & {
-  status: 'idle' | 'loading' | 'success' | 'error';
-};
+type SearchReponseState<T> = Omit<BS.SearchResponse<T>['payload'], '_cacheStatus_'>;
+
+type IdleState = {
+  status: 'idle',
+}
+
+type LoadingState<T> = {
+  status: 'loading',
+  request: BS.Request<T>;
+  abort: BS.AbortSearch;
+}
+
+type SuccessState<T> = {
+  status: 'success',
+  request: BS.Request<T>;
+  response: SearchReponseState<T>;
+}
+
+type ErrorState<T> = {
+  status: 'error',
+  request: BS.Request<T>;
+}
+
+
+type State<T> = IdleState | LoadingState<T> | SuccessState<T> | ErrorState<T>;
 
 type Action<T> =
-  | { type: 'startSearch'; }
-  | { type: 'searchComplete'; searchResponse: BS.SearchResponse<T>; }
-  | { type: 'searchFailed'; }
+  | { type: 'searchStarted'; request: BS.Request<T>; abort: BS.AbortSearch}
+  | { type: 'searchCompleted'; response: BS.SearchResponse<T>['payload']; request: BS.Request<T>;}
+  | { type: 'searchFailed'; request: BS.Request<T>;}
   
 type SearchReducer<T> = Reducer<State<T>, Action<T>>;
 
-const getInitialState = <T>(): State<T> => ({
-  documents: [],
-  stats: {},
-  numberOfDocuments: 0,
+const initialState: IdleState = {
   status: 'idle',
-});
+};
 
 const reducer = <T>(state: State<T>, action: Action<T>): State<T> => {
   switch (action.type) {
-    case 'startSearch': {
-      return {
-        ...state,
-        status: 'loading',
+    case 'searchStarted': {
+      if(state.status === 'loading') {
+        state.abort();
       }
+
+      return {
+        status: 'loading',
+        request: action.request,
+        abort: action.abort,
+      } 
     }
 
-    case 'searchComplete': {
-      return {
-        ...action.searchResponse.payload,
+    case 'searchCompleted': {
+      return state.status === 'loading' && state.request === action.request ? 
+      {
         status: 'success',
-      }
+        request: action.request,
+        response: action.response,
+      } :
+      state;
     }
 
     case 'searchFailed': {
-      return {
-        ...getInitialState(),
+      return state.status === 'loading' && state.request === action.request ? 
+      {
         status: 'error',
-      }
+        request: action.request,
+      } :
+      state;
     }
  
     default:
@@ -54,28 +83,34 @@ export const useQuery = <T>(request: BS.Request<T>) => {
   const queryClient = useContext(BrowserSearchContext);
   const [state, dispatch] = useReducer<SearchReducer<T>>(
     reducer,
-    getInitialState(),
+    initialState,
   );
 
+  const runQuery = (): void => {
+    const [seachResponsePromise, abortSearch] = queryClient.queryStore(request);
+    dispatch({type: 'searchStarted', request, abort: abortSearch})
+
+    seachResponsePromise
+      .then(searchResponse => {
+        dispatch({type: 'searchCompleted', response: searchResponse.payload, request})
+      })
+      .catch(e => {
+        console.log(e);
+        dispatch({type: 'searchFailed', request})
+      })
+  }
+
   useEffect(() => {
-    queryClient.subscribeToStoreChange(request.storeId);
+    queryClient.subscribeToStoreChange(request.storeId)(runQuery);
+
     return () => {
       queryClient.unsubscribeToStoreChange(request.storeId);
     };
   }, [request.storeId]);
 
-  const runQuery = () =>
-    queryClient
-      .queryStore(request)
-      .then(searchResponse => {
-        dispatch({type: 'searchComplete', searchResponse})
-      })
-      .catch(e => {
-        console.log(e);
-        dispatch({type: 'searchFailed'})
-      })
-
-  
+  useEffect(() => {
+    runQuery();
+  }, [request]);
 
   return state;
 }

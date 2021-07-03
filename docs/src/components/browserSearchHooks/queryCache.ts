@@ -1,6 +1,6 @@
 import * as BS from 'browser-search';
 import { StoreId } from 'browser-search';
-import * as hash from 'object-hash';
+import hash from 'object-hash';
 import { Maybe, Just, Nothing } from 'purify-ts/Maybe'
 
 type RequestHash = string;

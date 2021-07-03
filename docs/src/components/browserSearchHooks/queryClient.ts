@@ -15,20 +15,24 @@ export const buildQueryClient = () => {
       })
   )
 
-  const queryStore = <T>(request: BS.Request<T>): Promise<BS.SearchResponse<T>> => {
+
+  const queryStore = <T>(request: BS.Request<T>): [Promise<BS.SearchResponse<T>>, BS.AbortSearch] => {
     const maybeCachedSearchResponse = cache.queryCache(request);
 
     return (
       maybeCachedSearchResponse.caseOf({
-        Just: searchResponse => Promise.resolve(searchResponse),
+        Just: searchResponse => [Promise.resolve(searchResponse), () => {}],
         Nothing: () => {
-          const [searchResponsePromise] = BS.searchStore(request);
+          const [searchResponsePromise, abort] = BS.searchStore(request);
           return (
-            searchResponsePromise
-              .then(searchResponse => {
-                cache.addSearchResponseToCache(request, searchResponse);
-                return searchResponse;
-              })
+            [
+              searchResponsePromise
+                .then(searchResponse => {
+                  cache.addSearchResponseToCache(request, searchResponse);
+                  return searchResponse;
+                }),
+              abort
+            ]
           );
         }
       })
