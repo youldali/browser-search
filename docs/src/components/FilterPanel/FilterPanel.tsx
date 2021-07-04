@@ -1,14 +1,22 @@
 import React from 'react';
+import { FiltersApplied, NextFilterStateStat } from 'browser-search';
+import { pickBy } from 'ramda';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+
+import { QueryState } from '../browserSearchHooks';
+import { Person } from '../../modules';
 
 const drawerWidth = 240;
 
@@ -26,8 +34,39 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const FilterPanel = () => {
+type Props = {
+  filtersApplied: FiltersApplied;
+  personQueryState: QueryState<Person>;
+  onFilterChange: (filtersApplied: FiltersApplied) => void
+}
+
+type FilterList = {
+  [key: string]: boolean
+}
+
+export const FilterPanel = ({
+  personQueryState,
+  filtersApplied,
+  onFilterChange,
+}: Props) => {
   const classes = useStyles();
+  const filters = filtersApplied.reduce((acc: FilterList, filter): FilterList => {
+    acc[filter] = true;
+    return acc
+  }, {});
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFilters = { ...filters, [event.target.name]: event.target.checked };
+    const newFiltersApplied = Object.keys(pickBy((isApplied: boolean) => isApplied, newFilters));
+    onFilterChange(newFiltersApplied);
+  };
+  
+  const resetAllFilters = () => {
+    onFilterChange([]);
+  };
+
+  const stats = personQueryState.status === 'success' ? personQueryState.response.stats : null;
+
   return (
       <Drawer
         variant="permanent"
@@ -38,23 +77,75 @@ export const FilterPanel = () => {
         }}
       >
         <Toolbar />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+
+        <div>
+          <Button 
+          variant="contained" 
+          color="primary"
+          onClick={resetAllFilters}
+          >
+            Reset all
+          </Button>
+        </div>
+
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+
+        <FormControl component="fieldset">
+          <FormLabel component="legend">By age</FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch checked={filters.lowAged ?? false} onChange={handleFilterChange} name="lowAged" />}
+              label={<div>{'<'} 30 years old <FilterStat nextFilterStateStat={stats?.lowAged} /></div>}
+            />
+            <FormControlLabel
+              control={<Switch checked={filters.middleAged ?? false} onChange={handleFilterChange} name="middleAged" />}
+              label="Between 30 and 50 years old"
+            />
+            <FormControlLabel
+              control={<Switch checked={filters.highAged ?? false} onChange={handleFilterChange} name="highAged" />}
+              label="> 50 years old"
+            />
+          </FormGroup>
+        </FormControl>
+
+        <Divider />
+
+        <FormControl component="fieldset">
+          <FormLabel component="legend">By salary</FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch checked={filters.lowSalary ?? false} onChange={handleFilterChange} name="lowSalary" />}
+              label="< 40 000"
+            />
+            <FormControlLabel
+              control={<Switch checked={filters.middleSalary ?? false} onChange={handleFilterChange} name="middleSalary" />}
+              label="40 000 and 70 000"
+            />
+            <FormControlLabel
+              control={<Switch checked={filters.highSalary ?? false} onChange={handleFilterChange} name="highSalary" />}
+              label="> 70 000"
+            />
+          </FormGroup>
+        </FormControl>
+
       </Drawer>
   );
+}
+
+type FilterStatProps = {
+  nextFilterStateStat?: NextFilterStateStat;
+}
+const FilterStat = ({
+  nextFilterStateStat
+}: FilterStatProps) => {
+  if (!nextFilterStateStat) {
+    return null;
+  }
+
+  return (
+    nextFilterStateStat.type === 'added' ?
+    <Chip variant="default" color="primary" size="small" label={`+ ${nextFilterStateStat.nextDocumentsAdded}`}/> :
+    <Chip variant="default" color="primary" size="small" label={nextFilterStateStat.nextNumberOfDocuments}/>
+  )
+  
 }

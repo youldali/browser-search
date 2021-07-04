@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import * as browserSearch from 'browser-search';
+import * as BS from 'browser-search';
 
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,21 +14,6 @@ import { personGenerator, Person } from '../modules';
 import { usePersonQuery, usePersonTable } from './hooks';
 import { BrowserSearchProvider, useMutateStore } from './browserSearchHooks';
 
-
-const initStore = async () => {
-  const persons  = personGenerator.generatePersons(1000);
-  await browserSearch.createStore<Person>('persons')({
-    simple: ['name', 'age', 'salary', 'profession', 'country'],
-    array: ['favoriteColours'],
-  })('id');
-  await browserSearch.addDocumentsToStore<Person>('persons')(persons);
-}
-
-const search = async () => {
-  const values = await browserSearch.getAllValuesOfProperty('persons')('favoriteColours');
-  console.log(values);
-}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
@@ -42,9 +27,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const App = () => {
   const classes = useStyles();
+  const [filtersApplied, setFiltersApplied] = useState<BS.FiltersApplied>([]);
   const personsTableProps = usePersonTable();
   const personQueryState = usePersonQuery({
-    filtersApplied: ['lowAged'],
+    filtersApplied,
     orderBy: personsTableProps.orderBy,
     orderDirection: personsTableProps.orderDirection === 'desc' ? 'DESC' : 'ASC',
     page: personsTableProps.page,
@@ -70,29 +56,38 @@ export const App = () => {
       <CssBaseline />
       <AppBar />
       <main className={classes.content}>
-          <FilterPanel />
-          <Button 
-            variant="contained" 
-            color="primary"
-            onClick={addData}
-          >
-            Add data
-          </Button>
-          <QuerySuspense
-            queryState={personQueryState}
-            fallback={() => <div>An error occured</div>}
-            loading={<div>Loading</div>}
-          >
-            {
-              (queryResponse) =>
-              <ItemTable 
-                className={classes.itemTable} 
-                data={queryResponse.documents}
-                dataCount={queryResponse.numberOfDocuments}
-                {...personsTableProps}
-              />
-            } 
+          <FilterPanel 
+            personQueryState={personQueryState}
+            onFilterChange={(filtersApplied: BS.FiltersApplied) => setFiltersApplied(filtersApplied)}
+            filtersApplied={filtersApplied}
+          />
+          
+          <section>
+            <div>
+              <Button 
+              variant="contained" 
+              color="primary"
+              onClick={addData}
+              >
+                Add data
+              </Button>
+            </div>
+            <QuerySuspense
+              queryState={personQueryState}
+              fallback={() => <div>An error occured</div>}
+              loading={<div>Loading</div>}
+            >
+              {
+                (queryResponse) =>
+                <ItemTable 
+                  className={classes.itemTable} 
+                  data={queryResponse.documents}
+                  dataCount={queryResponse.numberOfDocuments}
+                  {...personsTableProps}
+                />
+              } 
           </QuerySuspense>
+          </section>
       </main>
     </BrowserSearchProvider>
   );
