@@ -1,12 +1,13 @@
 import React from 'react';
 import { buildQueryClient } from './queryClient';
 
-export const BrowserSearchContext = React.createContext(buildQueryClient());
+const queryClient = buildQueryClient();
+export const BrowserSearchContext = React.createContext(queryClient);
 
 export const BrowserSearchProvider = ({
   children,
 }: {children: React.ReactNode}) => (
-  <BrowserSearchContext.Provider value={buildQueryClient()}>
+  <BrowserSearchContext.Provider value={queryClient}>
     {children}
   </BrowserSearchContext.Provider>
 )

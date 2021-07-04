@@ -1,23 +1,35 @@
-import { personGenerator } from '../../modules'
-import { HeadCell, OrderDirection, useItemTable } from '../ItemTable'
+import { useMemo, useState} from 'react';
 
-type Person = personGenerator.Person;
+import { Person } from '../../modules'
+import { HeadCell, useItemTable } from '../ItemTable'
+import { useQuery } from '../browserSearchHooks';
+import { Request, FilterConfig, SearchResponse } from 'browser-search';
 
-type UsePersonTableProps = {
-  perPage?: number;
-  page?: number;
-  orderBy?: string;
-  orderDirection?: OrderDirection;
-}
+export const usePersonTable = () => {
+  const [searchResponse, setSearchResponse] = useState<SearchResponse<Person>>();
 
-export const usePersonTable = (personTableProps?: UsePersonTableProps) => {
   const itemTableProps = useItemTable({
-    data: personsData,
+    data: searchResponse?.documents ?? [],
     headCells,
-    ...personTableProps
   });
 
-  return itemTableProps;
+  const request: Request<Person> = useMemo(() => ({
+    storeId,
+    filterConfig,
+    filtersApplied: ['lowAged'],
+    orderBy: itemTableProps.orderBy,
+    orderDirection: itemTableProps.orderDirection === 'desc' ? 'DESC' : 'ASC',
+    page: itemTableProps.page,
+    perPage: itemTableProps.perPage,
+  }), [itemTableProps.orderBy, itemTableProps.orderDirection, itemTableProps.page, itemTableProps.perPage]);
+
+  const queryState = useQuery<Person>(request)
+
+  if(queryState.status === 'success' && queryState.response !== searchResponse) {
+    setSearchResponse(queryState.response as any)
+  }
+
+  return {itemTableProps, searchResponse};
 }
 
 const headCells: HeadCell<Person>[] = [
@@ -30,76 +42,15 @@ const headCells: HeadCell<Person>[] = [
   { id: 'favoriteColours', numeric: false, label: 'Favorite colours' },
 ];
 
-const personsData: Person[] = 
-[
-  {
-      id: '1',
-      "name": "Willie Garza",
-      "age": 38,
-      "email": "id@ipasag.cv",
-      "salary": 61299,
-      "profession": "Interior Decorator",
-      "favoriteColours": [
-          "yellow",
-          "white",
-          "blue",
-          "pink"
-      ],
-      "country": "Taiwan"
-  },
-  {
-    id: '2',
-      "name": "Gene Fletcher",
-      "age": 37,
-      "email": "fowa@uhuma.tv",
-      "salary": 61075,
-      "profession": "University Administrator",
-      "favoriteColours": [
-          "pink",
-          "yellow",
-          "brown",
-          "purple"
-      ],
-      "country": "Kiribati"
-  },
-  {
-    id: '3',
-      "name": "Sallie Garrett",
-      "age": 41,
-      "email": "fufcuva@wepzizawa.sv",
-      "salary": 67792,
-      "profession": "Design Engineer",
-      "favoriteColours": [
-          "pink",
-          "white",
-          "dark",
-          "brown"
-      ],
-      "country": "Turks & Caicos Islands"
-  },
-  {
-    id: '4',
-      "name": "Rosa Byrd",
-      "age": 50,
-      "email": "ebkoz@ih.hn",
-      "salary": 44593,
-      "profession": "Warehouse Manager",
-      "favoriteColours": [
-          "purple",
-          "blue",
-          "red",
-          "dark"
-      ],
-      "country": "Sri Lanka"
-  },
-  {
-    id: '5',
-      "name": "Mollie Kelley",
-      "age": 55,
-      "email": "vedal@sep.bb",
-      "salary": 37696,
-      "profession": "Quality Control Inspector",
-      "favoriteColours": [],
-      "country": "Marshall Islands"
-  },
-]
+const storeId = 'Persons';
+
+const filterConfig: FilterConfig<Person> = [ 
+  [ 
+    { id: 'lowAged', field: 'age', operator: 'lt', operand: 30 }, // Filter
+    { id: 'middleAged', field: 'age', operator: 'inRangeClosed', operand: [30, 50] }, // Filter
+    { id: 'highAged', field: 'age', operator: 'gt', operand: 50 }, // Filter
+  ],
+  [
+    { id: 'professionDentist', field: 'profession', operator: 'equals', operand: 'Dentist'}
+  ]
+];

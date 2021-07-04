@@ -2,27 +2,31 @@ import {useState} from 'react';
 import { HeadCell, OrderDirection, TableData } from './ItemTable';
 
 type UseItemTableProps<T extends TableData> = {
-    perPage?: number;
-    page?: number;
-    orderBy?: string;
-    orderDirection?: OrderDirection;
+    defaultPerPage?: number;
+    defaultPage?: number;
+    defaultOrderBy?: string;
+    defaultOrderDirection?: OrderDirection;
     data: T[];
     headCells: HeadCell<T>[];
 }
 
+const initialPerPage = 5;
+const initialPage = 1;
+const initialOrderBy = undefined;
+const initialOrderDirection = 'asc';
+
 export const useItemTable = <T extends TableData>({
-  perPage: initialPerPage = 5,
-  page: initialPage = 0,
-  orderBy: initialOrderBy = undefined,
-  orderDirection: initialOrderDirection = 'asc',
-  data: initialData,
+  defaultPerPage = initialPerPage,
+  defaultPage = initialPage,
+  defaultOrderBy = initialOrderBy,
+  defaultOrderDirection = initialOrderDirection,
+  data,
   headCells,
 }: UseItemTableProps<T>) => {
-  const [orderDirection, setOrderDirection] = useState<OrderDirection>(initialOrderDirection);
-  const [orderBy, setOrderBy] = useState<string | undefined>(initialOrderBy);
-  const [perPage, setPerPage] = useState<number>(initialPerPage);
-  const [page, setPage] = useState<number>(initialPage);
-  const [data, setData] = useState<T[]>(initialData);
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>(defaultOrderDirection);
+  const [orderBy, setOrderBy] = useState<string | undefined>(defaultOrderBy);
+  const [perPage, setPerPage] = useState<number>(defaultPerPage);
+  const [page, setPage] = useState<number>(defaultPage);
 
   const onSortChange = (property: string) => {
     const isAsc = orderBy === property && orderDirection === 'asc';
@@ -40,7 +44,6 @@ export const useItemTable = <T extends TableData>({
     page,
     onPageChange: (page: number) => setPage(page),
     onSortChange,
-    onDataChange: (data: T[]) => setData(data),
     data,
     headCells,
   }

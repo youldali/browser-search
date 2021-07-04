@@ -46,6 +46,7 @@ type ItemTableProps<T extends TableData> = {
   orderBy: string | undefined;
   perPage: number;
   page: number;
+  dataCount: number;
   data: T[];
   onPageChange: (page: number) => void;
   onSortChange: (property: string) => void;
@@ -60,6 +61,7 @@ export const ItemTable = <T extends {id: string}>({
   perPage,
   page,
   data,
+  dataCount,
   onPageChange,
   onSortChange,
   onPerPageChange,
@@ -114,7 +116,7 @@ export const ItemTable = <T extends {id: string}>({
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={data.length}
+          count={dataCount}
           rowsPerPage={perPage}
           page={page}
           onChangePage={(_, page) => onPageChange(page)}

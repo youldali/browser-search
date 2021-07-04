@@ -2,9 +2,14 @@ import { Request, ResponseSuccess } from './controllers';
 import * as storage from './apis/storage.util';
 export * from './controllers';
 export { Operator } from './modules/filterConfiguration';
-export declare type SearchResponse<T> = Pick<ResponseSuccess<T>, 'payload'>;
+export declare type SearchResponse<T> = ResponseSuccess<T>['payload'];
 export declare type AbortSearch = () => void;
-export declare const searchStore: <T>(request: Request<T>) => [Promise<SearchResponse<T>>, AbortSearch];
+export declare const searchStore: <T>(request: Request<T>) => [Promise<{
+    documents: T[];
+    stats: Dictionary<import("./controllers").NextFilterStateStat>;
+    numberOfDocuments: number;
+    _cacheStatus_: import("./controllers").CacheStatus;
+}>, AbortSearch];
 export declare const createStore: <T>(storeName: string) => (indexConfig: storage.SimplifiedIndexConfig<T>) => (keyPath: keyof T) => Promise<void>;
 export declare const addDocumentsToStore: <T>(storeName: string) => (data: T[]) => Promise<void>;
 export declare const getAllValuesOfProperty: <T extends IDBValidKey>(storeName: string) => (propertyName: string) => Promise<T[]>;
