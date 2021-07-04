@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as browserSearch from 'browser-search';
 
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
@@ -8,9 +8,10 @@ import Button from '@material-ui/core/Button';
 import { AppBar } from './AppBar';
 import { ItemTable } from './ItemTable';
 import { FilterPanel } from './FilterPanel';
+import { QuerySuspense } from './QuerySuspense';
 
 import { personGenerator, Person } from '../modules';
-import { usePersonTable } from './hooks';
+import { usePersonQuery, usePersonTable } from './hooks';
 import { BrowserSearchProvider, useMutateStore } from './browserSearchHooks';
 
 
@@ -41,7 +42,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const App = () => {
   const classes = useStyles();
-  const {itemTableProps, searchResponse} = usePersonTable();
+  const personsTableProps = usePersonTable();
+  const personQueryState = usePersonQuery({
+    filtersApplied: ['lowAged'],
+    orderBy: personsTableProps.orderBy,
+    orderDirection: personsTableProps.orderDirection === 'desc' ? 'DESC' : 'ASC',
+    page: personsTableProps.page,
+    perPage: personsTableProps.perPage,
+  });
+
   const mutateStore = useMutateStore<Person>('Persons');
 
   useEffect(() => {
@@ -49,11 +58,9 @@ export const App = () => {
       simple: ['name', 'age', 'salary', 'profession', 'country'],
       array: ['favoriteColours'],
     })('id');
-    console.log('creation store');
   }, [])
 
   const addData = () => {
-    console.log('adding data');
     const persons  = personGenerator.generatePersons(1000);
     mutateStore.addDataToStore(persons);
   }
@@ -71,11 +78,21 @@ export const App = () => {
           >
             Add data
           </Button>
-          <ItemTable 
-            className={classes.itemTable} 
-            dataCount={searchResponse?.numberOfDocuments ?? 0}
-            {...itemTableProps}
-          />
+          <QuerySuspense
+            queryState={personQueryState}
+            fallback={() => <div>An error occured</div>}
+            loading={<div>Loading</div>}
+          >
+            {
+              (queryResponse) =>
+              <ItemTable 
+                className={classes.itemTable} 
+                data={queryResponse.documents}
+                dataCount={queryResponse.numberOfDocuments}
+                {...personsTableProps}
+              />
+            } 
+          </QuerySuspense>
       </main>
     </BrowserSearchProvider>
   );

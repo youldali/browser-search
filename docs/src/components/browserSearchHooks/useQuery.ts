@@ -3,44 +3,44 @@ import { useCallback, useContext, useEffect, useReducer, Reducer } from 'react';
 import { BrowserSearchContext } from './provider';
 
 
-type SearchReponseState<T> = Omit<BS.SearchResponse<T>, '_cacheStatus_'>;
+export type SearchReponse<T> = Omit<BS.SearchResponse<T>, '_cacheStatus_'>;
 
-type IdleState = {
+export type IdleState = {
   status: 'idle',
 }
 
-type LoadingState<T> = {
+export type LoadingQueryState<T> = {
   status: 'loading',
   request: BS.Request<T>;
   abort: BS.AbortSearch;
 }
 
-type SuccessState<T> = {
+export type SuccessQueryState<T> = {
   status: 'success',
   request: BS.Request<T>;
-  response: SearchReponseState<T>;
+  response: SearchReponse<T>;
 }
 
-type ErrorState<T> = {
+export type ErrorQueryState<T> = {
   status: 'error',
   request: BS.Request<T>;
 }
 
 
-type State<T> = IdleState | LoadingState<T> | SuccessState<T> | ErrorState<T>;
+export type QueryState<T> = IdleState | LoadingQueryState<T> | SuccessQueryState<T> | ErrorQueryState<T>;
 
 type Action<T> =
   | { type: 'searchStarted'; request: BS.Request<T>; abort: BS.AbortSearch}
   | { type: 'searchCompleted'; response: BS.SearchResponse<T>; request: BS.Request<T>;}
   | { type: 'searchFailed'; request: BS.Request<T>;}
   
-type SearchReducer<T> = Reducer<State<T>, Action<T>>;
+type SearchReducer<T> = Reducer<QueryState<T>, Action<T>>;
 
 const initialState: IdleState = {
   status: 'idle',
 };
 
-const reducer = <T>(state: State<T>, action: Action<T>): State<T> => {
+const reducer = <T>(state: QueryState<T>, action: Action<T>): QueryState<T> => {
   switch (action.type) {
     case 'searchStarted': {
       if(state.status === 'loading') {
@@ -79,7 +79,7 @@ const reducer = <T>(state: State<T>, action: Action<T>): State<T> => {
 }
 
 
-export const useQuery = <T>(request: BS.Request<T>): State<T> => {
+export const useQuery = <T>(request: BS.Request<T>): QueryState<T> => {
   const queryClient = useContext(BrowserSearchContext);
   const [state, dispatch] = useReducer<SearchReducer<T>>(
     reducer,

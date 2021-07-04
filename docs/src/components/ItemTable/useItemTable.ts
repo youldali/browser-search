@@ -6,7 +6,6 @@ type UseItemTableProps<T extends TableData> = {
     defaultPage?: number;
     defaultOrderBy?: string;
     defaultOrderDirection?: OrderDirection;
-    data: T[];
     headCells: HeadCell<T>[];
 }
 
@@ -20,7 +19,6 @@ export const useItemTable = <T extends TableData>({
   defaultPage = initialPage,
   defaultOrderBy = initialOrderBy,
   defaultOrderDirection = initialOrderDirection,
-  data,
   headCells,
 }: UseItemTableProps<T>) => {
   const [orderDirection, setOrderDirection] = useState<OrderDirection>(defaultOrderDirection);
@@ -44,7 +42,6 @@ export const useItemTable = <T extends TableData>({
     page,
     onPageChange: (page: number) => setPage(page),
     onSortChange,
-    data,
     headCells,
   }
 }
