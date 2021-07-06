@@ -11,6 +11,7 @@ Object {
     "3": Array [
       3,
     ],
+    "4": Array [],
   },
   "documentsIdsRejectedByMultipleFilters": Array [
     4,
@@ -21,12 +22,17 @@ Object {
   ],
   "nextFilterStateForFilterId": Object {
     "activity-1": Object {
-      "documentIds": Array [],
-      "type": "added",
+      "documentIds": Array [
+        0,
+        1,
+      ],
+      "type": "matching",
     },
     "activity-2": Object {
-      "documentIds": Array [],
-      "type": "added",
+      "documentIds": Array [
+        1,
+      ],
+      "type": "matching",
     },
     "activity-3": Object {
       "documentIds": Array [
@@ -46,12 +52,39 @@ Object {
       ],
       "type": "narrowed",
     },
+    "priceMax2": Object {
+      "documentIds": Array [
+        0,
+        1,
+      ],
+      "type": "matching",
+    },
     "priceMin": Object {
+      "documentIds": Array [
+        0,
+        1,
+      ],
+      "type": "matching",
+    },
+    "priceMin2": Object {
       "documentIds": Array [],
       "type": "added",
     },
   },
-  "nextFilterStatesForNonAppliedFilterId": Object {
+  "nextFilterStates": Object {
+    "activity-1": Object {
+      "documentIds": Array [
+        0,
+        1,
+      ],
+      "type": "matching",
+    },
+    "activity-2": Object {
+      "documentIds": Array [
+        1,
+      ],
+      "type": "matching",
+    },
     "activity-3": Object {
       "documentIds": Array [
         3,
@@ -69,6 +102,24 @@ Object {
         0,
       ],
       "type": "narrowed",
+    },
+    "priceMax2": Object {
+      "documentIds": Array [
+        0,
+        1,
+      ],
+      "type": "matching",
+    },
+    "priceMin": Object {
+      "documentIds": Array [
+        0,
+        1,
+      ],
+      "type": "matching",
+    },
+    "priceMin2": Object {
+      "documentIds": Array [],
+      "type": "added",
     },
   },
 }

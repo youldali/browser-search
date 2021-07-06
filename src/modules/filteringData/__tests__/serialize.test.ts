@@ -27,8 +27,8 @@ describe ('serialization', () => {
             expect(deserializeFilteringData.getDocumentsIdsRejectedByMultipleFilters()).toEqual(filteringStatisticsData.getDocumentsIdsRejectedByMultipleFilters());
         });
     
-        test('Should give a dictionary of FilteringStat by filter non applied', () => {
-            expect(deserializeFilteringData.getNextFilterStatesForNonAppliedFilterId()).toEqual(filteringStatisticsData.getNextFilterStatesForNonAppliedFilterId());
+        test('Should give a dictionary of FilteringStat by filter', () => {
+            expect(deserializeFilteringData.getNextFilterStates()).toEqual(filteringStatisticsData.getNextFilterStates());
         });
         
         filterConfigDataFixture.getAllFilterGroupIds().forEach(filterGroupId => {

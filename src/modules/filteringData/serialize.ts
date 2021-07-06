@@ -4,7 +4,6 @@ import { GroupId, FilterId, FilterConfigData } from 'modules/filterConfiguration
 export interface SerializedFilteringData {
   documentsIdsValidated: DocumentId[];
   documentsIdsRejectedByMultipleFilters: DocumentId[];
-  nextFilterStatesForNonAppliedFilterId: Dictionary<NextFilterState>;
   documentsIdsRejectedByGroupId: Dictionary<DocumentId[]>;
   nextFilterStateForFilterId: Dictionary<NextFilterState>;
   nextFilterStates: Dictionary<NextFilterState>;
@@ -13,7 +12,6 @@ export interface SerializedFilteringData {
 export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filteringData: FilteringData): SerializedFilteringData => {
   const documentsIdsValidated = filteringData.getDocumentsIdsValidated();
   const documentsIdsRejectedByMultipleFilters = filteringData.getDocumentsIdsRejectedByMultipleFilters();
-  const nextFilterStatesForNonAppliedFilterId = filteringData.getNextFilterStatesForNonAppliedFilterId();
   const nextFilterStates = filteringData.getNextFilterStates();
 
   const groupIds = filterConfigData.getAllFilterGroupIds();
@@ -31,7 +29,6 @@ export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filterin
   return {
     documentsIdsValidated,
     documentsIdsRejectedByMultipleFilters,
-    nextFilterStatesForNonAppliedFilterId,
     nextFilterStates,
     documentsIdsRejectedByGroupId, 
     nextFilterStateForFilterId
@@ -41,13 +38,11 @@ export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filterin
 export const deserialize = (serializedFilteringData: SerializedFilteringData): FilteringData => {
   const getDocumentsIdsValidated = () => serializedFilteringData.documentsIdsValidated;
   const getDocumentsIdsRejectedByMultipleFilters = () => serializedFilteringData.documentsIdsRejectedByMultipleFilters;
-  const getNextFilterStatesForNonAppliedFilterId = () => serializedFilteringData.nextFilterStatesForNonAppliedFilterId;
   const getNextFilterStates = () => serializedFilteringData.nextFilterStates;
   const getNextFilterStateForFilterId = (filterId: FilterId) => (serializedFilteringData.nextFilterStateForFilterId[filterId]);
   const getDocumentsIdsRejectedByGroupId = (groupId: GroupId) => (serializedFilteringData.documentsIdsRejectedByGroupId[groupId]);
 
   return {
-    getNextFilterStatesForNonAppliedFilterId,
     getNextFilterStates,
     getNextFilterStateForFilterId,
     getDocumentsIdsRejectedByGroupId,

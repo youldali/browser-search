@@ -15,7 +15,6 @@ export type NextFilterState = {
 
 export interface FilteringData {
     getNextFilterStates: () => Dictionary<NextFilterState>,
-    getNextFilterStatesForNonAppliedFilterId: () => Dictionary<NextFilterState>
     getNextFilterStateForFilterId: (filterId: FilterId) => NextFilterState,
     getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => DocumentId[],
     getDocumentsIdsRejectedByMultipleFilters: () => DocumentId[],
@@ -132,17 +131,6 @@ const getFilteringData =
             );
         }
 
-        const getNextFilterStatesForNonAppliedFilterId = (): Dictionary<NextFilterState> => {
-            const filterIdsNotApplied = filterConfigData.getFilterIdsNotApplied();
-            const filteringStatsByNonAppliedFilterId = filterIdsNotApplied.reduce((nextFilterStateDictionary: Dictionary<NextFilterState>, filterId) => {
-                const filteringStat = getNextFilterStateForFilterId(filterId);
-                nextFilterStateDictionary[filterId] = filteringStat;
-                return nextFilterStateDictionary;
-            }, {});
-
-            return filteringStatsByNonAppliedFilterId;
-        }
-
         const getNextFilterStates = (): Dictionary<NextFilterState> => {
             const filterIds = filterConfigData.getAllFilterIds();
             const filteringStatsByFilterId = filterIds.reduce((nextFilterStateDictionary: Dictionary<NextFilterState>, filterId) => {
@@ -156,7 +144,6 @@ const getFilteringData =
 
         return {
             getNextFilterStates,
-            getNextFilterStatesForNonAppliedFilterId,
             getNextFilterStateForFilterId,
             getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => filteringStatusToDocumentsIds.get(groupId) ?? [],
             getDocumentsIdsRejectedByMultipleFilters: () => filteringStatusToDocumentsIds.get(false) ?? [],

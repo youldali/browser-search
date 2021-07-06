@@ -17,10 +17,6 @@ describe('createFilteringData', () => {
         expect(filteringStatisticsData.getDocumentsIdsRejectedByMultipleFilters()).toMatchSnapshot();
     });
 
-    test('Should give a dictionary of FilteringStat by filter non applied', () => {
-        expect(filteringStatisticsData.getNextFilterStatesForNonAppliedFilterId()).toMatchSnapshot();
-    });
-
     test('Should give a dictionary of FilteringStat by filter', () => {
         expect(filteringStatisticsData.getNextFilterStates()).toMatchSnapshot();
     });

@@ -54,33 +54,6 @@ Object {
 }
 `;
 
-exports[`createFilteringData Should give a dictionary of FilteringStat by filter non applied 1`] = `
-Object {
-  "activity-3": Object {
-    "documentIds": Array [
-      3,
-    ],
-    "type": "added",
-  },
-  "numberOfPeople": Object {
-    "documentIds": Array [
-      1,
-    ],
-    "type": "narrowed",
-  },
-  "priceMax": Object {
-    "documentIds": Array [
-      0,
-    ],
-    "type": "narrowed",
-  },
-  "priceMin2": Object {
-    "documentIds": Array [],
-    "type": "added",
-  },
-}
-`;
-
 exports[`createFilteringData Should give all the FilteringStat by filter "activity-3" 1`] = `
 Object {
   "documentIds": Array [
