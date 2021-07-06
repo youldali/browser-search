@@ -1,5 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`createFilteringData Should give a dictionary of FilteringStat by filter 1`] = `
+Object {
+  "activity-1": Object {
+    "documentIds": Array [
+      0,
+      1,
+    ],
+    "type": "matching",
+  },
+  "activity-2": Object {
+    "documentIds": Array [
+      1,
+    ],
+    "type": "matching",
+  },
+  "activity-3": Object {
+    "documentIds": Array [
+      3,
+    ],
+    "type": "added",
+  },
+  "numberOfPeople": Object {
+    "documentIds": Array [
+      1,
+    ],
+    "type": "narrowed",
+  },
+  "priceMax": Object {
+    "documentIds": Array [
+      0,
+    ],
+    "type": "narrowed",
+  },
+  "priceMax2": Object {
+    "documentIds": Array [
+      0,
+      1,
+    ],
+    "type": "matching",
+  },
+  "priceMin": Object {
+    "documentIds": Array [
+      0,
+      1,
+    ],
+    "type": "matching",
+  },
+  "priceMin2": Object {
+    "documentIds": Array [],
+    "type": "added",
+  },
+}
+`;
+
 exports[`createFilteringData Should give a dictionary of FilteringStat by filter non applied 1`] = `
 Object {
   "activity-3": Object {

@@ -20,7 +20,7 @@ export interface Item {
 }
 
 export const itemsFixture: Item[] = [
-    { id: 0, price: 250, numberOfPeople: 1, activity: ['swimming', 'tennis']},
+    { id: 0, price: 250, numberOfPeople: 1, activity: ['swimming']},
     { id: 1, price: 1000, numberOfPeople: 2, activity: ['football', 'swimming', 'tennis', 'golfing']},
     { id: 2, price: 20, numberOfPeople: 5, activity: ['swimming', 'tennis'] },
     { id: 3, price: 1000, numberOfPeople: 1, activity: ['football', 'golfing']},
@@ -56,7 +56,7 @@ export const filterIdToMatchingDocumentIdsFixture: FilterIdToMatchingDocumentIds
   [filterDictionaryFixture.priceMax2.id]: [0, 1, 2, 3, 4],
   [filterDictionaryFixture.numberOfPeople.id]: [1, 4],
   [filterDictionaryFixture['activity-1'].id]: [0, 1, 2],
-  [filterDictionaryFixture['activity-2'].id]: [0, 1, 2],
+  [filterDictionaryFixture['activity-2'].id]: [1, 2],
   [filterDictionaryFixture['activity-3'].id]: [1, 3],
 }
 

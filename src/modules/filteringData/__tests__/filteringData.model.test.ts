@@ -20,6 +20,10 @@ describe('createFilteringData', () => {
     test('Should give a dictionary of FilteringStat by filter non applied', () => {
         expect(filteringStatisticsData.getNextFilterStatesForNonAppliedFilterId()).toMatchSnapshot();
     });
+
+    test('Should give a dictionary of FilteringStat by filter', () => {
+        expect(filteringStatisticsData.getNextFilterStates()).toMatchSnapshot();
+    });
     
     filterConfigDataFixture.getAllFilterGroupIds().forEach(filterGroupId => {
         test(`Should give all the document id rejected by group "${filterGroupId}"`, () => {
