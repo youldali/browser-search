@@ -7,12 +7,14 @@ export interface SerializedFilteringData {
   nextFilterStatesForNonAppliedFilterId: Dictionary<NextFilterState>;
   documentsIdsRejectedByGroupId: Dictionary<DocumentId[]>;
   nextFilterStateForFilterId: Dictionary<NextFilterState>;
+  nextFilterStates: Dictionary<NextFilterState>;
 }
 
 export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filteringData: FilteringData): SerializedFilteringData => {
   const documentsIdsValidated = filteringData.getDocumentsIdsValidated();
   const documentsIdsRejectedByMultipleFilters = filteringData.getDocumentsIdsRejectedByMultipleFilters();
   const nextFilterStatesForNonAppliedFilterId = filteringData.getNextFilterStatesForNonAppliedFilterId();
+  const nextFilterStates = filteringData.getNextFilterStates();
 
   const groupIds = filterConfigData.getAllFilterGroupIds();
   const documentsIdsRejectedByGroupId = groupIds.reduce((acc: Dictionary<DocumentId[]>, groupId: GroupId): Dictionary<DocumentId[]> => {
@@ -30,6 +32,7 @@ export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filterin
     documentsIdsValidated,
     documentsIdsRejectedByMultipleFilters,
     nextFilterStatesForNonAppliedFilterId,
+    nextFilterStates,
     documentsIdsRejectedByGroupId, 
     nextFilterStateForFilterId
   }
@@ -39,11 +42,13 @@ export const deserialize = (serializedFilteringData: SerializedFilteringData): F
   const getDocumentsIdsValidated = () => serializedFilteringData.documentsIdsValidated;
   const getDocumentsIdsRejectedByMultipleFilters = () => serializedFilteringData.documentsIdsRejectedByMultipleFilters;
   const getNextFilterStatesForNonAppliedFilterId = () => serializedFilteringData.nextFilterStatesForNonAppliedFilterId;
+  const getNextFilterStates = () => serializedFilteringData.nextFilterStates;
   const getNextFilterStateForFilterId = (filterId: FilterId) => (serializedFilteringData.nextFilterStateForFilterId[filterId]);
   const getDocumentsIdsRejectedByGroupId = (groupId: GroupId) => (serializedFilteringData.documentsIdsRejectedByGroupId[groupId]);
 
   return {
     getNextFilterStatesForNonAppliedFilterId,
+    getNextFilterStates,
     getNextFilterStateForFilterId,
     getDocumentsIdsRejectedByGroupId,
     getDocumentsIdsRejectedByMultipleFilters,

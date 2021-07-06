@@ -7,7 +7,12 @@ export type NextFilterStateStat = {
 {
   type: 'narrowed';
   nextNumberOfDocuments: number;
-};
+} |
+{
+  type: 'matching';
+  matchingNumberOfDocuments: number;
+}
+;
 
 export type ResponseSuccess<T> = { 
   outcome: 'success', 

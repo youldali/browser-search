@@ -5,6 +5,9 @@ export declare type NextFilterStateStat = {
 } | {
     type: 'narrowed';
     nextNumberOfDocuments: number;
+} | {
+    type: 'matching';
+    matchingNumberOfDocuments: number;
 };
 export declare type ResponseSuccess<T> = {
     outcome: 'success';

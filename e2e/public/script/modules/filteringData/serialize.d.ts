@@ -6,6 +6,7 @@ export interface SerializedFilteringData {
     nextFilterStatesForNonAppliedFilterId: Dictionary<NextFilterState>;
     documentsIdsRejectedByGroupId: Dictionary<DocumentId[]>;
     nextFilterStateForFilterId: Dictionary<NextFilterState>;
+    nextFilterStates: Dictionary<NextFilterState>;
 }
 export declare const serialize: <T>(filterConfigData: FilterConfigData<T>) => (filteringData: FilteringData) => SerializedFilteringData;
 export declare const deserialize: (serializedFilteringData: SerializedFilteringData) => FilteringData;

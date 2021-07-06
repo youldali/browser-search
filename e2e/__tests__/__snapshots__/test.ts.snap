@@ -172,6 +172,10 @@ Object {
       "nextNumberOfDocuments": 4,
       "type": "narrowed",
     },
+    "red": Object {
+      "matchingNumberOfDocuments": 7,
+      "type": "matching",
+    },
   },
 }
 `;
@@ -232,6 +236,10 @@ Object {
     "middleAged": Object {
       "nextNumberOfDocuments": 5,
       "type": "narrowed",
+    },
+    "red": Object {
+      "matchingNumberOfDocuments": 8,
+      "type": "matching",
     },
   },
 }
@@ -312,6 +320,10 @@ Object {
     "highAged": Object {
       "nextDocumentsAdded": 3,
       "type": "added",
+    },
+    "lowAged": Object {
+      "matchingNumberOfDocuments": 4,
+      "type": "matching",
     },
     "middleAged": Object {
       "nextDocumentsAdded": 8,
@@ -684,9 +696,17 @@ Object {
   ],
   "numberOfDocuments": 9,
   "stats": Object {
+    "blue": Object {
+      "matchingNumberOfDocuments": 4,
+      "type": "matching",
+    },
     "engineer": Object {
       "nextNumberOfDocuments": 0,
       "type": "narrowed",
+    },
+    "green": Object {
+      "matchingNumberOfDocuments": 1,
+      "type": "matching",
     },
     "highAged": Object {
       "nextNumberOfDocuments": 1,
@@ -699,6 +719,10 @@ Object {
     "middleAged": Object {
       "nextNumberOfDocuments": 6,
       "type": "narrowed",
+    },
+    "red": Object {
+      "matchingNumberOfDocuments": 7,
+      "type": "matching",
     },
   },
 }
@@ -724,9 +748,21 @@ Object {
   ],
   "numberOfDocuments": 1,
   "stats": Object {
+    "blue": Object {
+      "matchingNumberOfDocuments": 1,
+      "type": "matching",
+    },
     "engineer": Object {
       "nextNumberOfDocuments": 0,
       "type": "narrowed",
+    },
+    "green": Object {
+      "matchingNumberOfDocuments": 0,
+      "type": "matching",
+    },
+    "highAged": Object {
+      "matchingNumberOfDocuments": 1,
+      "type": "matching",
     },
     "lowAged": Object {
       "nextDocumentsAdded": 2,
@@ -735,6 +771,10 @@ Object {
     "middleAged": Object {
       "nextDocumentsAdded": 6,
       "type": "added",
+    },
+    "red": Object {
+      "matchingNumberOfDocuments": 1,
+      "type": "matching",
     },
   },
 }
@@ -863,6 +903,10 @@ Object {
       "nextNumberOfDocuments": 4,
       "type": "narrowed",
     },
+    "red": Object {
+      "matchingNumberOfDocuments": 7,
+      "type": "matching",
+    },
   },
 }
 `;
@@ -915,6 +959,10 @@ Object {
       "nextNumberOfDocuments": 0,
       "type": "narrowed",
     },
+    "engineer": Object {
+      "matchingNumberOfDocuments": 0,
+      "type": "matching",
+    },
     "green": Object {
       "nextNumberOfDocuments": 0,
       "type": "narrowed",
@@ -922,6 +970,10 @@ Object {
     "highAged": Object {
       "nextDocumentsAdded": 0,
       "type": "added",
+    },
+    "lowAged": Object {
+      "matchingNumberOfDocuments": 0,
+      "type": "matching",
     },
     "middleAged": Object {
       "nextDocumentsAdded": 1,
@@ -1006,6 +1058,10 @@ Array [
         "nextNumberOfDocuments": 4,
         "type": "narrowed",
       },
+      "red": Object {
+        "matchingNumberOfDocuments": 7,
+        "type": "matching",
+      },
     },
   },
   Object {
@@ -1055,6 +1111,10 @@ Array [
     ],
     "numberOfDocuments": 4,
     "stats": Object {
+      "blue": Object {
+        "matchingNumberOfDocuments": 4,
+        "type": "matching",
+      },
       "engineer": Object {
         "nextNumberOfDocuments": 0,
         "type": "narrowed",
@@ -1106,6 +1166,10 @@ Object {
     "blue": Object {
       "nextNumberOfDocuments": 0,
       "type": "narrowed",
+    },
+    "engineer": Object {
+      "matchingNumberOfDocuments": 1,
+      "type": "matching",
     },
     "green": Object {
       "nextNumberOfDocuments": 0,

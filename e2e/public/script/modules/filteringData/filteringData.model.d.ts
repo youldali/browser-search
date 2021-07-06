@@ -6,10 +6,11 @@ export interface FilterIdToMatchingDocumentIds {
     [key: string]: DocumentId[];
 }
 export declare type NextFilterState = {
-    type: 'added' | 'narrowed';
+    type: 'added' | 'narrowed' | 'matching';
     documentIds: DocumentId[];
 };
 export interface FilteringData {
+    getNextFilterStates: () => Dictionary<NextFilterState>;
     getNextFilterStatesForNonAppliedFilterId: () => Dictionary<NextFilterState>;
     getNextFilterStateForFilterId: (filterId: FilterId) => NextFilterState;
     getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => DocumentId[];

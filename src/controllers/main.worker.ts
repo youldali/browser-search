@@ -63,7 +63,7 @@ const processRequest = async <T>(request: Request<T>) => {
     const eitherAsyncFilteringStats = 
       liftedFilteringData
         .map(filteringData => {
-          const nextFilterStates = filteringData.getNextFilterStatesForNonAppliedFilterId();
+          const nextFilterStates = filteringData.getNextFilterStates();
           const nextFilterStatesStats = map<Dictionary<NextFilterState>, Dictionary<NextFilterStateStat>>(getNextFilterStateStat, nextFilterStates)
           const matchingDocumentIds = filteringData.getDocumentsIdsValidated();
           return {
@@ -101,11 +101,16 @@ const getNextFilterStateStat = (nextFilterState: NextFilterState): NextFilterSta
   {
     type: nextFilterState.type,
     nextDocumentsAdded: nextFilterState.documentIds.length,
-  } :
+  } : nextFilterState.type === 'narrowed' ?
   {
     type: nextFilterState.type,
     nextNumberOfDocuments: nextFilterState.documentIds.length,
+  } :
+  {
+    type: nextFilterState.type,
+    matchingNumberOfDocuments: nextFilterState.documentIds.length,
   }
+
 )
 
 type FilteringStats = {
