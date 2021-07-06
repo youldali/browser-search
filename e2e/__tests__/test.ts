@@ -122,7 +122,7 @@ describe('Browser Search', () => {
         expect(documents).toMatchSnapshot();
       })
     
-      it('sorts by name ASC, gets the first 5 persons (page 1)', async () => {
+      it('sorts by name ASC, gets the first 5 persons (page 0)', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
           const [results] = window.browserSearch.searchStore<Person>({
             filterConfig, 
@@ -130,7 +130,7 @@ describe('Browser Search', () => {
             filtersApplied: [],
             orderBy: 'name',
             orderDirection: 'ASC',
-            page: 1,
+            page: 0,
             perPage: 5,
           });
           return results;
@@ -140,7 +140,7 @@ describe('Browser Search', () => {
         expect(documents).toMatchSnapshot();
       })
     
-      it('sorts by name ASC, gets the next 5 persons (page 2)', async () => {
+      it('sorts by name ASC, gets the next 5 persons (page 1)', async () => {
         const documents = await page.evaluate(({filterConfig, storeId}) => {
           const [results] = window.browserSearch.searchStore<Person>({
             filterConfig, 
@@ -148,7 +148,7 @@ describe('Browser Search', () => {
             filtersApplied: [],
             orderBy: 'name',
             orderDirection: 'ASC',
-            page: 2,
+            page: 1,
             perPage: 5,
           });
           return results;
@@ -375,7 +375,7 @@ describe('Browser Search', () => {
             orderBy: 'name',
             orderDirection: 'ASC',
             perPage: 2,
-            page: 1,
+            page: 0,
           });
 
           const resultsB = resultsA.then( _ => {
@@ -386,7 +386,7 @@ describe('Browser Search', () => {
               orderBy: 'name',
               orderDirection: 'DESC',
               perPage: 2,
-              page: 2
+              page: 1
             })
             return results;
           });
@@ -410,7 +410,7 @@ describe('Browser Search', () => {
             orderBy: 'name',
             orderDirection: 'ASC',
             perPage: 2,
-            page: 1,
+            page: 0,
           })
           return results;
         }, { filterConfig, storeId } as any);
@@ -427,7 +427,7 @@ describe('Browser Search', () => {
             orderBy: 'name',
             orderDirection: 'ASC',
             perPage: 2,
-            page: 1,
+            page: 0,
           })
           return results;
         }, { filterConfig, storeId } as any);

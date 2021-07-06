@@ -8,13 +8,13 @@ exports[`validateRequest it should return an error when order by is invalid 1`] 
 
 exports[`validateRequest it should return an error when order direction is invalid 1`] = `[Error: Request Error: The order direction property must be either "ASC" | "DESC"]`;
 
+exports[`validateRequest it should return an error when page is invalid 1`] = `[Error: Request Error: The page property must be a natural number]`;
+
+exports[`validateRequest it should return an error when page is invalid number 1`] = `[Error: Request Error: The page property must be a natural number]`;
+
 exports[`validateRequest it should return an error when per page is invalid 1`] = `[Error: Request Error: The per page property must be a natural number]`;
 
-exports[`validateRequest it should return an error when per page is invalid 2`] = `[Error: Request Error: The page property must be a natural number]`;
-
 exports[`validateRequest it should return an error when per page is invalid number 1`] = `[Error: Request Error: The per page property must be a natural number]`;
-
-exports[`validateRequest it should return an error when per page is invalid number 2`] = `[Error: Request Error: The page property must be a natural number]`;
 
 exports[`validateRequest it should return an error when storeId is invalid 1`] = `[Error: Request Error: The store Id must be a string.]`;
 
@@ -126,7 +126,7 @@ Object {
   ],
   "orderBy": "price",
   "orderDirection": "ASC",
-  "page": 2,
+  "page": 0,
   "perPage": 5,
   "storeId": "items",
 }

@@ -8,7 +8,7 @@ import { validateFilterConfig } from '../../modules/filterConfiguration'
 const requestSchema = yup.object({
 	storeId: yup.string().typeError(requestErrors['Request/InvalidStoreId']).required(requestErrors['Request/InvalidStoreId']),
 	filtersApplied: yup.array().of(yup.string()).typeError(requestErrors['Request/InvalidFiltersApplied']),
-	page: yup.number().typeError(requestErrors['Request/InvalidPage']).positive(requestErrors['Request/InvalidPage']).round('round').optional(),
+	page: yup.number().typeError(requestErrors['Request/InvalidPage']).min(0, requestErrors['Request/InvalidPage']).round('round').optional(),
   perPage: yup.number().typeError(requestErrors['Request/InvalidPerPage']).positive(requestErrors['Request/InvalidPerPage']).round('round').optional(),
   orderDirection: yup.string().typeError(requestErrors['Request/InvalidOrderDirection']).oneOf(['ASC', 'DESC'], requestErrors['Request/InvalidOrderDirection']).optional(),
 	orderBy: yup.string().typeError(requestErrors['Request/InvalidOrderBy']).optional(),

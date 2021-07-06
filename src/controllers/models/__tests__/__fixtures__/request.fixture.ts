@@ -37,7 +37,7 @@ export const getRequestFixture = createFixture<Request<Item>>({
   orderBy: 'price',
   orderDirection: 'ASC',
   perPage: 5,
-  page: 2,
+  page: 0,
 });
 
 export const getShortRequestFixture = createFixture<Request<Item>>({

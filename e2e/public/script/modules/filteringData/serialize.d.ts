@@ -3,7 +3,6 @@ import { FilterConfigData } from 'modules/filterConfiguration';
 export interface SerializedFilteringData {
     documentsIdsValidated: DocumentId[];
     documentsIdsRejectedByMultipleFilters: DocumentId[];
-    nextFilterStatesForNonAppliedFilterId: Dictionary<NextFilterState>;
     documentsIdsRejectedByGroupId: Dictionary<DocumentId[]>;
     nextFilterStateForFilterId: Dictionary<NextFilterState>;
     nextFilterStates: Dictionary<NextFilterState>;

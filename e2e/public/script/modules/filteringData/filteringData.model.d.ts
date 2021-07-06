@@ -11,7 +11,6 @@ export declare type NextFilterState = {
 };
 export interface FilteringData {
     getNextFilterStates: () => Dictionary<NextFilterState>;
-    getNextFilterStatesForNonAppliedFilterId: () => Dictionary<NextFilterState>;
     getNextFilterStateForFilterId: (filterId: FilterId) => NextFilterState;
     getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => DocumentId[];
     getDocumentsIdsRejectedByMultipleFilters: () => DocumentId[];

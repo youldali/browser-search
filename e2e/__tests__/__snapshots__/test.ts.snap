@@ -1427,7 +1427,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes sorts by name ASC, gets the first 5 persons (page 1) 1`] = `
+exports[`Browser Search searchStore successes sorts by name ASC, gets the first 5 persons (page 0) 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -1528,7 +1528,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes sorts by name ASC, gets the next 5 persons (page 2) 1`] = `
+exports[`Browser Search searchStore successes sorts by name ASC, gets the next 5 persons (page 1) 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [

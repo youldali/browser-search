@@ -49,7 +49,7 @@ describe('validateRequest', () => {
 		})
 	));
 
-	test('it should return an error when per page is invalid', () => (		
+	test('it should return an error when page is invalid', () => (		
 		validateRequest_(getRequestFixture({page: 'invalid'} as any))
 		.run()
 		.then(eitherRequestFixture => {
@@ -58,7 +58,7 @@ describe('validateRequest', () => {
 		})
 	));
 
-	test('it should return an error when per page is invalid number', () => (		
+	test('it should return an error when page is invalid number', () => (		
 		validateRequest_(getRequestFixture({page: -1} as any))
 		.run()
 		.then(eitherRequestFixture => {
