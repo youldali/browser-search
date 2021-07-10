@@ -20,27 +20,27 @@ import { Interval } from 'dataStructures/interval';
 export declare type GroupId = string;
 export declare type FilterId = string;
 export declare type FilterOperand = number | string | number[] | string[] | Interval;
-export interface Filter<T> {
-    id: string;
+export interface Filter<T, TFilterId extends string = string> {
+    id: TFilterId;
     field: keyof T;
     operator: Operator;
     operand: FilterOperand;
 }
-export declare type GroupOfFilters<T> = Filter<T>[];
-export declare type FilterConfig<T> = GroupOfFilters<T>[];
-export declare type FiltersApplied = FilterId[];
-export declare type GroupDictionary<T> = Record<GroupId, GroupOfFilters<T>>;
+export declare type GroupOfFilters<T, TFilterId extends string = string> = Filter<T, TFilterId>[];
+export declare type FilterConfig<T, TFilterId extends string = string> = GroupOfFilters<T, TFilterId>[];
+export declare type FiltersApplied<TFilterId extends string = string> = TFilterId[];
+export declare type GroupDictionary<T, TFilterId extends string = string> = Record<GroupId, GroupOfFilters<T, TFilterId>>;
 export declare type FilterIdToGroupId = Map<FilterId, GroupId>;
-export interface FilterConfigData<T> {
-    getFilterDictionary: () => Record<string, Filter<T>>;
-    getFiltersApplied: () => Filter<T>[];
-    getFiltersNotApplied: () => Filter<T>[];
-    getAllFilterIds: () => FilterId[];
-    getFilterIdsApplied: () => FilterId[];
-    getFilterIdsNotApplied: () => FilterId[];
-    getGroupDictionary: () => GroupDictionary<T>;
+export interface FilterConfigData<T, TFilterId extends string = string> {
+    getFilterDictionary: () => Record<TFilterId, Filter<T, TFilterId>>;
+    getFiltersApplied: () => Filter<T, TFilterId>[];
+    getFiltersNotApplied: () => Filter<T, TFilterId>[];
+    getAllFilterIds: () => TFilterId[];
+    getFilterIdsApplied: () => Partial<TFilterId>[];
+    getFilterIdsNotApplied: () => Partial<TFilterId>[];
+    getGroupDictionary: () => GroupDictionary<T, TFilterId>;
     getAllFilterGroupIds: () => GroupId[];
     getGroupIdsApplied: () => GroupId[];
     getGroupIdForFilter: (filterId: FilterId) => GroupId;
 }
-export declare const buildFilterConfigData: <T>(filterConfig: FilterConfig<T>) => (filterIdsApplied: FiltersApplied) => FilterConfigData<T>;
+export declare const buildFilterConfigData: <T, TFilterId extends string = string>(filterConfig: FilterConfig<T, TFilterId>) => (filterIdsApplied: TFilterId[]) => FilterConfigData<T, TFilterId>;

@@ -1,7 +1,3 @@
-export { 
-  FiltersApplied,
-  FilterConfig,
-} from '../modules/filterConfiguration'
 import * as hash from 'object-hash';
 import * as storage from '../apis/storage.util';
 import { EitherAsync } from 'purify-ts/EitherAsync'

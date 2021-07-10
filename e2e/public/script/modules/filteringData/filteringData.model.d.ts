@@ -16,7 +16,7 @@ export interface FilteringData {
     getDocumentsIdsRejectedByMultipleFilters: () => DocumentId[];
     getDocumentsIdsValidated: () => DocumentId[];
 }
-export declare const createFilteringData: <T>(filterConfigData: FilterConfigData<T>) => (filterIdToMatchingDocumentIds: FilterIdToMatchingDocumentIds) => {
+export declare const createFilteringData: <T>(filterConfigData: FilterConfigData<T, string>) => (filterIdToMatchingDocumentIds: FilterIdToMatchingDocumentIds) => {
     addFilteredObjectStatus(filteredItemStatus: FilteredItemStatus, documentId: DocumentId): void;
     setStatusValue(filteredItemStatus: FilteredItemStatus, idList: DocumentId[]): void;
     done(): FilteringData;

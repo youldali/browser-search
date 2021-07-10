@@ -27,7 +27,7 @@ export const validateRequest = <T>(extraValidators: ExtraValidators) => (request
 	.chain(request => validateStoreExistence(extraValidators.getStoreExist)(request))
 )
 
-type BaseRequest<T> = Omit<Request<T>, 'filterConfig'>
+type BaseRequest<T, TFilterId extends string = string> = Omit<Request<T, TFilterId>, 'filterConfig'>
 const validateBaseRequest = <T>(request: any): EitherAsync<Error, BaseRequest<T>> => {
   const validation = requestSchema.validate(request, {
 		strict: true,
@@ -39,7 +39,7 @@ const validateBaseRequest = <T>(request: any): EitherAsync<Error, BaseRequest<T>
 	return EitherAsync.fromPromise(() => validation);
 }
 
-const validateStoreExistence = <T>(getStoreExist: ExtraValidators['getStoreExist']) => (request: Request<T>): EitherAsync<Error, Request<T>> => (
+const validateStoreExistence = <T, TFilterId extends string = string>(getStoreExist: ExtraValidators['getStoreExist']) => (request: Request<T, TFilterId>): EitherAsync<Error, Request<T, TFilterId>> => (
 	getStoreExist(request.storeId)
 	.map(doesStoreExist => {
 		if(doesStoreExist) {

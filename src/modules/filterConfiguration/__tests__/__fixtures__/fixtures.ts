@@ -12,7 +12,9 @@ interface Item {
   activity: ItemActivity[];
 }
 
-const filterDictionaryFixture: Record<string, Filter<Item>> = {
+type FilterIds = 'priceMin' | 'priceMax' | 'numberOfPeople' | 'activity-1' | 'activity-2' | 'activity-3';
+
+const filterDictionaryFixture: Record<FilterIds, Filter<Item, FilterIds>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 },
     numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: 'equals', operand: 2 },
@@ -22,7 +24,7 @@ const filterDictionaryFixture: Record<string, Filter<Item>> = {
 };
 export const getFilterDictionaryFixture = createFixture(filterDictionaryFixture);
 
-const filterConfigFixture: FilterConfig<Item> = [
+const filterConfigFixture: FilterConfig<Item, FilterIds> = [
     [filterDictionaryFixture.priceMin],
     [filterDictionaryFixture.priceMax],
     [filterDictionaryFixture.numberOfPeople],
@@ -30,4 +32,4 @@ const filterConfigFixture: FilterConfig<Item> = [
 ];
 export const getFilterConfigFixture = createArrayFixture(filterConfigFixture);
 
-export const getFiltersIdsAppliedFixture = createArrayFixture(['priceMin', 'activity-1', 'activity-2']);
+export const getFiltersIdsAppliedFixture = createArrayFixture<FilterIds>(['priceMin', 'activity-1', 'activity-2']);

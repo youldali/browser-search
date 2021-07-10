@@ -7,5 +7,5 @@ export interface SerializedFilteringData {
     nextFilterStateForFilterId: Record<string, NextFilterState>;
     nextFilterStates: Record<string, NextFilterState>;
 }
-export declare const serialize: <T>(filterConfigData: FilterConfigData<T>) => (filteringData: FilteringData) => SerializedFilteringData;
+export declare const serialize: <T>(filterConfigData: FilterConfigData<T, string>) => (filteringData: FilteringData) => SerializedFilteringData;
 export declare const deserialize: (serializedFilteringData: SerializedFilteringData) => FilteringData;

@@ -14,6 +14,8 @@ import { personGenerator, Person } from '../modules';
 import { usePersonQuery, usePersonTable } from './hooks';
 import { BrowserSearchProvider, useMutateStore } from './browserSearchHooks';
 
+export type FilterId = 'lowAged' | 'middleAged' | 'highAged' | 'lowSalary' | 'middleSalary' | 'highSalary' | 'professionDentist';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
@@ -27,9 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const App = () => {
   const classes = useStyles();
-  const [filtersApplied, setFiltersApplied] = useState<BS.FiltersApplied>([]);
+  const [filtersApplied, setFiltersApplied] = useState<BS.FiltersApplied<FilterId>>([]);
   const personsTableProps = usePersonTable();
-  const personQueryState = usePersonQuery({
+  const personQueryState = usePersonQuery<FilterId>({
     filtersApplied,
     orderBy: personsTableProps.orderBy,
     orderDirection: personsTableProps.orderDirection === 'desc' ? 'DESC' : 'ASC',
@@ -58,7 +60,7 @@ export const App = () => {
       <main className={classes.content}>
           <FilterPanel 
             personQueryState={personQueryState}
-            onFilterChange={(filtersApplied: BS.FiltersApplied) => setFiltersApplied(filtersApplied)}
+            onFilterChange={(filtersApplied: BS.FiltersApplied<FilterId>) => setFiltersApplied(filtersApplied)}
             filtersApplied={filtersApplied}
           />
           

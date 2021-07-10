@@ -11,9 +11,9 @@ const workerFunction = () => {
   //@worker
 }
 
-export type SearchResponse<T> = ResponseSuccess<T>['payload']
+export type SearchResponse<T, TFilterId extends string = string> = ResponseSuccess<T, TFilterId>['payload']
 export type AbortSearch = () => void;
-export const searchStore = <T>(request: Request<T>): [Promise<SearchResponse<T>>, AbortSearch] => {
+export const searchStore = <T, TFilterId extends string = string>(request: Request<T, TFilterId>): [Promise<SearchResponse<T, TFilterId>>, AbortSearch] => {
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 

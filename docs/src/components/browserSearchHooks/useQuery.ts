@@ -3,44 +3,44 @@ import { useCallback, useContext, useEffect, useReducer, Reducer } from 'react';
 import { BrowserSearchContext } from './provider';
 
 
-export type SearchReponse<T> = Omit<BS.SearchResponse<T>, '_cacheStatus_'>;
+export type SearchReponse<T, TFilterId extends string = string> = Omit<BS.SearchResponse<T, TFilterId>, '_cacheStatus_'>;
 
 export type IdleState = {
   status: 'idle',
 }
 
-export type LoadingQueryState<T> = {
+export type LoadingQueryState<T, TFilterId extends string = string> = {
   status: 'loading',
-  request: BS.Request<T>;
+  request: BS.Request<T, TFilterId>;
   abort: BS.AbortSearch;
 }
 
-export type SuccessQueryState<T> = {
+export type SuccessQueryState<T, TFilterId extends string = string> = {
   status: 'success',
-  request: BS.Request<T>;
-  response: SearchReponse<T>;
+  request: BS.Request<T, TFilterId>;
+  response: SearchReponse<T, TFilterId>;
 }
 
-export type ErrorQueryState<T> = {
+export type ErrorQueryState<T, TFilterId extends string = string> = {
   status: 'error',
-  request: BS.Request<T>;
+  request: BS.Request<T, TFilterId>;
 }
 
 
-export type QueryState<T> = IdleState | LoadingQueryState<T> | SuccessQueryState<T> | ErrorQueryState<T>;
+export type QueryState<T, TFilterId extends string = string> = IdleState | LoadingQueryState<T, TFilterId> | SuccessQueryState<T, TFilterId> | ErrorQueryState<T, TFilterId>;
 
-type Action<T> =
-  | { type: 'searchStarted'; request: BS.Request<T>; abort: BS.AbortSearch}
-  | { type: 'searchCompleted'; response: BS.SearchResponse<T>; request: BS.Request<T>;}
-  | { type: 'searchFailed'; request: BS.Request<T>;}
+type Action<T, TFilterId extends string = string> =
+  | { type: 'searchStarted'; request: BS.Request<T, TFilterId>; abort: BS.AbortSearch}
+  | { type: 'searchCompleted'; response: BS.SearchResponse<T, TFilterId>; request: BS.Request<T, TFilterId>;}
+  | { type: 'searchFailed'; request: BS.Request<T, TFilterId>;}
   
-type SearchReducer<T> = Reducer<QueryState<T>, Action<T>>;
+type SearchReducer<T, TFilterId extends string = string> = Reducer<QueryState<T, TFilterId>, Action<T, TFilterId>>;
 
 const initialState: IdleState = {
   status: 'idle',
 };
 
-const reducer = <T>(state: QueryState<T>, action: Action<T>): QueryState<T> => {
+const reducer = <T, TFilterId extends string = string>(state: QueryState<T, TFilterId>, action: Action<T, TFilterId>): QueryState<T, TFilterId> => {
   switch (action.type) {
     case 'searchStarted': {
       if(state.status === 'loading') {
@@ -79,9 +79,9 @@ const reducer = <T>(state: QueryState<T>, action: Action<T>): QueryState<T> => {
 }
 
 
-export const useQuery = <T>(request: BS.Request<T>): QueryState<T> => {
+export const useQuery = <T, TFilterId extends string = string>(request: BS.Request<T, TFilterId>): QueryState<T, TFilterId> => {
   const queryClient = useContext(BrowserSearchContext);
-  const [state, dispatch] = useReducer<SearchReducer<T>>(
+  const [state, dispatch] = useReducer<SearchReducer<T, TFilterId>>(
     reducer,
     initialState,
   );

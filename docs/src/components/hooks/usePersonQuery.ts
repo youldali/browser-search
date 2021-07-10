@@ -5,10 +5,10 @@ import { Person } from '../../modules'
 import { useQuery, QueryState } from '../browserSearchHooks';
 import { storeId, filterConfig } from '../../modules';
 
-type Props = Pick<Request<Person>, 'filtersApplied' | 'orderBy' | 'orderDirection' | 'page' | 'perPage'>
+type Props<TFilterId extends string> = Pick<Request<Person, TFilterId>, 'filtersApplied' | 'orderBy' | 'orderDirection' | 'page' | 'perPage'>
 
-export const usePersonQuery = (props: Props): QueryState<Person> => {
-  const request: Request<Person> = useMemo(() => ({
+export const usePersonQuery = <TFilterId extends string>(props: Props<TFilterId>): QueryState<Person> => {
+  const request: Request<Person, TFilterId> = useMemo(() => ({
     storeId,
     filterConfig,
     ...props,

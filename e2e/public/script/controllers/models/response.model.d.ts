@@ -9,11 +9,11 @@ export declare type NextFilterStateStat = {
     type: 'matching';
     matchingNumberOfDocuments: number;
 };
-export declare type ResponseSuccess<T> = {
+export declare type ResponseSuccess<T, TFilterId extends string = string> = {
     outcome: 'success';
     payload: {
         documents: T[];
-        stats: Record<string, NextFilterStateStat>;
+        stats: Record<TFilterId, NextFilterStateStat>;
         numberOfDocuments: number;
         _cacheStatus_: CacheStatus;
     };

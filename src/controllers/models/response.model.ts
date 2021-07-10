@@ -14,11 +14,11 @@ export type NextFilterStateStat = {
 }
 ;
 
-export type ResponseSuccess<T> = { 
+export type ResponseSuccess<T, TFilterId extends string = string> = { 
   outcome: 'success', 
   payload: {
     documents: T[],
-    stats: Record<string, NextFilterStateStat>,
+    stats: Record<TFilterId, NextFilterStateStat>,
     numberOfDocuments: number,
     _cacheStatus_: CacheStatus
   },

@@ -11,10 +11,10 @@ export {
     FilterConfig,
 } from '../../modules/filterConfiguration'
 
-export interface Request<T> {
+export interface Request<T, TFilterId extends string = string> {
     storeId: StoreId;
-    filterConfig: FilterConfig<T>;
-	filtersApplied: FiltersApplied;
+    filterConfig: FilterConfig<T, TFilterId>;
+	filtersApplied: FiltersApplied<TFilterId>;
 	orderBy?: string;
 	orderDirection?: OrderDirection;
     page?: number;

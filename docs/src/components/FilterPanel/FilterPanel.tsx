@@ -17,6 +17,8 @@ import Chip from '@material-ui/core/Chip';
 
 import { QueryState } from '../browserSearchHooks';
 import { Person } from '../../modules';
+import {FilterId} from '../App';
+
 
 const drawerWidth = 240;
 
@@ -35,14 +37,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  filtersApplied: FiltersApplied;
-  personQueryState: QueryState<Person>;
-  onFilterChange: (filtersApplied: FiltersApplied) => void
+  filtersApplied: FiltersApplied<FilterId>;
+  personQueryState: QueryState<Person, FilterId>;
+  onFilterChange: (filtersApplied: FiltersApplied<FilterId>) => void
 }
 
-type FilterList = {
-  [key: string]: boolean
-}
 
 export const FilterPanel = ({
   personQueryState,
@@ -50,15 +49,15 @@ export const FilterPanel = ({
   onFilterChange,
 }: Props) => {
   const classes = useStyles();
-  const filters = filtersApplied.reduce((acc: FilterList, filter): FilterList => {
+  const filters = filtersApplied.reduce((acc: Record<FilterId, boolean>, filter): Record<FilterId, boolean> => {
     acc[filter] = true;
     return acc
-  }, {});
+  }, {} as Record<FilterId, boolean>);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilters = { ...filters, [event.target.name]: event.target.checked };
     const newFiltersApplied = Object.keys(pickBy((isApplied: boolean) => isApplied, newFilters));
-    onFilterChange(newFiltersApplied);
+    onFilterChange(newFiltersApplied as FilterId[]);
   };
   
   const resetAllFilters = () => {

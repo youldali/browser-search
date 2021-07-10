@@ -2,11 +2,11 @@ import { Request, ResponseSuccess } from './controllers';
 import * as storage from './apis/storage.util';
 export * from './controllers';
 export { Operator } from './modules/filterConfiguration';
-export declare type SearchResponse<T> = ResponseSuccess<T>['payload'];
+export declare type SearchResponse<T, TFilterId extends string = string> = ResponseSuccess<T, TFilterId>['payload'];
 export declare type AbortSearch = () => void;
-export declare const searchStore: <T>(request: Request<T>) => [Promise<{
+export declare const searchStore: <T, TFilterId extends string = string>(request: Request<T, TFilterId>) => [Promise<{
     documents: T[];
-    stats: Record<string, import("./controllers").NextFilterStateStat>;
+    stats: Record<TFilterId, import("./controllers").NextFilterStateStat>;
     numberOfDocuments: number;
     _cacheStatus_: import("./controllers").CacheStatus;
 }>, AbortSearch];

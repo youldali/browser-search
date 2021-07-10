@@ -13,8 +13,8 @@ export interface FilteringStatisticsResponse {
     numberOfMatchingItems: number,
     totalNumberOfItems: number,
 };
-interface RequestEvent<T> extends MessageEvent {
-    data: Request<T>,
+interface RequestEvent<T, TFilterId extends string = string> extends MessageEvent {
+    data: Request<T, TFilterId>,
 }
 
 interface FilteringDataExtended extends FilteringData {
@@ -28,7 +28,7 @@ self.onmessage = <T>(event: RequestEvent<T>): void => {
 };
 
 
-const getFilteringDataFromRequest = <T>(request: Request<T>): EitherAsync<Error, FilteringDataExtended> => {
+const getFilteringDataFromRequest = <T, TFilterId extends string = string>(request: Request<T, TFilterId>): EitherAsync<Error, FilteringDataExtended> => {
   const eitherAsyncFilteringDataFromRequest = 
     validateRequest<T>({getStoreExist: doesStoreExist})(request)
       .map(request => buildFilterConfigData(request.filterConfig)(request.filtersApplied))
@@ -51,7 +51,7 @@ const getFilteringDataFromRequest = <T>(request: Request<T>): EitherAsync<Error,
   return eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);
 }
 
-const processRequest = async <T>(request: Request<T>) => {
+const processRequest = async <T, TFilterId extends string = string>(request: Request<T, TFilterId>) => {
     const eitherAsyncFilteringData = getFilteringDataFromRequest(request);
     const liftedFilteringData = EitherAsync.liftEither(await eitherAsyncFilteringData.run());
 

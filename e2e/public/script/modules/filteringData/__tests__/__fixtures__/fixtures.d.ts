@@ -12,7 +12,7 @@ export declare const itemsFixture: Item[];
 export declare const filterDictionaryFixture: Record<string, Filter<Item>>;
 export declare const filterConfigFixture: FilterConfig<Item>;
 export declare const filtersIdsAppliedFixture: string[];
-export declare const filterConfigDataFixture: import("modules/filterConfiguration").FilterConfigData<Item>;
+export declare const filterConfigDataFixture: import("modules/filterConfiguration").FilterConfigData<Item, string>;
 export declare const filterIdToMatchingDocumentIdsFixture: FilterIdToMatchingDocumentIds;
 export declare const getFilterStatusForItem: (target: Item) => FilteredItemStatus;
 export declare const itemToFilteringStatusFixture: Map<any, FilteredItemStatus>;

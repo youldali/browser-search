@@ -8,4 +8,4 @@ export interface FilteringFunctionsData<T> {
     getGroupIdFromFilterFunctions: (filterFunctions: FilterFunction<T>[]) => string | undefined;
     getFilterFunctionsCollections: () => FilterFunctionsCollections<T>;
 }
-export declare const getFilteringFunctionsData: <T>(filterConfigData: FilterConfigData<T>) => FilteringFunctionsData<T>;
+export declare const getFilteringFunctionsData: <T>(filterConfigData: FilterConfigData<T, string>) => FilteringFunctionsData<T>;

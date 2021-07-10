@@ -23,37 +23,37 @@ import { isNil, mergeAll, reject, uniq } from 'ramda';
 export type GroupId = string;
 export type FilterId = string;
 export type FilterOperand = number | string | number[] | string[] | Interval;
-export interface Filter<T> {
-	id: string,
+export interface Filter<T, TFilterId extends string = string> {
+	id: TFilterId,
 	field: keyof T,
 	operator: Operator,
 	operand: FilterOperand,
 };
-export type GroupOfFilters<T> = Filter<T>[];
-export type FilterConfig<T>  = GroupOfFilters<T>[];
-export type FiltersApplied = FilterId[];
-export type GroupDictionary<T>  = Record<GroupId, GroupOfFilters<T> >;
+export type GroupOfFilters<T, TFilterId extends string = string> = Filter<T, TFilterId>[];
+export type FilterConfig<T, TFilterId extends string = string>  = GroupOfFilters<T, TFilterId>[];
+export type FiltersApplied<TFilterId extends string = string> = TFilterId[];
+export type GroupDictionary<T, TFilterId extends string = string>  = Record<GroupId, GroupOfFilters<T, TFilterId> >;
 export type FilterIdToGroupId = Map<FilterId, GroupId>; 
 
-export interface FilterConfigData<T> {
-	getFilterDictionary: () => Record<string, Filter<T>>,
-	getFiltersApplied: () => Filter<T> [],
-	getFiltersNotApplied: () => Filter<T> [],
-	getAllFilterIds: () => FilterId[],
-	getFilterIdsApplied: () => FilterId[],
-	getFilterIdsNotApplied: () => FilterId[],
-	getGroupDictionary: () => GroupDictionary<T> ,
+export interface FilterConfigData<T, TFilterId extends string = string> {
+	getFilterDictionary: () => Record<TFilterId, Filter<T, TFilterId>>,
+	getFiltersApplied: () => Filter<T, TFilterId> [],
+	getFiltersNotApplied: () => Filter<T, TFilterId> [],
+	getAllFilterIds: () => TFilterId[],
+	getFilterIdsApplied: () => Partial<TFilterId>[],
+	getFilterIdsNotApplied: () => Partial<TFilterId>[],
+	getGroupDictionary: () => GroupDictionary<T, TFilterId> ,
 	getAllFilterGroupIds: () => GroupId[],
 	getGroupIdsApplied: () => GroupId[],
 	getGroupIdForFilter: (filterId: FilterId) => GroupId,
 }
 
 export const buildFilterConfigData = 
-	<T>(filterConfig: FilterConfig<T>) =>
-	(filterIdsApplied: FiltersApplied): FilterConfigData<T> => {
+	<T, TFilterId extends string = string>(filterConfig: FilterConfig<T, TFilterId>) =>
+	(filterIdsApplied: TFilterId[]): FilterConfigData<T, TFilterId> => {
 		const filterData = getFilterData(filterConfig)(filterIdsApplied);
 		const groupData = getGroupData(filterConfig);
-		const groupDictionaryOfFiltersApplied = filterData.uniqueFilterIdsApplied.reduce((groupDictionary: Record<string, GroupId>, filterId: FilterId): Record<string, GroupId> => {
+		const groupDictionaryFromFiltersApplied = filterData.uniqueFilterIdsApplied.reduce((groupDictionary: Record<GroupId, GroupId>, filterId: FilterId): Record<GroupId, GroupId> => {
 			const group = groupData.filterToGroup.get(filterId);
 			if(group) {
 				groupDictionary[group] = group;
@@ -61,7 +61,7 @@ export const buildFilterConfigData =
 			return groupDictionary;
 		}, {});
 
-		const groupIdsApplied = Object.values(groupDictionaryOfFiltersApplied);
+		const groupIdsApplied = Object.values(groupDictionaryFromFiltersApplied);
 
 		return {
 			getAllFilterIds: () => filterData.allFilterIds,
@@ -78,26 +78,26 @@ export const buildFilterConfigData =
 	}
 
 const getFilterConfigToFilterDictionary = 
-	<T>(filterConfig: FilterConfig<T>): Record<string, Filter<T>> => {
-		const groupOfFiltersToDictionary = (filterDictionary: Record<string, Filter<T>>, currentFilter: Filter<T>): Record<string, Filter<T>> => {
+	<T, TFilterId extends string = string>(filterConfig: FilterConfig<T, TFilterId>): Record<TFilterId, Filter<T, TFilterId>> => {
+		const groupOfFiltersToDictionary = (filterDictionary: Record<TFilterId, Filter<T, TFilterId>>, currentFilter: Filter<T, TFilterId>): Record<TFilterId, Filter<T, TFilterId>> => {
 			filterDictionary[currentFilter.id] = currentFilter;
 			return filterDictionary;
 		}
 
 		const filterDictionary = mergeAll(
-			filterConfig.map(groupOfFilters => groupOfFilters.reduce(groupOfFiltersToDictionary, {}))
+			filterConfig.map(groupOfFilters => groupOfFilters.reduce(groupOfFiltersToDictionary, {} as Record<TFilterId, Filter<T, TFilterId>>))
 		);
 
 		return filterDictionary;
 }
 
 const getFilterData = 
-	<T>(filterConfig: FilterConfig<T>) =>
-	(filterIdsApplied: FiltersApplied) => {
+	<T, TFilterId extends string = string>(filterConfig: FilterConfig<T, TFilterId>) =>
+	(filterIdsApplied: TFilterId[]) => {
 	const filterDictionary = getFilterConfigToFilterDictionary(filterConfig);
-	const allFilterIds = Object.values(filterDictionary).map(filter => filter.id);
+	const allFilterIds = Object.values<Filter<T, TFilterId>>(filterDictionary).map(filter=> filter.id);
 	const filterIdsNotApplied = reject(
-		(filterId => filterIdsApplied.includes(filterId)),
+		((filterId: TFilterId) => filterIdsApplied.includes(filterId)),
 		allFilterIds
 	);
 
@@ -119,10 +119,10 @@ const getFilterData =
 }
 
 const getGroupData = 
-	<T>(filterConfig: FilterConfig<T>) => {
+	<T, TFilterId extends string = string>(filterConfig: FilterConfig<T, TFilterId>) => {
 	
 	const groupDictionary = filterConfig.reduce(
-		(filtersByGroupDictionary: GroupDictionary<T>, groupOfFilters, index) => {
+		(filtersByGroupDictionary: GroupDictionary<T, TFilterId>, groupOfFilters, index) => {
 			filtersByGroupDictionary[index.toString()] = groupOfFilters;
 			return filtersByGroupDictionary;
 		},
