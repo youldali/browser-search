@@ -80,8 +80,8 @@ export const findElementIndexInSortedArray = <T>(a: Array<T>) => (searchedElemen
 }
 
 // [string | number] -> { [string] : string | number}
-export const transformIntoObject = (array: Array<StringOrNumber>): Dictionary<StringOrNumber> => {
-	const reducer = (accumulator: Dictionary<StringOrNumber>, currentValue: StringOrNumber) => {
+export const transformIntoObject = (array: Array<StringOrNumber>): Record<string, StringOrNumber> => {
+	const reducer = (accumulator: Record<string, StringOrNumber>, currentValue: StringOrNumber) => {
 		accumulator[currentValue] = currentValue;
 		return accumulator;
 	}
@@ -89,7 +89,7 @@ export const transformIntoObject = (array: Array<StringOrNumber>): Dictionary<St
 }
 
 // [string | number] -> { [string | number] : string | number} -> [string | number]
-export const filterAgainstObjectKeys = (array: StringOrNumber[]) => (object: Dictionary<StringOrNumber>) =>
+export const filterAgainstObjectKeys = (array: StringOrNumber[]) => (object: Record<string, StringOrNumber>) =>
 	array.filter( itemId => object[itemId] !== undefined)
 
 

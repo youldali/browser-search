@@ -64,7 +64,7 @@ const processRequest = async <T>(request: Request<T>) => {
       liftedFilteringData
         .map(filteringData => {
           const nextFilterStates = filteringData.getNextFilterStates();
-          const nextFilterStatesStats = map<Dictionary<NextFilterState>, Dictionary<NextFilterStateStat>>(getNextFilterStateStat, nextFilterStates)
+          const nextFilterStatesStats = map<Record<string, NextFilterState>, Record<string, NextFilterStateStat>>(getNextFilterStateStat, nextFilterStates)
           const matchingDocumentIds = filteringData.getDocumentsIdsValidated();
           return {
             stats: nextFilterStatesStats,
@@ -114,7 +114,7 @@ const getNextFilterStateStat = (nextFilterState: NextFilterState): NextFilterSta
 )
 
 type FilteringStats = {
-  stats: Dictionary<NextFilterStateStat>,
+  stats: Record<string, NextFilterStateStat>,
   numberOfDocuments: number,
 }
 const postResult = <T>(documents: T[]) => (filteringStats: FilteringStats) => (cacheStatus: CacheStatus): void => {

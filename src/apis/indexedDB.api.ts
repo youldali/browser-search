@@ -6,7 +6,7 @@ const { indexedDB } = globalScope;
 
 type OnUpgradeCallback = (db: IDBDatabase) => void
 export type IndexValue = { multiEntry?: boolean, unique?: boolean };
-export type IndexConfig = Dictionary<IndexValue>;
+export type IndexConfig = Record<string, IndexValue>;
 
 export const closeDatabase = (db: IDBDatabase): Promise<void> => Promise.resolve(db.close())
 

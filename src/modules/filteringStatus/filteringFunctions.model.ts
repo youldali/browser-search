@@ -8,7 +8,7 @@ import {
 
 export type FilterFunction<T> = (target: T) => boolean;
 export type FilterFunctionsCollections<T> = FilterFunction<T>[][];
-export type GroupIdToFilterFunctions<T> = Dictionary<FilterFunction<T>[]>;
+export type GroupIdToFilterFunctions<T> = Record<GroupId, FilterFunction<T>[]>;
 export type FilterFunctionsToGroupId<T> = Map<FilterFunction<T>[], GroupId>
 
 export interface FilteringFunctionsData<T> {

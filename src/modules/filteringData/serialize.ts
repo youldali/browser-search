@@ -4,9 +4,9 @@ import { GroupId, FilterId, FilterConfigData } from 'modules/filterConfiguration
 export interface SerializedFilteringData {
   documentsIdsValidated: DocumentId[];
   documentsIdsRejectedByMultipleFilters: DocumentId[];
-  documentsIdsRejectedByGroupId: Dictionary<DocumentId[]>;
-  nextFilterStateForFilterId: Dictionary<NextFilterState>;
-  nextFilterStates: Dictionary<NextFilterState>;
+  documentsIdsRejectedByGroupId: Record<string, DocumentId[]>;
+  nextFilterStateForFilterId: Record<string, NextFilterState>;
+  nextFilterStates: Record<string, NextFilterState>;
 }
 
 export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filteringData: FilteringData): SerializedFilteringData => {
@@ -15,13 +15,13 @@ export const serialize = <T>(filterConfigData: FilterConfigData<T>) => (filterin
   const nextFilterStates = filteringData.getNextFilterStates();
 
   const groupIds = filterConfigData.getAllFilterGroupIds();
-  const documentsIdsRejectedByGroupId = groupIds.reduce((acc: Dictionary<DocumentId[]>, groupId: GroupId): Dictionary<DocumentId[]> => {
+  const documentsIdsRejectedByGroupId = groupIds.reduce((acc: Record<string, DocumentId[]>, groupId: GroupId): Record<string, DocumentId[]> => {
     acc[groupId] = filteringData.getDocumentsIdsRejectedByGroupId(groupId);
     return acc;
   }, {})
 
   const filterIds = filterConfigData.getAllFilterIds();
-  const nextFilterStateForFilterId = filterIds.reduce((acc: Dictionary<NextFilterState>, filterId: FilterId): Dictionary<NextFilterState> => {
+  const nextFilterStateForFilterId = filterIds.reduce((acc: Record<string, NextFilterState>, filterId: FilterId): Record<string, NextFilterState> => {
     acc[filterId] = filteringData.getNextFilterStateForFilterId(filterId);
     return acc;
   }, {})

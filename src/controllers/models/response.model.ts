@@ -18,7 +18,7 @@ export type ResponseSuccess<T> = {
   outcome: 'success', 
   payload: {
     documents: T[],
-    stats: Dictionary<NextFilterStateStat>,
+    stats: Record<string, NextFilterStateStat>,
     numberOfDocuments: number,
     _cacheStatus_: CacheStatus
   },

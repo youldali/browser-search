@@ -9,7 +9,7 @@ export interface Item {
     activity: ItemActivity[];
 }
 export declare const itemsFixture: Item[];
-export declare const filterDictionaryFixture: Dictionary<Filter<Item>>;
+export declare const filterDictionaryFixture: Record<string, Filter<Item>>;
 export declare const filterConfigFixture: FilterConfig<Item>;
 export declare const filtersIdsAppliedFixture: string[];
 export declare const filterConfigDataFixture: import("modules/filterConfiguration").FilterConfigData<Item>;

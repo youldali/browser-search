@@ -145,7 +145,9 @@ const FilterStat = ({
   return (
     nextFilterStateStat.type === 'added' ?
     <Chip variant="default" color="primary" size="small" label={`+ ${nextFilterStateStat.nextDocumentsAdded}`}/> :
-    <Chip variant="default" color="primary" size="small" label={nextFilterStateStat.nextNumberOfDocuments}/>
+    nextFilterStateStat.type === 'narrowed' ?
+    <Chip variant="default" color="primary" size="small" label={nextFilterStateStat.nextNumberOfDocuments}/> : 
+    <Chip variant="default" color="secondary" size="small" label={nextFilterStateStat.matchingNumberOfDocuments}/>
   )
   
 }

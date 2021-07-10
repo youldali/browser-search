@@ -3,7 +3,7 @@ export declare type IndexValue = {
     multiEntry?: boolean;
     unique?: boolean;
 };
-export declare type IndexConfig = Dictionary<IndexValue>;
+export declare type IndexConfig = Record<string, IndexValue>;
 export declare const closeDatabase: (db: IDBDatabase) => Promise<void>;
 export declare const openDatabaseLatestVersion: (dbName: string) => Promise<IDBDatabase>;
 export declare const createOrOpenDatabase: (dbName: string) => (dbVersion: number) => (onUpgradeCallback: OnUpgradeCallback) => Promise<IDBDatabase>;

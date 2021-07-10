@@ -29,10 +29,10 @@ export interface Filter<T> {
 export declare type GroupOfFilters<T> = Filter<T>[];
 export declare type FilterConfig<T> = GroupOfFilters<T>[];
 export declare type FiltersApplied = FilterId[];
-export declare type GroupDictionary<T> = Dictionary<GroupOfFilters<T>>;
+export declare type GroupDictionary<T> = Record<GroupId, GroupOfFilters<T>>;
 export declare type FilterIdToGroupId = Map<FilterId, GroupId>;
 export interface FilterConfigData<T> {
-    getFilterDictionary: () => Dictionary<Filter<T>>;
+    getFilterDictionary: () => Record<string, Filter<T>>;
     getFiltersApplied: () => Filter<T>[];
     getFiltersNotApplied: () => Filter<T>[];
     getAllFilterIds: () => FilterId[];

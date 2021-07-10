@@ -12,7 +12,7 @@ interface Item {
   activity: ItemActivity[];
 }
 
-const filterDictionaryFixture: Dictionary<Filter<Item>> = {
+const filterDictionaryFixture: Record<string, Filter<Item>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 },
     numberOfPeople: { id: 'numberOfPeople', field: 'numberOfPeople', operator: 'equals', operand: 2 },

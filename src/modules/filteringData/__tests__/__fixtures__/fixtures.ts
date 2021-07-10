@@ -27,7 +27,7 @@ export const itemsFixture: Item[] = [
     { id: 4, price: 10, numberOfPeople: 2, activity: ['football']},
 ];
 
-export const filterDictionaryFixture: Dictionary<Filter<Item>> = {
+export const filterDictionaryFixture: Record<string, Filter<Item>> = {
     priceMin: { id: 'priceMin', field: 'price', operator: 'gt', operand: 200 },
     priceMax: { id: 'priceMax', field: 'price', operator: 'lt', operand: 500 },
     priceMin2: { id: 'priceMin2', field: 'price', operator: 'gt', operand: 500 },

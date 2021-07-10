@@ -10,7 +10,7 @@ export declare type NextFilterState = {
     documentIds: DocumentId[];
 };
 export interface FilteringData {
-    getNextFilterStates: () => Dictionary<NextFilterState>;
+    getNextFilterStates: () => Record<string, NextFilterState>;
     getNextFilterStateForFilterId: (filterId: FilterId) => NextFilterState;
     getDocumentsIdsRejectedByGroupId: (groupId: GroupId) => DocumentId[];
     getDocumentsIdsRejectedByMultipleFilters: () => DocumentId[];

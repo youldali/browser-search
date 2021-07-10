@@ -6,7 +6,7 @@ export declare type SearchResponse<T> = ResponseSuccess<T>['payload'];
 export declare type AbortSearch = () => void;
 export declare const searchStore: <T>(request: Request<T>) => [Promise<{
     documents: T[];
-    stats: Dictionary<import("./controllers").NextFilterStateStat>;
+    stats: Record<string, import("./controllers").NextFilterStateStat>;
     numberOfDocuments: number;
     _cacheStatus_: import("./controllers").CacheStatus;
 }>, AbortSearch];

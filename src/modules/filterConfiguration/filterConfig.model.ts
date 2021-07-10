@@ -32,11 +32,11 @@ export interface Filter<T> {
 export type GroupOfFilters<T> = Filter<T>[];
 export type FilterConfig<T>  = GroupOfFilters<T>[];
 export type FiltersApplied = FilterId[];
-export type GroupDictionary<T>  = Dictionary<GroupOfFilters<T> >; //key is FilterGroup
+export type GroupDictionary<T>  = Record<GroupId, GroupOfFilters<T> >;
 export type FilterIdToGroupId = Map<FilterId, GroupId>; 
 
 export interface FilterConfigData<T> {
-	getFilterDictionary: () => Dictionary<Filter<T>>,
+	getFilterDictionary: () => Record<string, Filter<T>>,
 	getFiltersApplied: () => Filter<T> [],
 	getFiltersNotApplied: () => Filter<T> [],
 	getAllFilterIds: () => FilterId[],
@@ -53,7 +53,7 @@ export const buildFilterConfigData =
 	(filterIdsApplied: FiltersApplied): FilterConfigData<T> => {
 		const filterData = getFilterData(filterConfig)(filterIdsApplied);
 		const groupData = getGroupData(filterConfig);
-		const groupDictionaryOfFiltersApplied = filterData.uniqueFilterIdsApplied.reduce((groupDictionary: Dictionary<GroupId>, filterId: FilterId): Dictionary<GroupId> => {
+		const groupDictionaryOfFiltersApplied = filterData.uniqueFilterIdsApplied.reduce((groupDictionary: Record<string, GroupId>, filterId: FilterId): Record<string, GroupId> => {
 			const group = groupData.filterToGroup.get(filterId);
 			if(group) {
 				groupDictionary[group] = group;
@@ -78,8 +78,8 @@ export const buildFilterConfigData =
 	}
 
 const getFilterConfigToFilterDictionary = 
-	<T>(filterConfig: FilterConfig<T>): Dictionary<Filter<T>> => {
-		const groupOfFiltersToDictionary = (filterDictionary: Dictionary<Filter<T>>, currentFilter: Filter<T>): Dictionary<Filter<T>> => {
+	<T>(filterConfig: FilterConfig<T>): Record<string, Filter<T>> => {
+		const groupOfFiltersToDictionary = (filterDictionary: Record<string, Filter<T>>, currentFilter: Filter<T>): Record<string, Filter<T>> => {
 			filterDictionary[currentFilter.id] = currentFilter;
 			return filterDictionary;
 		}

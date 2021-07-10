@@ -3,9 +3,9 @@ import { FilterConfigData } from 'modules/filterConfiguration';
 export interface SerializedFilteringData {
     documentsIdsValidated: DocumentId[];
     documentsIdsRejectedByMultipleFilters: DocumentId[];
-    documentsIdsRejectedByGroupId: Dictionary<DocumentId[]>;
-    nextFilterStateForFilterId: Dictionary<NextFilterState>;
-    nextFilterStates: Dictionary<NextFilterState>;
+    documentsIdsRejectedByGroupId: Record<string, DocumentId[]>;
+    nextFilterStateForFilterId: Record<string, NextFilterState>;
+    nextFilterStates: Record<string, NextFilterState>;
 }
 export declare const serialize: <T>(filterConfigData: FilterConfigData<T>) => (filteringData: FilteringData) => SerializedFilteringData;
 export declare const deserialize: (serializedFilteringData: SerializedFilteringData) => FilteringData;

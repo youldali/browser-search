@@ -6,7 +6,7 @@ interface Item {
     numberOfPeople: number;
     activity: ItemActivity[];
 }
-export declare const getFilterDictionaryFixture: (overrides?: Partial<Dictionary<Filter<Item>>>) => Dictionary<Filter<Item>> & Partial<Dictionary<Filter<Item>>>;
+export declare const getFilterDictionaryFixture: (overrides?: Partial<Record<string, Filter<Item>>>) => Record<string, Filter<Item>> & Partial<Record<string, Filter<Item>>>;
 export declare const getFilterConfigFixture: (overrides?: import("../../filterConfig.model").GroupOfFilters<Item>[]) => import("../../filterConfig.model").GroupOfFilters<Item>[];
 export declare const getFiltersIdsAppliedFixture: (overrides?: string[]) => string[];
 export {};
