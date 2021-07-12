@@ -3,7 +3,9 @@ import { Person } from '.'
 
 export const storeId = 'Persons';
 
-export const filterConfig: FilterConfig<Person> = [ 
+export type FilterId = 'lowAged' | 'middleAged' | 'highAged' | 'lowSalary' | 'middleSalary' | 'highSalary' | 'professionDentist';
+
+export const filterConfig: FilterConfig<Person, FilterId> = [ 
   [ 
     { id: 'lowAged', field: 'age', operator: 'lt', operand: 30 },
     { id: 'middleAged', field: 'age', operator: 'inRangeClosed', operand: [30, 50] },

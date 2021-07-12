@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { FiltersApplied, NextFilterStateStat } from 'browser-search';
 import { pickBy } from 'ramda';
 
@@ -14,13 +14,13 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import Typography from '@material-ui/core/Typography';
 
 import { QueryState } from '../browserSearchHooks';
-import { Person } from '../../modules';
-import {FilterId} from '../App';
+import { FilterId, Person } from '../../modules';
 
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +33,13 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerContainer: {
       overflow: 'auto',
     },
+    filterLabel: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    filterControlLabel: {
+      flexGrow: 1,
+    }
   }),
 );
 
@@ -94,15 +101,18 @@ export const FilterPanel = ({
           <FormGroup>
             <FormControlLabel
               control={<Switch checked={filters.lowAged ?? false} onChange={handleFilterChange} name="lowAged" />}
-              label={<div>{'<'} 30 years old <FilterStat nextFilterStateStat={stats?.lowAged} /></div>}
+              label={<FilterLabel>{'<'} 30 years old <FilterStat nextFilterStateStat={stats?.lowAged} /></FilterLabel>}
+              classes={{label: classes.filterControlLabel}}
             />
             <FormControlLabel
               control={<Switch checked={filters.middleAged ?? false} onChange={handleFilterChange} name="middleAged" />}
-              label="Between 30 and 50 years old"
+              label={<FilterLabel>Between 30 and 50 years old <FilterStat nextFilterStateStat={stats?.middleAged} /></FilterLabel>}
+              classes={{label: classes.filterControlLabel}}
             />
             <FormControlLabel
               control={<Switch checked={filters.highAged ?? false} onChange={handleFilterChange} name="highAged" />}
-              label="> 50 years old"
+              label={<FilterLabel>{'>'} 50 years old <FilterStat nextFilterStateStat={stats?.highAged} /></FilterLabel>}
+              classes={{label: classes.filterControlLabel}}
             />
           </FormGroup>
         </FormControl>
@@ -114,15 +124,18 @@ export const FilterPanel = ({
           <FormGroup>
             <FormControlLabel
               control={<Switch checked={filters.lowSalary ?? false} onChange={handleFilterChange} name="lowSalary" />}
-              label="< 40 000"
+              label={<FilterLabel>{'<'} 40 000$ <FilterStat nextFilterStateStat={stats?.lowSalary} /></FilterLabel>}
+              classes={{label: classes.filterControlLabel}}
             />
             <FormControlLabel
               control={<Switch checked={filters.middleSalary ?? false} onChange={handleFilterChange} name="middleSalary" />}
-              label="40 000 and 70 000"
+              label={<FilterLabel>Between 40 000$ and 70 000$ <FilterStat nextFilterStateStat={stats?.middleSalary} /></FilterLabel>}
+              classes={{label: classes.filterControlLabel}}
             />
             <FormControlLabel
               control={<Switch checked={filters.highSalary ?? false} onChange={handleFilterChange} name="highSalary" />}
-              label="> 70 000"
+              label={<FilterLabel>{'>'} 70 000$ <FilterStat nextFilterStateStat={stats?.highSalary} /></FilterLabel>}
+              classes={{label: classes.filterControlLabel}}
             />
           </FormGroup>
         </FormControl>
@@ -149,4 +162,21 @@ const FilterStat = ({
     <Chip variant="default" color="secondary" size="small" label={nextFilterStateStat.matchingNumberOfDocuments}/>
   )
   
+}
+
+type FilterLabelProps = {
+  children: ReactNode;
+}
+const FilterLabel = ({children}: FilterLabelProps) => {
+  const classes = useStyles();
+  return (
+    <Typography 
+      variant="button" 
+      display="block" 
+      gutterBottom
+      className={classes.filterLabel}
+    >
+      {children}
+    </Typography>
+  );
 }

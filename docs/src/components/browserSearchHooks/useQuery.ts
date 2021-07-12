@@ -34,7 +34,7 @@ type Action<T, TFilterId extends string = string> =
   | { type: 'searchCompleted'; response: BS.SearchResponse<T, TFilterId>; request: BS.Request<T, TFilterId>;}
   | { type: 'searchFailed'; request: BS.Request<T, TFilterId>;}
   
-type SearchReducer<T, TFilterId extends string = string> = Reducer<QueryState<T, TFilterId>, Action<T, TFilterId>>;
+type QueryReducer<T, TFilterId extends string = string> = Reducer<QueryState<T, TFilterId>, Action<T, TFilterId>>;
 
 const initialState: IdleState = {
   status: 'idle',
@@ -81,7 +81,7 @@ const reducer = <T, TFilterId extends string = string>(state: QueryState<T, TFil
 
 export const useQuery = <T, TFilterId extends string = string>(request: BS.Request<T, TFilterId>): QueryState<T, TFilterId> => {
   const queryClient = useContext(BrowserSearchContext);
-  const [state, dispatch] = useReducer<SearchReducer<T, TFilterId>>(
+  const [state, dispatch] = useReducer<QueryReducer<T, TFilterId>>(
     reducer,
     initialState,
   );

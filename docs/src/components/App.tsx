@@ -10,11 +10,9 @@ import { ItemTable } from './ItemTable';
 import { FilterPanel } from './FilterPanel';
 import { QuerySuspense } from './QuerySuspense';
 
-import { personGenerator, Person } from '../modules';
+import { personGenerator, FilterId, Person } from '../modules';
 import { usePersonQuery, usePersonTable } from './hooks';
 import { BrowserSearchProvider, useMutateStore } from './browserSearchHooks';
-
-export type FilterId = 'lowAged' | 'middleAged' | 'highAged' | 'lowSalary' | 'middleSalary' | 'highSalary' | 'professionDentist';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +29,7 @@ export const App = () => {
   const classes = useStyles();
   const [filtersApplied, setFiltersApplied] = useState<BS.FiltersApplied<FilterId>>([]);
   const personsTableProps = usePersonTable();
-  const personQueryState = usePersonQuery<FilterId>({
+  const personQueryState = usePersonQuery({
     filtersApplied,
     orderBy: personsTableProps.orderBy,
     orderDirection: personsTableProps.orderDirection === 'desc' ? 'DESC' : 'ASC',
@@ -58,7 +56,7 @@ export const App = () => {
       <CssBaseline />
       <AppBar />
       <main className={classes.content}>
-          <FilterPanel 
+          <FilterPanel
             personQueryState={personQueryState}
             onFilterChange={(filtersApplied: BS.FiltersApplied<FilterId>) => setFiltersApplied(filtersApplied)}
             filtersApplied={filtersApplied}
