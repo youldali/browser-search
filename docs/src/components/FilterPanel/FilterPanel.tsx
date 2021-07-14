@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { FiltersApplied, NextFilterStateStat } from 'browser-search';
+import React from 'react';
+import { FiltersApplied } from 'browser-search';
 import { pickBy } from 'ramda';
 
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,15 +10,13 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
+
 
 import { QueryState } from '../browserSearchHooks';
 import { FilterId, Person } from '../../modules';
-
+import { SwitchField } from './SwitchField';
 
 const drawerWidth = 280;
 
@@ -33,13 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerContainer: {
       overflow: 'auto',
     },
-    filterLabel: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    filterControlLabel: {
-      flexGrow: 1,
-    }
   }),
 );
 
@@ -99,20 +90,28 @@ export const FilterPanel = ({
         <FormControl component="fieldset">
           <FormLabel component="legend">By age</FormLabel>
           <FormGroup>
-            <FormControlLabel
-              control={<Switch checked={filters.lowAged ?? false} onChange={handleFilterChange} name="lowAged" />}
-              label={<FilterLabel>{'<'} 30 years old <FilterStat nextFilterStateStat={stats?.lowAged} /></FilterLabel>}
-              classes={{label: classes.filterControlLabel}}
+            <SwitchField
+              filterName='lowAged'
+              label='< 30 years old'
+              isChecked={filters.lowAged ?? false}
+              onSwitchChange={handleFilterChange}
+              nextFilterStateStat={stats?.lowAged}
             />
-            <FormControlLabel
-              control={<Switch checked={filters.middleAged ?? false} onChange={handleFilterChange} name="middleAged" />}
-              label={<FilterLabel>Between 30 and 50 years old <FilterStat nextFilterStateStat={stats?.middleAged} /></FilterLabel>}
-              classes={{label: classes.filterControlLabel}}
+
+            <SwitchField
+              filterName='middleAged'
+              label='Between 30 and 50 years old'
+              isChecked={filters.middleAged ?? false}
+              onSwitchChange={handleFilterChange}
+              nextFilterStateStat={stats?.middleAged}
             />
-            <FormControlLabel
-              control={<Switch checked={filters.highAged ?? false} onChange={handleFilterChange} name="highAged" />}
-              label={<FilterLabel>{'>'} 50 years old <FilterStat nextFilterStateStat={stats?.highAged} /></FilterLabel>}
-              classes={{label: classes.filterControlLabel}}
+
+            <SwitchField
+              filterName='highAged'
+              label='> 50 years old'
+              isChecked={filters.highAged ?? false}
+              onSwitchChange={handleFilterChange}
+              nextFilterStateStat={stats?.highAged}
             />
           </FormGroup>
         </FormControl>
@@ -122,20 +121,28 @@ export const FilterPanel = ({
         <FormControl component="fieldset">
           <FormLabel component="legend">By salary</FormLabel>
           <FormGroup>
-            <FormControlLabel
-              control={<Switch checked={filters.lowSalary ?? false} onChange={handleFilterChange} name="lowSalary" />}
-              label={<FilterLabel>{'<'} 40 000$ <FilterStat nextFilterStateStat={stats?.lowSalary} /></FilterLabel>}
-              classes={{label: classes.filterControlLabel}}
+            <SwitchField
+              filterName='lowSalary'
+              label='< 40 000$'
+              isChecked={filters.lowSalary ?? false}
+              onSwitchChange={handleFilterChange}
+              nextFilterStateStat={stats?.lowSalary}
             />
-            <FormControlLabel
-              control={<Switch checked={filters.middleSalary ?? false} onChange={handleFilterChange} name="middleSalary" />}
-              label={<FilterLabel>Between 40 000$ and 70 000$ <FilterStat nextFilterStateStat={stats?.middleSalary} /></FilterLabel>}
-              classes={{label: classes.filterControlLabel}}
+
+            <SwitchField
+              filterName='middleSalary'
+              label='Between 40 000$ and 70 000$'
+              isChecked={filters.middleSalary ?? false}
+              onSwitchChange={handleFilterChange}
+              nextFilterStateStat={stats?.middleSalary}
             />
-            <FormControlLabel
-              control={<Switch checked={filters.highSalary ?? false} onChange={handleFilterChange} name="highSalary" />}
-              label={<FilterLabel>{'>'} 70 000$ <FilterStat nextFilterStateStat={stats?.highSalary} /></FilterLabel>}
-              classes={{label: classes.filterControlLabel}}
+
+            <SwitchField
+              filterName='highSalary'
+              label='> 70 000$'
+              isChecked={filters.highSalary ?? false}
+              onSwitchChange={handleFilterChange}
+              nextFilterStateStat={stats?.highSalary}
             />
           </FormGroup>
         </FormControl>
@@ -144,39 +151,3 @@ export const FilterPanel = ({
   );
 }
 
-type FilterStatProps = {
-  nextFilterStateStat?: NextFilterStateStat;
-}
-const FilterStat = ({
-  nextFilterStateStat
-}: FilterStatProps) => {
-  if (!nextFilterStateStat) {
-    return null;
-  }
-
-  return (
-    nextFilterStateStat.type === 'added' ?
-    <Chip variant="default" color="primary" size="small" label={`+ ${nextFilterStateStat.nextDocumentsAdded}`}/> :
-    nextFilterStateStat.type === 'narrowed' ?
-    <Chip variant="default" color="primary" size="small" label={nextFilterStateStat.nextNumberOfDocuments}/> : 
-    <Chip variant="default" color="secondary" size="small" label={nextFilterStateStat.matchingNumberOfDocuments}/>
-  )
-  
-}
-
-type FilterLabelProps = {
-  children: ReactNode;
-}
-const FilterLabel = ({children}: FilterLabelProps) => {
-  const classes = useStyles();
-  return (
-    <Typography 
-      variant="button" 
-      display="block" 
-      gutterBottom
-      className={classes.filterLabel}
-    >
-      {children}
-    </Typography>
-  );
-}

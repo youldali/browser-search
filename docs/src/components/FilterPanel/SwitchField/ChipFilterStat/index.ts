@@ -1,0 +1,1 @@
+export { ChipFilterStat } from './ChipFilterStat';
