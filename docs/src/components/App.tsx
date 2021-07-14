@@ -12,7 +12,7 @@ import { QuerySuspense } from './QuerySuspense';
 
 import { personGenerator, FilterId, Person } from '../modules';
 import { usePersonQuery, usePersonTable } from './hooks';
-import { BrowserSearchProvider, useMutateStore } from './browserSearchHooks';
+import { BrowserSearchProvider, useMutateStore, useIndexValues } from './browserSearchHooks';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +38,10 @@ export const App = () => {
   });
 
   const mutateStore = useMutateStore<Person>('Persons');
+
+  const indexValuesQueryState = useIndexValues<string>('Persons', 'country')
+
+  console.log(indexValuesQueryState);
 
   useEffect(() => {
     mutateStore.createStore({

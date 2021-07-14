@@ -39,15 +39,15 @@ export const buildQueryClient = () => {
     )
   }
 
-  const createStore = BS.createStore
+  const createStore = BS.createStore;
 
   const deleteStore = mutateStore(BS.deleteStore);
 
-  const addDataToStore = <T>(storeId: BS.StoreId) => (data: T[]) => mutateStore((storeId: BS.StoreId) => BS.addDocumentsToStore<T>(storeId)(data))(storeId)
+  const addDataToStore = <T>(storeId: BS.StoreId) => (data: T[]) => mutateStore((storeId: BS.StoreId) => BS.addDocumentsToStore<T>(storeId)(data))(storeId);
 
-  const subscribeToStoreChange = notifier.addStoreListener
+  const subscribeToStoreChange = notifier.addStoreListener;
 
-  const unsubscribeToStoreChange = notifier.removeStoreListener
+  const unsubscribeToStoreChange = notifier.removeStoreListener;
 
   return {
     queryStore,

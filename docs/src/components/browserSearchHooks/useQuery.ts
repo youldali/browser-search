@@ -110,7 +110,7 @@ export const useQuery = <T, TFilterId extends string = string>(request: BS.Reque
 
   useEffect(() => {
     runQuery();
-  }, [request]);
+  }, [runQuery]);
 
   return state;
 }
