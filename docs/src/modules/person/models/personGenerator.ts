@@ -1,6 +1,7 @@
 import { Chance } from 'chance';
-import {times} from 'ramda';
-import {Person} from './person.model';
+import { times } from 'ramda';
+
+import { Person } from './person';
 
 const chance = new Chance();
 

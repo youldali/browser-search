@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
+import { BrowserSearchProvider, useIndexValues, useMutateStore } from './browserSearchHooks';
+import { store } from './redux';
 import './index.css';
 import { App } from './components';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <BrowserSearchProvider>
+        <App />
+      </BrowserSearchProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

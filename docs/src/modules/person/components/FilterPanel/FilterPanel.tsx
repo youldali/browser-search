@@ -1,9 +1,7 @@
 import React from 'react';
-import { FiltersApplied } from 'browser-search';
-import { pickBy } from 'ramda';
-
+import { useDispatch, useSelector } from 'react-redux';
 import Toolbar from '@material-ui/core/Toolbar';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -11,9 +9,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 
+import { AppDispatch } from '../../../../redux';
+import { QueryState } from '../../../../browserSearchHooks';
+import { FilterId, Person, resetFilters, selectFiltersAppliedAsRecord, switchFilter } from '../..';
 
-import { QueryState } from '../browserSearchHooks';
-import { FilterId, Person } from '../../modules';
 import { SwitchField } from './SwitchField';
 
 const drawerWidth = 280;
@@ -33,31 +32,23 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  filtersApplied: FiltersApplied<FilterId>;
   personQueryState: QueryState<Person, FilterId>;
-  onFilterChange: (filtersApplied: FiltersApplied<FilterId>) => void
 }
-
 
 export const FilterPanel = ({
   personQueryState,
-  filtersApplied,
-  onFilterChange,
 }: Props) => {
+  const dispatch: AppDispatch = useDispatch();
+  const filtersAppliedAsRecord = useSelector(selectFiltersAppliedAsRecord);
+
   const classes = useStyles();
-  const filters = filtersApplied.reduce((acc: Record<FilterId, boolean>, filter): Record<FilterId, boolean> => {
-    acc[filter] = true;
-    return acc
-  }, {} as Record<FilterId, boolean>);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newFilters = { ...filters, [event.target.name]: event.target.checked };
-    const newFiltersApplied = Object.keys(pickBy((isApplied: boolean) => isApplied, newFilters));
-    onFilterChange(newFiltersApplied as FilterId[]);
+    dispatch(switchFilter(event.target.name as FilterId));
   };
   
   const resetAllFilters = () => {
-    onFilterChange([]);
+    dispatch(resetFilters());
   };
 
   const stats = personQueryState.status === 'success' ? personQueryState.response.stats : null;
@@ -91,7 +82,7 @@ export const FilterPanel = ({
             <SwitchField
               filterName='lowAged'
               label='< 30 years old'
-              isChecked={filters.lowAged ?? false}
+              isChecked={filtersAppliedAsRecord.lowAged ?? false}
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.lowAged}
             />
@@ -99,7 +90,7 @@ export const FilterPanel = ({
             <SwitchField
               filterName='middleAged'
               label='Between 30 and 50 years old'
-              isChecked={filters.middleAged ?? false}
+              isChecked={filtersAppliedAsRecord.middleAged ?? false}
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.middleAged}
             />
@@ -107,7 +98,7 @@ export const FilterPanel = ({
             <SwitchField
               filterName='highAged'
               label='> 50 years old'
-              isChecked={filters.highAged ?? false}
+              isChecked={filtersAppliedAsRecord.highAged ?? false}
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.highAged}
             />
@@ -122,7 +113,7 @@ export const FilterPanel = ({
             <SwitchField
               filterName='lowSalary'
               label='< 40 000$'
-              isChecked={filters.lowSalary ?? false}
+              isChecked={filtersAppliedAsRecord.lowSalary ?? false}
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.lowSalary}
             />
@@ -130,7 +121,7 @@ export const FilterPanel = ({
             <SwitchField
               filterName='middleSalary'
               label='Between 40 000$ and 70 000$'
-              isChecked={filters.middleSalary ?? false}
+              isChecked={filtersAppliedAsRecord.middleSalary ?? false}
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.middleSalary}
             />
@@ -138,7 +129,7 @@ export const FilterPanel = ({
             <SwitchField
               filterName='highSalary'
               label='> 70 000$'
-              isChecked={filters.highSalary ?? false}
+              isChecked={filtersAppliedAsRecord.highSalary ?? false}
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.highSalary}
             />

@@ -1,7 +1,6 @@
 import { FilterConfig } from 'browser-search';
-import { Person } from '.'
 
-export const storeId = 'Persons';
+import { Person } from '../models';
 
 export type FilterId = 'lowAged' | 'middleAged' | 'highAged' | 'lowSalary' | 'middleSalary' | 'highSalary' | 'professionDentist';
 

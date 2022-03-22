@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { Request } from 'browser-search';
 
-import { Person } from '../../modules'
-import { useQuery, QueryState } from '../browserSearchHooks';
-import { storeId, FilterId, filterConfig } from '../../modules';
+import { filterConfig, FilterId, storeId } from '../browserSearch';
+import { Person } from '../models';
+import { QueryState, useQuery } from '../../../browserSearchHooks';
 
 type Props = Pick<Request<Person, FilterId>, 'filtersApplied' | 'orderBy' | 'orderDirection' | 'page' | 'perPage'>
 

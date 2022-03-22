@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
-import { QueryState, SearchReponse } from './browserSearchHooks';
+
+import { QueryState, SearchReponse } from '../../../../browserSearchHooks';
 
 type QuerySuspenseProps<T> = {
   queryState: QueryState<T>;
