@@ -1,13 +1,18 @@
-import { buildFilterConfigData } from 'modules/filterConfiguration'
-import { NextFilterStateStat, CacheStatus, Request, ResponseSuccess, ResponseFailure, validateRequest } from './models/';
+import { buildFilterConfigData } from 'modules/filterConfiguration';
+import { map } from 'ramda';
+import { EitherAsync } from 'purify-ts/EitherAsync';
+
+import { doesStoreExist } from '../apis/storage.util';
+import { FilteringData, NextFilterState } from '../modules/filteringData';
+
+import {
+    CacheStatus, NextFilterStateStat, Request, ResponseFailure, ResponseSuccess, validateRequest,
+} from './models/';
 import { getFilteringData } from './filter';
 import { getOrderFromRequest } from './order';
 import { getPaginatedDocuments } from './pagination';
-import { doesStoreExist } from '../apis/storage.util'
-import { NextFilterState, FilteringData } from '../modules/filteringData';
-import { setCachedFilteringData, getCachedFilteringData } from './cache';
-import { map } from 'ramda';
-import { EitherAsync } from 'purify-ts/EitherAsync';
+import { getCachedFilteringData, setCachedFilteringData } from './cache';
+
 export interface FilteringStatisticsResponse {
     filtersStatisticsDetailedByFilter: number,
     numberOfMatchingItems: number,
@@ -53,7 +58,7 @@ const getFilteringDataFromRequest = <T, TFilterId extends string = string>(reque
 
 const processRequest = async <T, TFilterId extends string = string>(request: Request<T, TFilterId>) => {
     const eitherAsyncFilteringData = getFilteringDataFromRequest(request);
-    const liftedFilteringData = EitherAsync.liftEither(await eitherAsyncFilteringData.run());
+    const liftedFilteringData = EitherAsync.liftEither(await eitherAsyncFilteringData.run()); // we run the computation here so that's it's performed only once
 
     const eitherAsyncItems = 
       liftedFilteringData

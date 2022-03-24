@@ -1,0 +1,14 @@
+{
+  "name": "react-browser-search",
+  "version": "1.0.0",
+  "description": "React hooks for browser-search library",
+  "main": "dist/index.js",
+  "repository": "https://github.com/youldali/browser-search/",
+  "license": "MIT",
+  "dependencies": {
+    "browser-search": "file:.yalc/browser-search"
+  },
+  "devDependencies": {
+    "react": "^17.0.2"
+  }
+}

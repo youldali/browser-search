@@ -1,5 +1,6 @@
 import { identity } from 'ramda';
-import { Request, ResponseSuccess } from './controllers';
+
+import { Request, ResponseFailure, ResponseSuccess } from './controllers';
 import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
 import { deleteCache } from './apis/cache';
@@ -17,10 +18,10 @@ export const searchStore = <T, TFilterId extends string = string>(request: Reque
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 
-  let rejectResult: (reason?: any) => void;
+  let rejectResult: (reason?: Error) => void;
   const result: Promise<SearchResponse<T>> = new Promise((resolve, reject) => {
     rejectResult = reject;
-    applicationWorker.onmessage = (event) => {
+    applicationWorker.onmessage = (event: MessageEvent<ResponseSuccess<T> | ResponseFailure>) => {
       const result = event.data;
       result.outcome === 'error' ? reject(result.reason) : resolve(result.payload);
     }

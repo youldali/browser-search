@@ -1,12 +1,11 @@
 import * as BS from 'browser-search';
-import { StoreId } from 'browser-search';
 import hash from 'object-hash';
-import { Maybe, Just, Nothing } from 'purify-ts/Maybe'
+import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
 
 type RequestHash = string;
 
 type SearchCache = Map<RequestHash, BS.SearchResponse<unknown>>; // key is hash of Request
-type SearchResponseByStoreIndex = Map<BS.StoreId, RequestHash[]>; // key is hash of Request
+type SearchResponseByStoreIndex = Map<BS.StoreId, RequestHash[]>; 
 
 export const buildQueryCache = () => {
   const searchResponseCache: SearchCache = new Map();
@@ -18,11 +17,11 @@ export const buildQueryCache = () => {
     searchResponseByStoreIndex.set(storeId, hashes);
   }
 
-  const getHashesForStore = (storeId: StoreId): RequestHash[] => (
+  const getHashesForStore = (storeId: BS. StoreId): RequestHash[] => (
     searchResponseByStoreIndex.get(storeId) ?? []
   )
 
-  const deletehashesForStore = (storeId: StoreId): void => {
+  const deletehashesForStore = (storeId: BS.StoreId): void => {
     searchResponseByStoreIndex.delete(storeId);
   }
 
@@ -37,7 +36,7 @@ export const buildQueryCache = () => {
     addHashToStoreList(requestHash, request.storeId);
   }
 
-  const emptyCacheForStore = (storeId: StoreId): void => {
+  const emptyCacheForStore = (storeId: BS.StoreId): void => {
     const hashes = getHashesForStore(storeId);
     hashes.forEach(hash => searchResponseCache.delete(hash));
     deletehashesForStore(storeId);
