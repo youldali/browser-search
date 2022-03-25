@@ -6,7 +6,8 @@
   "repository": "https://github.com/youldali/browser-search/",
   "license": "MIT",
   "dependencies": {
-    "browser-search": "file:.yalc/browser-search"
+    "browser-search": "file:.yalc/browser-search",
+    "object-hash": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",

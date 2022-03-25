@@ -16,7 +16,7 @@ export const buildStoreCache = <CacheKey, CacheValue>() => {
     );
   }
 
-  const addValueToStoreCache = (key: CacheKey, value: CacheValue, storeId: BS.StoreId): void => {
+  const addValueToStoreCache = (storeId: BS.StoreId, key: CacheKey, value: CacheValue): void => {
     const storeCache = globalCache.get(storeId) ?? new Map() as StoreCache<CacheKey, CacheValue>;
     storeCache.set(key, value);
     globalCache.set(storeId, storeCache);
@@ -26,9 +26,17 @@ export const buildStoreCache = <CacheKey, CacheValue>() => {
     globalCache.delete(storeId)
   }
 
+  const deleteKeyFromStore = (storeId: BS.StoreId, key: CacheKey): void => {
+    const storeCache = globalCache.get(storeId);
+    if(storeCache) {
+      storeCache.delete(key);
+    }
+  }
+
   return {
     queryCache,
     addValueToStoreCache,
     deleteStoreCache,
+    deleteKeyFromStore,
   }
 }
