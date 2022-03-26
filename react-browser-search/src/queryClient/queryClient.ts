@@ -1,39 +1,32 @@
 import * as BS from 'browser-search';
+
 import { buildQueryCache } from './queryCache';
-import { buildNotifier } from './notifier';
+import { buildSubscriber } from './subscriber';
 
 export const buildQueryClient = () => {
   const cache = buildQueryCache();
-  const notifier = buildNotifier();
+  const subscriber = buildSubscriber();
 
   const mutateStore = <T>(mutationFunction: (storeId: BS.StoreId) => Promise<T>) => (storeId: BS.StoreId): Promise<T> => (
     mutationFunction(storeId)
       .then(result => {
-        cache.emptyCacheForStore(storeId)
-        notifier.notifyStoreChange(storeId);
+        cache.deleteStoreCache(storeId)
+        subscriber.notifyStoreChange(storeId);
         return result;
       })
   )
 
 
-  const queryStore = <T>(request: BS.Request<T>): [Promise<BS.SearchResponse<T>>, BS.AbortSearch] => {
-    const maybeCachedSearchResponse = cache.queryCache(request);
+  const queryStore = <Document>(request: BS.Request<Document>): [Promise<BS.SearchResponse<Document>>, BS.AbortSearch] => {
+    const maybeCachedSearchResponsePromise = cache.queryCache<Document>(request);
 
     return (
-      maybeCachedSearchResponse.caseOf({
-        Just: searchResponse => [Promise.resolve(searchResponse), () => {}],
+      maybeCachedSearchResponsePromise.caseOf({
+        Just: searchResponse => [searchResponse, () => {}],
         Nothing: () => {
           const [searchResponsePromise, abort] = BS.searchStore(request);
-          return (
-            [
-              searchResponsePromise
-                .then(searchResponse => {
-                  cache.addSearchResponseToCache(request, searchResponse);
-                  return searchResponse;
-                }),
-              abort
-            ]
-          );
+          cache.addQueryToCache<Document>(request, searchResponsePromise);
+          return [searchResponsePromise, abort];
         }
       })
     )
@@ -43,11 +36,11 @@ export const buildQueryClient = () => {
 
   const deleteStore = mutateStore(BS.deleteStore);
 
-  const addDataToStore = <T>(storeId: BS.StoreId) => (data: T[]) => mutateStore((storeId: BS.StoreId) => BS.addDocumentsToStore<T>(storeId)(data))(storeId);
+  const addDataToStore = <Document>(storeId: BS.StoreId) => (data: Document[]) => mutateStore((storeId: BS.StoreId) => BS.addDocumentsToStore<Document>(storeId)(data))(storeId);
 
-  const subscribeToStoreChange = notifier.addStoreListener;
+  const subscribeToStoreChange = subscriber.addStoreListener;
 
-  const unsubscribeToStoreChange = notifier.removeStoreListener;
+  const unsubscribeToStoreChange = subscriber.removeStoreListener;
 
   return {
     queryStore,

@@ -20,7 +20,7 @@ describe ('buildQueryCache', () => {
 
   describe('queryCache', () => {
     it('gets the resolved value if it exists', () => {
-      const cache = buildQueryCache<object>();
+      const cache = buildQueryCache();
 
       cache.addQueryToCache(request, Promise.resolve(response))
       const just = cache.queryCache(request);
@@ -28,7 +28,7 @@ describe ('buildQueryCache', () => {
     })
 
     it('gets the pending promise if no value exists', () => {
-      const cache = buildQueryCache<object>();
+      const cache = buildQueryCache();
 
       const pendingPromise: Promise<SearchResponse<object, string>> = new Promise(() => {})
       cache.addQueryToCache(request, pendingPromise);
@@ -38,7 +38,7 @@ describe ('buildQueryCache', () => {
     })
 
     it('returns nothing if no value exists', () => {
-      const cache = buildQueryCache<object>();
+      const cache = buildQueryCache();
 
       const nothing = cache.queryCache(request);
       expect(nothing.isNothing()).toBe(true);
@@ -47,7 +47,7 @@ describe ('buildQueryCache', () => {
 
   describe('addQueryToCache', () => {
     it('adds the query to the cache', () => {
-      const cache = buildQueryCache<object>();
+      const cache = buildQueryCache();
 
       cache.addQueryToCache(request, Promise.resolve(response))
       const just = cache.queryCache(request);
@@ -57,7 +57,7 @@ describe ('buildQueryCache', () => {
 
   describe('deleteStoreCache', () => {
     it('deletes the store cache', () => {
-      const cache = buildQueryCache<object>();
+      const cache = buildQueryCache();
 
       cache.addQueryToCache(request, Promise.resolve(response))
       cache.deleteStoreCache(request.storeId);
@@ -66,5 +66,4 @@ describe ('buildQueryCache', () => {
       expect(nothing.isNothing()).toBe(true);
     })
   })
-
 });

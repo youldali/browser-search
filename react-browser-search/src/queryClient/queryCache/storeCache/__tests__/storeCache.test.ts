@@ -6,7 +6,7 @@ describe ('buildStoreCache', () => {
 
   describe('addValueToStoreCache', () => {
     it('adds a new value to the cache store and creates it if it does not exist', () => {
-      const cache = buildStoreCache<string, number>();
+      const cache = buildStoreCache();
 
       cache.addValueToStoreCache(storeId, 'key', 1);
       expect(cache.queryCache(storeId, 'key').extract()).toBe(1);
@@ -18,7 +18,7 @@ describe ('buildStoreCache', () => {
 
   describe('queryCache', () => {
     it('gets the value or return Nothing if it does not exist', () => {
-      const cache = buildStoreCache<string, number>();
+      const cache = buildStoreCache();
 
       const nothing = cache.queryCache(storeId, 'key');
       expect(nothing.isNothing()).toBe(true);
@@ -31,7 +31,7 @@ describe ('buildStoreCache', () => {
 
   describe('deleteStoreCache', () => {
     it('deletes the cache associated to a store', () => {
-      const cache = buildStoreCache<string, number>();
+      const cache = buildStoreCache();
       
       cache.deleteStoreCache(storeId);
       cache.addValueToStoreCache(storeId, 'key', 1);
@@ -44,7 +44,7 @@ describe ('buildStoreCache', () => {
 
   describe('deleteKeyFromStore', () => {
     it('deletes the key from the store', () => {
-      const cache = buildStoreCache<string, number>();
+      const cache = buildStoreCache();
       
       cache.deleteKeyFromStore(storeId, 'key');
       cache.addValueToStoreCache(storeId, 'key', 1);

@@ -4,7 +4,7 @@ export type Listener = () => void;
 export type StoreListeners = Map<BS.StoreId, Listener[]>;
 
 
-export const buildNotifier = () => {
+export const buildSubscriber = () => {
   let storeListeners: StoreListeners = new Map();
 
   const notifyStoreChange = (storeId: BS.StoreId): void => {
