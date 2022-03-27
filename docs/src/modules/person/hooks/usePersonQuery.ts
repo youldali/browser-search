@@ -1,18 +1,23 @@
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Request } from 'browser-search';
+import { QueryState, useQuery } from 'react-browser-search';
 
+import { selectFilterState } from '../redux';
 import { filterConfig, FilterId, storeId } from '../browserSearch';
 import { Person } from '../models';
-import { QueryState, useQuery } from '../../../browserSearchHooks';
 
-type Props = Pick<Request<Person, FilterId>, 'filtersApplied' | 'orderBy' | 'orderDirection' | 'page' | 'perPage'>
-
-export const usePersonQuery = (props: Props): QueryState<Person, FilterId> => {
+export const usePersonQuery = (): QueryState<Person, FilterId> => {
+  const filterState = useSelector(selectFilterState);
   const request: Request<Person, FilterId> = useMemo(() => ({
     storeId,
     filterConfig,
-    ...props,
-  }), [props.orderBy, props.orderDirection, props.page, props.perPage, props.filtersApplied]);
+    filtersApplied: filterState.filterApplied,
+    orderBy: filterState.orderBy,
+    orderDirection: filterState.orderDirection === 'asc' ? 'ASC' : 'DESC',
+    perPage: filterState.perPage,
+    page: filterState.page,
+  }), [filterState]);
 
   return useQuery<Person, FilterId>(request);
 }

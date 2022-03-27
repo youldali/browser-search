@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
+import { useMutateStore } from 'react-browser-search';
 
-import { useMutateStore } from '../../../browserSearchHooks';
 import { Person } from '../models';
 import { arrayFields, simpleFields } from '../browserSearch';
 

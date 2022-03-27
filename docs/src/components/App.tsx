@@ -24,9 +24,7 @@ export const App = () => {
       <CssBaseline />
       <AppBar />
       <main className={classes.content}>
-        <FilterPanel
-          personQueryState={personQueryState}
-        />
+        <FilterPanel />
         <PersonTable />
       </main>
     </>

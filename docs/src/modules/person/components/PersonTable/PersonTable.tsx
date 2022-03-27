@@ -1,12 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import { useIndexValues, useMutateStore } from 'react-browser-search';
 
 import { generatePersons, Person } from '../../models';
-import { selectFiltersApplied } from '../../redux';
 import { useCreatePersonStore, usePersonQuery, usePersonTable } from '../../hooks';
-import { useIndexValues, useMutateStore } from '../../../../browserSearchHooks';
 import { ItemTable, QuerySuspense } from '../../../common';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,16 +20,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const PersonTable = () => {
   const classes = useStyles();
-  const filtersApplied = useSelector(selectFiltersApplied);
   useCreatePersonStore();
   const personsTableProps = usePersonTable();
-  const personQueryState = usePersonQuery({
-    filtersApplied,
-    orderBy: personsTableProps.orderBy,
-    orderDirection: personsTableProps.orderDirection === 'desc' ? 'DESC' : 'ASC',
-    page: personsTableProps.page,
-    perPage: personsTableProps.perPage,
-  });
+  const personQueryState = usePersonQuery();
 
   const mutateStore = useMutateStore<Person>('Persons');
 

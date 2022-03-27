@@ -4,10 +4,6 @@
     "browser-search": {
       "signature": "3cedc72e639e780e606fcfb7d2a3d588",
       "file": true
-    },
-    "react-browser-search": {
-      "signature": "cead3be68f37f4393abb810d24152e1a",
-      "file": true
     }
   }
 }

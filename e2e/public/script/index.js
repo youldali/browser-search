@@ -13025,8 +13025,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "deleteAllStores": () => (/* binding */ deleteAllStores),
 /* harmony export */   "doesStoreExist": () => (/* binding */ doesStoreExist)
 /* harmony export */ });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/identity.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/identity.js");
 /* harmony import */ var _helpers_worker_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers/worker.util */ "./src/helpers/worker.util.ts");
 /* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./apis/storage.util */ "./src/apis/storage.util.ts");
 /* harmony import */ var _apis_cache__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./apis/cache */ "./src/apis/cache.ts");
@@ -15254,7 +15254,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n/* harmony import */ var _models___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./models/ */ \"./src/controllers/models/index.ts\");\n/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter */ \"./src/controllers/filter.ts\");\n/* harmony import */ var _order__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./order */ \"./src/controllers/order.ts\");\n/* harmony import */ var _pagination__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pagination */ \"./src/controllers/pagination.ts\");\n/* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../apis/storage.util */ \"./src/apis/storage.util.ts\");\n/* harmony import */ var _cache__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cache */ \"./src/controllers/cache.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__);\n\n\n\n\n\n\n\n\n\n\n;\nself.onmessage = (event) => {\n    const requestData = event.data;\n    console.log('from worker, received data: ', requestData);\n    processRequest(requestData);\n};\nconst getFilteringDataFromRequest = (request) => {\n    const eitherAsyncFilteringDataFromRequest = (0,_models___WEBPACK_IMPORTED_MODULE_1__.validateRequest)({ getStoreExist: _apis_storage_util__WEBPACK_IMPORTED_MODULE_5__.doesStoreExist })(request)\n        .map(request => (0,modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.buildFilterConfigData)(request.filterConfig)(request.filtersApplied))\n        .chain(filterConfigData => ((0,_filter__WEBPACK_IMPORTED_MODULE_2__.getFilteringData)(request.storeId)(filterConfigData)\n        .map(filteringData => {\n        (0,_cache__WEBPACK_IMPORTED_MODULE_6__.setCachedFilteringData)(request)(filterConfigData)(filteringData)\n            .run();\n        return Object.assign(Object.assign({}, filteringData), { _cached_: false });\n    })));\n    const eitherAsyncFilteringDataFromCache = (0,_cache__WEBPACK_IMPORTED_MODULE_6__.getCachedFilteringData)(request)\n        .map(filteringData => (Object.assign(Object.assign({}, filteringData), { _cached_: true })))\n        .mapLeft(e => { console.log(e); return e; });\n    return eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);\n};\nconst processRequest = (request) => (0,tslib__WEBPACK_IMPORTED_MODULE_7__.__awaiter)(void 0, void 0, void 0, function* () {\n    const eitherAsyncFilteringData = getFilteringDataFromRequest(request);\n    const liftedFilteringData = purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__.EitherAsync.liftEither(yield eitherAsyncFilteringData.run());\n    const eitherAsyncItems = liftedFilteringData\n        .chain(filteringData => (0,_order__WEBPACK_IMPORTED_MODULE_3__.getOrderFromRequest)(request)(filteringData.getDocumentsIdsValidated()))\n        .chain((0,_pagination__WEBPACK_IMPORTED_MODULE_4__.getPaginatedDocuments)(request));\n    const eitherAsyncFilteringStats = liftedFilteringData\n        .map(filteringData => {\n        const nextFilterStates = filteringData.getNextFilterStates();\n        const nextFilterStatesStats = (0,ramda__WEBPACK_IMPORTED_MODULE_9__.default)(getNextFilterStateStat, nextFilterStates);\n        const matchingDocumentIds = filteringData.getDocumentsIdsValidated();\n        return {\n            stats: nextFilterStatesStats,\n            numberOfDocuments: matchingDocumentIds.length,\n        };\n    });\n    const eitherAsyncCacheStatus = liftedFilteringData\n        .map(filteringDataExtended => filteringDataExtended._cached_ ? 'partial' : 'none');\n    Promise\n        .all([eitherAsyncFilteringStats.run(), eitherAsyncItems.run(), eitherAsyncCacheStatus.run()])\n        .then(([eitherFilteringStats, eitherItems, eitherCacheStatus]) => {\n        if (eitherFilteringStats.isRight() && eitherItems.isRight() && eitherCacheStatus.isRight()) {\n            const filteringStats = eitherFilteringStats.extract();\n            const items = eitherItems.extract();\n            const cacheStatus = eitherCacheStatus.extract();\n            postResult(items)(filteringStats)(cacheStatus);\n        }\n        else if (eitherItems.isLeft()) {\n            const error = eitherItems.extract();\n            postError(error);\n        }\n        else if (eitherFilteringStats.isLeft()) {\n            const error = eitherFilteringStats.extract();\n            postError(error);\n        }\n    });\n});\nconst getNextFilterStateStat = (nextFilterState) => (nextFilterState.type === 'added' ?\n    {\n        type: nextFilterState.type,\n        nextDocumentsAdded: nextFilterState.documentIds.length,\n    } : nextFilterState.type === 'narrowed' ?\n    {\n        type: nextFilterState.type,\n        nextNumberOfDocuments: nextFilterState.documentIds.length,\n    } :\n    {\n        type: nextFilterState.type,\n        matchingNumberOfDocuments: nextFilterState.documentIds.length,\n    });\nconst postResult = (documents) => (filteringStats) => (cacheStatus) => {\n    const response = {\n        outcome: 'success',\n        payload: Object.assign({ documents, _cacheStatus_: cacheStatus }, filteringStats),\n    };\n    self.postMessage(response);\n};\nconst postError = (error) => {\n    const response = {\n        outcome: 'error',\n        reason: error,\n    };\n    self.postMessage(response);\n};\n\n\n//# sourceURL=webpack://browser-search/./src/controllers/main.worker.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/storage.util */ \"./src/apis/storage.util.ts\");\n/* harmony import */ var _models___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/ */ \"./src/controllers/models/index.ts\");\n/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter */ \"./src/controllers/filter.ts\");\n/* harmony import */ var _order__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./order */ \"./src/controllers/order.ts\");\n/* harmony import */ var _pagination__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pagination */ \"./src/controllers/pagination.ts\");\n/* harmony import */ var _cache__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cache */ \"./src/controllers/cache.ts\");\n\n\n\n\n\n\n\n\n\n\n;\nself.onmessage = (event) => {\n    const requestData = event.data;\n    console.log('from worker, received data: ', requestData);\n    processRequest(requestData);\n};\nconst getFilteringDataFromRequest = (request) => {\n    const eitherAsyncFilteringDataFromRequest = (0,_models___WEBPACK_IMPORTED_MODULE_2__.validateRequest)({ getStoreExist: _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.doesStoreExist })(request)\n        .map(request => (0,modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.buildFilterConfigData)(request.filterConfig)(request.filtersApplied))\n        .chain(filterConfigData => ((0,_filter__WEBPACK_IMPORTED_MODULE_3__.getFilteringData)(request.storeId)(filterConfigData)\n        .map(filteringData => {\n        (0,_cache__WEBPACK_IMPORTED_MODULE_6__.setCachedFilteringData)(request)(filterConfigData)(filteringData)\n            .run();\n        return Object.assign(Object.assign({}, filteringData), { _cached_: false });\n    })));\n    const eitherAsyncFilteringDataFromCache = (0,_cache__WEBPACK_IMPORTED_MODULE_6__.getCachedFilteringData)(request)\n        .map(filteringData => (Object.assign(Object.assign({}, filteringData), { _cached_: true })))\n        .mapLeft(e => { console.log(e); return e; });\n    return eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);\n};\nconst processRequest = (request) => (0,tslib__WEBPACK_IMPORTED_MODULE_7__.__awaiter)(void 0, void 0, void 0, function* () {\n    const eitherAsyncFilteringData = getFilteringDataFromRequest(request);\n    const liftedFilteringData = purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__.EitherAsync.liftEither(yield eitherAsyncFilteringData.run()); // we run the computation here so that's it's performed only once\n    const eitherAsyncItems = liftedFilteringData\n        .chain(filteringData => (0,_order__WEBPACK_IMPORTED_MODULE_4__.getOrderFromRequest)(request)(filteringData.getDocumentsIdsValidated()))\n        .chain((0,_pagination__WEBPACK_IMPORTED_MODULE_5__.getPaginatedDocuments)(request));\n    const eitherAsyncFilteringStats = liftedFilteringData\n        .map(filteringData => {\n        const nextFilterStates = filteringData.getNextFilterStates();\n        const nextFilterStatesStats = (0,ramda__WEBPACK_IMPORTED_MODULE_9__.default)(getNextFilterStateStat, nextFilterStates);\n        const matchingDocumentIds = filteringData.getDocumentsIdsValidated();\n        return {\n            stats: nextFilterStatesStats,\n            numberOfDocuments: matchingDocumentIds.length,\n        };\n    });\n    const eitherAsyncCacheStatus = liftedFilteringData\n        .map(filteringDataExtended => filteringDataExtended._cached_ ? 'partial' : 'none');\n    Promise\n        .all([eitherAsyncFilteringStats.run(), eitherAsyncItems.run(), eitherAsyncCacheStatus.run()])\n        .then(([eitherFilteringStats, eitherItems, eitherCacheStatus]) => {\n        if (eitherFilteringStats.isRight() && eitherItems.isRight() && eitherCacheStatus.isRight()) {\n            const filteringStats = eitherFilteringStats.extract();\n            const items = eitherItems.extract();\n            const cacheStatus = eitherCacheStatus.extract();\n            postResult(items)(filteringStats)(cacheStatus);\n        }\n        else if (eitherItems.isLeft()) {\n            const error = eitherItems.extract();\n            postError(error);\n        }\n        else if (eitherFilteringStats.isLeft()) {\n            const error = eitherFilteringStats.extract();\n            postError(error);\n        }\n    });\n});\nconst getNextFilterStateStat = (nextFilterState) => (nextFilterState.type === 'added' ?\n    {\n        type: nextFilterState.type,\n        nextDocumentsAdded: nextFilterState.documentIds.length,\n    } : nextFilterState.type === 'narrowed' ?\n    {\n        type: nextFilterState.type,\n        nextNumberOfDocuments: nextFilterState.documentIds.length,\n    } :\n    {\n        type: nextFilterState.type,\n        matchingNumberOfDocuments: nextFilterState.documentIds.length,\n    });\nconst postResult = (documents) => (filteringStats) => (cacheStatus) => {\n    const response = {\n        outcome: 'success',\n        payload: Object.assign({ documents, _cacheStatus_: cacheStatus }, filteringStats),\n    };\n    self.postMessage(response);\n};\nconst postError = (error) => {\n    const response = {\n        outcome: 'error',\n        reason: error,\n    };\n    self.postMessage(response);\n};\n\n\n//# sourceURL=webpack://browser-search/./src/controllers/main.worker.ts?");
 
 /***/ }),
 
@@ -15882,71 +15882,76 @@ const searchStore = (request) => {
     };
     return [result, abort];
 };
-const createStore = (storeName) => (indexConfig) => (keyPath) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.createStore(storeName)(indexConfig)(keyPath)
-    .run()
-    .then(eitherValues => (eitherValues.caseOf({
-    Left: error => { throw error; },
-    Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
-}))));
-const addDocumentsToStore = (storeName) => (data) => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+const createStore = (storeName) => (indexConfig) => (keyPath) => (0,tslib__WEBPACK_IMPORTED_MODULE_4__.__awaiter)(void 0, void 0, void 0, function* () {
+    if (yield doesStoreExist(storeName)) {
+        yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
+    }
+    return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.createStore(storeName)(indexConfig)(keyPath)
+        .run()
+        .then(eitherValues => (eitherValues.caseOf({
+        Left: error => { throw error; },
+        Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
+    }))));
+});
+const addDocumentsToStore = (storeName) => (data) => (0,tslib__WEBPACK_IMPORTED_MODULE_4__.__awaiter)(void 0, void 0, void 0, function* () {
     yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.addDocumentsToStore(storeName)(data)
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
-        Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+        Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
     }))));
 });
 const getAllValuesOfProperty = (storeName) => (propertyName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getAllUniqueKeysForIndex(storeName)(propertyName)
     .run()
     .then(eitherValues => (eitherValues.caseOf({
     Left: error => { throw error; },
-    Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+    Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
 }))));
 const getNumberOfDocumentsInStore = (storeName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getNumberOfDocumentsInStore(storeName)
     .run()
     .then(eitherValues => (eitherValues.caseOf({
     Left: error => { throw error; },
-    Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+    Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
 }))));
 const getDocuments = (storeName) => (documentIds) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getDocuments(storeName)(documentIds)
     .run()
     .then(eitherValues => (eitherValues.caseOf({
     Left: error => { throw error; },
-    Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+    Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
 }))));
-const deleteStore = (storeName) => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+const deleteStore = (storeName) => (0,tslib__WEBPACK_IMPORTED_MODULE_4__.__awaiter)(void 0, void 0, void 0, function* () {
     yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStore(storeName)
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
-        Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+        Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
     }))));
 });
-const deleteStoreIfExist = (storeName) => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+const deleteStoreIfExist = (storeName) => (0,tslib__WEBPACK_IMPORTED_MODULE_4__.__awaiter)(void 0, void 0, void 0, function* () {
     yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStoreIfExist(storeName)
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
-        Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+        Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
     }))));
 });
-const deleteAllStores = () => (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__awaiter)(void 0, void 0, void 0, function* () {
+const deleteAllStores = () => (0,tslib__WEBPACK_IMPORTED_MODULE_4__.__awaiter)(void 0, void 0, void 0, function* () {
     yield (0,_apis_cache__WEBPACK_IMPORTED_MODULE_2__.deleteCache)().run();
     return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteDatabase()
         .run()
         .then(eitherValues => (eitherValues.caseOf({
         Left: error => { throw error; },
-        Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+        Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
     }))));
 });
 const doesStoreExist = (storeName) => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.doesStoreExist(storeName)
     .run()
     .then(eitherValues => (eitherValues.caseOf({
     Left: error => { throw error; },
-    Right: ramda__WEBPACK_IMPORTED_MODULE_4__.default
+    Right: ramda__WEBPACK_IMPORTED_MODULE_5__.default
 }))));
 
 })();

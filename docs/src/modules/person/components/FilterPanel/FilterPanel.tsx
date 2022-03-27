@@ -10,8 +10,9 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 
 import { AppDispatch } from '../../../../redux';
-import { QueryState } from '../../../../browserSearchHooks';
-import { FilterId, Person, resetFilters, selectFiltersAppliedAsRecord, switchFilter } from '../..';
+import { FilterId } from '../../browserSearch';
+import { resetFilters, selectFiltersAppliedAsRecord, switchFilter } from '../../redux';
+import { usePersonQuery } from '../../hooks';
 
 import { SwitchField } from './SwitchField';
 
@@ -31,15 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = {
-  personQueryState: QueryState<Person, FilterId>;
-}
-
-export const FilterPanel = ({
-  personQueryState,
-}: Props) => {
+export const FilterPanel = () => {
   const dispatch: AppDispatch = useDispatch();
   const filtersAppliedAsRecord = useSelector(selectFiltersAppliedAsRecord);
+  const personQueryState = usePersonQuery();
 
   const classes = useStyles();
 

@@ -37,6 +37,7 @@ const config = {
   },
   externals: {
     "browser-search": 'browser-search',
+    "react": 'react',
   },
 };
 
