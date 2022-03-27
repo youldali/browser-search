@@ -1,5 +1,6 @@
 import React from 'react';
-import { buildQueryClient } from './queryClient';
+
+import { buildQueryClient } from '../queryClient';
 
 const queryClient = buildQueryClient();
 export const BrowserSearchContext = React.createContext(queryClient);

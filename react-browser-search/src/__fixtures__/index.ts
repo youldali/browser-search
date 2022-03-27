@@ -1,0 +1,1 @@
+export { getRequestFixture } from './request';
