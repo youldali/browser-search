@@ -35,16 +35,22 @@ export const searchStore = <T, TFilterId extends string = string>(request: Reque
   return [result, abort];
 };
 
-export const createStore = <T>(storeName: string) => (indexConfig: storage.SimplifiedIndexConfig<T>) => (keyPath: keyof T): Promise<void> => (
-  storage.createStore<T>(storeName)(indexConfig)(keyPath)
-    .run()
-    .then(eitherValues => (
-      eitherValues.caseOf({ 
-        Left: error => {throw error}, 
-        Right: identity
-      })
-    ))
-)
+export const createStore = <T>(storeName: string) => (indexConfig: storage.SimplifiedIndexConfig<T>) => async (keyPath: keyof T): Promise<void> => {
+  if(await doesStoreExist(storeName)){
+    await deleteCache().run();
+  }
+
+  return (
+    storage.createStore<T>(storeName)(indexConfig)(keyPath)
+      .run()
+      .then(eitherValues => (
+        eitherValues.caseOf({ 
+          Left: error => {throw error}, 
+          Right: identity
+        })
+      ))
+  );
+}
 
 export const addDocumentsToStore = <T>(storeName: string) => async (data: T[]): Promise<void> => {
   await deleteCache().run();
