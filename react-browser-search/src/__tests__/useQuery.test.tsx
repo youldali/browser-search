@@ -1,6 +1,5 @@
 import React from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { Request, SearchResponse, StoreId } from 'browser-search';
 
 import { getRequestFixture } from '../__fixtures__';
 import { LoadingQueryState, SuccessQueryState, useQuery } from '../useQuery';
@@ -16,7 +15,6 @@ describe ('useQuery', () => {
 
   const storeId = 'storeId';
 
-  
   it('returns loading and success states when the promise is resolved', async () => {
     const request = getRequestFixture();
     const {result, waitForNextUpdate} = renderHook(() => useQuery(request), {wrapper: createWrapper()})

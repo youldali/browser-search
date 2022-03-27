@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { BrowserSearchProvider } from 'react-browser-search';
 
-import { BrowserSearchProvider, useIndexValues, useMutateStore } from './browserSearchHooks';
 import { store } from './redux';
 import './index.css';
 import { App } from './components';
