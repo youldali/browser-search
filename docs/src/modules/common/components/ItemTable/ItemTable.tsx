@@ -1,14 +1,16 @@
 import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TablePagination from '@material-ui/core/TablePagination';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
 
 export interface TableData {
   id: string;
@@ -119,8 +121,8 @@ export const ItemTable = <T extends {id: string}>({
           count={dataCount}
           rowsPerPage={perPage}
           page={page}
-          onChangePage={(_, page) => onPageChange(page)}
-          onChangeRowsPerPage={(event) => onPerPageChange(parseInt(event.target.value, 10))}
+          onPageChange={(_, page) => onPageChange(page)}
+          onRowsPerPageChange={(event) => onPerPageChange(parseInt(event.target.value, 10))}
         />
       </Paper>
     </section>

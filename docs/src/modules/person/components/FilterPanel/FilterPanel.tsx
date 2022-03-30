@@ -1,13 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Toolbar from '@material-ui/core/Toolbar';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import Button from '@material-ui/core/Button';
+import Toolbar from '@mui/material/Toolbar';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import Button from '@mui/material/Button';
 
 import { AppDispatch } from '../../../../redux';
 import { FilterId } from '../../browserSearch';
@@ -15,6 +17,7 @@ import { resetFilters, selectFiltersAppliedAsRecord, switchFilter } from '../../
 import { usePersonQuery } from '../../hooks';
 
 import { SwitchField } from './SwitchField';
+import { CountryAutocomplete } from './CountryAutocomplete';
 
 const drawerWidth = 280;
 
@@ -129,6 +132,13 @@ export const FilterPanel = () => {
               onSwitchChange={handleFilterChange}
               nextFilterStateStat={stats?.highSalary}
             />
+          </FormGroup>
+        </FormControl>
+
+        <FormControl component="fieldset">
+          <FormLabel component="legend">By country</FormLabel>
+          <FormGroup>
+            <CountryAutocomplete />
           </FormGroup>
         </FormControl>
 

@@ -1,6 +1,6 @@
-import * as BS from 'browser-search';
-import { StoreId } from 'browser-search';
-import { useCallback, useContext, useEffect, useReducer, Reducer } from 'react';
+import { getAllValuesOfProperty, StoreId } from 'browser-search';
+import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
+
 import { BrowserSearchContext } from './provider';
 
 type IndexId = string;
@@ -87,15 +87,14 @@ export const useIndexValues = <T extends IDBValidKey>(storeId: StoreId, indexId:
   );
 
   const runQuery = useCallback( (): void => {
-    const responsePromise = BS.getAllValuesOfProperty(storeId)(indexId);
+    const responsePromise = getAllValuesOfProperty(storeId)(indexId);
     dispatch({type: 'requestStarted', indexId, storeId})
-
+    console.log("RUN QUERY !");
     responsePromise
       .then(response => {
         dispatch({type: 'requestCompleted', response: response as T[], indexId, storeId})
       })
       .catch(e => {
-        console.log(e);
         dispatch({type: 'requestFailed', indexId, storeId})
       })
   }, [storeId, indexId]);

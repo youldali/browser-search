@@ -2,7 +2,7 @@ import { FilterConfig } from 'browser-search';
 
 import { Person } from '../models';
 
-export type FilterId = 'lowAged' | 'middleAged' | 'highAged' | 'lowSalary' | 'middleSalary' | 'highSalary' | 'professionDentist';
+export type FilterId = 'lowAged' | 'middleAged' | 'highAged' | 'lowSalary' | 'middleSalary' | 'highSalary' | 'professionDentist' | string;
 
 export const filterConfig: FilterConfig<Person, FilterId> = [ 
   [ 

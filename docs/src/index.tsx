@@ -2,17 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserSearchProvider } from 'react-browser-search';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { store } from './redux';
 import './index.css';
 import { App } from './components';
 import reportWebVitals from './reportWebVitals';
 
+const theme = createTheme();
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserSearchProvider>
-        <App />
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
       </BrowserSearchProvider>
     </Provider>
   </React.StrictMode>,

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FiltersApplied } from 'browser-search';
 
 import { FilterId } from '../browserSearch/filterConfig';
@@ -69,16 +69,18 @@ export const filterSlice = createSlice({
   },
 })
 
+const toFilterRecord = (filtersApplied: FiltersApplied<FilterId>) => filtersApplied.reduce((acc: Record<FilterId, boolean>, filter): Record<FilterId, boolean> => {
+  acc[filter] = true;
+  return acc
+}, {} as Record<FilterId, boolean>);
+
 export const { resetFilters, switchFilter, setPage, setOrderDirection, setOrderBy, setPerPage, changeSort } = filterSlice.actions;
 
-export const selectFiltersApplied = (state: RootState) => state.filters.filterApplied;
-export const selectFiltersAppliedAsRecord = (state: RootState) => toFilterRecord(state.filters.filterApplied);
+export const selectFiltersApplied = (state: RootState): FiltersApplied => state.filters.filterApplied;
+export const selectFiltersAppliedAsRecord = createSelector(selectFiltersApplied,  toFilterRecord);
 export const selectFilterState = (state: RootState) => state.filters;
 
 export const filterReducer = filterSlice.reducer;
 
 
-const toFilterRecord = (filtersApplied: FiltersApplied<FilterId>) => filtersApplied.reduce((acc: Record<FilterId, boolean>, filter): Record<FilterId, boolean> => {
-  acc[filter] = true;
-  return acc
-}, {} as Record<FilterId, boolean>);
+

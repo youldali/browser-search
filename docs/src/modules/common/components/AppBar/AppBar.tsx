@@ -1,9 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import AppBarMUI  from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import AppBarMUI  from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
 type AppBarProps = {
   className?: string;

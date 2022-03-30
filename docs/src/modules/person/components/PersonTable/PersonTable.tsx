@@ -1,7 +1,9 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import { useIndexValues, useMutateStore } from 'react-browser-search';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import { useMutateStore } from 'react-browser-search';
 
 import { generatePersons, Person } from '../../models';
 import { useCreatePersonStore, usePersonQuery, usePersonTable } from '../../hooks';
@@ -25,10 +27,6 @@ export const PersonTable = () => {
   const personQueryState = usePersonQuery();
 
   const mutateStore = useMutateStore<Person>('Persons');
-
-  const indexValuesQueryState = useIndexValues<string>('Persons', 'country')
-
-  console.log(indexValuesQueryState);
 
   const addData = () => {
     const persons  = generatePersons(1000);

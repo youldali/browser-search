@@ -1,9 +1,11 @@
 import React, { ReactNode } from 'react';
 import { NextFilterStateStat } from 'browser-search';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
 
 import { ChipFilterStat } from './ChipFilterStat';
 

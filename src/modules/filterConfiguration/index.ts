@@ -1,6 +1,7 @@
 export {
   buildFilterConfigData,
   Filter,
+  GroupOfFilters,
   GroupId,
   FilterId,
   FilterConfig,
