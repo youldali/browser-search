@@ -5,7 +5,7 @@ import { FilterId } from '../browserSearch/filterConfig';
 
 import type { Person } from '../models';
 import type { RootState } from '../../../redux';
-
+type FilterGroupKey = string;
 type PersonFilterConfig = FilterConfig<Person, FilterId>;
 
 export const baseFilterConfig: PersonFilterConfig = [ 
@@ -24,7 +24,7 @@ export const baseFilterConfig: PersonFilterConfig = [
   ]
 ];
 
-type State = Record<string, PersonFilterConfig>;
+type State = Record<FilterGroupKey, PersonFilterConfig>;
 
 const initialState: State = {
   base: baseFilterConfig,

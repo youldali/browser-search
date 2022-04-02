@@ -6,7 +6,9 @@ import Button from '@mui/material/Button';
 import { useMutateStore } from 'react-browser-search';
 
 import { generatePersons, Person } from '../../models';
-import { useCreatePersonStore, usePersonQuery, usePersonTable } from '../../hooks';
+import {
+    useCreatePersonStore, usePersonQuery, usePersonTable, useUpdateFilterConfig,
+} from '../../hooks';
 import { ItemTable, QuerySuspense } from '../../../common';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,6 +27,7 @@ export const PersonTable = () => {
   useCreatePersonStore();
   const personsTableProps = usePersonTable();
   const personQueryState = usePersonQuery();
+  useUpdateFilterConfig();
 
   const mutateStore = useMutateStore<Person>('Persons');
 

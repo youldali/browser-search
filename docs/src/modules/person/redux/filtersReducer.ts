@@ -5,8 +5,10 @@ import { FilterId } from '../browserSearch/filterConfig';
 
 import type { RootState } from '../../../redux';
 
+type FilterGroupKey = string;
+
 interface FilterState {
-  filterApplied: FiltersApplied<FilterId>;
+  filterAppliedByGroup: Record<FilterGroupKey, FiltersApplied<FilterId>>;
   orderBy: FilterId | undefined;
   perPage: number;
   page: number;
@@ -14,7 +16,7 @@ interface FilterState {
 }
 
 const initialState: FilterState = {
-  filterApplied: [],
+  filterAppliedByGroup: {},
   orderBy: undefined,
   perPage: 10,
   page: 1,
@@ -28,22 +30,28 @@ export const filterSlice = createSlice({
     resetFilters: (state) => {
       return {
         ...state,
-        filterApplied: [],
+        filterAppliedByGroup: {},
       }
     },
 
-    switchFilter: ({filterApplied}, action: PayloadAction<FilterId>) => {
-      const filterIndex = filterApplied.indexOf(action.payload);
+    switchFilter: ({filterAppliedByGroup}, {payload: {key, filter}}: PayloadAction<{key: FilterGroupKey, filter: FilterId}>) => {
+      const filtersApplied = filterAppliedByGroup[key] ?? [];
+      const filterIndex = filtersApplied.indexOf(filter);
       if(filterIndex > -1) {
-        filterApplied.splice(filterIndex, 1)
+        filtersApplied.splice(filterIndex, 1)
       }
       else {
-        filterApplied.push(action.payload);
+        filtersApplied.push(filter);
       }
+      filterAppliedByGroup[key] = filtersApplied;
+    },
+
+    replaceFiltersApplied: ({filterAppliedByGroup}, {payload: {key, filtersApplied}}: PayloadAction<{key: FilterGroupKey, filtersApplied: FiltersApplied}>) => {
+      filterAppliedByGroup[key] = filtersApplied;
     },
 
     setPage(state, {payload}: PayloadAction<FilterState["page"]>) {
-      if(payload > 0) {
+      if(payload >= 0) {
         state.page = payload
       }
     },
@@ -68,16 +76,18 @@ export const filterSlice = createSlice({
     }
   },
 })
+export const { resetFilters, switchFilter, setPage, setOrderDirection, setOrderBy, setPerPage, changeSort, replaceFiltersApplied } = filterSlice.actions;
 
 const toFilterRecord = (filtersApplied: FiltersApplied<FilterId>) => filtersApplied.reduce((acc: Record<FilterId, boolean>, filter): Record<FilterId, boolean> => {
   acc[filter] = true;
   return acc
 }, {} as Record<FilterId, boolean>);
 
-export const { resetFilters, switchFilter, setPage, setOrderDirection, setOrderBy, setPerPage, changeSort } = filterSlice.actions;
+const selectFiltersAppliedByGroup = (state: RootState): Record<FilterGroupKey, FiltersApplied<FilterId>> => state.filters.filterAppliedByGroup;
 
-export const selectFiltersApplied = (state: RootState): FiltersApplied => state.filters.filterApplied;
-export const selectFiltersAppliedAsRecord = createSelector(selectFiltersApplied,  toFilterRecord);
+export const selectFiltersAppliedForGroup = (key: FilterGroupKey) => (state: RootState): FiltersApplied<FilterId> => selectFiltersAppliedByGroup(state)[key] ?? [];
+export const selectFiltersAppliedRecordForGroup = (key: FilterGroupKey) => createSelector(selectFiltersAppliedForGroup(key), (filtersApplied) => toFilterRecord(filtersApplied));
+export const selectFiltersApplied = createSelector(selectFiltersAppliedByGroup, (filterAppliedByGroup): FiltersApplied => Object.values(filterAppliedByGroup).flat());
 export const selectFilterState = (state: RootState) => state.filters;
 
 export const filterReducer = filterSlice.reducer;

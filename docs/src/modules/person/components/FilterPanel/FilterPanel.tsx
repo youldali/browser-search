@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 
 import { AppDispatch } from '../../../../redux';
 import { FilterId } from '../../browserSearch';
-import { resetFilters, selectFiltersAppliedAsRecord, switchFilter } from '../../redux';
+import { resetFilters, selectFiltersAppliedRecordForGroup, switchFilter } from '../../redux';
 import { usePersonQuery } from '../../hooks';
 
 import { SwitchField } from './SwitchField';
@@ -35,15 +35,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const filterGroupKey = 'base';
+
 export const FilterPanel = () => {
   const dispatch: AppDispatch = useDispatch();
-  const filtersAppliedAsRecord = useSelector(selectFiltersAppliedAsRecord);
+  const filtersAppliedAsRecord = useSelector(selectFiltersAppliedRecordForGroup(filterGroupKey));
   const personQueryState = usePersonQuery();
 
   const classes = useStyles();
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(switchFilter(event.target.name as FilterId));
+    dispatch(switchFilter({key: filterGroupKey, filter: event.target.name as FilterId}));
   };
   
   const resetAllFilters = () => {
