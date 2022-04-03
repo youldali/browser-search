@@ -9,6 +9,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { personStoreSearchSlice } from '../../../redux';
 import { useCountryValues } from '../../../hooks';
 import { AppDispatch } from '../../../../../redux';
+import { QuerySuspense } from '../../../../common';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -22,32 +23,41 @@ export const CountryAutocomplete = () => {
   const countryValuesQueryState = useCountryValues();
 
   return (
-    <Autocomplete
-      multiple
-      limitTags={2}
-      size="small"
-      id="checkboxes-tags-demo"
-      options={countryValuesQueryState.status === 'success' ? countryValuesQueryState.response : []}
-      disableCloseOnSelect
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
+      <QuerySuspense
+        queryState={countryValuesQueryState}
+        fallback={() => <div>An error occured</div>}
+        loading={<div>Loading</div>}
+      >
+        {
+          (options) =>
+          <Autocomplete
+            multiple
+            limitTags={2}
+            size="small"
+            id="checkboxes-tags-demo"
+            options={options}
+            disableCloseOnSelect
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                />
+                {option}
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField {...params} label="Checkboxes" placeholder="Filter by countries" />
+            )}
+            onChange={(_, values) => {
+              const filters = values.map(value => 'country-' + value);
+              dispatch(actions.replaceFiltersForGroup({key: filterGroupKey, filtersApplied: filters}));
+            }}
+            value={filtersApplied.map(value => value.split('-')[1])}
           />
-          {option}
-        </li>
-      )}
-      renderInput={(params) => (
-        <TextField {...params} label="Checkboxes" placeholder="Filter by countries" />
-      )}
-      onChange={(_, values) => {
-        const filters = values.map(value => 'country-' + value);
-        dispatch(actions.replaceFiltersForGroup({key: filterGroupKey, filtersApplied: filters}));
-      }}
-      value={filtersApplied.map(value => value.split('-')[1])}
-    />
+        } 
+    </QuerySuspense>
   );
 }

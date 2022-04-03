@@ -2,31 +2,26 @@ import * as BS from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 
 import { BrowserSearchContext } from './provider';
+import * as GenericQueryState from './queryState';
+
+type RequestPayload<Document, TFilterId extends string> = BS.Request<Document, TFilterId>
+
+type ResponsePayload<Document, TFilterId extends string> = SearchReponse<Document, TFilterId>;
 
 export type SearchReponse<Document, TFilterId extends string = string> = Omit<BS.SearchResponse<Document, TFilterId>, '_cacheStatus_'>;
 
-export type IdleState = {
-  status: 'idle',
+export interface IdleState extends GenericQueryState.IdleState {
 }
 
-export type LoadingQueryState<Document, TFilterId extends string = string> = {
-  status: 'loading',
-  request: BS.Request<Document, TFilterId>;
+export interface LoadingQueryState<Document, TFilterId extends string = string> extends GenericQueryState.LoadingQueryState<RequestPayload<Document, TFilterId>>  {
   abort: BS.AbortSearch;
 }
 
-export type SuccessQueryState<Document, TFilterId extends string = string> = {
-  status: 'success',
-  request: BS.Request<Document, TFilterId>;
-  response: SearchReponse<Document, TFilterId>;
+export interface SuccessQueryState<Document, TFilterId extends string = string> extends GenericQueryState.SuccessQueryState<RequestPayload<Document, TFilterId>, ResponsePayload<Document, TFilterId>> {
 }
 
-export type ErrorQueryState<Document, TFilterId extends string = string> = {
-  status: 'error',
-  request: BS.Request<Document, TFilterId>;
-  error: Error;
+export interface ErrorQueryState<Document, TFilterId extends string = string> extends GenericQueryState.ErrorQueryState<RequestPayload<Document, TFilterId>, Error> {
 }
-
 
 export type QueryState<Document, TFilterId extends string = string> = IdleState | LoadingQueryState<Document, TFilterId> | SuccessQueryState<Document, TFilterId> | ErrorQueryState<Document, TFilterId>;
 

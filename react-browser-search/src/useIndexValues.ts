@@ -1,40 +1,36 @@
 import { getAllValuesOfProperty, StoreId } from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 
+import * as GenericQueryState from './queryState';
 import { BrowserSearchContext } from './provider';
 
 type IndexId = string;
 
-export type IdleState = {
-  status: 'idle',
-}
-
-export type LoadingQueryState = {
-  status: 'loading',
+type RequestPayload = {
   indexId: IndexId;
   storeId: StoreId;
 }
 
-export type SuccessQueryState<T> = {
-  status: 'success',
-  indexId: IndexId;
-  storeId: StoreId;
-  response: T[];
+type ResponsePayload<T> = T[];
+
+export interface IdleState extends GenericQueryState.IdleState {
 }
 
-export type ErrorQueryState = {
-  status: 'error',
-  indexId: IndexId;
-  storeId: StoreId;
+export interface LoadingQueryState extends GenericQueryState.LoadingQueryState<RequestPayload>  {
 }
 
+export interface SuccessQueryState<T> extends GenericQueryState.SuccessQueryState<RequestPayload, ResponsePayload<T>> {
+}
+
+export interface ErrorQueryState extends GenericQueryState.ErrorQueryState<RequestPayload, Error> {
+}
 
 export type QueryState<T> = IdleState | LoadingQueryState | SuccessQueryState<T> | ErrorQueryState;
 
 type Action<T> =
   | { type: 'requestStarted'; indexId: IndexId; storeId: StoreId;}
   | { type: 'requestCompleted'; response: T[]; indexId: IndexId; storeId: StoreId;}
-  | { type: 'requestFailed'; indexId: IndexId; storeId: StoreId;}
+  | { type: 'requestFailed'; indexId: IndexId; storeId: StoreId; error: Error}
   
 type QueryReducer<T> = Reducer<QueryState<T>, Action<T>>;
 
@@ -47,28 +43,35 @@ const reducer = <T extends IDBValidKey>(state: QueryState<T>, action: Action<T>)
     case 'requestStarted': {
       return {
         status: 'loading',
-        indexId: action.indexId,
-        storeId: action.storeId,
+        request: {
+          indexId: action.indexId,
+          storeId: action.storeId,
+        }
       } 
     }
 
     case 'requestCompleted': {
-      return state.status === 'loading' && state.indexId === action.indexId && state.storeId === action.storeId ? 
+      return state.status === 'loading' && state.request.indexId === action.indexId && state.request.storeId === action.storeId ? 
       {
         status: 'success',
-        indexId: action.indexId,
+        request: {
+          indexId: action.indexId,
+          storeId: action.storeId,
+        },
         response: action.response,
-        storeId: action.storeId,
       } :
       state;
     }
 
     case 'requestFailed': {
-      return state.status === 'loading' && state.indexId === action.indexId && state.storeId === action.storeId ? 
+      return state.status === 'loading' && state.request.indexId === action.indexId && state.request.storeId === action.storeId ? 
       {
         status: 'error',
-        indexId: action.indexId,
-        storeId: action.storeId,
+        request: {
+          indexId: action.indexId,
+          storeId: action.storeId,
+        },
+        error: action.error,
       } :
       state;
     }
@@ -89,13 +92,13 @@ export const useIndexValues = <T extends IDBValidKey>(storeId: StoreId, indexId:
   const runQuery = useCallback( (): void => {
     const responsePromise = getAllValuesOfProperty(storeId)(indexId);
     dispatch({type: 'requestStarted', indexId, storeId})
-    console.log("RUN QUERY !");
+    
     responsePromise
       .then(response => {
         dispatch({type: 'requestCompleted', response: response as T[], indexId, storeId})
       })
-      .catch(e => {
-        dispatch({type: 'requestFailed', indexId, storeId})
+      .catch(error => {
+        dispatch({type: 'requestFailed', indexId, storeId, error})
       })
   }, [storeId, indexId]);
 

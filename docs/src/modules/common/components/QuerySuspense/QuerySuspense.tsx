@@ -1,19 +1,19 @@
 import React, { ReactElement } from 'react';
-import { QueryState, SearchReponse } from 'react-browser-search';
+import { GenericQueryState, SearchReponse } from 'react-browser-search';
 
-type QuerySuspenseProps<T> = {
-  queryState: QueryState<T>;
+type QuerySuspenseProps<Request, Response, Error> = {
+  queryState: GenericQueryState.QueryState<Request, Response, Error>;
   fallback: () => ReactElement | null;
   loading: ReactElement | null;
-  children: (data: SearchReponse<T>) => ReactElement | null;
+  children: (data: Response) => ReactElement | null;
 };
 
-export const QuerySuspense = <T extends any>({
+export const QuerySuspense = <Request, Response, Error>({
   queryState,
   fallback,
   loading,
   children,
-}: QuerySuspenseProps<T>) => {
+}: QuerySuspenseProps<Request, Response, Error>) => {
   if (queryState.status === 'loading' || queryState.status === 'idle') {
     return loading;
   }
