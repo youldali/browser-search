@@ -13,11 +13,13 @@ import Button from '@mui/material/Button';
 
 import { AppDispatch } from '../../../../redux';
 import { FilterId } from '../../browserSearch';
-import { resetFilters, selectFiltersAppliedRecordForGroup, switchFilter } from '../../redux';
+import { personStoreSearchSlice } from '../../redux';
 import { usePersonQuery } from '../../hooks';
 
 import { SwitchField } from './SwitchField';
 import { CountryAutocomplete } from './CountryAutocomplete';
+
+const { actions, selectors } = personStoreSearchSlice;
 
 const drawerWidth = 280;
 
@@ -39,17 +41,17 @@ const filterGroupKey = 'base';
 
 export const FilterPanel = () => {
   const dispatch: AppDispatch = useDispatch();
-  const filtersAppliedAsRecord = useSelector(selectFiltersAppliedRecordForGroup(filterGroupKey));
+  const filtersAppliedAsRecord = useSelector((state) => selectors.selectFiltersAppliedRecordForGroup(state, filterGroupKey));
   const personQueryState = usePersonQuery();
 
   const classes = useStyles();
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(switchFilter({key: filterGroupKey, filter: event.target.name as FilterId}));
+    dispatch(actions.switchFilterForGroup({key: filterGroupKey, filter: event.target.name as FilterId}));
   };
   
   const resetAllFilters = () => {
-    dispatch(resetFilters());
+    dispatch(actions.resetFilters());
   };
 
   const stats = personQueryState.status === 'success' ? personQueryState.response.stats : null;

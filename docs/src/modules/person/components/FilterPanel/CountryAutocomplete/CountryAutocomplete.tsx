@@ -6,18 +6,19 @@ import TextField from '@mui/material/TextField';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-import { replaceFiltersApplied, selectFiltersAppliedForGroup } from '../../../redux';
+import { personStoreSearchSlice } from '../../../redux';
 import { useCountryValues } from '../../../hooks';
 import { AppDispatch } from '../../../../../redux';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
+const { actions, selectors } = personStoreSearchSlice;
 const filterGroupKey = 'country';
 
 export const CountryAutocomplete = () => {
   const dispatch: AppDispatch = useDispatch();
-  const filtersApplied = useSelector(selectFiltersAppliedForGroup(filterGroupKey));
+  const filtersApplied = useSelector((state) => selectors.selectFiltersAppliedForGroup(state, filterGroupKey));
   const countryValuesQueryState = useCountryValues();
 
   return (
@@ -44,7 +45,7 @@ export const CountryAutocomplete = () => {
       )}
       onChange={(_, values) => {
         const filters = values.map(value => 'country-' + value);
-        dispatch(replaceFiltersApplied({key: filterGroupKey, filtersApplied: filters}));
+        dispatch(actions.replaceFiltersForGroup({key: filterGroupKey, filtersApplied: filters}));
       }}
       value={filtersApplied.map(value => value.split('-')[1])}
     />

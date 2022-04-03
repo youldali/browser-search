@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-    changeSort, selectFilterState, setOrderBy, setOrderDirection, setPage, setPerPage,
-} from '../redux';
+import { personStoreSearchSlice } from '../redux';
 import { Person } from '../models';
 import { FilterId } from '../browserSearch';
 import { AppDispatch } from '../../../redux';
@@ -18,15 +16,17 @@ const headCells: HeadCell<Person>[] = [
   { id: 'favoriteColours', numeric: false, label: 'Favorite colours' },
 ];
 
+const { actions, selectors } = personStoreSearchSlice;
+
 export const usePersonTable = () => {
-  const filterState = useSelector(selectFilterState);
+  const searchState = useSelector(selectors.selectSearchState);
   const dispatch: AppDispatch = useDispatch();
 
-  const {orderDirection, orderBy, page, perPage} = filterState;
+  const {orderDirection, orderBy, page, perPage} = searchState;
 
   const onSortChange = (property: string) => {
     const isAsc = orderBy === property && orderDirection === 'asc';
-    dispatch(changeSort({
+    dispatch(actions.changeSort({
       orderBy: property as FilterId,
       orderDirection: isAsc ? 'desc' : 'asc'
     }));
@@ -34,13 +34,13 @@ export const usePersonTable = () => {
 
   return {
     orderDirection,
-    onOrderDirectionChange: (orderDirection: 'asc' | 'desc') => dispatch(setOrderDirection(orderDirection)),
+    onOrderDirectionChange: (orderDirection: 'asc' | 'desc') => dispatch(actions.setOrderDirection(orderDirection)),
     orderBy,
-    onOrderByChange: (orderBy: string) => dispatch(setOrderBy(orderBy as FilterId)),
+    onOrderByChange: (orderBy: string) => dispatch(actions.setOrderBy(orderBy as FilterId)),
     perPage,
-    onPerPageChange: (perPage: number) => dispatch(setPerPage(perPage)),
+    onPerPageChange: (perPage: number) => dispatch(actions.setPerPage(perPage)),
     page,
-    onPageChange: (page: number) => dispatch(setPage(page)),
+    onPageChange: (page: number) => dispatch(actions.setPage(page)),
     onSortChange,
     headCells,
   }
