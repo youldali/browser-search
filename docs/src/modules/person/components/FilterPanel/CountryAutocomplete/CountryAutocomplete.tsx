@@ -5,11 +5,15 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Skeleton from '@mui/material/Skeleton';
+import { SearchResponse } from 'browser-search';
 
 import { personStoreSearchSlice } from '../../../redux';
 import { useCountryValues } from '../../../hooks';
 import { AppDispatch } from '../../../../../redux';
 import { QuerySuspense } from '../../../../common';
+import { Person } from '../../../models';
+import { ChipFilterStat } from '../SwitchField/ChipFilterStat';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -17,16 +21,23 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const { actions, selectors } = personStoreSearchSlice;
 const filterGroupKey = 'country';
 
-export const CountryAutocomplete = () => {
+type Props = {
+  stats: SearchResponse<Person>["stats"]
+}
+
+
+
+export const CountryAutocomplete = ({ stats }: Props) => {
   const dispatch: AppDispatch = useDispatch();
   const filtersApplied = useSelector((state) => selectors.selectFiltersAppliedForGroup(state, filterGroupKey));
   const countryValuesQueryState = useCountryValues();
 
+  console.log(stats);
   return (
       <QuerySuspense
         queryState={countryValuesQueryState}
         fallback={() => <div>An error occured</div>}
-        loading={<div>Loading</div>}
+        loading={<Skeleton variant="rectangular" width='100%' height={40} />}
       >
         {
           (options) =>
@@ -46,6 +57,7 @@ export const CountryAutocomplete = () => {
                   checked={selected}
                 />
                 {option}
+                <ChipFilterStat nextFilterStateStat={stats[`${filterGroupKey}-${option}`]} />
               </li>
             )}
             renderInput={(params) => (

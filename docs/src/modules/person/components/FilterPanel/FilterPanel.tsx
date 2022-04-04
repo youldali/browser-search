@@ -142,7 +142,7 @@ export const FilterPanel = () => {
         <FormControl component="fieldset">
           <FormLabel component="legend">By country</FormLabel>
           <FormGroup>
-            <CountryAutocomplete />
+            { stats && <CountryAutocomplete stats={stats} />}
           </FormGroup>
         </FormControl>
 

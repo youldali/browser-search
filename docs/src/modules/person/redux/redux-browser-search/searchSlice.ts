@@ -20,7 +20,7 @@ const getDefaultInitialState = <FilterId extends string>(): SearchReducerState<F
   orderDirection: 'asc',
 });
 
-export const buildSearchSlice = <FilterId extends string, RootState = object>({
+export const buildSearchSlice = <FilterId extends string>({
     initialState = getDefaultInitialState<FilterId>(),
     reducerName,
     reducerPath = [reducerName],
@@ -97,7 +97,7 @@ export const buildSearchSlice = <FilterId extends string, RootState = object>({
   });
 
   const slicePath = RPath(reducerPath);
-  const selectState = (state: RootState): SearchReducerState<FilterId> => slicePath(state) as SearchReducerState<FilterId>;
+  const selectState = (state: object): SearchReducerState<FilterId> => slicePath(state) as SearchReducerState<FilterId>;
 
   const selectFiltersAppliedByGroup = createSelector(
     selectState,
@@ -107,14 +107,14 @@ export const buildSearchSlice = <FilterId extends string, RootState = object>({
   
   const selectFiltersAppliedForGroup = createSelector([
       selectFiltersAppliedByGroup,
-      (_, key: FilterGroupKey) => key
+      (_: object, key: FilterGroupKey) => key
     ],
     (filtersAppliedByGroup, key) => filtersAppliedByGroup[key] ?? []
   );
   
   const selectFiltersAppliedRecordForGroup = createSelector([
     selectFiltersAppliedByGroup,
-    (_, key: FilterGroupKey) => key
+    (_: object, key: FilterGroupKey) => key
   ],
   (filtersAppliedByGroup, key) => toFilterRecord(filtersAppliedByGroup[key] ?? [])
   )

@@ -23,7 +23,7 @@ export const usePersonQuery = (): QueryState<Person, FilterId> => {
     orderDirection: searchState.orderDirection === 'asc' ? 'ASC' : 'DESC',
     perPage: searchState.perPage,
     page: searchState.page,
-  }), [searchState]);
+  }), [searchState, filterConfig]);
 
   return useQuery<Person, FilterId>(request);
 }
