@@ -13,7 +13,7 @@ import { useCountryValues } from '../../../hooks';
 import { AppDispatch } from '../../../../../redux';
 import { QuerySuspense } from '../../../../common';
 import { Person } from '../../../models';
-import { ChipFilterStat } from '../SwitchField/ChipFilterStat';
+import { ChipFilterStat } from '../../../../common/components';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -32,7 +32,6 @@ export const CountryAutocomplete = ({ stats }: Props) => {
   const filtersApplied = useSelector((state) => selectors.selectFiltersAppliedForGroup(state, filterGroupKey));
   const countryValuesQueryState = useCountryValues();
 
-  console.log(stats);
   return (
       <QuerySuspense
         queryState={countryValuesQueryState}
@@ -42,12 +41,12 @@ export const CountryAutocomplete = ({ stats }: Props) => {
         {
           (options) =>
           <Autocomplete
+            disableCloseOnSelect
             multiple
             limitTags={2}
             size="small"
             id="checkboxes-tags-demo"
             options={options}
-            disableCloseOnSelect
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox

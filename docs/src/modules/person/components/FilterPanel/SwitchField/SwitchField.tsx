@@ -4,10 +4,10 @@ import { Theme } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 
-import { ChipFilterStat } from './ChipFilterStat';
+import { ChipFilterStat } from '../../../../common/components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +42,7 @@ export const SwitchField = ({
 
   return (
     <FormControlLabel
-      control={<Switch checked={isChecked} onChange={onSwitchChange} name={filterName} />}
+      control={<Checkbox checked={isChecked} onChange={onSwitchChange} name={filterName} />}
       label={<FilterLabel>{label} <ChipFilterStat nextFilterStateStat={nextFilterStateStat} /></FilterLabel>}
       classes={{label: classes.filterControlLabel}}
     />

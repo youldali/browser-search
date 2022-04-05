@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Toolbar from '@mui/material/Toolbar';
 import { Theme } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
@@ -11,15 +10,10 @@ import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
 
-import { AppDispatch } from '../../../../redux';
-import { FilterId } from '../../browserSearch';
-import { personStoreSearchSlice } from '../../redux';
-import { usePersonQuery } from '../../hooks';
+import { PersonQueryResponse } from '../../hooks';
 
 import { SwitchField } from './SwitchField';
 import { CountryAutocomplete } from './CountryAutocomplete';
-
-const { actions, selectors } = personStoreSearchSlice;
 
 const drawerWidth = 280;
 
@@ -39,22 +33,24 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const filterGroupKey = 'base';
 
-export const FilterPanel = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const filtersAppliedAsRecord = useSelector((state) => selectors.selectFiltersAppliedRecordForGroup(state, filterGroupKey));
-  const personQueryState = usePersonQuery();
+type Props = {
+  response: PersonQueryResponse;
+  filtersAppliedAsRecord: Record<string, boolean>;
+  onResetFilters(): void;
+  onSwitchFilter(payload: {key: string, filter: string}): void;
+}
 
+export const FilterPanel = ({
+  filtersAppliedAsRecord,
+  response: {stats},
+  onResetFilters,
+  onSwitchFilter,
+}: Props) => {
   const classes = useStyles();
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(actions.switchFilterForGroup({key: filterGroupKey, filter: event.target.name as FilterId}));
+    onSwitchFilter({key: filterGroupKey, filter: event.target.name});
   };
-  
-  const resetAllFilters = () => {
-    dispatch(actions.resetFilters());
-  };
-
-  const stats = personQueryState.status === 'success' ? personQueryState.response.stats : null;
 
   return (
       <Drawer
@@ -71,7 +67,7 @@ export const FilterPanel = () => {
           <Button 
           variant="contained" 
           color="primary"
-          onClick={resetAllFilters}
+          onClick={onResetFilters}
           >
             Reset all
           </Button>

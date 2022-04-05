@@ -1,1 +1,1 @@
-export { FilterPanel } from './FilterPanel';
+export { FilterPanelContainer as FilterPanel } from './FilterPanelContainer';

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Request } from 'browser-search';
-import { QueryState, useQuery } from 'react-browser-search';
+import { QueryState, SuccessQueryState, useQuery } from 'react-browser-search';
 
 import { personStoreFilterConfigSlice, personStoreSearchSlice } from '../redux';
 import { FilterId, storeId } from '../browserSearch';
@@ -27,3 +27,5 @@ export const usePersonQuery = (): QueryState<Person, FilterId> => {
 
   return useQuery<Person, FilterId>(request);
 }
+
+export type PersonQueryResponse = SuccessQueryState<Person, FilterId>["response"];

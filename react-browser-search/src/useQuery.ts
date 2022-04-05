@@ -6,9 +6,9 @@ import * as GenericQueryState from './queryState';
 
 type RequestPayload<Document, TFilterId extends string> = BS.Request<Document, TFilterId>
 
-type ResponsePayload<Document, TFilterId extends string> = SearchReponse<Document, TFilterId>;
+type ResponsePayload<Document, TFilterId extends string> = SearchResponse<Document, TFilterId>;
 
-export type SearchReponse<Document, TFilterId extends string = string> = Omit<BS.SearchResponse<Document, TFilterId>, '_cacheStatus_'>;
+export type SearchResponse<Document, TFilterId extends string = string> = Omit<BS.SearchResponse<Document, TFilterId>, '_cacheStatus_'>;
 
 export interface IdleState extends GenericQueryState.IdleState {
 }
