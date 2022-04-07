@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { GenericQueryState, SearchReponse } from 'react-browser-search';
+import { GenericQueryState } from 'react-browser-search';
 
 type QuerySuspenseProps<Request, Response, Error> = {
   queryState: GenericQueryState.QueryState<Request, Response, Error>;

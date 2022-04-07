@@ -15,7 +15,7 @@ export interface SuccessQueryState<Request, Response> {
 
 export interface ErrorQueryState<Request, Error> {
   status: 'error',
-  request?: Request;
+  request: Request;
   error: Error;
 }
 

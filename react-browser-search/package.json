@@ -7,10 +7,13 @@
   "license": "MIT",
   "dependencies": {
     "browser-search": "file:.yalc/browser-search",
-    "object-hash": "^3.0.0"
+    "memoizee": "^0.4.15",
+    "object-hash": "^3.0.0",
+    "ramda": "^0.28.0"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
+    "@types/memoizee": "^0.4.7",
     "@webpack-cli/generators": "^2.4.2",
     "jest": "^27.5.1",
     "prettier": "^2.6.1",
@@ -24,6 +27,7 @@
     "webpack-cli": "^4.9.2"
   },
   "scripts": {
+    "yalc:update": "yarn build:dev && yalc publish && yalc push",
     "test": "jest",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",

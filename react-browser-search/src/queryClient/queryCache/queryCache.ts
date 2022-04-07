@@ -1,6 +1,7 @@
 import * as BS from 'browser-search';
-import hash from 'object-hash';
 import { Maybe } from 'purify-ts/Maybe';
+
+import { hashRequest } from '../../request';
 
 import { buildStoreCache } from './storeCache';
 
@@ -11,7 +12,7 @@ export const buildQueryCache = () => {
   const pendingQueryCache = buildStoreCache();
 
   const queryCache = <Document>(request: BS.Request<Document>): Maybe<Promise<BS.SearchResponse<Document>>> => {
-    const requestHash = hashObject(request);
+    const requestHash = hashRequest(request);
 
     return (
       responseCache
@@ -22,7 +23,7 @@ export const buildQueryCache = () => {
   }
 
   const addQueryToCache = <Document>(request: BS.Request<Document>, query: Promise<BS.SearchResponse<Document>>): void => {
-    const requestHash = hashObject(request);
+    const requestHash = hashRequest(request);
     pendingQueryCache.addValueToStoreCache(request.storeId, requestHash, query);
 
     query
@@ -45,7 +46,3 @@ export const buildQueryCache = () => {
     deleteStoreCache,
   }
 }
-
-const hashObject = (object: object): string => hash(object, {algorithm: 'md5', unorderedArrays: true})
-
- 

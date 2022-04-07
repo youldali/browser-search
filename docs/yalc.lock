@@ -2,11 +2,11 @@
   "version": "v1",
   "packages": {
     "browser-search": {
-      "signature": "b1275284bb14b432941019104f51fccd",
+      "signature": "3b75a60d6d38c8887362ae520108afe2",
       "file": true
     },
     "react-browser-search": {
-      "signature": "deda0e83a57905a812a3783e70674403",
+      "signature": "8220d265593392a871bf6a69cc71198a",
       "file": true
     }
   }

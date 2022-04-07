@@ -12,6 +12,7 @@ const config = {
     library: 'react-browser-search',
     libraryTarget: 'umd',
   },
+  devtool: 'source-map', 
   plugins: [
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/

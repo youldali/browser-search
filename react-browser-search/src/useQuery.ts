@@ -3,6 +3,7 @@ import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 
 import { BrowserSearchContext } from './provider';
 import * as GenericQueryState from './queryState';
+import { areRequestsEqual } from './request';
 
 type RequestPayload<Document, TFilterId extends string> = BS.Request<Document, TFilterId>
 
@@ -39,7 +40,7 @@ const initialState: IdleState = {
 const reducer = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): QueryState<Document, TFilterId> => {
   switch (action.type) {
     case 'searchStarted': {
-      if(state.status === 'loading') {
+      if(state.status === 'loading' && !areRequestsEqual(state.request, action.request)) {
         state.abort();
       }
 
@@ -92,7 +93,7 @@ export const useQuery = <Document, TFilterId extends string = string>(request: B
         dispatch({type: 'searchCompleted', response: searchResponse, request})
       })
       .catch(error => {
-        console.log(error);
+        console.log(error, request);
         dispatch({type: 'searchFailed', request, error})
       })
   }, [request, queryClient]);
