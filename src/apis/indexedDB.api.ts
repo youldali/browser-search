@@ -107,7 +107,7 @@ export const getNumberOfDocumentsInStore =
             countRequest.onerror = () => reject(new Error('An error occured when getting the number of documents in store "${storeName}": ' + transaction?.error?.message));
         });
     }
-    catch(e) {
+    catch(e: any) {
         return Promise.reject(new Error(`An error occured when getting the number of documents in store "${storeName}". Make sure the store exist. Error: ${e.message}`))
     }
 }
@@ -211,7 +211,7 @@ export const getAllUniqueKeysForIndex =
             transaction.onerror = () => reject(new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}":  ${transaction?.error?.message}`));
         });
     }
-    catch(e) {
+    catch(e: any) {
         return Promise.reject(new Error(`An error occured when getting the unique keys for store "${storeName}", index "${indexName}". Make sure the store and the index exist. Error: ${e.message}`));
     }
 };
