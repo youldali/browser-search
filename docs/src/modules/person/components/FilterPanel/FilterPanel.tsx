@@ -1,8 +1,5 @@
 import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
-import { Theme } from '@mui/material/styles';
-import createStyles from '@mui/styles/createStyles';
-import makeStyles from '@mui/styles/makeStyles';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
@@ -15,21 +12,7 @@ import { PersonQueryResponse } from '../../hooks';
 import { SwitchField } from './SwitchField';
 import { CountryAutocomplete } from './CountryAutocomplete';
 
-const drawerWidth = 280;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    drawer: {
-      width: drawerWidth,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    drawerContainer: {
-      overflow: 'auto',
-    },
-  }),
-);
+const drawerWidth = 300;
 
 const filterGroupKey = 'base';
 
@@ -46,8 +29,6 @@ export const FilterPanel = ({
   onResetFilters,
   onSwitchFilter,
 }: Props) => {
-  const classes = useStyles();
-
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSwitchFilter({key: filterGroupKey, filter: event.target.name});
   };
@@ -56,9 +37,14 @@ export const FilterPanel = ({
       <Drawer
         variant="permanent"
         anchor="left"
-        className={classes.drawer}
-        classes={{
-          paper: classes.drawerPaper,
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { 
+            width: drawerWidth, 
+            boxSizing: 'border-box',
+            padding: 2,
+          },
         }}
       >
         <Toolbar />
