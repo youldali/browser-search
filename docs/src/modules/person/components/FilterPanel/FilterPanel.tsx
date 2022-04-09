@@ -1,134 +1,106 @@
 import React from 'react';
-import Toolbar from '@mui/material/Toolbar';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import Button from '@mui/material/Button';
+import { FiltersApplied } from 'browser-search';
+import Fab from '@mui/material/Fab';
+import List from '@mui/material/List';
+import ListSubheader from '@mui/material/ListSubheader';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import { PersonQueryResponse } from '../../hooks';
 
-import { SwitchField } from './SwitchField';
+import { FilterListItem } from './FilterListItem';
 import { CountryAutocomplete } from './CountryAutocomplete';
-
-const drawerWidth = 300;
 
 const filterGroupKey = 'base';
 
 type Props = {
   response: PersonQueryResponse;
   filtersAppliedAsRecord: Record<string, boolean>;
+  filtersApplied: FiltersApplied;
   onResetFilters(): void;
   onSwitchFilter(payload: {key: string, filter: string}): void;
 }
 
 export const FilterPanel = ({
   filtersAppliedAsRecord,
+  filtersApplied,
   response: {stats},
   onResetFilters,
   onSwitchFilter,
 }: Props) => {
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onSwitchFilter({key: filterGroupKey, filter: event.target.name});
+  const handleFilterChange = (filterName: string) => {
+    onSwitchFilter({key: filterGroupKey, filter: filterName});
   };
 
   return (
-      <Drawer
-        variant="permanent"
-        anchor="left"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { 
-            width: drawerWidth, 
-            boxSizing: 'border-box',
-            padding: 2,
-          },
-        }}
-      >
-        <Toolbar />
-
-        <div>
-          <Button 
-          variant="contained" 
-          color="primary"
+    <aside>
+      <div>
+        <Fab 
+          size="medium"
+          variant='extended'
+          color="secondary"
           onClick={onResetFilters}
-          >
-            Reset all
-          </Button>
-        </div>
+          disabled={filtersApplied.length === 0}
+        >
+          <DeleteOutlineIcon sx={{ mr: 1 }} />
+          Reset all
+        </Fab>
+      </div>
 
-        <Divider />
+      <List sx={{ bgcolor: 'background.paper' }}>
+        <ListSubheader disableSticky>By Age</ListSubheader>
+        <FilterListItem
+          filterName='lowAged'
+          label='< 30 years old'
+          isChecked={filtersAppliedAsRecord.lowAged ?? false}
+          onFilterChange={handleFilterChange}
+          nextFilterStateStat={stats?.lowAged}
+        />
 
-        <FormControl component="fieldset">
-          <FormLabel component="legend">By age</FormLabel>
-          <FormGroup>
-            <SwitchField
-              filterName='lowAged'
-              label='< 30 years old'
-              isChecked={filtersAppliedAsRecord.lowAged ?? false}
-              onSwitchChange={handleFilterChange}
-              nextFilterStateStat={stats?.lowAged}
-            />
+        <FilterListItem
+          filterName='middleAged'
+          label='Between 30 and 50 years old'
+          isChecked={filtersAppliedAsRecord.middleAged ?? false}
+          onFilterChange={handleFilterChange}
+          nextFilterStateStat={stats?.middleAged}
+        />
 
-            <SwitchField
-              filterName='middleAged'
-              label='Between 30 and 50 years old'
-              isChecked={filtersAppliedAsRecord.middleAged ?? false}
-              onSwitchChange={handleFilterChange}
-              nextFilterStateStat={stats?.middleAged}
-            />
+        <FilterListItem
+          filterName='highAged'
+          label='> 50 years old'
+          isChecked={filtersAppliedAsRecord.highAged ?? false}
+          onFilterChange={handleFilterChange}
+          nextFilterStateStat={stats?.highAged}
+        />
 
-            <SwitchField
-              filterName='highAged'
-              label='> 50 years old'
-              isChecked={filtersAppliedAsRecord.highAged ?? false}
-              onSwitchChange={handleFilterChange}
-              nextFilterStateStat={stats?.highAged}
-            />
-          </FormGroup>
-        </FormControl>
+        <ListSubheader disableSticky>By salary</ListSubheader>
+        <FilterListItem
+          filterName='lowSalary'
+          label='< 40 000$'
+          isChecked={filtersAppliedAsRecord.lowSalary ?? false}
+          onFilterChange={handleFilterChange}
+          nextFilterStateStat={stats.lowSalary}
+        />
 
-        <Divider />
+        <FilterListItem
+          filterName='middleSalary'
+          label='Between 40 000$ and 70 000$'
+          isChecked={filtersAppliedAsRecord.middleSalary ?? false}
+          onFilterChange={handleFilterChange}
+          nextFilterStateStat={stats.middleSalary}
+        />
 
-        <FormControl component="fieldset">
-          <FormLabel component="legend">By salary</FormLabel>
-          <FormGroup>
-            <SwitchField
-              filterName='lowSalary'
-              label='< 40 000$'
-              isChecked={filtersAppliedAsRecord.lowSalary ?? false}
-              onSwitchChange={handleFilterChange}
-              nextFilterStateStat={stats?.lowSalary}
-            />
+        <FilterListItem
+          filterName='highSalary'
+          label='> 70 000$'
+          isChecked={filtersAppliedAsRecord.highSalary ?? false}
+          onFilterChange={handleFilterChange}
+          nextFilterStateStat={stats.highSalary}
+        />
 
-            <SwitchField
-              filterName='middleSalary'
-              label='Between 40 000$ and 70 000$'
-              isChecked={filtersAppliedAsRecord.middleSalary ?? false}
-              onSwitchChange={handleFilterChange}
-              nextFilterStateStat={stats?.middleSalary}
-            />
-
-            <SwitchField
-              filterName='highSalary'
-              label='> 70 000$'
-              isChecked={filtersAppliedAsRecord.highSalary ?? false}
-              onSwitchChange={handleFilterChange}
-              nextFilterStateStat={stats?.highSalary}
-            />
-          </FormGroup>
-        </FormControl>
-
-        <FormControl component="fieldset">
-          <FormLabel component="legend">By country</FormLabel>
-          <FormGroup>
-            { stats && <CountryAutocomplete stats={stats} />}
-          </FormGroup>
-        </FormControl>
-
-      </Drawer>
+        <ListSubheader disableSticky>By country</ListSubheader>
+        <CountryAutocomplete stats={stats} />
+      </List>
+    </aside>
   );
 }
 

@@ -15,6 +15,7 @@ const filterGroupKey = 'base';
 export const FilterPanelContainer = () => {
   const dispatch: AppDispatch = useDispatch();
   const filtersAppliedAsRecord = useSelector((state) => selectors.selectFiltersAppliedRecordForGroup(state, filterGroupKey));
+  const filtersApplied = useSelector(selectors.selectFiltersApplied);
   const personQueryState = usePersonQuery();
 
   const onSwitchFilter = (payload: {key: string, filter: string}) => {
@@ -27,19 +28,20 @@ export const FilterPanelContainer = () => {
 
   return (
     <QuerySuspense
-        queryState={personQueryState}
-        fallback={() => <div>An error occured</div>}
-        loading={<span>loading</span>}
-      >
-        {
-          (response) =>
-          <FilterPanel
-            response={response}
-            filtersAppliedAsRecord={filtersAppliedAsRecord}
-            onResetFilters={resetAllFilters}
-            onSwitchFilter={onSwitchFilter}
-          />
-        } 
+      queryState={personQueryState}
+      fallback={() => <div>An error occured</div>}
+      loading={<span>loading</span>}
+    >
+      {
+        (response) =>
+        <FilterPanel
+          response={response}
+          filtersAppliedAsRecord={filtersAppliedAsRecord}
+          filtersApplied={filtersApplied}
+          onResetFilters={resetAllFilters}
+          onSwitchFilter={onSwitchFilter}
+        />
+      } 
     </QuerySuspense>
   );
 }

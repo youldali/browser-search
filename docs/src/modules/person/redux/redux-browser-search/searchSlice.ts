@@ -85,7 +85,8 @@ export const buildSearchSlice = <FilterId extends string>({
   
       setPerPage(state, {payload}: PayloadAction<SearchReducerState<FilterId>["perPage"]>) {
         if(payload > 0) {
-          state.perPage = payload
+          state.perPage = payload;
+          state.page = 0;
         }
       },
   
