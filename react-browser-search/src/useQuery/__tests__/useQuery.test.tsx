@@ -106,8 +106,10 @@ describe ('reducer', () => {
   })
 
   it('it goes from loading to success', async () => {
-    const loadingState = getLoadingStateFixture();
     const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
+    const loadingState = getLoadingStateFixture({
+      request: searchCompletedAction.request
+    });
     const expectedState = getSuccessStateFixture({
       request: searchCompletedAction.request,
       response: searchCompletedAction.response,
@@ -130,8 +132,10 @@ describe ('reducer', () => {
   })
 
   it('it goes from stale to success', async () => {
-    const staleState = getStaleStateFixture();
     const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
+    const staleState = getStaleStateFixture({
+      request: searchCompletedAction.request,
+    });
     const expectedState = getSuccessStateFixture({
       request: searchCompletedAction.request,
       response: searchCompletedAction.response,
@@ -141,8 +145,10 @@ describe ('reducer', () => {
   })
 
   it('it goes from loading to error', async () => {
-    const loadingState = getLoadingStateFixture();
     const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
+    const loadingState = getLoadingStateFixture({
+      request: searchFailedAction.request,
+    });
     const expectedState = getErrorStateFixture({
       request: searchFailedAction.request,
       error: searchFailedAction.error,
@@ -152,8 +158,10 @@ describe ('reducer', () => {
   })
 
   it('it goes from stale to error', async () => {
-    const staleState = getStaleStateFixture();
     const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
+    const staleState = getStaleStateFixture({
+      request: searchFailedAction.request,
+    });
     const expectedState = getErrorStateFixture({
       request: searchFailedAction.request,
       error: searchFailedAction.error,

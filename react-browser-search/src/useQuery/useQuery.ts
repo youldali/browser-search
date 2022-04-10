@@ -86,10 +86,14 @@ const fromSuccessOrStaleToStale = <Document, TFilterId extends string = string>(
 export const reducer = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): QueryState<Document, TFilterId> => {
   switch (action.type) {
     case 'searchStarted': {
-      if(state.isFetching && !areRequestsEqual(state.request, action.request)) {
+      if(state.status === 'loading' && !areRequestsEqual(state.request, action.request)) {
         state.abort();
       }
 
+      if(state.status === 'stale' && !areRequestsEqual(state.newRequest, action.request)) {
+        state.abort();
+      }
+      
       switch(state.status) {
         case 'idle':
         case 'error':
@@ -103,8 +107,9 @@ export const reducer = <Document, TFilterId extends string = string>(state: Quer
     case 'searchCompleted': {
       switch(state.status) {
         case 'loading':
+          return state.request === action.request ? fromLoadingOrStaleToSuccess(state, action) : state;
         case 'stale':
-          return fromLoadingOrStaleToSuccess(state, action);
+          return state.newRequest === action.request ? fromLoadingOrStaleToSuccess(state, action) : state;
         default:
           return state;
       }
@@ -113,8 +118,9 @@ export const reducer = <Document, TFilterId extends string = string>(state: Quer
     case 'searchFailed': {
       switch(state.status) {
         case 'loading':
+          return state.request === action.request ? fromLoadingOrStaleToError(state, action) : state;
         case 'stale':
-          return fromLoadingOrStaleToError(state, action);
+          return state.newRequest === action.request ? fromLoadingOrStaleToError(state, action) : state;
         default:
           return state;
       }
@@ -132,7 +138,7 @@ export const useQuery = <Document, TFilterId extends string = string>(request: B
     reducer,
     initialState,
   );
-  console.log(state);
+
   const runQuery = useCallback( (): void => {
     const [seachResponsePromise, abortSearch] = queryClient.queryStore(request);
     dispatch({type: 'searchStarted', request, abort: abortSearch})
