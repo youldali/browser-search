@@ -1,4 +1,4 @@
-import { Request, SearchResponse, StoreId } from 'browser-search';
+import { Request } from 'browser-search';
 
 import { createFixture } from './createFixture';
 

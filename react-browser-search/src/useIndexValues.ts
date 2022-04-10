@@ -36,6 +36,7 @@ type QueryReducer<T> = Reducer<QueryState<T>, Action<T>>;
 
 const initialState: IdleState = {
   status: 'idle',
+  isFetching: false,
 };
 
 const reducer = <T extends IDBValidKey>(state: QueryState<T>, action: Action<T>): QueryState<T> => {
@@ -46,7 +47,8 @@ const reducer = <T extends IDBValidKey>(state: QueryState<T>, action: Action<T>)
         request: {
           indexId: action.indexId,
           storeId: action.storeId,
-        }
+        },
+        isFetching: true,
       } 
     }
 
@@ -59,6 +61,7 @@ const reducer = <T extends IDBValidKey>(state: QueryState<T>, action: Action<T>)
           storeId: action.storeId,
         },
         response: action.response,
+        isFetching: false,
       } :
       state;
     }
@@ -72,6 +75,7 @@ const reducer = <T extends IDBValidKey>(state: QueryState<T>, action: Action<T>)
           storeId: action.storeId,
         },
         error: action.error,
+        isFetching: false,
       } :
       state;
     }
