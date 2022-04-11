@@ -15,18 +15,19 @@ export const PersonTable = () => {
     <section>
       <QuerySuspense
         queryState={personQueryState}
-        fallback={() => <div>An error occured</div>}
-        loading={<div>Loading</div>}
-      >
-        {
-          (queryResponse) =>
+        error={() => <div>An error occured</div>}
+        loading={() => <div>Loading</div>}
+        stale={() => <div>Loading</div>}
+        idle={() => <div>Loading</div>}
+        success={
+          ({response}) =>
           <ItemTable 
-            data={queryResponse.documents}
-            dataCount={queryResponse.numberOfDocuments}
+            data={response.documents}
+            dataCount={response.numberOfDocuments}
             {...personsTableProps}
           />
         } 
-    </QuerySuspense>
+      />
     </section>
   );
 }

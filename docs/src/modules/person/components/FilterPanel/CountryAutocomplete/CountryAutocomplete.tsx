@@ -35,18 +35,19 @@ export const CountryAutocomplete = ({ stats }: Props) => {
   return (
       <QuerySuspense
         queryState={countryValuesQueryState}
-        fallback={() => <div>An error occured</div>}
-        loading={<Skeleton variant="rectangular" width='100%' height={40} />}
-      >
-        {
-          (options) =>
+        error={() => <div>An error occured</div>}
+        loading={() => <Skeleton variant="rectangular" width='100%' height={40} />}
+        idle={() => <Skeleton variant="rectangular" width='100%' height={40} />}
+        stale={() => <div>An error occured</div>}
+        success={
+          (queryState) =>
           <Autocomplete
             disableCloseOnSelect
             multiple
             limitTags={2}
             size="small"
             id="checkboxes-tags-demo"
-            options={options}
+            options={queryState.response}
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox
@@ -69,6 +70,6 @@ export const CountryAutocomplete = ({ stats }: Props) => {
             value={filtersApplied.map(value => value.split('-')[1])}
           />
         } 
-    </QuerySuspense>
+      />
   );
 }

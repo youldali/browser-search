@@ -29,11 +29,11 @@ export const FilterPanelContainer = () => {
   return (
     <QuerySuspense
       queryState={personQueryState}
-      fallback={() => <div>An error occured</div>}
-      loading={<span>loading</span>}
-    >
-      {
-        (response) =>
+      idle={() => <div>An error occured</div>}
+      loading={() => <span>loading</span>}
+      error={() => <div>An error occured</div>}
+      stale={
+        ({response}) =>
         <FilterPanel
           response={response}
           filtersAppliedAsRecord={filtersAppliedAsRecord}
@@ -42,7 +42,17 @@ export const FilterPanelContainer = () => {
           onSwitchFilter={onSwitchFilter}
         />
       } 
-    </QuerySuspense>
+      success={
+        ({response}) =>
+        <FilterPanel
+          response={response}
+          filtersAppliedAsRecord={filtersAppliedAsRecord}
+          filtersApplied={filtersApplied}
+          onResetFilters={resetAllFilters}
+          onSwitchFilter={onSwitchFilter}
+        />
+      } 
+    />
   );
 }
 

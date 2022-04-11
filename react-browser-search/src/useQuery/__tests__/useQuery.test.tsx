@@ -6,7 +6,7 @@ import {
     getResponseFixture, getStaleStateFixture, getSuccessStateFixture,
 } from '../../__fixtures__';
 import {
-    ErrorQueryState, IdleState, LoadingQueryState, reducer, SearchCompletedAction,
+    buildReducer, ErrorQueryState, IdleState, LoadingQueryState, SearchCompletedAction,
     SearchFailedAction, SearchStartedAction, StaleQueryState, SuccessQueryState, useQuery,
 } from '../useQuery';
 import { useMutateStore } from '../../useMutateStore';
@@ -93,92 +93,199 @@ describe ('useQuery', () => {
 
 
 describe ('reducer', () => {
+  const reducer = buildReducer();
+  
+  describe('From idle state', () => {
+    it('To loading state', async () => {
+      const idleState = getIdleStateFixture();
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const expectedState = getLoadingStateFixture({
+        request: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(idleState, searchStartedAction)).toEqual(expectedState);
+    })
+  });
 
-  it('it goes from idle to loading', async () => {
-    const idleState = getIdleStateFixture();
-    const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
-    const expectedState = getLoadingStateFixture({
-      request: searchStartedAction.request,
-      abort: searchStartedAction.abort,
-    });
+  describe('From loading state', () => {
+    it('to next loading state and aborts the previous request is they are different', async () => {
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const loadingState = getLoadingStateFixture({
+        request: getRequestFixture({
+          filtersApplied: ['random-filter'],
+        }),
+        abort: jest.fn()
+      });
+      const expectedState = getLoadingStateFixture({
+        request: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(loadingState, searchStartedAction)).toEqual(expectedState);
+      expect(loadingState.abort).toHaveBeenCalledTimes(1);
+    })
 
-    expect(reducer(idleState, searchStartedAction)).toEqual(expectedState);
-  })
+    it('to next loading state and does not abort the previous request is they are equal', async () => {
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const loadingState = getLoadingStateFixture({
+        request: getRequestFixture(),
+        abort: jest.fn()
+      });
+      const expectedState = getLoadingStateFixture({
+        request: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(loadingState, searchStartedAction)).toEqual(expectedState);
+      expect(loadingState.abort).not.toHaveBeenCalled();
+    })
+  
+    it('remains unchanged when the search completed is not the last one started (prevents race condition)', async () => {
+      const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
+      const loadingState = getLoadingStateFixture();
+      const expectedState = loadingState;
+  
+      expect(reducer(loadingState, searchCompletedAction)).toEqual(expectedState);
+    })
+  
+    it('remains unchanged when the search failed is not the last one started (prevents race condition)', async () => {
+      const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
+      const loadingState = getLoadingStateFixture();
+      const expectedState = loadingState;
+  
+      expect(reducer(loadingState, searchFailedAction)).toEqual(expectedState);
+    })
+  
+    it('to success state', async () => {
+      const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
+      const loadingState = getLoadingStateFixture({
+        request: searchCompletedAction.request
+      });
+      const expectedState = getSuccessStateFixture({
+        request: searchCompletedAction.request,
+        response: searchCompletedAction.response,
+      });
+  
+      expect(reducer(loadingState, searchCompletedAction)).toEqual(expectedState);
+    })
 
-  it('it goes from loading to success', async () => {
-    const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
-    const loadingState = getLoadingStateFixture({
-      request: searchCompletedAction.request
-    });
-    const expectedState = getSuccessStateFixture({
-      request: searchCompletedAction.request,
-      response: searchCompletedAction.response,
-    });
+    it('to error state', async () => {
+      const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
+      const loadingState = getLoadingStateFixture({
+        request: searchFailedAction.request,
+      });
+      const expectedState = getErrorStateFixture({
+        request: searchFailedAction.request,
+        error: searchFailedAction.error,
+      });
+  
+      expect(reducer(loadingState, searchFailedAction)).toEqual(expectedState);
+    })
+  });
 
-    expect(reducer(loadingState, searchCompletedAction)).toEqual(expectedState);
-  })
+  describe('From stale state', () => {
+    it('to next stale state and aborts the previous request is they are different', async () => {
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const staleState = getStaleStateFixture({
+        newRequest: getRequestFixture({
+          filtersApplied: ['random-filter'],
+        }),
+        abort: jest.fn()
+      });
+      const expectedState = getStaleStateFixture({
+        newRequest: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(staleState, searchStartedAction)).toEqual(expectedState);
+      expect(staleState.abort).toHaveBeenCalledTimes(1);
+    })
 
-  it('it goes from success to stale', async () => {
-    const successState = getSuccessStateFixture();
-    const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
-    const expectedState = getStaleStateFixture({
-      request: successState.request,
-      response: successState.response,
-      newRequest: searchStartedAction.request,
-      abort: searchStartedAction.abort,
-    });
+    it('to next stale state and does not abort the previous request is they are equal', async () => {
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const staleState = getStaleStateFixture({
+        newRequest: getRequestFixture(),
+        abort: jest.fn()
+      });
+      const expectedState = getStaleStateFixture({
+        newRequest: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(staleState, searchStartedAction)).toEqual(expectedState);
+      expect(staleState.abort).not.toHaveBeenCalled();
+    })
+  
+    it('remains unchanged when the search completed is not the last one started (prevents race condition)', async () => {
+      const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
+      const staleState = getStaleStateFixture();
+      const expectedState = staleState;
+  
+      expect(reducer(staleState, searchCompletedAction)).toEqual(expectedState);
+    })
+  
+    it('remains unchanged when the search failed is not the last one started (prevents race condition)', async () => {
+      const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
+      const staleState = getStaleStateFixture();
+      const expectedState = staleState;
+  
+      expect(reducer(staleState, searchFailedAction)).toEqual(expectedState);
+    })
+  
+    it('to success state', async () => {
+      const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
+      const staleState = getStaleStateFixture({
+        newRequest: searchCompletedAction.request,
+      });
+      const expectedState = getSuccessStateFixture({
+        request: searchCompletedAction.request,
+        response: searchCompletedAction.response,
+      });
+  
+      expect(reducer(staleState, searchCompletedAction)).toEqual(expectedState);
+    })
 
-    expect(reducer(successState, searchStartedAction)).toEqual(expectedState);
-  })
+    it('to error state', async () => {
+      const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
+      const staleState = getStaleStateFixture({
+        newRequest: searchFailedAction.request,
+      });
+      const expectedState = getErrorStateFixture({
+        request: searchFailedAction.request,
+        error: searchFailedAction.error,
+      });
+  
+      expect(reducer(staleState, searchFailedAction)).toEqual(expectedState);
+    })
+  });
 
-  it('it goes from stale to success', async () => {
-    const searchCompletedAction: SearchCompletedAction<unknown> = {type: 'searchCompleted', request: getRequestFixture(), response: getResponseFixture()};
-    const staleState = getStaleStateFixture({
-      request: searchCompletedAction.request,
-    });
-    const expectedState = getSuccessStateFixture({
-      request: searchCompletedAction.request,
-      response: searchCompletedAction.response,
-    });
+  describe('From success state', () => {
+    it('to stale state', async () => {
+      const successState = getSuccessStateFixture();
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const expectedState = getStaleStateFixture({
+        request: successState.request,
+        response: successState.response,
+        newRequest: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(successState, searchStartedAction)).toEqual(expectedState);
+    })
+  });
 
-    expect(reducer(staleState, searchCompletedAction)).toEqual(expectedState);
-  })
-
-  it('it goes from loading to error', async () => {
-    const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
-    const loadingState = getLoadingStateFixture({
-      request: searchFailedAction.request,
-    });
-    const expectedState = getErrorStateFixture({
-      request: searchFailedAction.request,
-      error: searchFailedAction.error,
-    });
-
-    expect(reducer(loadingState, searchFailedAction)).toEqual(expectedState);
-  })
-
-  it('it goes from stale to error', async () => {
-    const searchFailedAction: SearchFailedAction<unknown> = {type: 'searchFailed', request: getRequestFixture(), error: new Error()};
-    const staleState = getStaleStateFixture({
-      request: searchFailedAction.request,
-    });
-    const expectedState = getErrorStateFixture({
-      request: searchFailedAction.request,
-      error: searchFailedAction.error,
-    });
-
-    expect(reducer(staleState, searchFailedAction)).toEqual(expectedState);
-  })
-
-  it('it goes from error to loading', async () => {
-    const errorState = getErrorStateFixture();
-    const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
-    const expectedState = getLoadingStateFixture({
-      request: searchStartedAction.request,
-      abort: searchStartedAction.abort,
-    });
-
-    expect(reducer(errorState, searchStartedAction)).toEqual(expectedState);
-  })
+  describe('From error state', () => {
+    it('to loading state', async () => {
+      const errorState = getErrorStateFixture();
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const expectedState = getLoadingStateFixture({
+        request: searchStartedAction.request,
+        abort: searchStartedAction.abort,
+      });
+  
+      expect(reducer(errorState, searchStartedAction)).toEqual(expectedState);
+    })
+  });
 
 })

@@ -1,9 +1,11 @@
 import * as BS from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
+import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
 
 import { BrowserSearchContext } from '../provider';
 import * as GenericQueryState from '../queryState';
 import { areRequestsEqual } from '../request';
+import { buildStateMachine, StateTransition } from '../stateMachine';
 
 type RequestPayload<Document, TFilterId extends string> = BS.Request<Document, TFilterId>
 
@@ -45,97 +47,141 @@ const initialState: IdleState = {
 };
 
 
-const fromIdleOrErrorOrLoadingToLoading = <Document, TFilterId extends string = string>(_: IdleState | LoadingQueryState<Document, TFilterId> | ErrorQueryState<Document, TFilterId>, action: SearchStartedAction<Document, TFilterId>): LoadingQueryState<Document, TFilterId> => (
-  {
+const fromIdleToLoading = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<LoadingQueryState<Document, TFilterId>> => (
+  state.status === 'idle' && action.type === 'searchStarted' ?
+  Just({
     status: 'loading',
     request: action.request,
     abort: action.abort,
     isFetching: true,
-  }
+  }) : Nothing
 )
 
-const fromLoadingOrStaleToSuccess = <Document, TFilterId extends string = string>(_: LoadingQueryState<Document, TFilterId> | StaleQueryState<Document, TFilterId>, action: SearchCompletedAction<Document, TFilterId>): SuccessQueryState<Document, TFilterId> => (
-  {
-    status: 'success',
-    request: action.request,
-    response: action.response,
-    isFetching: false,
-  }
-)
+const fromLoadingToLoading = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<LoadingQueryState<Document, TFilterId>> => {
+  if(state.status === 'loading' && action.type === 'searchStarted') {
+    if(!areRequestsEqual(state.request, action.request)) {
+      state.abort();
+    }
 
-const fromLoadingOrStaleToError = <Document, TFilterId extends string = string>(_: LoadingQueryState<Document, TFilterId> | StaleQueryState<Document, TFilterId>, action: SearchFailedAction<Document, TFilterId>): ErrorQueryState<Document, TFilterId> => (
-  {
+    return Just({
+      status: 'loading',
+      request: action.request,
+      abort: action.abort,
+      isFetching: true,
+    })
+  }
+
+  return Nothing;
+}
+
+const fromLoadingToError = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<ErrorQueryState<Document, TFilterId>> => (
+  state.status === 'loading' && action.type === 'searchFailed' && state.request === action.request ?
+  Just({
     status: 'error',
     request: action.request,
     error: action.error,
     isFetching: false,
-  }
+  }) : Nothing
 )
 
-const fromSuccessOrStaleToStale = <Document, TFilterId extends string = string>(state: SuccessQueryState<Document, TFilterId> | StaleQueryState<Document, TFilterId>, action: SearchStartedAction<Document, TFilterId>): StaleQueryState<Document, TFilterId> => (
-  {
+
+const fromLoadingToSuccess = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<SuccessQueryState<Document, TFilterId>> => (
+  state.status === 'loading' && action.type === 'searchCompleted' && state.request === action.request ?
+  Just({
+    status: 'success',
+    request: action.request,
+    response: action.response,
+    isFetching: false,
+  }) : Nothing
+)
+
+const fromSuccessToStale = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<StaleQueryState<Document, TFilterId>> => (
+  state.status === 'success' && action.type === 'searchStarted' ?
+  Just({
     status: 'stale',
     request: state.request,
     response: state.response,
     newRequest: action.request,
     abort: action.abort,
     isFetching: true,
-  }
+  }) : Nothing
 )
 
-export const reducer = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): QueryState<Document, TFilterId> => {
-  switch (action.type) {
-    case 'searchStarted': {
-      if(state.status === 'loading' && !areRequestsEqual(state.request, action.request)) {
-        state.abort();
-      }
+const fromStaleToSuccess = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<SuccessQueryState<Document, TFilterId>> => (
+  state.status === 'stale' && action.type === 'searchCompleted' && state.newRequest === action.request ?
+  Just({
+    status: 'success',
+    request: action.request,
+    response: action.response,
+    isFetching: false,
+  }) : Nothing
+)
 
-      if(state.status === 'stale' && !areRequestsEqual(state.newRequest, action.request)) {
-        state.abort();
-      }
-      
-      switch(state.status) {
-        case 'idle':
-        case 'error':
-        case 'loading':
-          return fromIdleOrErrorOrLoadingToLoading(state, action);
-        default:
-          return fromSuccessOrStaleToStale(state, action);
-      }
+const fromStaleToStale = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<StaleQueryState<Document, TFilterId>> => {
+  if(state.status === 'stale' && action.type === 'searchStarted'){
+    if(state.status === 'stale' && !areRequestsEqual(state.newRequest, action.request)) {
+      state.abort();
     }
 
-    case 'searchCompleted': {
-      switch(state.status) {
-        case 'loading':
-          return state.request === action.request ? fromLoadingOrStaleToSuccess(state, action) : state;
-        case 'stale':
-          return state.newRequest === action.request ? fromLoadingOrStaleToSuccess(state, action) : state;
-        default:
-          return state;
-      }
-    }
-
-    case 'searchFailed': {
-      switch(state.status) {
-        case 'loading':
-          return state.request === action.request ? fromLoadingOrStaleToError(state, action) : state;
-        case 'stale':
-          return state.newRequest === action.request ? fromLoadingOrStaleToError(state, action) : state;
-        default:
-          return state;
-      }
-    }
- 
-    default:
-      return state;
+    return Just({
+      status: 'stale',
+      request: state.request,
+      response: state.response,
+      newRequest: action.request,
+      abort: action.abort,
+      isFetching: true,
+    })
   }
+
+  return Nothing;
 }
 
+const fromStaleToError = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<ErrorQueryState<Document, TFilterId>> => (
+  state.status === 'stale' && action.type === 'searchFailed' && state.newRequest === action.request ?
+  Just({
+    status: 'error',
+    request: action.request,
+    error: action.error,
+    isFetching: false,
+  }) : Nothing
+)
+
+const fromErrorToLoading = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<LoadingQueryState<Document, TFilterId>> => (
+  state.status === 'error' && action.type === 'searchStarted' ?
+  Just({
+    status: 'loading',
+    request: action.request,
+    abort: action.abort,
+    isFetching: true,
+  }) : Nothing
+)
+
+//----
+
+// type StateTransition = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>) => Maybe<QueryState<Document, TFilterId>>;
+// export const reducer = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): QueryState<Document, TFilterId> => {
+//   const stateTransitions: StateTransition[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading]
+//   const maybeNextState = stateTransitions.reduce(
+//     (maybeNextState: Maybe<QueryState<Document, TFilterId>>, stateTransition: StateTransition): Maybe<QueryState<Document, TFilterId>> => 
+//       maybeNextState.alt(stateTransition(state, action))
+//   , Nothing);
+
+//   return maybeNextState.caseOf({
+//     Just: (nextState) => nextState,
+//     Nothing: () => state,
+//   })
+// }
+
+
+export const buildReducer = <Document, TFilterId extends string = string>(): QueryReducer<Document, TFilterId> => {
+  const stateTransitions: StateTransition<QueryState<Document, TFilterId>, Action<Document, TFilterId>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading]
+  return buildStateMachine(stateTransitions);
+}
 
 export const useQuery = <Document, TFilterId extends string = string>(request: BS.Request<Document, TFilterId>): QueryState<Document, TFilterId> => {
   const queryClient = useContext(BrowserSearchContext);
   const [state, dispatch] = useReducer<QueryReducer<Document, TFilterId>>(
-    reducer,
+    buildReducer<Document, TFilterId>(),
     initialState,
   );
 

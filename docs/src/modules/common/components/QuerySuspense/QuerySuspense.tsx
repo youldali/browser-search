@@ -3,24 +3,37 @@ import { GenericQueryState } from 'react-browser-search';
 
 type QuerySuspenseProps<Request, Response, Error> = {
   queryState: GenericQueryState.QueryState<Request, Response, Error>;
-  fallback: () => ReactElement | null;
-  loading: ReactElement | null;
-  children: (data: Response) => ReactElement | null;
+  idle: (idleQueryState: GenericQueryState.IdleState) => ReactElement | null;
+  error: (errorQueryState: GenericQueryState.ErrorQueryState<Request, Error>) => ReactElement | null;
+  loading: (loadingQueryState: GenericQueryState.LoadingQueryState<Request>) => ReactElement | null;
+  stale: (stateQueryState: GenericQueryState.StaleQueryState<Request, Response>) => ReactElement | null;
+  success: (successQueryState: GenericQueryState.SuccessQueryState<Request, Response>) => ReactElement | null;
 };
 
 export const QuerySuspense = <Request, Response, Error>({
   queryState,
-  fallback,
+  error,
+  idle,
+  stale,
   loading,
-  children,
+  success,
 }: QuerySuspenseProps<Request, Response, Error>) => {
-  if (queryState.status === 'loading' || queryState.status === 'idle') {
-    return loading;
+
+  if (queryState.status === 'idle') {
+    return idle(queryState);
+  }
+
+  if (queryState.status === 'loading') {
+    return loading(queryState);
   }
 
   if (queryState.status === 'error') {
-    return fallback();
+    return error(queryState);
   }
 
-  return children(queryState.response);
+  if (queryState.status === 'stale') {
+    return stale(queryState);
+  }
+
+  return success(queryState);
 };
