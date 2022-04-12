@@ -156,23 +156,6 @@ const fromErrorToLoading = <Document, TFilterId extends string = string>(state: 
   }) : Nothing
 )
 
-//----
-
-// type StateTransition = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>) => Maybe<QueryState<Document, TFilterId>>;
-// export const reducer = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): QueryState<Document, TFilterId> => {
-//   const stateTransitions: StateTransition[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading]
-//   const maybeNextState = stateTransitions.reduce(
-//     (maybeNextState: Maybe<QueryState<Document, TFilterId>>, stateTransition: StateTransition): Maybe<QueryState<Document, TFilterId>> => 
-//       maybeNextState.alt(stateTransition(state, action))
-//   , Nothing);
-
-//   return maybeNextState.caseOf({
-//     Just: (nextState) => nextState,
-//     Nothing: () => state,
-//   })
-// }
-
-
 export const buildReducer = <Document, TFilterId extends string = string>(): QueryReducer<Document, TFilterId> => {
   const stateTransitions: StateTransition<QueryState<Document, TFilterId>, Action<Document, TFilterId>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading]
   return buildStateMachine(stateTransitions);

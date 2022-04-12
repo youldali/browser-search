@@ -4,6 +4,7 @@ import Fab from '@mui/material/Fab';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { boolean } from 'yup';
 
 import { PersonQueryResponse } from '../../hooks';
 
@@ -16,6 +17,7 @@ type Props = {
   response: PersonQueryResponse;
   filtersAppliedAsRecord: Record<string, boolean>;
   filtersApplied: FiltersApplied;
+  isStale?: boolean;
   onResetFilters(): void;
   onSwitchFilter(payload: {key: string, filter: string}): void;
 }
@@ -24,6 +26,7 @@ export const FilterPanel = ({
   filtersAppliedAsRecord,
   filtersApplied,
   response: {stats},
+  isStale = false,
   onResetFilters,
   onSwitchFilter,
 }: Props) => {
@@ -42,7 +45,7 @@ export const FilterPanel = ({
           disabled={filtersApplied.length === 0}
         >
           <DeleteOutlineIcon sx={{ mr: 1 }} />
-          Reset all
+          {filtersApplied.length ? `Reset all (${filtersApplied.length})` : `Reset all`}
         </Fab>
       </div>
 
@@ -54,6 +57,7 @@ export const FilterPanel = ({
           isChecked={filtersAppliedAsRecord.lowAged ?? false}
           onFilterChange={handleFilterChange}
           nextFilterStateStat={stats?.lowAged}
+          isStale={isStale}
         />
 
         <FilterListItem
@@ -62,6 +66,7 @@ export const FilterPanel = ({
           isChecked={filtersAppliedAsRecord.middleAged ?? false}
           onFilterChange={handleFilterChange}
           nextFilterStateStat={stats?.middleAged}
+          isStale={isStale}
         />
 
         <FilterListItem
@@ -70,6 +75,7 @@ export const FilterPanel = ({
           isChecked={filtersAppliedAsRecord.highAged ?? false}
           onFilterChange={handleFilterChange}
           nextFilterStateStat={stats?.highAged}
+          isStale={isStale}
         />
 
         <ListSubheader disableSticky>By salary</ListSubheader>
@@ -79,6 +85,7 @@ export const FilterPanel = ({
           isChecked={filtersAppliedAsRecord.lowSalary ?? false}
           onFilterChange={handleFilterChange}
           nextFilterStateStat={stats.lowSalary}
+          isStale={isStale}
         />
 
         <FilterListItem
@@ -87,6 +94,7 @@ export const FilterPanel = ({
           isChecked={filtersAppliedAsRecord.middleSalary ?? false}
           onFilterChange={handleFilterChange}
           nextFilterStateStat={stats.middleSalary}
+          isStale={isStale}
         />
 
         <FilterListItem
@@ -95,6 +103,7 @@ export const FilterPanel = ({
           isChecked={filtersAppliedAsRecord.highSalary ?? false}
           onFilterChange={handleFilterChange}
           nextFilterStateStat={stats.highSalary}
+          isStale={isStale}
         />
 
         <ListSubheader disableSticky>By country</ListSubheader>

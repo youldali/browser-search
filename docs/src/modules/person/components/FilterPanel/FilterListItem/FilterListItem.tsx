@@ -15,6 +15,7 @@ type Props = {
   isChecked: boolean;
   label: ReactNode;
   filterName: string;
+  isStale: boolean;
 }
 
 
@@ -24,6 +25,7 @@ export const FilterListItem = ({
   label,
   filterName,
   nextFilterStateStat,
+  isStale,
 }: Props) => {
 
   return (
@@ -48,7 +50,7 @@ export const FilterListItem = ({
         </ListItemIcon>
         <Box sx={{display: 'flex', justifyContent: 'space-around', width: '100%',}}>
           <ListItemText id={filterName} primary={label} />
-          <ChipFilterStat nextFilterStateStat={nextFilterStateStat} />
+          <ChipFilterStat nextFilterStateStat={nextFilterStateStat} isStale={isStale} />
         </Box>
       </ListItemButton>
     </ListItem>

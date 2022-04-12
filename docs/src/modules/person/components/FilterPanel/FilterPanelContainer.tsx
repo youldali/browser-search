@@ -35,6 +35,7 @@ export const FilterPanelContainer = () => {
       stale={
         ({response}) =>
         <FilterPanel
+          isStale
           response={response}
           filtersAppliedAsRecord={filtersAppliedAsRecord}
           filtersApplied={filtersApplied}
