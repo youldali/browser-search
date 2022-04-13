@@ -8,6 +8,7 @@ import { areRequestsEqual } from '../request';
 import { buildStateMachine, StateTransition } from '../stateMachine';
 
 type RequestPayload<Document, TFilterId extends string> = BS.Request<Document, TFilterId>
+type RunQueryTrigger = 'store-mutation' | 'request-change';
 
 export type SearchResponse<Document, TFilterId extends string = string> = Omit<BS.SearchResponse<Document, TFilterId>, '_cacheStatus_'>;
 
@@ -16,6 +17,7 @@ export interface IdleState extends GenericQueryState.IdleState {
 
 export interface LoadingQueryState<Document, TFilterId extends string = string> extends GenericQueryState.LoadingQueryState<RequestPayload<Document, TFilterId>>  {
   abort: BS.AbortSearch;
+  trigger: RunQueryTrigger;
 }
 
 export interface SuccessQueryState<Document, TFilterId extends string = string> extends GenericQueryState.SuccessQueryState<RequestPayload<Document, TFilterId>, SearchResponse<Document, TFilterId>> {
@@ -23,6 +25,7 @@ export interface SuccessQueryState<Document, TFilterId extends string = string> 
 
 export interface StaleQueryState<Document, TFilterId extends string = string> extends GenericQueryState.StaleQueryState<RequestPayload<Document, TFilterId>, SearchResponse<Document, TFilterId>> {
   abort: BS.AbortSearch;
+  trigger: RunQueryTrigger;
 }
 export interface ErrorQueryState<Document, TFilterId extends string = string> extends GenericQueryState.ErrorQueryState<RequestPayload<Document, TFilterId>, Error> {
 }
@@ -30,7 +33,7 @@ export interface ErrorQueryState<Document, TFilterId extends string = string> ex
 export type QueryState<Document, TFilterId extends string = string> = IdleState | LoadingQueryState<Document, TFilterId> | SuccessQueryState<Document, TFilterId> | StaleQueryState<Document, TFilterId> | ErrorQueryState<Document, TFilterId>;
 
 
-export type SearchStartedAction<Document, TFilterId extends string = string> = { type: 'searchStarted'; request: BS.Request<Document, TFilterId>; abort: BS.AbortSearch}
+export type SearchStartedAction<Document, TFilterId extends string = string> = { type: 'searchStarted'; request: BS.Request<Document, TFilterId>; abort: BS.AbortSearch, trigger: RunQueryTrigger}
 export type SearchCompletedAction<Document, TFilterId extends string = string> = { type: 'searchCompleted'; response: BS.SearchResponse<Document, TFilterId>; request: BS.Request<Document, TFilterId>;}
 export type SearchFailedAction<Document, TFilterId extends string = string> = { type: 'searchFailed'; request: BS.Request<Document, TFilterId>; error: Error};
 
@@ -54,6 +57,7 @@ const fromIdleToLoading = <Document, TFilterId extends string = string>(state: Q
     request: action.request,
     abort: action.abort,
     isFetching: true,
+    trigger: action.trigger
   }) : Nothing
 )
 
@@ -68,6 +72,7 @@ const fromLoadingToLoading = <Document, TFilterId extends string = string>(state
       request: action.request,
       abort: action.abort,
       isFetching: true,
+      trigger: action.trigger,
     })
   }
 
@@ -104,6 +109,7 @@ const fromSuccessToStale = <Document, TFilterId extends string = string>(state: 
     newRequest: action.request,
     abort: action.abort,
     isFetching: true,
+    trigger: action.trigger,
   }) : Nothing
 )
 
@@ -130,6 +136,7 @@ const fromStaleToStale = <Document, TFilterId extends string = string>(state: Qu
       newRequest: action.request,
       abort: action.abort,
       isFetching: true,
+      trigger: action.trigger,
     })
   }
 
@@ -153,6 +160,7 @@ const fromErrorToLoading = <Document, TFilterId extends string = string>(state: 
     request: action.request,
     abort: action.abort,
     isFetching: true,
+    trigger: action.trigger
   }) : Nothing
 )
 
@@ -168,9 +176,9 @@ export const useQuery = <Document, TFilterId extends string = string>(request: B
     initialState,
   );
 
-  const runQuery = useCallback( (): void => {
+  const runQuery = useCallback( ({trigger}: {trigger: RunQueryTrigger}): void => {
     const [seachResponsePromise, abortSearch] = queryClient.queryStore(request);
-    dispatch({type: 'searchStarted', request, abort: abortSearch})
+    dispatch({type: 'searchStarted', request, abort: abortSearch, trigger})
 
     seachResponsePromise
       .then(searchResponse => {
@@ -191,7 +199,7 @@ export const useQuery = <Document, TFilterId extends string = string>(request: B
   }, [request.storeId, queryClient, runQuery]);
 
   useEffect(() => {
-    runQuery();
+    runQuery({trigger: 'request-change'});
   }, [runQuery]);
 
   return state;

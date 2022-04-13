@@ -16,6 +16,7 @@ const loadingState: LoadingQueryState<any> = {
   isFetching: true,
   request: getRequestFixture(),
   abort: jest.fn(),
+  trigger: 'request-change',
 }
 
 const successState: SuccessQueryState<any> = {
@@ -32,6 +33,7 @@ const staleState: StaleQueryState<any> = {
   response: getResponseFixture(),
   newRequest: getRequestFixture(),
   abort: jest.fn(),
+  trigger: 'request-change',
 }
 
 const errorState: ErrorQueryState<any> = {

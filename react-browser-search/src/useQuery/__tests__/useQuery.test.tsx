@@ -98,7 +98,7 @@ describe ('reducer', () => {
   describe('From idle state', () => {
     it('To loading state', async () => {
       const idleState = getIdleStateFixture();
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const expectedState = getLoadingStateFixture({
         request: searchStartedAction.request,
         abort: searchStartedAction.abort,
@@ -110,7 +110,7 @@ describe ('reducer', () => {
 
   describe('From loading state', () => {
     it('to next loading state and aborts the previous request is they are different', async () => {
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const loadingState = getLoadingStateFixture({
         request: getRequestFixture({
           filtersApplied: ['random-filter'],
@@ -127,7 +127,7 @@ describe ('reducer', () => {
     })
 
     it('to next loading state and does not abort the previous request is they are equal', async () => {
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const loadingState = getLoadingStateFixture({
         request: getRequestFixture(),
         abort: jest.fn()
@@ -186,7 +186,7 @@ describe ('reducer', () => {
 
   describe('From stale state', () => {
     it('to next stale state and aborts the previous request is they are different', async () => {
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const staleState = getStaleStateFixture({
         newRequest: getRequestFixture({
           filtersApplied: ['random-filter'],
@@ -203,7 +203,7 @@ describe ('reducer', () => {
     })
 
     it('to next stale state and does not abort the previous request is they are equal', async () => {
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const staleState = getStaleStateFixture({
         newRequest: getRequestFixture(),
         abort: jest.fn()
@@ -263,7 +263,7 @@ describe ('reducer', () => {
   describe('From success state', () => {
     it('to stale state', async () => {
       const successState = getSuccessStateFixture();
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const expectedState = getStaleStateFixture({
         request: successState.request,
         response: successState.response,
@@ -278,7 +278,7 @@ describe ('reducer', () => {
   describe('From error state', () => {
     it('to loading state', async () => {
       const errorState = getErrorStateFixture();
-      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn()};
+      const searchStartedAction: SearchStartedAction<unknown> = {type: 'searchStarted', request: getRequestFixture(), abort: jest.fn(), trigger: 'request-change'};
       const expectedState = getLoadingStateFixture({
         request: searchStartedAction.request,
         abort: searchStartedAction.abort,

@@ -1,6 +1,6 @@
 import * as BS from 'browser-search';
 
-export type Listener = () => void; 
+export type Listener = <Trigger extends 'store-mutation' >({trigger}: {trigger: Trigger}) => void; 
 export type StoreListeners = Map<BS.StoreId, Listener[]>;
 
 
@@ -9,7 +9,7 @@ export const buildSubscriber = () => {
 
   const notifyStoreChange = (storeId: BS.StoreId): void => {
     const listeners = storeListeners.get(storeId) ?? [];
-    listeners.forEach(callback => callback())
+    listeners.forEach(callback => callback({trigger: 'store-mutation'}))
   }
 
   const addStoreListener = (storeId: BS.StoreId) => (listener: Listener): void => {
