@@ -1,6 +1,7 @@
 import * as BS from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
+import { boolean } from 'yup';
 
 import { BrowserSearchContext } from '../provider';
 import * as GenericQueryState from '../queryState';
@@ -26,6 +27,7 @@ export interface SuccessQueryState<Document, TFilterId extends string = string> 
 export interface StaleQueryState<Document, TFilterId extends string = string> extends GenericQueryState.StaleQueryState<RequestPayload<Document, TFilterId>, SearchResponse<Document, TFilterId>> {
   abort: BS.AbortSearch;
   trigger: RunQueryTrigger;
+  areStatsStale: boolean;
 }
 export interface ErrorQueryState<Document, TFilterId extends string = string> extends GenericQueryState.ErrorQueryState<RequestPayload<Document, TFilterId>, Error> {
 }
@@ -63,7 +65,7 @@ const fromIdleToLoading = <Document, TFilterId extends string = string>(state: Q
 
 const fromLoadingToLoading = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<LoadingQueryState<Document, TFilterId>> => {
   if(state.status === 'loading' && action.type === 'searchStarted') {
-    if(!areRequestsEqual(state.request, action.request)) {
+    if(getShouldAbortRequest(state.request, action)) {
       state.abort();
     }
 
@@ -110,6 +112,7 @@ const fromSuccessToStale = <Document, TFilterId extends string = string>(state: 
     abort: action.abort,
     isFetching: true,
     trigger: action.trigger,
+    areStatsStale: getAreStatsStale(state.request, action),
   }) : Nothing
 )
 
@@ -125,7 +128,7 @@ const fromStaleToSuccess = <Document, TFilterId extends string = string>(state: 
 
 const fromStaleToStale = <Document, TFilterId extends string = string>(state: QueryState<Document, TFilterId>, action: Action<Document, TFilterId>): Maybe<StaleQueryState<Document, TFilterId>> => {
   if(state.status === 'stale' && action.type === 'searchStarted'){
-    if(state.status === 'stale' && !areRequestsEqual(state.newRequest, action.request)) {
+    if(getShouldAbortRequest(state.newRequest, action)) {
       state.abort();
     }
 
@@ -137,6 +140,7 @@ const fromStaleToStale = <Document, TFilterId extends string = string>(state: Qu
       abort: action.abort,
       isFetching: true,
       trigger: action.trigger,
+      areStatsStale: getAreStatsStale(state.request, action),
     })
   }
 
@@ -164,6 +168,17 @@ const fromErrorToLoading = <Document, TFilterId extends string = string>(state: 
   }) : Nothing
 )
 
+const getAreStatsStale = <Document, TFilterId extends string>(previousRequest: BS.Request<Document, TFilterId>, searchStartedAction: SearchStartedAction<Document, TFilterId>) => (
+  previousRequest.filtersApplied !== searchStartedAction.request.filtersApplied || 
+  previousRequest.filterConfig !== searchStartedAction.request.filterConfig ||
+  searchStartedAction.trigger === 'store-mutation'
+)
+
+const getShouldAbortRequest = <Document, TFilterId extends string>(previousRequest: BS.Request<Document, TFilterId>, searchStartedAction: SearchStartedAction<Document, TFilterId>) => (
+  !areRequestsEqual(previousRequest, searchStartedAction.request) || 
+  searchStartedAction.trigger === 'store-mutation'
+)
+
 export const buildReducer = <Document, TFilterId extends string = string>(): QueryReducer<Document, TFilterId> => {
   const stateTransitions: StateTransition<QueryState<Document, TFilterId>, Action<Document, TFilterId>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading]
   return buildStateMachine(stateTransitions);
@@ -177,16 +192,17 @@ export const useQuery = <Document, TFilterId extends string = string>(request: B
   );
 
   const runQuery = useCallback( ({trigger}: {trigger: RunQueryTrigger}): void => {
-    const [seachResponsePromise, abortSearch] = queryClient.queryStore(request);
-    dispatch({type: 'searchStarted', request, abort: abortSearch, trigger})
+    const requestInstance = {...request};
+    const [seachResponsePromise, abortSearch] = queryClient.queryStore(requestInstance);
+    dispatch({type: 'searchStarted', request: requestInstance, abort: abortSearch, trigger})
 
     seachResponsePromise
       .then(searchResponse => {
-        dispatch({type: 'searchCompleted', response: searchResponse, request})
+        dispatch({type: 'searchCompleted', response: searchResponse, request: requestInstance})
       })
       .catch(error => {
         console.log(error, request);
-        dispatch({type: 'searchFailed', request, error})
+        dispatch({type: 'searchFailed', request: requestInstance, error})
       })
   }, [request, queryClient]);
 

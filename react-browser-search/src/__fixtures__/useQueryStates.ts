@@ -34,6 +34,7 @@ const staleState: StaleQueryState<any> = {
   newRequest: getRequestFixture(),
   abort: jest.fn(),
   trigger: 'request-change',
+  areStatsStale: true,
 }
 
 const errorState: ErrorQueryState<any> = {

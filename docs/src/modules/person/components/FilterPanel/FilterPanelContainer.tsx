@@ -33,16 +33,17 @@ export const FilterPanelContainer = () => {
       loading={() => <span>loading</span>}
       error={() => <div>An error occured</div>}
       stale={
-        (state) =>
-        <FilterPanel
-          isStale={state.trigger === 'store-mutation' || state.request.filtersApplied !== state.newRequest.filtersApplied}
-          response={state.response}
-          filtersAppliedAsRecord={filtersAppliedAsRecord}
-          filtersApplied={filtersApplied}
-          onResetFilters={resetAllFilters}
-          onSwitchFilter={onSwitchFilter}
-        />
-      } 
+        (state) => (
+          <FilterPanel
+            isStale={state.areStatsStale}
+            response={state.response}
+            filtersAppliedAsRecord={filtersAppliedAsRecord}
+            filtersApplied={filtersApplied}
+            onResetFilters={resetAllFilters}
+            onSwitchFilter={onSwitchFilter}
+          />
+        )
+      }
       success={
         ({response}) =>
         <FilterPanel

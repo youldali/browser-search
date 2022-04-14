@@ -28,7 +28,10 @@ export const buildQueryCache = () => {
 
     query
       .then(queryResponse => {
-        responseCache.addValueToStoreCache(request.storeId, requestHash, queryResponse);
+        // if not in the cache, it means cache has been emptied in the meantime (because of store mutation) so it's obsolete
+        if(pendingQueryCache.queryCache(request.storeId, requestHash)) {
+          responseCache.addValueToStoreCache(request.storeId, requestHash, queryResponse);
+        }
       })
       .finally(() => {
         pendingQueryCache.deleteKeyFromStore(request.storeId, requestHash)
