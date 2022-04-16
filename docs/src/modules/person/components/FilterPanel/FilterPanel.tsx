@@ -4,7 +4,6 @@ import Fab from '@mui/material/Fab';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { boolean } from 'yup';
 
 import { PersonQueryResponse } from '../../hooks';
 
@@ -107,7 +106,7 @@ export const FilterPanel = ({
         />
 
         <ListSubheader disableSticky>By country</ListSubheader>
-        <CountryAutocomplete stats={stats} />
+        <CountryAutocomplete stats={stats} isStatsStale={isStale} />
       </List>
     </aside>
   );

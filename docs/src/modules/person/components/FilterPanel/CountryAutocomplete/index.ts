@@ -1,1 +1,1 @@
-export { CountryAutocomplete } from './CountryAutocomplete';
+export { CountryAutocompleteContainer as CountryAutocomplete } from './CountryAutocompleteContainer';

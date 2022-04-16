@@ -1,19 +1,11 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Autocomplete from '@mui/material/Autocomplete';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import Skeleton from '@mui/material/Skeleton';
 import { SearchResponse } from 'browser-search';
 
 import { personStoreSearchSlice } from '../../../redux';
-import { useCountryValues } from '../../../hooks';
-import { AppDispatch } from '../../../../../redux';
-import { QuerySuspense } from '../../../../common';
 import { Person } from '../../../models';
-import { ChipFilterStat } from '../../../../common/components';
+import { CheckboxAutocomplete } from '../../../../common/components';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -21,55 +13,27 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const { actions, selectors } = personStoreSearchSlice;
 const filterGroupKey = 'country';
 
+type Country = string;
+
 type Props = {
-  stats: SearchResponse<Person>["stats"]
+  options: Country[];
+  values: Country[];
+  isStatsStale?: boolean;
+  stats: SearchResponse<Person>["stats"];
+  onChange(selectedCountries: Country[]): void;
 }
 
-
-
-export const CountryAutocomplete = ({ stats }: Props) => {
-  const dispatch: AppDispatch = useDispatch();
-  const filtersApplied = useSelector((state) => selectors.selectFiltersAppliedForGroup(state, filterGroupKey));
-  const countryValuesQueryState = useCountryValues();
-
+export const CountryAutocomplete = ({ options, values, isStatsStale = false, stats, onChange }: Props) => {
   return (
-      <QuerySuspense
-        queryState={countryValuesQueryState}
-        error={() => <div>An error occured</div>}
-        loading={() => <Skeleton variant="rectangular" width='100%' height={40} />}
-        idle={() => <Skeleton variant="rectangular" width='100%' height={40} />}
-        stale={() => <div>An error occured</div>}
-        success={
-          (queryState) =>
-          <Autocomplete
-            disableCloseOnSelect
-            multiple
-            limitTags={2}
-            size="small"
-            id="checkboxes-tags-demo"
-            options={queryState.response}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
-                />
-                {option}
-                <ChipFilterStat nextFilterStateStat={stats[`${filterGroupKey}-${option}`]} isStale={false} />
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Checkboxes" placeholder="Filter by countries" />
-            )}
-            onChange={(_, values) => {
-              const filters = values.map(value => 'country-' + value);
-              dispatch(actions.replaceFiltersForGroup({key: filterGroupKey, filtersApplied: filters}));
-            }}
-            value={filtersApplied.map(value => value.split('-')[1])}
-          />
-        } 
-      />
+    <CheckboxAutocomplete
+      options={options}
+      values={values}
+      id='Country-Autocomplete'
+      placeholder='Select 1 or many countries'
+      label='Filter by countries'
+      isStatsStale={isStatsStale}
+      onChange={(_, selectedCountries) => onChange(selectedCountries)}
+      getNextFilterState={(option) => stats[`${filterGroupKey}-${option}`]}
+    />
   );
 }

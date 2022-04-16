@@ -48,7 +48,7 @@ export const FilterListItem = ({
             inputProps={{ 'aria-labelledby': filterName }}
           />
         </ListItemIcon>
-        <Box sx={{display: 'flex', justifyContent: 'space-around', width: '100%',}}>
+        <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',}}>
           <ListItemText id={filterName} primary={label} />
           <ChipFilterStat nextFilterStateStat={nextFilterStateStat} isStale={isStale} />
         </Box>
