@@ -7,6 +7,8 @@ import { usePersonQuery } from '../../hooks';
 import { QuerySuspense } from '../../../common';
 
 import { FilterPanel } from './FilterPanel';
+import { FilterPanelSkeleton } from './FilterPanelSkeleton';
+import { FilterPanelError } from './FilterPanelError';
 
 const { actions, selectors } = personStoreSearchSlice;
 
@@ -29,9 +31,9 @@ export const FilterPanelContainer = () => {
   return (
     <QuerySuspense
       queryState={personQueryState}
-      idle={() => <div>An error occured</div>}
-      loading={() => <span>loading</span>}
-      error={() => <div>An error occured</div>}
+      idle={() => <FilterPanelSkeleton />}
+      loading={() => <FilterPanelSkeleton />}
+      error={() => <FilterPanelError />}
       stale={
         (state) => (
           <FilterPanel

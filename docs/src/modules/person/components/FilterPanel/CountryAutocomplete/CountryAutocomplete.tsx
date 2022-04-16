@@ -57,7 +57,7 @@ export const CountryAutocomplete = ({ stats }: Props) => {
                   checked={selected}
                 />
                 {option}
-                <ChipFilterStat nextFilterStateStat={stats[`${filterGroupKey}-${option}`]} />
+                <ChipFilterStat nextFilterStateStat={stats[`${filterGroupKey}-${option}`]} isStale={false} />
               </li>
             )}
             renderInput={(params) => (
