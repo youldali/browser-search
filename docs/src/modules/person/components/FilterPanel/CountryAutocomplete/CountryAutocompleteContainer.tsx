@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SearchResponse } from 'browser-search';
+import Alert from '@mui/material/Alert';
 
 import { personStoreSearchSlice } from '../../../redux';
 import { useCountryValues } from '../../../hooks';
@@ -27,7 +28,7 @@ export const CountryAutocompleteContainer = ({ stats, isStatsStale }: Props) => 
   return (
       <QuerySuspense
         queryState={countryValuesQueryState}
-        error={() => <div>An error occured</div>}
+        error={() => <Alert severity="error">An error occured when fetching the countries.</Alert>}
         loading={() => <CheckboxAutocompleteSkeleton />}
         idle={() => <CheckboxAutocompleteSkeleton />}
         stale={() => <CheckboxAutocompleteSkeleton />}

@@ -1,3 +1,4 @@
 export { getRequestFixture } from './request';
 export { getResponseFixture } from './response';
-export * from './useQueryStates';
+export * as useQueryStates from './useQueryStates';
+export * as useIndexValuesStates from './useIndexValuesStates';

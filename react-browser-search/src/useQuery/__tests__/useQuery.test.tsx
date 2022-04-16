@@ -1,10 +1,7 @@
 import React from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import {
-    getErrorStateFixture, getIdleStateFixture, getLoadingStateFixture, getRequestFixture,
-    getResponseFixture, getStaleStateFixture, getSuccessStateFixture,
-} from '../../__fixtures__';
+import { getRequestFixture, getResponseFixture, useQueryStates } from '../../__fixtures__';
 import {
     buildReducer, ErrorQueryState, IdleState, LoadingQueryState, SearchCompletedAction,
     SearchFailedAction, SearchStartedAction, StaleQueryState, SuccessQueryState, useQuery,
@@ -16,6 +13,7 @@ jest.mock('../../queryClient');
 
 const createWrapper = () => ({ children }: { children?: React.ReactNode }) => <BrowserSearchProvider>{children}</BrowserSearchProvider>
 
+const { getErrorStateFixture, getIdleStateFixture, getLoadingStateFixture, getStaleStateFixture, getSuccessStateFixture } = useQueryStates;
 
 describe ('useQuery', () => {
 

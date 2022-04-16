@@ -1,7 +1,6 @@
 import * as BS from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
-import { boolean } from 'yup';
 
 import { BrowserSearchContext } from '../provider';
 import * as GenericQueryState from '../queryState';
@@ -180,7 +179,7 @@ const getShouldAbortRequest = <Document, TFilterId extends string>(previousReque
 )
 
 export const buildReducer = <Document, TFilterId extends string = string>(): QueryReducer<Document, TFilterId> => {
-  const stateTransitions: StateTransition<QueryState<Document, TFilterId>, Action<Document, TFilterId>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading]
+  const stateTransitions: StateTransition<QueryState<Document, TFilterId>, Action<Document, TFilterId>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading];
   return buildStateMachine(stateTransitions);
 }
 
