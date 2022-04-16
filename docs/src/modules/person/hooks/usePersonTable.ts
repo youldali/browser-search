@@ -13,7 +13,7 @@ const headCells: HeadCell<Person>[] = [
   { id: 'email', numeric: false, label: 'Email' },
   { id: 'profession', numeric: false, label: 'Profession' },
   { id: 'salary', numeric: true, label: 'Salary' },
-  { id: 'favoriteColours', numeric: false, label: 'Favorite colours' },
+  { id: 'hobbies', numeric: false, label: 'Hobbies' },
 ];
 
 const { actions, selectors } = personStoreSearchSlice;

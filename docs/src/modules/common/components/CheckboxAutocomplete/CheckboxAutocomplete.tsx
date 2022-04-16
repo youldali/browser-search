@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { grey } from '@mui/material/colors';
 import { NextFilterStateStat } from 'browser-search';
 
 import { ChipFilterStat } from '../ChipFilterStat';
@@ -33,9 +34,8 @@ export const CheckboxAutocomplete = <Option extends string>({ options, id, value
       size="small"
       id={id}
       options={options}
-      open
       renderOption={(props, option, { selected }) => (
-        <li {...props}>
+        <li {...props} style={{background: grey[100]}}>
           <Checkbox
             icon={checkboxUncheckedIcon}
             checkedIcon={checkboxCheckedIcon}
@@ -44,11 +44,9 @@ export const CheckboxAutocomplete = <Option extends string>({ options, id, value
             size='small'
           />
           <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%', position: 'relative'}}>
-          <Typography variant="body2">
-            {option}
-          </Typography>
-
-            
+            <Typography variant="body2">
+              {option}
+            </Typography>
             <ChipFilterStat nextFilterStateStat={getNextFilterState(option)} isStale={isStatsStale} />
           </Box>
         </li>

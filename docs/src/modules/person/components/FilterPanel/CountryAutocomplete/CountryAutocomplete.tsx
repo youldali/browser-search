@@ -1,16 +1,9 @@
 import React from 'react';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { SearchResponse } from 'browser-search';
 
-import { personStoreSearchSlice } from '../../../redux';
 import { Person } from '../../../models';
 import { CheckboxAutocomplete } from '../../../../common/components';
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-const { actions, selectors } = personStoreSearchSlice;
 const filterGroupKey = 'country';
 
 type Country = string;
