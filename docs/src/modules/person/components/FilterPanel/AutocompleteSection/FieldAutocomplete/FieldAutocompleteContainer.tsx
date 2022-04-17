@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UseIndexValuesQueryState } from 'react-browser-search';
 import Alert from '@mui/material/Alert';
+import { string } from 'yup';
 
 import { personStoreSearchSlice } from '../../../../redux';
 import { AppDispatch } from '../../../../../../redux';
@@ -12,20 +13,22 @@ import { FieldAutocomplete, Props as FieldAutocompleteProps } from './FieldAutoc
 
 const { actions, selectors } = personStoreSearchSlice;
 
-type Props<FieldValues extends string> = {
-  filterGroupKey: string;
-  indexValuesQueryState: UseIndexValuesQueryState<FieldValues>;
+type Props<FieldValue extends string> = {
+  filterAppliedGroupKey: string;
+  indexValuesQueryState: UseIndexValuesQueryState<FieldValue>;
   errorMessage: string;
-} & Omit<FieldAutocompleteProps<FieldValues>, 'values' | 'options' | 'onChange'>
+  getFilterId(value: FieldValue): string;
+} & Omit<FieldAutocompleteProps<FieldValue>, 'values' | 'options' | 'onChange'>
 
-export const FieldAutocompleteContainer = <FieldValues extends string>({ 
-  filterGroupKey,
+export const FieldAutocompleteContainer = <FieldValue extends string>({ 
+  getFilterId,
+  filterAppliedGroupKey,
   indexValuesQueryState,
   errorMessage,
   ...rest
-}: Props<FieldValues>) => {
+}: Props<FieldValue>) => {
   const dispatch: AppDispatch = useDispatch();
-  const filtersApplied = useSelector((state) => selectors.selectFiltersAppliedForGroup(state, filterGroupKey));
+  const filtersApplied = useSelector((state) => selectors.selectFiltersAppliedForGroup(state, filterAppliedGroupKey));
 
   return (
       <QuerySuspense
@@ -38,12 +41,12 @@ export const FieldAutocompleteContainer = <FieldValues extends string>({
           (queryState) =>
             <FieldAutocomplete
               {...rest}
-              filterGroupKey={filterGroupKey}
+              getFilterId={getFilterId}
               options={queryState.response}
-              values={filtersApplied.map(value => value.split('-')[1])}
-              onChange={(selectedProfession) => {
-                const filters = selectedProfession.map(selectedProfession => filterGroupKey + '-' + selectedProfession);
-                dispatch(actions.replaceFiltersForGroup({key: filterGroupKey, filtersApplied: filters}));
+              values={filtersApplied.map(value => value.split('-').pop() as string)}
+              onChange={(selectedValues: FieldValue[]) => {
+                const filters = selectedValues.map(selectedValue => getFilterId(selectedValue));
+                dispatch(actions.replaceFiltersForGroup({key: filterAppliedGroupKey, filtersApplied: filters}));
               }}
             />
         } 

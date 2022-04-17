@@ -2,7 +2,10 @@ import React from 'react';
 import ListSubheader from '@mui/material/ListSubheader';
 
 import {
-    PersonQueryResponse, useCountryValues, useHobbiesValues, useProfessionValues,
+    allOfHobbiesFilterAppliedGroupKey, allOfHobbiesGetFilterId, countryFilterAppliedGroupKey,
+    countryGetFilterId, hobbyFilterAppliedGroupKey, hobbyGetFilterId, PersonQueryResponse,
+    professionFilterAppliedGroupKey, professionGetFilterId, useCountryValues, useHobbiesValues,
+    useProfessionValues,
 } from '../../../hooks';
 
 import { FieldAutocomplete } from './FieldAutocomplete';
@@ -25,7 +28,8 @@ export const AutocompleteSection = ({
     <div>
         <ListSubheader disableSticky>By country</ListSubheader>
         <FieldAutocomplete 
-          filterGroupKey='country'
+          filterAppliedGroupKey={countryFilterAppliedGroupKey}
+          getFilterId={countryGetFilterId}
           stats={stats} 
           isStatsStale={isStale} 
           indexValuesQueryState={countryValuesQueryState}
@@ -37,7 +41,8 @@ export const AutocompleteSection = ({
 
         <ListSubheader disableSticky>By Profession</ListSubheader>
         <FieldAutocomplete 
-          filterGroupKey='profession'
+          filterAppliedGroupKey={professionFilterAppliedGroupKey}
+          getFilterId={professionGetFilterId}
           stats={stats} 
           isStatsStale={isStale} 
           indexValuesQueryState={professionValuesQueryState}
@@ -47,16 +52,30 @@ export const AutocompleteSection = ({
           label='Filter by professions'
         />
 
-        <ListSubheader disableSticky>By Hobbies</ListSubheader>
+        <ListSubheader disableSticky>By Hobbies (one of)</ListSubheader>
         <FieldAutocomplete 
-          filterGroupKey='hobbies'
+          filterAppliedGroupKey={hobbyFilterAppliedGroupKey}
+          getFilterId={hobbyGetFilterId}
           stats={stats} 
           isStatsStale={isStale} 
           indexValuesQueryState={hobbiesValuesQueryState}
           errorMessage='An error occured fetching the hobbies'
           id='hobbies-Autocomplete'
           placeholder='Select 1 or many hobbies'
-          label='Filter by hobbies'
+          label='Filter by hobbies (one of)'
+        />
+
+        <ListSubheader disableSticky>By Hobbies (all of)</ListSubheader>
+        <FieldAutocomplete 
+          filterAppliedGroupKey={allOfHobbiesFilterAppliedGroupKey}
+          getFilterId={allOfHobbiesGetFilterId}
+          stats={stats} 
+          isStatsStale={isStale} 
+          indexValuesQueryState={hobbiesValuesQueryState}
+          errorMessage='An error occured fetching the hobbies'
+          id='hobbiesAllOf-Autocomplete'
+          placeholder='Select 1 or many hobbies'
+          label='Filter by hobbies (all of)'
         />
     </div>
   );

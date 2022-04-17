@@ -4,19 +4,19 @@ import { SearchResponse } from 'browser-search';
 import { Person } from '../../../../models';
 import { CheckboxAutocomplete } from '../../../../../common/components';
 
-export type Props<FieldValues extends string> = {
-  options: FieldValues[];
-  values: FieldValues[];
+export type Props<FieldValue extends string> = {
+  options: FieldValue[];
+  values: FieldValue[];
   isStatsStale?: boolean;
   stats: SearchResponse<Person>["stats"];
   id: string;
   placeholder: string;
   label: string;
-  filterGroupKey: string;
-  onChange(selectedProfessions: FieldValues[]): void;
+  getFilterId(value: FieldValue): string;
+  onChange(selectedProfessions: FieldValue[]): void;
 }
 
-export const FieldAutocomplete = <FieldValues extends string>({ 
+export const FieldAutocomplete = <FieldValue extends string>({ 
   id,
   label,
   placeholder,
@@ -24,9 +24,9 @@ export const FieldAutocomplete = <FieldValues extends string>({
   values, 
   isStatsStale = false, 
   stats, 
-  filterGroupKey,
+  getFilterId,
   onChange,
-}: Props<FieldValues>) => {
+}: Props<FieldValue>) => {
   return (
     <CheckboxAutocomplete
       options={options}
@@ -36,7 +36,7 @@ export const FieldAutocomplete = <FieldValues extends string>({
       label={label}
       isStatsStale={isStatsStale}
       onChange={(_, selectedValues) => onChange(selectedValues)}
-      getNextFilterState={(option) => stats[`${filterGroupKey}-${option}`]}
+      getNextFilterState={(option) => stats[getFilterId(option)]}
     />
   );
 }

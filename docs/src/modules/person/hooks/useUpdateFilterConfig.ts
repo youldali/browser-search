@@ -1,13 +1,20 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Filter, GroupOfFilters, Operator } from 'browser-search';
+import { mergeAll } from 'ramda';
 
 import { AppDispatch } from '../../../redux';
 import { personStoreFilterConfigSlice } from '../redux';
+import { Person } from '../models';
 
-import { useCountryValues } from './useCountryValues';
-import { useProfessionValues } from './useProfessionValues';
-import { useHobbiesValues } from './useHobbiesValues';
+import { countryFilterConfigKey, countryGetFilterId, useCountryValues } from './useCountryValues';
+import {
+    professionFilterConfigKey, professionGetFilterId, useProfessionValues,
+} from './useProfessionValues';
+import {
+    allOfHobbiesGetFilterConfigKey, allOfHobbiesGetFilterId, hobbyFilterConfigKey, hobbyGetFilterId,
+    useHobbiesValues,
+} from './useHobbiesValues';
 
 const {actions} = personStoreFilterConfigSlice;
 
@@ -19,36 +26,46 @@ export const useUpdateFilterConfig = () => {
 
   useEffect(() => {
     if(countryValuesQueryState.status === 'success') {
-      const filters = buildFilterConfig('country', 'equals')(countryValuesQueryState.response);
+      const filters = buildFilterConfig('country', 'equals', countryGetFilterId)(countryValuesQueryState.response);
       dispatch(actions.replaceFilterConfigs({
-        'country': filters
+        [countryFilterConfigKey]: filters
       }));
     }
   }, [countryValuesQueryState])
 
   useEffect(() => {
     if(professionValuesQueryState.status === 'success') {
-      const filters = buildFilterConfig('profession', 'equals')(professionValuesQueryState.response);
+      const filters = buildFilterConfig('profession', 'equals', professionGetFilterId)(professionValuesQueryState.response);
       dispatch(actions.replaceFilterConfigs({
-        'profession': filters
+        [professionFilterConfigKey]: filters
       }));
     }
   }, [professionValuesQueryState])
 
   useEffect(() => {
     if(hobbiesValuesQueryState.status === 'success') {
-      const filters = buildFilterConfig('hobbies', 'contains')(hobbiesValuesQueryState.response);
+      const filters = buildFilterConfig('hobbies', 'contains', hobbyGetFilterId)(hobbiesValuesQueryState.response);
       dispatch(actions.replaceFilterConfigs({
-        'hobbies': filters
+        [hobbyFilterConfigKey]: filters
       }));
+    }
+  }, [hobbiesValuesQueryState])
+
+  useEffect(() => {
+    if(hobbiesValuesQueryState.status === 'success') {
+      const filtersConfigs = hobbiesValuesQueryState.response.map(
+        hobby => ({[allOfHobbiesGetFilterConfigKey(hobby)]: buildFilterConfig('hobbies', 'contains', allOfHobbiesGetFilterId)([hobby])})
+      );
+      dispatch(actions.replaceFilterConfigs(mergeAll(filtersConfigs)));
     }
   }, [hobbiesValuesQueryState])
 }
 
-const buildFilterConfig = (field: string, operator: Operator) => (values: unknown[]): GroupOfFilters<any> => {
-  const filters: Filter<any>[] = values.map((value) => (
-    { id: `${field}-${value}`, field: field, operator: operator, operand: value }
-  ));
+const buildFilterConfig = (field: keyof Person, operator: Operator, getFilterId: (value: string) => string) => (values: string[]): GroupOfFilters<Person> => {
+  const filters: Filter<Person>[] = values.map((value) => {
+    const id = getFilterId(value);
+    return { id, field, operator, operand: value }
+  });
 
   return filters;
 }

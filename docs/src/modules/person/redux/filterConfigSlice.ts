@@ -15,9 +15,6 @@ export const initialState: State<Person, FilterId> = {
     { id: 'middleSalary', field: 'salary', operator: 'inRangeClosed', operand: [40000, 70000] },
     { id: 'highSalary', field: 'salary', operator: 'gt', operand: 70000 },
   ],
-  profession: [
-    { id: 'professionDentist', field: 'profession', operator: 'equals', operand: 'Dentist'}
-  ]
 }
 
 export const personStoreFilterConfigSlice = buildFilterConfigSlice({
