@@ -61,7 +61,7 @@ export const useUpdateFilterConfig = () => {
   }, [hobbiesValuesQueryState])
 }
 
-const buildFilterConfig = (field: keyof Person, operator: Operator, getFilterId: (value: string) => string) => (values: string[]): GroupOfFilters<Person> => {
+export const buildFilterConfig = (field: keyof Person, operator: Operator, getFilterId: (value: string) => string) => (values: string[]): GroupOfFilters<Person> => {
   const filters: Filter<Person>[] = values.map((value) => {
     const id = getFilterId(value);
     return { id, field, operator, operand: value }

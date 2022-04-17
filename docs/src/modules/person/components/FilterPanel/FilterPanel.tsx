@@ -9,6 +9,7 @@ import { PersonQueryResponse } from '../../hooks';
 
 import { FilterListItem } from './FilterListItem';
 import { AutocompleteSection } from './AutocompleteSection';
+import { FilterByNameSection } from './FilterByNameSection';
 
 const filterGroupKey = 'base';
 
@@ -50,6 +51,8 @@ export const FilterPanel = ({
       </div>
 
       <List sx={{ bgcolor: 'background.paper' }}>
+        <FilterByNameSection />
+        
         <ListSubheader disableSticky>By Age</ListSubheader>
         <FilterListItem
           filterName='lowAged'
