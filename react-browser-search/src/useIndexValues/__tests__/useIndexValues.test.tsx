@@ -1,10 +1,6 @@
-import React from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
-
-import { getRequestFixture, getResponseFixture, useIndexValuesStates } from '../../__fixtures__';
+import { useIndexValuesStates } from '../../__fixtures__';
 import {
-    buildReducer, ErrorQueryState, IdleState, LoadingQueryState, RequestCompletedAction,
-    RequestFailedAction, RequestStartedAction, StaleQueryState, SuccessQueryState,
+    buildReducer, RequestCompletedAction, RequestFailedAction, RequestStartedAction,
 } from '../useIndexValues';
 
 const { getErrorStateFixture, getIdleStateFixture, getLoadingStateFixture, getStaleStateFixture, getSuccessStateFixture, getResponsePayloadFixture, getResquestPayloadFixture } = useIndexValuesStates;

@@ -1,17 +1,18 @@
 import {
-    ErrorQueryState, IdleState, LoadingQueryState, StaleQueryState, SuccessQueryState,
+    UseQueryErrorState, UseQueryIdleState, UseQueryLoadingState, UseQueryStaleState,
+    UseQuerySuccessState,
 } from '../useQuery';
 
 import { createFixture } from './createFixture';
 import { getRequestFixture } from './request';
 import { getResponseFixture } from './response';
 
-const idleState: IdleState = {
+const idleState: UseQueryIdleState = {
   status: 'idle',
   isFetching: false,
 }
 
-const loadingState: LoadingQueryState<any> = {
+const loadingState: UseQueryLoadingState<any> = {
   status: 'loading',
   isFetching: true,
   request: getRequestFixture(),
@@ -19,14 +20,14 @@ const loadingState: LoadingQueryState<any> = {
   trigger: 'request-change',
 }
 
-const successState: SuccessQueryState<any> = {
+const successState: UseQuerySuccessState<any> = {
   status: 'success',
   isFetching: false,
   request: getRequestFixture(),
   response: getResponseFixture(),
 }
 
-const staleState: StaleQueryState<any> = {
+const staleState: UseQueryStaleState<any> = {
   status: 'stale',
   isFetching: true,
   request: getRequestFixture(),
@@ -37,7 +38,7 @@ const staleState: StaleQueryState<any> = {
   areStatsStale: true,
 }
 
-const errorState: ErrorQueryState<any> = {
+const errorState: UseQueryErrorState<any> = {
   status: 'error',
   isFetching: false,
   request: getRequestFixture(),
@@ -45,7 +46,7 @@ const errorState: ErrorQueryState<any> = {
 }
 
 export const getIdleStateFixture = () => createFixture(idleState)();
-export const getLoadingStateFixture = <Document>(overrides?: Partial<LoadingQueryState<Document>>) => createFixture<LoadingQueryState<Document>>(loadingState)(overrides);
-export const getSuccessStateFixture = <Document>(overrides?: Partial<SuccessQueryState<Document>>) => createFixture<SuccessQueryState<Document>>(successState)(overrides);
-export const getStaleStateFixture = <Document>(overrides?: Partial<StaleQueryState<Document>>) => createFixture<StaleQueryState<Document>>(staleState)(overrides);
-export const getErrorStateFixture = <Document>(overrides?: Partial<ErrorQueryState<Document>>) => createFixture<ErrorQueryState<Document>>(errorState)(overrides);
+export const getLoadingStateFixture = <Document>(overrides?: Partial<UseQueryLoadingState<Document>>) => createFixture<UseQueryLoadingState<Document>>(loadingState)(overrides);
+export const getSuccessStateFixture = <Document>(overrides?: Partial<UseQuerySuccessState<Document>>) => createFixture<UseQuerySuccessState<Document>>(successState)(overrides);
+export const getStaleStateFixture = <Document>(overrides?: Partial<UseQueryStaleState<Document>>) => createFixture<UseQueryStaleState<Document>>(staleState)(overrides);
+export const getErrorStateFixture = <Document>(overrides?: Partial<UseQueryErrorState<Document>>) => createFixture<UseQueryErrorState<Document>>(errorState)(overrides);

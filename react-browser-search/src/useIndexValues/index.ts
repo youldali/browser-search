@@ -1,2 +1,10 @@
 export { useIndexValues } from './useIndexValues';
-export type { QueryState, IdleState, LoadingQueryState, SuccessQueryState, ErrorQueryState, StaleQueryState, ResponsePayload, RequestPayload } from './useIndexValues';
+export type { ResponsePayload as UseIndexValuesResponsePayload, RequestPayload as UseIndexValuesRequestPayload} from './useIndexValues';
+export type { 
+  QueryState as UseIndexValuesQueryState, 
+  IdleState as UseIndexValuesIdleState, 
+  LoadingQueryState as UseIndexValuesLoadingState, 
+  SuccessQueryState as UseIndexValuesSuccessState, 
+  ErrorQueryState as UseIndexValuesErrorState, 
+  StaleQueryState as UseIndexValuesStaleState,
+} from './useIndexValues';

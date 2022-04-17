@@ -3,8 +3,8 @@ import { act, renderHook } from '@testing-library/react-hooks';
 
 import { getRequestFixture, getResponseFixture, useQueryStates } from '../../__fixtures__';
 import {
-    buildReducer, ErrorQueryState, IdleState, LoadingQueryState, SearchCompletedAction,
-    SearchFailedAction, SearchStartedAction, StaleQueryState, SuccessQueryState, useQuery,
+    buildReducer, LoadingQueryState, SearchCompletedAction, SearchFailedAction, SearchStartedAction,
+    SuccessQueryState, useQuery,
 } from '../useQuery';
 import { useMutateStore } from '../../useMutateStore';
 import { BrowserSearchProvider } from '../../provider/__mocks__';
@@ -90,7 +90,7 @@ describe ('useQuery', () => {
 
 
 
-describe ('reducer', () => {
+describe.only('reducer', () => {
   const reducer = buildReducer();
   
   describe('From idle state', () => {
@@ -393,6 +393,7 @@ describe ('reducer', () => {
         response: successState.response,
         newRequest: searchStartedAction.request,
         abort: searchStartedAction.abort,
+        areStatsStale: false,
       });
   
       expect(reducer(successState, searchStartedAction)).toEqual(expectedState);
