@@ -143,7 +143,6 @@ export const buildReducer = <FieldValues>(): QueryReducer<FieldValues> => {
   return buildStateMachine(stateTransitions);
 }
 
-
 export const useIndexValues = <T extends IDBValidKey>(storeId: StoreId, indexId: IndexId): QueryState<T> => {
   const queryClient = useContext(BrowserSearchContext);
   const [state, dispatch] = useReducer<QueryReducer<T>>(
