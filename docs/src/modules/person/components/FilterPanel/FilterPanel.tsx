@@ -8,9 +8,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { PersonQueryResponse } from '../../hooks';
 
 import { FilterListItem } from './FilterListItem';
-import { CountryAutocomplete } from './CountryAutocomplete';
-import { ProfessionAutocomplete } from './ProfessionAutocomplete';
-import { HobbiesAutocomplete } from './HobbiesAutocomplete';
+import { AutocompleteSection } from './AutocompleteSection';
 
 const filterGroupKey = 'base';
 
@@ -26,11 +24,12 @@ type Props = {
 export const FilterPanel = ({
   filtersAppliedAsRecord,
   filtersApplied,
-  response: {stats},
+  response,
   isStale = false,
   onResetFilters,
   onSwitchFilter,
 }: Props) => {
+  const {stats} = response;
   const handleFilterChange = (filterName: string) => {
     onSwitchFilter({key: filterGroupKey, filter: filterName});
   };
@@ -107,14 +106,9 @@ export const FilterPanel = ({
           isStale={isStale}
         />
 
-        <ListSubheader disableSticky>By country</ListSubheader>
-        <CountryAutocomplete stats={stats} isStatsStale={isStale} />
-
-        <ListSubheader disableSticky>By profession</ListSubheader>
-        <ProfessionAutocomplete stats={stats} isStatsStale={isStale} />
-
-        <ListSubheader disableSticky>By Hobbies</ListSubheader>
-        <HobbiesAutocomplete stats={stats} isStatsStale={isStale} />
+        <AutocompleteSection 
+          response={response} isStale={isStale}
+        />
       </List>
     </aside>
   );

@@ -1,16 +1,18 @@
 import React, { ReactElement } from 'react';
-import { GenericQueryState } from 'react-browser-search';
+import {
+    ErrorQueryState, IdleState, LoadingQueryState, QueryState, StaleQueryState, SuccessQueryState,
+} from 'react-browser-search';
 
-type QuerySuspenseProps<Request, Response, Error, T extends GenericQueryState.QueryState<Request, Response, Error>> = {
+type QuerySuspenseProps<Request, Response, Error, T extends QueryState<Request, Response, Error>> = {
   queryState: T;
-  idle: (idleQueryState: Extract<T, GenericQueryState.IdleState>) => ReactElement | null;
-  error: (errorQueryState: Extract<T, GenericQueryState.ErrorQueryState<Request, Error>>) => ReactElement | null;
-  loading: (loadingQueryState: Extract<T, GenericQueryState.LoadingQueryState<Request>>) => ReactElement | null;
-  stale: (stateQueryState: Extract<T, GenericQueryState.StaleQueryState<Request, Response>>) => ReactElement | null;
-  success: (successQueryState: Extract<T, GenericQueryState.SuccessQueryState<Request, Response>>) => ReactElement | null;
+  idle: (idleQueryState: Extract<T, IdleState>) => ReactElement | null;
+  error: (errorQueryState: Extract<T, ErrorQueryState<Request, Error>>) => ReactElement | null;
+  loading: (loadingQueryState: Extract<T, LoadingQueryState<Request>>) => ReactElement | null;
+  stale: (stateQueryState: Extract<T, StaleQueryState<Request, Response>>) => ReactElement | null;
+  success: (successQueryState: Extract<T, SuccessQueryState<Request, Response>>) => ReactElement | null;
 };
 
-export const QuerySuspense = <Request, Response, Error, T extends GenericQueryState.QueryState<Request, Response, Error>>({
+export const QuerySuspense = <Request, Response, Error, T extends QueryState<Request, Response, Error>>({
   queryState,
   error,
   idle,
@@ -20,20 +22,20 @@ export const QuerySuspense = <Request, Response, Error, T extends GenericQuerySt
 }: QuerySuspenseProps<Request, Response, Error, T>) => {
 
   if (queryState.status === 'idle') {
-    return idle(queryState as Extract<T, GenericQueryState.IdleState>);
+    return idle(queryState as Extract<T, IdleState>);
   }
 
   if (queryState.status === 'loading') {
-    return loading(queryState as Extract<T, GenericQueryState.LoadingQueryState<Request>>);
+    return loading(queryState as Extract<T, LoadingQueryState<Request>>);
   }
 
   if (queryState.status === 'error') {
-    return error(queryState as Extract<T, GenericQueryState.ErrorQueryState<Request, Error>>);
+    return error(queryState as Extract<T, ErrorQueryState<Request, Error>>);
   }
 
   if (queryState.status === 'stale') {
-    return stale(queryState as Extract<T, GenericQueryState.StaleQueryState<Request, Response>>);
+    return stale(queryState as Extract<T, StaleQueryState<Request, Response>>);
   }
 
-  return success(queryState as Extract<T, GenericQueryState.SuccessQueryState<Request, Response>>);
+  return success(queryState as Extract<T, SuccessQueryState<Request, Response>>);
 };

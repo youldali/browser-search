@@ -1,1 +1,0 @@
-export { HobbiesAutocompleteContainer as HobbiesAutocomplete } from './HobbiesAutocompleteContainer';

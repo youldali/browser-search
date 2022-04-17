@@ -1,1 +1,0 @@
-export { ProfessionAutocompleteContainer as ProfessionAutocomplete } from './ProfessionAutocompleteContainer';

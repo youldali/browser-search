@@ -2,4 +2,4 @@ export * from './useQuery';
 export * from './useIndexValues';
 export { useMutateStore } from './useMutateStore';
 export { BrowserSearchProvider } from './provider';
-export * as GenericQueryState from './queryState';
+export * from './queryState';
