@@ -10,6 +10,7 @@ import { PersonQueryResponse } from '../../hooks';
 import { FilterListItem } from './FilterListItem';
 import { CountryAutocomplete } from './CountryAutocomplete';
 import { ProfessionAutocomplete } from './ProfessionAutocomplete';
+import { HobbiesAutocomplete } from './HobbiesAutocomplete';
 
 const filterGroupKey = 'base';
 
@@ -112,6 +113,8 @@ export const FilterPanel = ({
         <ListSubheader disableSticky>By profession</ListSubheader>
         <ProfessionAutocomplete stats={stats} isStatsStale={isStale} />
 
+        <ListSubheader disableSticky>By Hobbies</ListSubheader>
+        <HobbiesAutocomplete stats={stats} isStatsStale={isStale} />
       </List>
     </aside>
   );

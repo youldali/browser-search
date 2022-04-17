@@ -4,28 +4,28 @@ import { SearchResponse } from 'browser-search';
 import { Person } from '../../../models';
 import { CheckboxAutocomplete } from '../../../../common/components';
 
-const filterGroupKey = 'profession';
+const filterGroupKey = 'hobbies';
 
-type Profession = string;
+type Hobby = string;
 
 type Props = {
-  options: Profession[];
-  values: Profession[];
+  options: Hobby[];
+  values: Hobby[];
   isStatsStale?: boolean;
   stats: SearchResponse<Person>["stats"];
-  onChange(selectedProfessions: Profession[]): void;
+  onChange(selectedHobbies: Hobby[]): void;
 }
 
-export const ProfessionAutocomplete = ({ options, values, isStatsStale = false, stats, onChange }: Props) => {
+export const HobbiesAutocomplete = ({ options, values, isStatsStale = false, stats, onChange }: Props) => {
   return (
     <CheckboxAutocomplete
       options={options}
       values={values}
-      id='Profession-Autocomplete'
-      placeholder='Select 1 or many professions'
-      label='Filter by professions'
+      id='Hobbies-Autocomplete'
+      placeholder='Select 1 or many Hobbiss'
+      label='Filter by Hobbies'
       isStatsStale={isStatsStale}
-      onChange={(_, selectedProfessions) => onChange(selectedProfessions)}
+      onChange={(_, selectedHobbies) => onChange(selectedHobbies)}
       getNextFilterState={(option) => stats[`${filterGroupKey}-${option}`]}
     />
   );
