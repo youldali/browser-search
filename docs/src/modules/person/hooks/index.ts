@@ -5,3 +5,4 @@ export * from './useHobbiesValues';
 export * from './usePersonQuery';
 export * from './usePersonTable';
 export * from './useUpdateFilterConfig';
+export * from './useFilterByName';
