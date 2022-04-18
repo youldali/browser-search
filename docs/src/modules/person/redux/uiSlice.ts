@@ -3,7 +3,7 @@ import { path as RPath } from 'ramda';
 
 import { personStoreSearchSlice } from './searchSlice';
 
-const {actions: searchSliceActions} = personStoreSearchSlice
+const {actions: searchSliceActions, selectors: searchSliceSelectors} = personStoreSearchSlice
 const reducerPath = ['ui'];
 
 export type State = {
@@ -40,10 +40,17 @@ const selectByNameText = createSelector(
   (state) => state.filters.byNameText,
 )
 
+// when the name filter is on, we also have a filter on the lastName and firstName
+const selectNumberOfFilters = createSelector(
+  searchSliceSelectors.selectFiltersApplied,
+  (filtersApplied) => filtersApplied.includes('name') ? filtersApplied.length - 2 : filtersApplied.length,
+)
+
 export const personUiStoreSlice = {
   reducer: uiSlice.reducer,
   actions: uiSlice.actions,
   selectors: {
-    selectByNameText
+    selectByNameText,
+    selectNumberOfFilters,
   }
 }

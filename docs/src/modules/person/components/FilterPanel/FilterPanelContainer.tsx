@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AppDispatch } from '../../../../redux';
-import { personStoreSearchSlice } from '../../redux';
+import { personStoreSearchSlice, personUiStoreSlice } from '../../redux';
 import { usePersonQuery } from '../../hooks';
 import { QuerySuspense } from '../../../common';
 
@@ -10,22 +10,24 @@ import { FilterPanel } from './FilterPanel';
 import { FilterPanelSkeleton } from './FilterPanelSkeleton';
 import { FilterPanelError } from './FilterPanelError';
 
-const { actions, selectors } = personStoreSearchSlice;
+const { actions: searchActions, selectors: searchSelectors } = personStoreSearchSlice;
+const { selectors: uiSelectors } = personUiStoreSlice;
 
 const filterGroupKey = 'base';
 
 export const FilterPanelContainer = () => {
   const dispatch: AppDispatch = useDispatch();
-  const filtersAppliedAsRecord = useSelector((state) => selectors.selectFiltersAppliedRecordForGroup(state, filterGroupKey));
-  const filtersApplied = useSelector(selectors.selectFiltersApplied);
+  const filtersAppliedAsRecord = useSelector((state) => searchSelectors.selectFiltersAppliedRecordForGroup(state, filterGroupKey));
+  const filtersApplied = useSelector(searchSelectors.selectFiltersApplied);
+  const filtersAppliedCount = useSelector(uiSelectors.selectNumberOfFilters);
   const personQueryState = usePersonQuery();
 
   const onSwitchFilter = (payload: {key: string, filter: string}) => {
-    dispatch(actions.switchFilterForGroup(payload));
+    dispatch(searchActions.switchFilterForGroup(payload));
   };
   
   const resetAllFilters = () => {
-    dispatch(actions.resetFilters());
+    dispatch(searchActions.resetFilters());
   };
 
   return (
@@ -40,7 +42,7 @@ export const FilterPanelContainer = () => {
             isStale={state.areStatsStale}
             response={state.response}
             filtersAppliedAsRecord={filtersAppliedAsRecord}
-            filtersApplied={filtersApplied}
+            filtersAppliedCount={filtersAppliedCount}
             onResetFilters={resetAllFilters}
             onSwitchFilter={onSwitchFilter}
           />
@@ -51,7 +53,7 @@ export const FilterPanelContainer = () => {
         <FilterPanel
           response={response}
           filtersAppliedAsRecord={filtersAppliedAsRecord}
-          filtersApplied={filtersApplied}
+          filtersAppliedCount={filtersAppliedCount}
           onResetFilters={resetAllFilters}
           onSwitchFilter={onSwitchFilter}
         />

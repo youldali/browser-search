@@ -16,7 +16,7 @@ const filterGroupKey = 'base';
 type Props = {
   response: PersonQueryResponse;
   filtersAppliedAsRecord: Record<string, boolean>;
-  filtersApplied: FiltersApplied;
+  filtersAppliedCount: number;
   isStale?: boolean;
   onResetFilters(): void;
   onSwitchFilter(payload: {key: string, filter: string}): void;
@@ -24,7 +24,7 @@ type Props = {
 
 export const FilterPanel = ({
   filtersAppliedAsRecord,
-  filtersApplied,
+  filtersAppliedCount,
   response,
   isStale = false,
   onResetFilters,
@@ -43,10 +43,10 @@ export const FilterPanel = ({
           variant='extended'
           color="secondary"
           onClick={onResetFilters}
-          disabled={filtersApplied.length === 0}
+          disabled={filtersAppliedCount === 0}
         >
           <DeleteOutlineIcon sx={{ mr: 1 }} />
-          {filtersApplied.length ? `Reset all (${filtersApplied.length})` : `Reset all`}
+          {filtersAppliedCount ? `Reset all (${filtersAppliedCount})` : `Reset all`}
         </Fab>
       </div>
 
