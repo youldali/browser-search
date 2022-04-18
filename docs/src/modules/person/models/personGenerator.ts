@@ -3,10 +3,16 @@ import { times } from 'ramda';
 
 import { Person } from './person';
 
-export const generatePerson = (): Person => (
-  {
+export const generatePerson = (): Person => {
+  const lastName = chance.last().toLocaleLowerCase();
+  const firstName = chance.first().toLocaleLowerCase();
+
+  const name = `${firstName} ${lastName}`;
+  return {
     id: chance.guid(),
-    name: chance.name(),
+    firstName,
+    lastName,
+    name,
     age: chance.age(),
     email: chance.email(),
     salary: chance.natural({ min: 20000, max: 100000 }),
@@ -14,7 +20,7 @@ export const generatePerson = (): Person => (
     hobbies: chance.pickset(hobbiesSet, chance.natural({ min: 0, max: 4 })),
     country: chance.pickone(countrySet),
   }
-)
+}
 
 export const generatePersons = (n: number) => times(generatePerson, n);
 

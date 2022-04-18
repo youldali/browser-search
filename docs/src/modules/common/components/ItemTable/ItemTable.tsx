@@ -53,6 +53,7 @@ type ItemTableProps<T extends TableData> = {
   onPageChange: (page: number) => void;
   onSortChange: (property: string) => void;
   onPerPageChange: (perPage: number) => void;
+  renderCell?(value: T[keyof T & string], column: keyof T): React.ReactNode;
 }
 
 export const ItemTable = <T extends {id: string}>({
@@ -67,6 +68,7 @@ export const ItemTable = <T extends {id: string}>({
   onPageChange,
   onSortChange,
   onPerPageChange,
+  renderCell,
 }: ItemTableProps<T>) => {
   const classes = useStyles();
 
@@ -101,12 +103,17 @@ export const ItemTable = <T extends {id: string}>({
               <TableRow key={row.id} className={classes.row}>
                 {headCells.map((headCell) => {
                   const columnValue = row[headCell.id];
+                  const renderedCell = renderCell?.(columnValue, headCell.id)
                   return (
                   <TableCell
                     key={headCell.id}
                     align={headCell.numeric ? 'right' : 'left'}
                   >
-                    {Array.isArray(columnValue) ? columnValue.join() : columnValue}
+                    {
+                      renderedCell ?
+                      renderedCell :
+                      Array.isArray(columnValue) ? columnValue.join() : columnValue
+                    }
                   </TableCell>
                 )})}
                 

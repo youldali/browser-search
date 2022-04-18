@@ -1,5 +1,7 @@
 import React from 'react';
+import Chip from '@mui/material/Chip';
 
+import { uppercaseFirstLetter } from '../../../../utils';
 import {
     useCreatePersonStore, usePersonQuery, usePersonTable, useUpdateFilterConfig,
 } from '../../hooks';
@@ -25,6 +27,15 @@ export const PersonTable = () => {
             data={response.documents}
             dataCount={response.numberOfDocuments}
             {...personsTableProps}
+            renderCell={(value, column) => {
+              if(column === 'name') {
+                return uppercaseFirstLetter(value as string);
+              }
+              if(column === 'hobbies') {
+                return (value as string[]).map((hobby) => <Chip sx={{marginRight: 1}} label={hobby} variant="outlined" />)
+              }
+              return null;
+            }}
           />
         } 
       />
