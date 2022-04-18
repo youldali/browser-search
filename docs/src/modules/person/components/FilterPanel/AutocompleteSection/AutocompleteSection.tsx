@@ -23,7 +23,6 @@ export const AutocompleteSection = ({
   const professionValuesQueryState = useProfessionValues();
   const hobbiesValuesQueryState = useHobbiesValues();
 
-  console.log(stats);
   return (
     <div>
         <ListSubheader disableSticky>By country</ListSubheader>

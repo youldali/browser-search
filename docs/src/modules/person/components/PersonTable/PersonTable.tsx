@@ -10,6 +10,7 @@ import {
     useUpdateFilterConfig,
 } from '../../hooks';
 import { ItemTable, ItemTableSkeleton, QuerySuspense } from '../../../common';
+import { Person } from '../../models';
 
 export const PersonTable = () => {
   useCreatePersonStore();
@@ -24,10 +25,10 @@ export const PersonTable = () => {
       {...personsTableProps}
       renderCell={(value, column) => {
         if(column === 'name') {
-          return uppercaseFirstLetter(value as string);
+          return uppercaseFirstLetter(value as Person['name']);
         }
         if(column === 'hobbies') {
-          return (value as string[]).map((hobby) => <Chip sx={{marginRight: 1}} label={hobby} variant="outlined" />)
+          return (value as Person['hobbies']).map((hobby) => <Chip key={hobby} sx={{marginRight: 1}} label={hobby} variant="outlined" />)
         }
         return null;
       }}
