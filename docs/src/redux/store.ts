@@ -1,12 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
-import { personStoreFilterConfigSlice, personStoreSearchSlice } from '../modules/person';
+import {
+    personStoreFilterConfigSlice, personStoreSearchSlice, personUiStoreSlice,
+} from '../modules/person';
 
 export const store = configureStore({
   reducer: {
     search: personStoreSearchSlice.reducer,
     filterConfig: personStoreFilterConfigSlice.reducer,
+    ui: personUiStoreSlice.reducer,
   },
 })
 

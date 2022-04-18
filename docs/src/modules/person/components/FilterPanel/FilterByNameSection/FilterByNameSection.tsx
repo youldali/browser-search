@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useDebounce } from 'react-use';
 import Box from '@mui/material/Box';
 import ListSubheader from '@mui/material/ListSubheader';
 import TextField from '@mui/material/TextField';
 import { operators } from 'browser-search/dist/modules/filterConfiguration';
 
 import { AppDispatch } from '../../../../../redux';
-import { personStoreFilterConfigSlice, personStoreSearchSlice } from '../../../redux';
+import { debounceInputTime } from '../../../../../config';
+import {
+    personStoreFilterConfigSlice, personStoreSearchSlice, personUiStoreSlice,
+} from '../../../redux';
 import { buildFilterConfig } from '../../../hooks';
 
 const {actions: filterConfigActions} = personStoreFilterConfigSlice;
 const {actions: searchActions} = personStoreSearchSlice;
+const {actions: uiActions, selectors} = personUiStoreSlice;
 
 export const FilterByNameSection = () => {
-  const [filterText, setFilterText] = useState('');
+  const filterText = useSelector(selectors.selectByNameText);
   const dispatch: AppDispatch = useDispatch();
 
   const onFilter = () => {
-    const filterConfig = buildFilterConfig('name', 'inRangeOpen', () => 'name')([getRange(filterText)] as any);
-    dispatch(filterConfigActions.replaceFilterConfigs({
-      name: filterConfig
-    }));
-    dispatch(searchActions.replaceFiltersForGroup({
-      key: 'name',
-      filtersApplied: ['name']
-    }));
-  }
-
-  useEffect(() => {
     if(filterText) {
-      onFilter();
+      const filterConfig = buildFilterConfig('name', 'inRangeOpen', () => 'name')([getRange(filterText)] as any);
+      dispatch(filterConfigActions.replaceFilterConfigs({
+        name: filterConfig
+      }));
+      dispatch(searchActions.replaceFiltersForGroup({
+        key: 'name',
+        filtersApplied: ['name']
+      }));
     }
     else {
       dispatch(searchActions.replaceFiltersForGroup({
@@ -37,8 +38,9 @@ export const FilterByNameSection = () => {
         filtersApplied: []
       }));
     }
+  }
 
-  }, [filterText]);
+  useDebounce(onFilter, debounceInputTime, [filterText]);
 
   return (
     <div>
@@ -48,7 +50,7 @@ export const FilterByNameSection = () => {
           variant="filled" 
           placeholder='Start typing' 
           value={filterText}
-          onChange={(event) => setFilterText(event.target.value)}
+          onChange={(event) => dispatch(uiActions.setByNameFilterText(event.target.value))}
           size="small"
           fullWidth
           margin='normal'
