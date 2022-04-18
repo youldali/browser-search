@@ -1,9 +1,9 @@
 import { FilterId } from '../browserSearch/filterConfig';
 
 import { buildFilterConfigSlice, State } from './redux-browser-search';
+import { personStoreSearchSlice } from './searchSlice';
 
 import type { Person } from '../models';
-
 export const initialState: State<Person, FilterId> = {
   age: [ 
     { id: 'lowAged', field: 'age', operator: 'lt', operand: 30 },
@@ -20,4 +20,10 @@ export const initialState: State<Person, FilterId> = {
 export const personStoreFilterConfigSlice = buildFilterConfigSlice({
   initialState,
   reducerName: 'filterConfig',
+  extraReducers: (builder) => {
+    builder.addCase(personStoreSearchSlice.actions.resetFilters.type, (state) => {
+      // dynamic filter config depending on the filters set
+      state['name'] = [];
+    })
+  }
 })

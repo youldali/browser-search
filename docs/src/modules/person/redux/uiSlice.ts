@@ -26,10 +26,10 @@ const uiSlice = createSlice({
       state.filters.byNameText = payload;
     },
   },
-  extraReducers: {
-    [searchSliceActions.resetFilters.type]: (state) => {
+  extraReducers: (builder) => {
+    builder.addCase(searchSliceActions.resetFilters.type, (state) => {
       state.filters.byNameText = '';
-    },
+    })
   },
 });
 

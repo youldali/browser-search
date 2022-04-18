@@ -1,4 +1,4 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, CreateSliceOptions, PayloadAction } from '@reduxjs/toolkit';
 import { FilterConfig, GroupOfFilters } from 'browser-search';
 import { path as RPath } from 'ramda';
 
@@ -8,12 +8,14 @@ export type State<Document, FilterId extends string> = Record<GroupId, GroupOfFi
 
 export const buildFilterConfigSlice = <Document, FilterId extends string>({
     initialState = {},
+    extraReducers,
     reducerName,
     reducerPath = [reducerName],
   }: {
   initialState?: State<Document, FilterId>,
   reducerName: string,
   reducerPath?: string[],
+  extraReducers?: CreateSliceOptions<State<Document, FilterId>>['extraReducers']
 }) => {
 
   const filterConfigSlice = createSlice({
@@ -27,6 +29,7 @@ export const buildFilterConfigSlice = <Document, FilterId extends string>({
         } as State<Document, FilterId>
       },
     },
+    extraReducers
   });
 
   const slicePath = RPath(reducerPath)
@@ -46,8 +49,10 @@ export const buildFilterConfigSlice = <Document, FilterId extends string>({
 }
 
 const stateToFilterConfig = <Document, FilterId extends string>(state: State<Document, FilterId>) => (
-    Object.values(state).reduce((acc: FilterConfig<Document, FilterId>, groupOfFilters: GroupOfFilters<Document, FilterId>): FilterConfig<Document, FilterId> => {
-    acc.push(groupOfFilters);
+  Object.values(state).reduce((acc: FilterConfig<Document, FilterId>, groupOfFilters: GroupOfFilters<Document, FilterId>): FilterConfig<Document, FilterId> => {
+    if(groupOfFilters.length) {
+      acc.push(groupOfFilters);
+    }
     return acc;
   }, [])
 )

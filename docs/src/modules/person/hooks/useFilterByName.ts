@@ -13,10 +13,10 @@ export const useFilterByName = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const addFilter = useCallback((filterByNameText: string) => {
-    const nameFilterConfig = getNameSearchFilterConfig(getStringSearchRange(filterByNameText));
+    const nameGroupFilterConfig = getNameSearchFilterConfig(getStringSearchRange(filterByNameText));
 
     dispatch(filterConfigActions.replaceFilterConfigs({
-      name: nameFilterConfig
+      name: nameGroupFilterConfig
     }));
 
     dispatch(searchActions.replaceFiltersForGroup({
@@ -26,6 +26,10 @@ export const useFilterByName = () => {
   }, []);
 
   const resetFilter = useCallback(() => {
+    dispatch(filterConfigActions.replaceFilterConfigs({
+      name: []
+    }));
+
     dispatch(searchActions.replaceFiltersForGroup({
       key: 'name',
       filtersApplied: []

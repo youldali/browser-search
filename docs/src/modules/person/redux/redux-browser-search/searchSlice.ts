@@ -1,4 +1,6 @@
-import { createSelector, createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
+import {
+    createSelector, createSlice, CreateSliceOptions, Draft, PayloadAction,
+} from '@reduxjs/toolkit';
 import { FiltersApplied } from 'browser-search';
 import { path as RPath } from 'ramda';
 
@@ -24,10 +26,12 @@ export const buildSearchSlice = <FilterId extends string>({
     initialState = getDefaultInitialState<FilterId>(),
     reducerName,
     reducerPath = [reducerName],
+    extraReducers
   }: {
   initialState?: SearchReducerState<FilterId>,
   reducerName: string,
   reducerPath?: string[],
+  extraReducers?: CreateSliceOptions<SearchReducerState<FilterId>>['extraReducers']
 }) => {
 
   const searchSlice = createSlice({
@@ -95,6 +99,7 @@ export const buildSearchSlice = <FilterId extends string>({
         state.orderDirection = payload.orderDirection;
       }
     },
+    extraReducers,
   });
 
   const slicePath = RPath(reducerPath);
