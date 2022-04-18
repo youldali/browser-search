@@ -1,11 +1,15 @@
 import React from 'react';
 import Chip from '@mui/material/Chip';
+import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 
 import { uppercaseFirstLetter } from '../../../../utils';
 import {
-    useCreatePersonStore, usePersonQuery, usePersonTable, useUpdateFilterConfig,
+    PersonQueryResponse, useCreatePersonStore, usePersonQuery, usePersonTable,
+    useUpdateFilterConfig,
 } from '../../hooks';
-import { ItemTable, QuerySuspense } from '../../../common';
+import { ItemTable, ItemTableSkeleton, QuerySuspense } from '../../../common';
 
 export const PersonTable = () => {
   useCreatePersonStore();
@@ -13,30 +17,48 @@ export const PersonTable = () => {
   const personQueryState = usePersonQuery();
   useUpdateFilterConfig();
 
+  const renderItemTable = (response: PersonQueryResponse) => (
+    <ItemTable 
+      data={response.documents}
+      dataCount={response.numberOfDocuments}
+      {...personsTableProps}
+      renderCell={(value, column) => {
+        if(column === 'name') {
+          return uppercaseFirstLetter(value as string);
+        }
+        if(column === 'hobbies') {
+          return (value as string[]).map((hobby) => <Chip sx={{marginRight: 1}} label={hobby} variant="outlined" />)
+        }
+        return null;
+      }}
+    />
+  )
+
   return (
     <section>
       <QuerySuspense
         queryState={personQueryState}
-        error={() => <div>An error occured</div>}
-        loading={() => <div>Loading</div>}
-        stale={() => <div>Loading</div>}
-        idle={() => <div>Loading</div>}
-        success={
-          ({response}) =>
-          <ItemTable 
-            data={response.documents}
-            dataCount={response.numberOfDocuments}
-            {...personsTableProps}
-            renderCell={(value, column) => {
-              if(column === 'name') {
-                return uppercaseFirstLetter(value as string);
-              }
-              if(column === 'hobbies') {
-                return (value as string[]).map((hobby) => <Chip sx={{marginRight: 1}} label={hobby} variant="outlined" />)
-              }
-              return null;
-            }}
+        error={() => <Alert severity="error">An error occured when displaying the data</Alert>}
+        idle={() => (
+          <ItemTableSkeleton
+            headCells={personsTableProps.headCells}
           />
+        )}
+        loading={() => (
+          <ItemTableSkeleton
+            headCells={personsTableProps.headCells}
+          />
+        )}
+        stale={({response}) => (
+          <>
+            <Box sx={{ width: '100%' }}>
+              <LinearProgress />
+            </Box>
+            {renderItemTable(response)}
+          </>
+        )}
+        success={
+          ({response}) => renderItemTable(response)
         } 
       />
     </section>
