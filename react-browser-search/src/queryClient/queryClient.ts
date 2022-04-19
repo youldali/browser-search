@@ -1,16 +1,19 @@
 import * as BS from 'browser-search';
 
-import { buildQueryCache } from './queryCache';
+import { IndexRequest } from '../indexRequest';
+
+import { buildIndexValuesCache, buildQueryCache } from './queryCache';
 import { buildSubscriber } from './subscriber';
 
 export const buildQueryClient = () => {
-  const cache = buildQueryCache();
+  const queryCache = buildQueryCache();
+  const indexValuesCache = buildIndexValuesCache();
   const subscriber = buildSubscriber();
 
   const mutateStore = <T>(mutationFunction: (storeId: BS.StoreId) => Promise<T>) => (storeId: BS.StoreId): Promise<T> => (
     mutationFunction(storeId)
       .then(result => {
-        cache.deleteStoreCache(storeId)
+        [queryCache, indexValuesCache].forEach(cache => cache.deleteStoreCache(storeId));
         subscriber.notifyStoreChange(storeId);
         return result;
       })
@@ -18,15 +21,30 @@ export const buildQueryClient = () => {
 
 
   const queryStore = <Document>(request: BS.Request<Document>): [Promise<BS.SearchResponse<Document>>, BS.AbortSearch] => {
-    const maybeCachedSearchResponsePromise = cache.queryCache<Document>(request);
+    const maybeCachedSearchResponsePromise = queryCache.queryCache<Document>(request);
 
     return (
       maybeCachedSearchResponsePromise.caseOf({
         Just: searchResponse => [searchResponse, () => {}],
         Nothing: () => {
           const [searchResponsePromise, abort] = BS.searchStore(request);
-          cache.addQueryToCache<Document>(request, searchResponsePromise);
+          queryCache.addQueryToCache<Document>(request, searchResponsePromise);
           return [searchResponsePromise, abort];
+        }
+      })
+    )
+  }
+
+  const queryIndex = <Value extends IDBValidKey>(request: IndexRequest): Promise<Value[]> => {
+    const maybeCachedResponsePromise = indexValuesCache.queryCache<Value>(request);
+
+    return (
+      maybeCachedResponsePromise.caseOf({
+        Just: indexValues => indexValues,
+        Nothing: () => {
+          const indexValuesPromise = BS.getAllValuesOfProperty<Value>(request.storeId)(request.indexId);
+          indexValuesCache.addQueryToCache<Value>(request, indexValuesPromise);
+          return indexValuesPromise;
         }
       })
     )
@@ -44,6 +62,7 @@ export const buildQueryClient = () => {
 
   return {
     queryStore,
+    queryIndex,
     createStore,
     deleteStore,
     addDataToStore,

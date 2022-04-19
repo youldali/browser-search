@@ -1,16 +1,18 @@
 import { AbortSearch, Request, SearchResponse, StoreId } from 'browser-search';
 
-import { buildQueryCache } from '../queryCache';
+import { buildIndexValuesCache, buildQueryCache } from '../queryCache';
 import { buildSubscriber } from '../subscriber';
+import { IndexRequest } from '../../indexRequest';
 
 export const buildQueryClient = () => {
-  const cache = buildQueryCache();
+  const queryCache = buildQueryCache();
+  const indexValuesCache = buildIndexValuesCache();
   const subscriber = buildSubscriber();
 
   const mutateStore = <T>(mutationFunction: (storeId: StoreId) => Promise<T>) => (storeId: StoreId): Promise<T> => (
     mutationFunction(storeId)
       .then(result => {
-        cache.deleteStoreCache(storeId)
+        [queryCache, indexValuesCache].forEach(cache => cache.deleteStoreCache(storeId));
         subscriber.notifyStoreChange(storeId);
         return result;
       })
@@ -18,7 +20,7 @@ export const buildQueryClient = () => {
 
 
   const queryStore = <Document>(request: Request<Document>): [Promise<SearchResponse<Document>>, AbortSearch] => {
-    const maybeCachedSearchResponsePromise = cache.queryCache<Document>(request);
+    const maybeCachedSearchResponsePromise = queryCache.queryCache<Document>(request);
 
     const response: SearchResponse<Document, string> = {
       documents: [] as Document[],
@@ -32,8 +34,24 @@ export const buildQueryClient = () => {
         Just: searchResponse => [searchResponse, () => {}],
         Nothing: () => {
           const [searchResponsePromise, abort] = [Promise.resolve(response), jest.fn()];
-          cache.addQueryToCache<Document>(request, searchResponsePromise);
+          queryCache.addQueryToCache<Document>(request, searchResponsePromise);
           return [searchResponsePromise, abort];
+        }
+      })
+    )
+  }
+
+  const queryIndex = <Value extends IDBValidKey>(request: IndexRequest): Promise<Value[]> => {
+    const maybeCachedResponsePromise = indexValuesCache.queryCache<Value>(request);
+    const response: Value[] = [];
+
+    return (
+      maybeCachedResponsePromise.caseOf({
+        Just: indexValues => indexValues,
+        Nothing: () => {
+          const indexValuesPromise = Promise.resolve(response);
+          indexValuesCache.addQueryToCache<Value>(request, indexValuesPromise);
+          return indexValuesPromise;
         }
       })
     )
@@ -51,6 +69,7 @@ export const buildQueryClient = () => {
 
   return {
     queryStore,
+    queryIndex,
     createStore,
     deleteStore,
     addDataToStore,

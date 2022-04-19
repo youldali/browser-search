@@ -1,10 +1,11 @@
-import { getAllValuesOfProperty, StoreId } from 'browser-search';
+import { StoreId } from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
 
 import { buildStateMachine, StateTransition } from '../stateMachine';
 import * as GenericQueryState from '../queryState';
 import { BrowserSearchContext } from '../provider';
+import { IndexRequest } from '../indexRequest';
 
 type IndexId = string;
 
@@ -13,7 +14,7 @@ export type RequestPayload = {
   storeId: StoreId;
 }
 
-export type ResponsePayload<FieldValues> = FieldValues[];
+export type ResponsePayload<FieldValue> = FieldValue[];
 
 export interface IdleState extends GenericQueryState.IdleState {
 }
@@ -34,12 +35,12 @@ export type QueryState<T> = IdleState | LoadingQueryState | StaleQueryState<T> |
 
 export type RequestStartedAction = { type: 'requestStarted'; request: RequestPayload,};
 export type RequestFailedAction = { type: 'requestFailed'; request: RequestPayload, error: Error}
-export type RequestCompletedAction<FieldValues> = { type: 'requestCompleted'; response: FieldValues[]; request: RequestPayload,}
+export type RequestCompletedAction<FieldValue> = { type: 'requestCompleted'; response: FieldValue[]; request: RequestPayload,}
 
-export type Action<FieldValues> =
+export type Action<FieldValue> =
   | RequestStartedAction
   | RequestFailedAction
-  | RequestCompletedAction<FieldValues>;
+  | RequestCompletedAction<FieldValue>;
   
 type QueryReducer<T> = Reducer<QueryState<T>, Action<T>>;
 
@@ -48,7 +49,7 @@ const initialState: IdleState = {
   isFetching: false,
 };
 
-const fromIdleToLoading = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<LoadingQueryState> => (
+const fromIdleToLoading = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<LoadingQueryState> => (
   state.status === 'idle' && action.type === 'requestStarted' ?
   Just({
     status: 'loading',
@@ -57,7 +58,7 @@ const fromIdleToLoading = <FieldValues>(state: QueryState<FieldValues>, action: 
   }) : Nothing
 )
 
-const fromLoadingToLoading = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<LoadingQueryState> => (
+const fromLoadingToLoading = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<LoadingQueryState> => (
   state.status === 'loading' && action.type === 'requestStarted' ?
   Just({
     status: 'loading',
@@ -66,7 +67,7 @@ const fromLoadingToLoading = <FieldValues>(state: QueryState<FieldValues>, actio
   }) : Nothing
 )
 
-const fromLoadingToError = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<ErrorQueryState> => (
+const fromLoadingToError = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<ErrorQueryState> => (
   state.status === 'loading' && action.type === 'requestFailed' && state.request === action.request ?
   Just({
     status: 'error',
@@ -76,7 +77,7 @@ const fromLoadingToError = <FieldValues>(state: QueryState<FieldValues>, action:
   }) : Nothing
 )
 
-const fromLoadingToSuccess = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<SuccessQueryState<FieldValues>> => (
+const fromLoadingToSuccess = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<SuccessQueryState<FieldValue>> => (
   state.status === 'loading' && action.type === 'requestCompleted' && state.request === action.request ?
   Just({
     status: 'success',
@@ -86,7 +87,7 @@ const fromLoadingToSuccess = <FieldValues>(state: QueryState<FieldValues>, actio
   }) : Nothing
 )
 
-const fromSuccessToStale = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<StaleQueryState<FieldValues>> => (
+const fromSuccessToStale = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<StaleQueryState<FieldValue>> => (
   state.status === 'success' && action.type === 'requestStarted' ?
   Just({
     status: 'stale',
@@ -97,7 +98,7 @@ const fromSuccessToStale = <FieldValues>(state: QueryState<FieldValues>, action:
   }) : Nothing
 )
 
-const fromStaleToSuccess = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<SuccessQueryState<FieldValues>> => (
+const fromStaleToSuccess = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<SuccessQueryState<FieldValue>> => (
   state.status === 'stale' && action.type === 'requestCompleted' && state.newRequest === action.request ?
   Just({
     status: 'success',
@@ -107,7 +108,7 @@ const fromStaleToSuccess = <FieldValues>(state: QueryState<FieldValues>, action:
   }) : Nothing
 )
 
-const fromStaleToStale = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<StaleQueryState<FieldValues>> => (
+const fromStaleToStale = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<StaleQueryState<FieldValue>> => (
   state.status === 'stale' && action.type === 'requestStarted' ?
     Just({
       status: 'stale',
@@ -119,7 +120,7 @@ const fromStaleToStale = <FieldValues>(state: QueryState<FieldValues>, action: A
    Nothing
 )
 
-const fromStaleToError = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<ErrorQueryState> => (
+const fromStaleToError = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<ErrorQueryState> => (
   state.status === 'stale' && action.type === 'requestFailed' && state.newRequest === action.request ?
   Just({
     status: 'error',
@@ -129,7 +130,7 @@ const fromStaleToError = <FieldValues>(state: QueryState<FieldValues>, action: A
   }) : Nothing
 )
 
-const fromErrorToLoading = <FieldValues>(state: QueryState<FieldValues>, action: Action<FieldValues>): Maybe<LoadingQueryState> => (
+const fromErrorToLoading = <FieldValue>(state: QueryState<FieldValue>, action: Action<FieldValue>): Maybe<LoadingQueryState> => (
   state.status === 'error' && action.type === 'requestStarted' ?
   Just({
     status: 'loading',
@@ -138,8 +139,8 @@ const fromErrorToLoading = <FieldValues>(state: QueryState<FieldValues>, action:
   }) : Nothing
 )
 
-export const buildReducer = <FieldValues>(): QueryReducer<FieldValues> => {
-  const stateTransitions: StateTransition<QueryState<FieldValues>, Action<FieldValues>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading];
+export const buildReducer = <FieldValue>(): QueryReducer<FieldValue> => {
+  const stateTransitions: StateTransition<QueryState<FieldValue>, Action<FieldValue>>[] = [fromIdleToLoading, fromLoadingToLoading, fromLoadingToError, fromLoadingToSuccess, fromSuccessToStale, fromStaleToStale, fromStaleToSuccess, fromStaleToError, fromErrorToLoading];
   return buildStateMachine(stateTransitions);
 }
 
@@ -151,11 +152,13 @@ export const useIndexValues = <T extends IDBValidKey>(storeId: StoreId, indexId:
   );
 
   const runQuery = useCallback( (): void => {
-    const responsePromise = getAllValuesOfProperty(storeId)(indexId);
-    const request = {
+    const request: IndexRequest = {
       storeId,
       indexId,
     };
+
+    const responsePromise = queryClient.queryIndex(request);
+    
     dispatch({type: 'requestStarted', request})
     
     responsePromise

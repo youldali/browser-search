@@ -15,7 +15,7 @@ const createWrapper = () => ({ children }: { children?: React.ReactNode }) => <B
 
 const { getErrorStateFixture, getIdleStateFixture, getLoadingStateFixture, getStaleStateFixture, getSuccessStateFixture } = useQueryStates;
 
-describe ('useQuery', () => {
+describe('useQuery', () => {
 
   const storeId = 'storeId';
 
@@ -25,13 +25,14 @@ describe ('useQuery', () => {
 
     const loadingState = result.current as LoadingQueryState<unknown>;
     expect(loadingState.status).toBe('loading');
-    expect(loadingState.request).toBe(request);
+    expect(loadingState.request).toEqual(request);
+    const loadingStateRequest = loadingState.request;
 
     await waitForNextUpdate();
 
     const successState = result.current as SuccessQueryState<unknown>;
     expect(successState.status).toBe('success');
-    expect(successState.request).toBe(request);
+    expect(successState.request).toBe(loadingStateRequest);
   })
 
   it('returns the same response (from the cache) when 2 identical requests are made', async () => {
@@ -90,7 +91,7 @@ describe ('useQuery', () => {
 
 
 
-describe.only('reducer', () => {
+describe('reducer', () => {
   const reducer = buildReducer();
   
   describe('From idle state', () => {
