@@ -17,7 +17,7 @@ export const generatePerson = (): Person => {
     email: chance.email(),
     salary: chance.natural({ min: 20000, max: 100000 }),
     profession: chance.pickone(professionSet),
-    hobbies: chance.pickset(hobbiesSet, chance.natural({ min: 0, max: 4 })),
+    hobbies: chance.pickset(hobbiesSet, chance.natural({ min: 1, max: 4 })),
     country: chance.pickone(countrySet),
   }
 }
