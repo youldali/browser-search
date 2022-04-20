@@ -26,7 +26,7 @@ export type ResponseSuccess<T, TFilterId extends string = string> = {
 
 export type ResponseFailure = { 
   outcome: 'error', 
-  reason: Error,
+  reason: string,
 }
 
 export type Response<T> = ResponseSuccess<T> | ResponseFailure;

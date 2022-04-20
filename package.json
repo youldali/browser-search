@@ -12,6 +12,7 @@
     "node": ">=10"
   },
   "scripts": {
+    "yalc:update": "yarn build:fast && yalc publish && yalc push",
     "build": "yarn test && build:fast",
     "build:fast": "webpack --config ./webpack.worker-config.js && webpack && node ./postBuild.js",
     "test": "jest",
