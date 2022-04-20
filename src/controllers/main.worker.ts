@@ -135,9 +135,10 @@ const postResult = <T>(documents: T[]) => (filteringStats: FilteringStats) => (c
 };
 
 const postError = (error: Error): void => {
+  console.log('ERROR FROM WORKER');
   const response: ResponseFailure = { 
     outcome: 'error', 
-    reason: error,
+    reason: error.toString(),
   }
     self.postMessage(response);
 };

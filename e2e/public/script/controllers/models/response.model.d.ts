@@ -20,6 +20,6 @@ export declare type ResponseSuccess<T, TFilterId extends string = string> = {
 };
 export declare type ResponseFailure = {
     outcome: 'error';
-    reason: Error;
+    reason: string;
 };
 export declare type Response<T> = ResponseSuccess<T> | ResponseFailure;
