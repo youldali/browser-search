@@ -5,7 +5,7 @@ import Fab from '@mui/material/Fab';
 import { SxProps } from '@mui/material/styles';
 
 import { generatePersons, Person } from '../../models';
-import { useCreatePersonStore, useUpdateFilterConfig } from '../../hooks';
+import { useUpdateFilterConfig } from '../../hooks';
 
 type Props = {
   count: number
@@ -13,7 +13,6 @@ type Props = {
 }
 
 export const AddPersonsButton = ({count, sx}: Props) => {
-  useCreatePersonStore();
   useUpdateFilterConfig();
 
   const mutateStore = useMutateStore<Person>('Persons');

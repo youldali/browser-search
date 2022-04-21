@@ -6,14 +6,12 @@ import Alert from '@mui/material/Alert';
 
 import { uppercaseFirstLetter } from '../../../../utils';
 import {
-    PersonQueryResponse, useCreatePersonStore, usePersonQuery, usePersonTable,
-    useUpdateFilterConfig,
+    PersonQueryResponse, usePersonQuery, usePersonTable, useUpdateFilterConfig,
 } from '../../hooks';
 import { ItemTable, ItemTableSkeleton, QuerySuspense } from '../../../common';
 import { Person } from '../../models';
 
 export const PersonTable = () => {
-  useCreatePersonStore();
   const personsTableProps = usePersonTable();
   const personQueryState = usePersonQuery();
   useUpdateFilterConfig();

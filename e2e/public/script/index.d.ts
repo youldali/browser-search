@@ -1,5 +1,6 @@
 import { Request, ResponseSuccess } from './controllers';
 import * as storage from './apis/storage.util';
+export { SimplifiedIndexConfig } from './apis/storage.util';
 export * from './controllers';
 export { Operator } from './modules/filterConfiguration';
 export declare type SearchResponse<T, TFilterId extends string = string> = ResponseSuccess<T, TFilterId>['payload'];

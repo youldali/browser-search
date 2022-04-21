@@ -1,16 +1,23 @@
 import { useEffect } from 'react';
-import { useMutateStore } from 'react-browser-search';
+import { useCreateStore, UseCreateStoreQueryState } from 'react-browser-search';
+import { SimplifiedIndexConfig } from 'browser-search';
 
 import { Person } from '../models';
 import { arrayFields, simpleFields } from '../browserSearch';
 
-export const useCreatePersonStore = () => {
-  const mutateStore = useMutateStore<Person>('Persons');
+const storeId = 'Persons';
+const indexConfig: SimplifiedIndexConfig<Person> = {
+  simple: simpleFields,
+  array: arrayFields,
+}
 
-  useEffect(() => {
-    mutateStore.createStore({
-      simple: simpleFields,
-      array: arrayFields,
-    })('id');
-  }, []) 
+export const useCreatePersonStore = (): [() => Promise<void>, UseCreateStoreQueryState<Person>] => {
+  const [createStore, createStoreQueryState] = useCreateStore<Person>();
+  const createPersonStore = () => createStore({
+    storeId,
+    indexConfig,
+    keyPath: 'id',
+  });
+
+  return [createPersonStore, createStoreQueryState];
 };
