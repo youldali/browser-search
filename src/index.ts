@@ -5,6 +5,7 @@ import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
 import { deleteCache } from './apis/cache';
 
+export { SimplifiedIndexConfig } from './apis/storage.util'
 export * from './controllers'; 
 export { Operator } from './modules/filterConfiguration'
 
