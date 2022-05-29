@@ -3,7 +3,7 @@ import { Reducer, useCallback, useContext, useReducer } from 'react';
 import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
 
 import { buildStateMachine, StateTransition } from '../stateMachine';
-import * as GenericQueryState from '../mutationQueryState';
+import * as GenericQueryState from '../queryState';
 import { BrowserSearchContext } from '../provider';
 
 export type ResponsePayload = null;
@@ -14,16 +14,16 @@ export type RequestPayload<DataSchema> = {
 };
 
 
-export interface IdleState extends GenericQueryState.MutationIdleState {
+export interface IdleState extends GenericQueryState.IdleState {
 }
 
-export interface LoadingQueryState<DataSchema> extends GenericQueryState.MutationLoadingQueryState<RequestPayload<DataSchema>>  {
+export interface LoadingQueryState<DataSchema> extends GenericQueryState.LoadingQueryState<RequestPayload<DataSchema>>  {
 }
 
-export interface SuccessQueryState<DataSchema> extends GenericQueryState.MutationSuccessQueryState<RequestPayload<DataSchema>, ResponsePayload> {
+export interface SuccessQueryState<DataSchema> extends GenericQueryState.SuccessQueryState<RequestPayload<DataSchema>, ResponsePayload> {
 }
 
-export interface ErrorQueryState<DataSchema> extends GenericQueryState.MutationErrorQueryState<RequestPayload<DataSchema>, Error> {
+export interface ErrorQueryState<DataSchema> extends GenericQueryState.ErrorQueryState<RequestPayload<DataSchema>, Error> {
 }
 
 export type QueryState<DataSchema> = IdleState | LoadingQueryState<DataSchema> | SuccessQueryState<DataSchema> | ErrorQueryState<DataSchema>;
@@ -34,6 +34,7 @@ const fromIdleToLoading = <DataSchema>(state: QueryState<DataSchema>, action: Ac
   Just({
     status: 'loading',
     request: action.request,
+    isFetching: true,
   }) : Nothing
 )
 
@@ -43,6 +44,7 @@ const fromLoadingToError = <DataSchema>(state: QueryState<DataSchema>, action: A
     status: 'error',
     request: action.request,
     error: action.error,
+    isFetching: false,
   }) : Nothing
 )
 
@@ -52,6 +54,7 @@ const fromLoadingToSuccess = <DataSchema>(state: QueryState<DataSchema>, action:
     status: 'success',
     request: action.request,
     response: action.response,
+    isFetching: false,
   }) : Nothing
 )
 
@@ -68,6 +71,7 @@ type QueryReducer<DataSchema> = Reducer<QueryState<DataSchema>, Action<DataSchem
 
 const initialState: IdleState = {
   status: 'idle',
+  isFetching: false,
 };
 
 

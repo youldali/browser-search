@@ -32,3 +32,4 @@ export interface ErrorQueryState<Request, Error> {
 }
 
 export type QueryState<Request, Response, Error> = IdleState | LoadingQueryState<Request> | SuccessQueryState<Request, Response> | StaleQueryState<Request, Response> | ErrorQueryState<Request, Error>;
+export type MutationQueryState<Request, Response, Error> = IdleState | LoadingQueryState<Request> | SuccessQueryState<Request, Response> | ErrorQueryState<Request, Error>;
