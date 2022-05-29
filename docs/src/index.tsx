@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { store } from './redux';
 import './index.css';
-import { App } from './components';
+import { PersonPage } from './pages';
 import reportWebVitals from './reportWebVitals';
 
 const theme = createTheme();
@@ -16,7 +16,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserSearchProvider>
         <ThemeProvider theme={theme}>
-          <App />
+          <PersonPage />
         </ThemeProvider>
       </BrowserSearchProvider>
     </Provider>

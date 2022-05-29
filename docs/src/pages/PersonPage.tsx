@@ -5,12 +5,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
 
 import { Header, QuerySuspense } from '../modules/common/components';
-import { AddPersonsButton, FilterPanel, PersonTable } from '../modules/person/';
+import { AddPersonsButton, FilterPanel, PersonTable } from '../modules/person';
 import { useCreatePersonStore } from '../modules/person/hooks';
 
 const drawerWidth = 300;
 
-export const App = () => {
+export const PersonPage = () => {
   const [createPersonStore, createPersonStoreQueryState] = useCreatePersonStore();
 
   useEffect(() => {
