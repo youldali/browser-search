@@ -8,7 +8,7 @@ type QuerySuspenseProps<Request, Response, Error, T extends QueryState<Request, 
   idle: (idleQueryState: Extract<T, IdleState>) => ReactElement | null;
   error: (errorQueryState: Extract<T, ErrorQueryState<Request, Error>>) => ReactElement | null;
   loading: (loadingQueryState: Extract<T, LoadingQueryState<Request>>) => ReactElement | null;
-  stale: (stateQueryState: Extract<T, StaleQueryState<Request, Response>>) => ReactElement | null;
+  stale?: (stateQueryState: Extract<T, StaleQueryState<Request, Response>>) => ReactElement | null;
   success: (successQueryState: Extract<T, SuccessQueryState<Request, Response>>) => ReactElement | null;
 };
 
@@ -33,7 +33,7 @@ export const QuerySuspense = <Request, Response, Error, T extends QueryState<Req
     return error(queryState as Extract<T, ErrorQueryState<Request, Error>>);
   }
 
-  if (queryState.status === 'stale') {
+  if (queryState.status === 'stale' && stale) {
     return stale(queryState as Extract<T, StaleQueryState<Request, Response>>);
   }
 

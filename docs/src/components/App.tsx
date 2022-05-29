@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
 
-import { Header, MutationQuerySuspense } from '../modules/common/components';
+import { Header, QuerySuspense } from '../modules/common/components';
 import { AddPersonsButton, FilterPanel, PersonTable } from '../modules/person/';
 import { useCreatePersonStore } from '../modules/person/hooks';
 
@@ -17,8 +17,8 @@ export const App = () => {
     createPersonStore();
   }, [])
   return (
-    <MutationQuerySuspense 
-      mutationQueryState={createPersonStoreQueryState}
+    <QuerySuspense 
+      queryState={createPersonStoreQueryState}
       idle={() => <div>idle</div>}
       loading={() => <div>loading</div>}
       success={() => (
