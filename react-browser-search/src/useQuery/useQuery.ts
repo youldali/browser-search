@@ -1,6 +1,7 @@
 import * as BS from 'browser-search';
 import { Reducer, useCallback, useContext, useEffect, useReducer } from 'react';
 import { Just, Maybe, Nothing } from 'purify-ts/Maybe';
+import { isSafari } from 'react-device-detect';
 
 import { BrowserSearchContext } from '../provider';
 import * as GenericQueryState from '../queryState';
@@ -174,8 +175,8 @@ const getAreStatsStale = <Document, TFilterId extends string>(previousRequest: B
 )
 
 const getShouldAbortRequest = <Document, TFilterId extends string>(previousRequest: BS.Request<Document, TFilterId>, searchStartedAction: SearchStartedAction<Document, TFilterId>) => (
-  !areRequestsEqual(previousRequest, searchStartedAction.request) || 
-  searchStartedAction.trigger === 'store-mutation'
+  !isSafari && (!areRequestsEqual(previousRequest, searchStartedAction.request) || 
+  searchStartedAction.trigger === 'store-mutation')
 )
 
 export const buildReducer = <Document, TFilterId extends string = string>(): QueryReducer<Document, TFilterId> => {

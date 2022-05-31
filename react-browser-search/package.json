@@ -9,7 +9,8 @@
     "browser-search": "file:.yalc/browser-search",
     "memoizee": "^0.4.15",
     "object-hash": "^3.0.0",
-    "ramda": "^0.28.0"
+    "ramda": "^0.28.0",
+    "react-device-detect": "^2.2.2"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
