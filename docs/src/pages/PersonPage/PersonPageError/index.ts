@@ -1,0 +1,1 @@
+export { PersonPageError } from './PersonPageError';
