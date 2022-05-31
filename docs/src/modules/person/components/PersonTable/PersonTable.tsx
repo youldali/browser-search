@@ -1,25 +1,22 @@
 import React from 'react';
 import Chip from '@mui/material/Chip';
-import LinearProgress from '@mui/material/LinearProgress';
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
 
 import { uppercaseFirstLetter } from '../../../../utils';
-import {
-    PersonQueryResponse, usePersonQuery, usePersonTable, useUpdateFilterConfig,
-} from '../../hooks';
-import { ItemTable, ItemTableSkeleton, QuerySuspense } from '../../../common';
+import { PersonQueryResponse, usePersonTable } from '../../hooks';
+import { ItemTable } from '../../../common';
 import { Person } from '../../models';
 
-export const PersonTable = () => {
-  const personsTableProps = usePersonTable();
-  const personQueryState = usePersonQuery();
-  useUpdateFilterConfig();
+type Props = {
+  personQueryResponse: PersonQueryResponse
+}
 
-  const renderItemTable = (response: PersonQueryResponse) => (
+export const PersonTable = ({personQueryResponse}: Props) => {
+  const personsTableProps = usePersonTable();
+
+  return (
     <ItemTable 
-      data={response.documents}
-      dataCount={response.numberOfDocuments}
+      data={personQueryResponse.documents}
+      dataCount={personQueryResponse.numberOfDocuments}
       {...personsTableProps}
       renderCell={(value, column) => {
         if(column === 'name') {
@@ -31,35 +28,5 @@ export const PersonTable = () => {
         return null;
       }}
     />
-  )
-
-  return (
-    <section>
-      <QuerySuspense
-        queryState={personQueryState}
-        error={() => <Alert severity="error">An error occured when displaying the data</Alert>}
-        idle={() => (
-          <ItemTableSkeleton
-            headCells={personsTableProps.headCells}
-          />
-        )}
-        loading={() => (
-          <ItemTableSkeleton
-            headCells={personsTableProps.headCells}
-          />
-        )}
-        stale={({response}) => (
-          <>
-            <Box sx={{ width: '100%' }}>
-              <LinearProgress />
-            </Box>
-            {renderItemTable(response)}
-          </>
-        )}
-        success={
-          ({response}) => renderItemTable(response)
-        } 
-      />
-    </section>
   );
 }
