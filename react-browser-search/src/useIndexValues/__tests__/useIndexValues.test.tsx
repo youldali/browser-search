@@ -6,7 +6,7 @@ import {
     buildReducer, LoadingQueryState, RequestCompletedAction, RequestFailedAction,
     RequestStartedAction, SuccessQueryState, useIndexValues,
 } from '../useIndexValues';
-import { useMutateStore } from '../../useMutateStore';
+import { useAddDataToStore } from '../../useAddDataToStore';
 import { BrowserSearchProvider } from '../../provider/__mocks__';
 
 const { getErrorStateFixture, getIdleStateFixture, getLoadingStateFixture, getStaleStateFixture, getSuccessStateFixture, getResponsePayloadFixture, getResquestPayloadFixture } = useIndexValuesStates;
@@ -51,14 +51,14 @@ describe('useIndexValuesStates', () => {
   })
 
   it('does not return the request from the cache when the store has been mutated', async () => {
-    const {result: {current: mutateStore}} = renderHook(() => useMutateStore(storeId), {wrapper: createWrapper()})
+    const {result: {current: [addDataToStore]}} = renderHook(() => useAddDataToStore(), {wrapper: createWrapper()})
 
     const renderHookResultA = renderHook(() => useIndexValues(storeId, indexId), {wrapper: createWrapper()})
     await renderHookResultA.waitForNextUpdate();
     const successStateA = renderHookResultA.result.current as SuccessQueryState<unknown>;
     const responseA = successStateA.response;
 
-    await act(() => {mutateStore.addDataToStore([])});
+    await act(() => {addDataToStore({storeId, data: []})});
 
     const renderHookResultB = renderHook(() => useIndexValues(storeId, indexId), {wrapper: createWrapper()})
     await renderHookResultB.waitForNextUpdate();
@@ -69,14 +69,14 @@ describe('useIndexValuesStates', () => {
   })
 
   it('refreshes the response when the store has been mutated', async () => {
-    const {result: {current: mutateStore}} = renderHook(() => useMutateStore(storeId), {wrapper: createWrapper()})
+    const {result: {current: [addDataToStore]}} = renderHook(() => useAddDataToStore(), {wrapper: createWrapper()})
 
     const renderHookResult = renderHook(() => useIndexValues(storeId, indexId), {wrapper: createWrapper()})
     await renderHookResult.waitForNextUpdate();
     const successState = renderHookResult.result.current as SuccessQueryState<unknown>;
     const responseA = successState.response;
 
-    await act(() => {mutateStore.addDataToStore([])});
+    await act(() => {addDataToStore({storeId, data: []})});
 
     const successStateB = renderHookResult.result.current as SuccessQueryState<unknown>;
     expect(responseA).not.toBe(successStateB.response);

@@ -6,7 +6,7 @@ import {
     buildReducer, LoadingQueryState, SearchCompletedAction, SearchFailedAction, SearchStartedAction,
     SuccessQueryState, useQuery,
 } from '../useQuery';
-import { useMutateStore } from '../../useMutateStore';
+import { useAddDataToStore } from '../../useAddDataToStore';
 import { BrowserSearchProvider } from '../../provider/__mocks__';
 
 jest.mock('../../queryClient');
@@ -53,14 +53,14 @@ describe('useQuery', () => {
 
   it('does not return the request from the cache when the store has been mutated', async () => {
     const request = getRequestFixture({storeId});
-    const {result: {current: mutateStore}} = renderHook(() => useMutateStore(storeId), {wrapper: createWrapper()})
+    const {result: {current: [addDataToStore]}} = renderHook(() => useAddDataToStore(), {wrapper: createWrapper()})
 
     const renderHookResultA = renderHook(() => useQuery(request), {wrapper: createWrapper()})
     await renderHookResultA.waitForNextUpdate();
     const successStateA = renderHookResultA.result.current as SuccessQueryState<unknown>;
     const responseA = successStateA.response;
 
-    await act(() => {mutateStore.addDataToStore([])});
+    await act(() => {addDataToStore({storeId, data: []})});
 
     const renderHookResultB = renderHook(() => useQuery(request), {wrapper: createWrapper()})
     await renderHookResultB.waitForNextUpdate();
@@ -72,14 +72,14 @@ describe('useQuery', () => {
 
   it('refreshes the response when the store has been mutated', async () => {
     const request = getRequestFixture({storeId});
-    const {result: {current: mutateStore}} = renderHook(() => useMutateStore(storeId), {wrapper: createWrapper()})
+    const {result: {current: [addDataToStore]}} = renderHook(() => useAddDataToStore(), {wrapper: createWrapper()})
 
     const renderHookResult = renderHook(() => useQuery(request), {wrapper: createWrapper()})
     await renderHookResult.waitForNextUpdate();
     const successState = renderHookResult.result.current as SuccessQueryState<unknown>;
     const responseA = successState.response;
 
-    await act(() => {mutateStore.addDataToStore([])});
+    await act(() => {addDataToStore({storeId, data: []})});
 
     const successStateB = renderHookResult.result.current as SuccessQueryState<unknown>;
     expect(responseA).not.toBe(successStateB.response);
