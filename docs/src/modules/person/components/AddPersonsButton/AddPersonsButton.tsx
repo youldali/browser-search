@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMutateStore } from 'react-browser-search';
+import { useAddDataToStore } from 'react-browser-search';
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import { SxProps } from '@mui/material/styles';
@@ -15,11 +15,11 @@ type Props = {
 export const AddPersonsButton = ({count, sx}: Props) => {
   useUpdateFilterConfig();
 
-  const mutateStore = useMutateStore<Person>('Persons');
+  const [addDataToStore] = useAddDataToStore<Person>();
 
   const addData = () => {
     const persons  = generatePersons(count);
-    mutateStore.addDataToStore(persons);
+    addDataToStore({storeId: 'Persons', data: persons});
   }
 
   return (
