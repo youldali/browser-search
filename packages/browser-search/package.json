@@ -13,7 +13,7 @@
   },
   "scripts": {
     "yalc:update": "yarn build:fast && yalc publish && yalc push",
-    "build": "yarn test && build:fast",
+    "build": "yarn test && yarn build:fast",
     "build:fast": "webpack --config ./webpack.worker-config.js && webpack && node ./postBuild.js",
     "test": "jest",
     "lint": "yarn run eslint src --fix-dry-run "

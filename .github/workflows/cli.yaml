@@ -1,0 +1,59 @@
+name: browser-search
+
+on: [push]
+
+concurrency: ci-${{ github.ref }}
+env:
+  NODE_VERSION: 16
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN_RW }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            node_modules
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-yarn-
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Build
+        run: yarn build
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ contains('refs/heads/master,refs/heads/beta', github.ref) }}
+    steps:
+      - name: Semantic release action
+        uses: Spendesk/npm-release-action@v0.2.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.SPENDESK_BOT_SEMANTIC_RELEASE_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}

@@ -2,8 +2,8 @@
 
 exports[`Browser Search addDocumentsToStore failures fails when the store does not exist 1`] = `
 "Evaluation failed: Error: Error when adding data to store: Store \\"unknown\\" does not exist !
-    at http://localhost:8081/script/index.js:9111:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9290:178)
+    at http://localhost:8081/script/index.js:9112:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9291:178)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
     at step (http://localhost:8081/script/index.js:5901:23)
     at Object.next (http://localhost:8081/script/index.js:5882:53)
@@ -16,13 +16,13 @@ exports[`Browser Search addDocumentsToStore failures fails when the store does n
 
 exports[`Browser Search deleteStore failures returns an error when the store to delete does not exist 1`] = `
 "Evaluation failed: Error: An error occured when deleting store \\"unknown\\": An error occured when opening Database browser-search: AbortError: Version change transaction was aborted in upgradeneeded event handler.
-    at http://localhost:8081/script/index.js:9094:34"
+    at http://localhost:8081/script/index.js:9095:34"
 `;
 
 exports[`Browser Search getAllValuesOfProperty failures fails when the property is not indexed 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"persons\\", index \\"unknown\\". Make sure the store and the index exist. Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.
-    at http://localhost:8081/script/index.js:9163:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9308:183)
+    at http://localhost:8081/script/index.js:9164:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9309:183)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
     at step (http://localhost:8081/script/index.js:5901:23)
     at Object.next (http://localhost:8081/script/index.js:5882:53)
@@ -35,8 +35,8 @@ exports[`Browser Search getAllValuesOfProperty failures fails when the property 
 
 exports[`Browser Search getAllValuesOfProperty failures fails when the store does not exist 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"unknown\\", index \\"country\\". Make sure the store and the index exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9163:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9308:183)
+    at http://localhost:8081/script/index.js:9164:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9309:183)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
     at step (http://localhost:8081/script/index.js:5901:23)
     at Object.next (http://localhost:8081/script/index.js:5882:53)
@@ -83,8 +83,8 @@ Array [
 
 exports[`Browser Search getDocuments failures returns an error when the store does not exist 1`] = `
 [Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9174:28
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9312:171)
+    at http://localhost:8081/script/index.js:9175:28
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9313:171)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
     at step (http://localhost:8081/script/index.js:5901:23)
     at Object.next (http://localhost:8081/script/index.js:5882:53)
@@ -97,8 +97,8 @@ exports[`Browser Search getDocuments failures returns an error when the store do
 
 exports[`Browser Search getNumberOfDocumentsInStore fails when the store does not exist 1`] = `
 "Evaluation failed: Error: An error occured when getting the number of documents in store \\"unknown\\". Make sure the store exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9106:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9316:175)
+    at http://localhost:8081/script/index.js:9107:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9317:175)
     at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
     at step (http://localhost:8081/script/index.js:5901:23)
     at Object.next (http://localhost:8081/script/index.js:5882:53)
@@ -111,7 +111,7 @@ exports[`Browser Search getNumberOfDocumentsInStore fails when the store does no
 
 exports[`Browser Search searchStore Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
-    at abort (http://localhost:8081/script/index.js:15880:22)
+    at abort (http://localhost:8081/script/index.js:15881:22)
     at __puppeteer_evaluation_script__:9:37"
 `;
 
