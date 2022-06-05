@@ -1,7 +1,7 @@
 import 'expect-puppeteer';
 import * as puppeteer from 'puppeteer';
 
-import * as BrowserSearch from '../../browser-search';
+import * as BrowserSearch from '../../browser-search/src';
 
 import { indexConfig, keyPath, Person, persons, storeId } from './__fixtures__/personStore';
 
@@ -43,7 +43,7 @@ describe('Browser Search', () => {
   }
 
   beforeAll(async () => {
-    browser = await puppeteer.launch({headless: false});
+    browser = await puppeteer.launch({headless: true});
     page = await browser.newPage();
     await page.goto(process.env['TEST_URL'] as string);
 

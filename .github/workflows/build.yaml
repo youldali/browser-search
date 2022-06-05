@@ -1,0 +1,34 @@
+name: tests and builds
+
+on: [push]
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [browser-search]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: test, builds package
+        uses: ./.github/actions/test-builds-package
+        with:
+          package: ${{ matrix.package }}
+
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: e2e
+        uses: ./.github/actions/e2e

@@ -1,0 +1,44 @@
+name: 'Browser Search E2E'
+description: 'E2E'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Nodejs
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+      shell: bash
+      working-directory: packages/e2e
+
+    - uses: actions/cache@v3
+      id: yarn-cache
+      with:
+        path: |
+          ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          packages/e2e/node_modules
+        key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}-e2e
+        restore-keys: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-yarn-e2e
+
+    - name: Install dependencies
+      run: |
+        if ${{ steps.yarn-cache.outputs.cache-hit }} = 'true'
+        then
+          echo "Cache hit - skipping dependency installation"
+        else
+          yarn install --frozen-lockfile
+        fi
+      shell: bash
+      working-directory: packages/e2e
+
+    - name: test
+      run: yarn run test
+      shell: bash
+      working-directory: packages/e2e
