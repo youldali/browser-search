@@ -41,7 +41,10 @@ jobs:
         uses: technote-space/get-diff-action@v6
         with:
           FILES: package.json
-          
+
+      - name: log
+        run: echo {{ steps.diff.outputs.diff }}   
+
       - name: publish browser-search
         if: contains(steps.diff.outputs.diff, 'packages/browser-search/package.json')
         run: yarn publish
