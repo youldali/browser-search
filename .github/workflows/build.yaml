@@ -40,7 +40,8 @@ jobs:
         id: diff
         uses: technote-space/get-diff-action@v6
         with:
-          FILES: package.json
+          PATTERNS: |
+            **/package.json
 
       - name: log
         run: echo '${{ steps.diff.outputs.diff }}'
