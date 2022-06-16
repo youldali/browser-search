@@ -6,29 +6,47 @@ env:
   NODE_VERSION: 16
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        package: [browser-search]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  # build:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       package: [browser-search]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
 
-      - name: test, builds package
-        uses: ./.github/actions/test-builds-package
+  #     - name: test, builds package
+  #       uses: ./.github/actions/test-builds-package
+  #       with:
+  #         package: ${{ matrix.package }}
+
+  # e2e:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 15
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+
+  #     - name: e2e
+  #       uses: ./.github/actions/e2e
+
+  publish:
+    # needs: [build, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get file changed
+        id: diff
+        uses: technote-space/get-diff-action@v6
         with:
-          package: ${{ matrix.package }}
-
-  e2e:
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+          FILES: package.json
+          
+      - name: publish browser-search
+        if: contains(steps.diff.outputs.diff, 'packages/browser-search/package.json')
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
+        working-directory: packages/browser-search
         
-      - name: e2e
-        uses: ./.github/actions/e2e
