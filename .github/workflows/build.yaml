@@ -43,7 +43,7 @@ jobs:
           FILES: package.json
 
       - name: log
-        run: echo {{ steps.diff.outputs.diff }}   
+        run: echo '${{ steps.diff.outputs.diff }}'
 
       - name: publish browser-search
         if: contains(steps.diff.outputs.diff, 'packages/browser-search/package.json')
