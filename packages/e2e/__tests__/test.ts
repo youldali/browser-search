@@ -5,7 +5,7 @@ import * as BrowserSearch from '../../browser-search/src';
 
 import { indexConfig, keyPath, Person, persons, storeId } from './__fixtures__/personStore';
 
-import type { FilterConfig, searchStore as searchStoreType } from '../../browser-search';
+import type { FilterConfig } from '../../browser-search/src';
 type FilterIds = 'lowAged' | 'middleAged' | 'highAged' | 'engineer' | 'red' | 'blue' | 'green';
 const filterConfig: FilterConfig<Person, FilterIds> = [ 
   [ 
