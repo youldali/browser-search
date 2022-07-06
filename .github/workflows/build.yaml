@@ -9,28 +9,28 @@ env:
   NODE_VERSION: 16
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
 
-      - name: test, builds package
-        uses: ./.github/actions/test-builds
+  #     - name: test, builds package
+  #       uses: ./.github/actions/test-builds
 
-  e2e:
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  # e2e:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 15
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
 
-      - name: e2e
-        uses: ./.github/actions/e2e
+  #     - name: e2e
+  #       uses: ./.github/actions/e2e
 
   publish:
-    needs: [build, e2e]
+    # needs: [build, e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -38,4 +38,5 @@ jobs:
 
       - name: test, builds package
         uses: ./.github/actions/release
+        secrets: inherit
         
