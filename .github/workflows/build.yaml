@@ -38,5 +38,7 @@ jobs:
 
       - name: test, builds package
         uses: ./.github/actions/release
-        secrets: inherit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         
