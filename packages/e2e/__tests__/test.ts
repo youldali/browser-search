@@ -1,11 +1,11 @@
 import 'expect-puppeteer';
 import * as puppeteer from 'puppeteer';
 
-import * as BrowserSearch from '../../browser-search/src';
+import * as BrowserSearch from '../../../src';
 
 import { indexConfig, keyPath, Person, persons, storeId } from './__fixtures__/personStore';
 
-import type { FilterConfig } from '../../browser-search/src';
+import type { FilterConfig } from '../../../src';
 type FilterIds = 'lowAged' | 'middleAged' | 'highAged' | 'engineer' | 'red' | 'blue' | 'green';
 const filterConfig: FilterConfig<Person, FilterIds> = [ 
   [ 
