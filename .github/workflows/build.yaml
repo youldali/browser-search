@@ -1,42 +1,39 @@
 name: tests - builds - release
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 env:
   NODE_VERSION: 16
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
-
-  #     - name: test, builds package
-  #       uses: ./.github/actions/test-builds
-
-  # e2e:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 15
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
-
-  #     - name: e2e
-  #       uses: ./.github/actions/e2e
-
-  publish:
-    # needs: [build, e2e]
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: test, builds package
+      - name: test, builds
+        uses: ./.github/actions/test-builds
+
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: e2e
+        uses: ./.github/actions/e2e
+
+  publish:
+    needs: [build, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: release
         uses: ./.github/actions/release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
