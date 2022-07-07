@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "types": "dist/index.d.ts",
+  "repository": "youldali/browser-search",
   "files": [
     "dist",
     "src"
@@ -22,8 +23,8 @@
   "husky": {
     "hooks": {}
   },
-  "name": "browser-search",
-  "author": "Yannis",
+  "name": "@browser-search/browser-search",
+  "author": "youldali",
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
