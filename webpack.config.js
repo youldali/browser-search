@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 module.exports = [{
@@ -33,7 +32,6 @@ module.exports = [{
       modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     },
     plugins: [
-      new CleanWebpackPlugin(),
       new ReplaceInFileWebpackPlugin([{
           dir: 'dist',
           files: ['index.js'],
