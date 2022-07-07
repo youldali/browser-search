@@ -1,4 +1,4 @@
-import { FilterConfig } from 'browser-search';
+import { FilterConfig } from '@browser-search/browser-search';
 
 import { Person } from '../models';
 

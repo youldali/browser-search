@@ -1,5 +1,5 @@
 import { createSelector, createSlice, CreateSliceOptions, PayloadAction } from '@reduxjs/toolkit';
-import { FilterConfig, GroupOfFilters } from 'browser-search';
+import { FilterConfig, GroupOfFilters } from '@browser-search/browser-search';
 import { path as RPath } from 'ramda';
 
 type GroupId = string;

@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { useCreateStore, UseCreateStoreQueryState } from 'react-browser-search';
-import { SimplifiedIndexConfig } from 'browser-search';
+import { SimplifiedIndexConfig } from '@browser-search/browser-search';
 
 import { Person } from '../models';
 import { arrayFields, simpleFields } from '../browserSearch';

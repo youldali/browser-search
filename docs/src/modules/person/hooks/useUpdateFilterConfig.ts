@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Filter, GroupOfFilters, Operator } from 'browser-search';
+import { Filter, GroupOfFilters, Operator } from '@browser-search/browser-search';
 import { mergeAll } from 'ramda';
 
 import { AppDispatch } from '../../../redux';

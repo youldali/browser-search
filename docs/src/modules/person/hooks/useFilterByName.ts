@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { GroupOfFilters } from 'browser-search';
+import { GroupOfFilters } from '@browser-search/browser-search';
 
 import { AppDispatch } from '../../../redux';
 import { personStoreFilterConfigSlice, personStoreSearchSlice } from '../redux';

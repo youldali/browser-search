@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Request } from 'browser-search';
+import { Request } from '@browser-search/browser-search';
 import {
     SuccessQueryState, useQuery, UseQueryQueryState, UseQuerySuccessState,
 } from 'react-browser-search';
