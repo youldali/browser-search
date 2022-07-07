@@ -3,7 +3,7 @@ name: tests - builds - release
 on:
   push:
     branches:
-      - master
+      - [master, beta]
 
 env:
   NODE_VERSION: 16
