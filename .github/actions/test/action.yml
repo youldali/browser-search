@@ -36,6 +36,9 @@ runs:
           fi
         shell: bash
 
+      - name: Typecheck
+        run: yarn typecheck
+        
       - name: test
         run: yarn run test
         shell: bash

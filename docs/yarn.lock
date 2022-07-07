@@ -1314,10 +1314,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@browser-search/browser-search@^1.0.0-beta.3":
-  version "1.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@browser-search/browser-search/-/browser-search-1.0.0-beta.3.tgz#53e7ccb864371b221bfd4562ba89785fa4a56cf4"
-  integrity sha512-yBNMA4Dix1xRDq6blCZk0RBNjnjZdpKO9f2m9a128YTlcaRGY19dVcPfoQ4j+0OPlI0L4zi2XGg3vMjIM4aE4A==
+"@browser-search/browser-search@1.0.1-beta.2":
+  version "1.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/@browser-search/browser-search/-/browser-search-1.0.1-beta.2.tgz#18c3f651b44d4fc199abdb47679bcc9b3064933c"
+  integrity sha512-AaHRzDGw+DQklduyD3elDt5njW+EUMIKCO6xBcZUJdLhxb8nxHcW/RBNu84KnobF74+tcVq4LoA4jXPf8n7+Hg==
   dependencies:
     "@types/object-hash" "^2.1.0"
     "@types/ramda" "^0.27.39"
