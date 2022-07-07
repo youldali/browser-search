@@ -33,6 +33,7 @@ module.exports = [{
       modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     },
     plugins: [
+      new CleanWebpackPlugin(),
       new ReplaceInFileWebpackPlugin([{
           dir: 'dist',
           files: ['index.js'],
