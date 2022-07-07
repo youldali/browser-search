@@ -6,8 +6,7 @@
   "types": "dist/index.d.ts",
   "repository": "youldali/browser-search",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=10"
