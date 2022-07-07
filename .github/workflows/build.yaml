@@ -27,7 +27,7 @@ jobs:
         uses: ./.github/actions/e2e
 
   publish:
-    # needs: [build, e2e]
+    needs: [build, e2e]
     runs-on: ubuntu-latest 
     steps:
       - name: Checkout repository
