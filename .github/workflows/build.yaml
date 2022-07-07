@@ -28,7 +28,7 @@ jobs:
 
   publish:
     # needs: [build, e2e]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
