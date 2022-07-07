@@ -6,17 +6,17 @@ env:
   NODE_VERSION: 16
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: test, builds
-        uses: ./.github/actions/test-builds
+      - name: test
+        uses: ./.github/actions/test
 
   e2e:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

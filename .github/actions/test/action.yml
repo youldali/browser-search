@@ -39,7 +39,3 @@ runs:
       - name: test
         run: yarn run test
         shell: bash
-
-      - name: Build
-        run: yarn run build
-        shell: bash

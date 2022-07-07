@@ -35,6 +35,10 @@ runs:
         fi
       shell: bash
 
+    - name: Build
+      run: yarn run build
+      shell: bash
+      
     - name: Release
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
