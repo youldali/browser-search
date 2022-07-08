@@ -1,5 +1,5 @@
 import React from 'react';
-import { NextFilterStateStat } from 'browser-search';
+import { NextFilterStateStat } from '@browser-search/browser-search';
 import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
 import Fade from '@mui/material/Fade';

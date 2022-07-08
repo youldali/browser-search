@@ -5,7 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
-import { NextFilterStateStat } from 'browser-search';
+import { NextFilterStateStat } from '@browser-search/browser-search';
 
 import { ChipFilterStat } from '../../../../common/components';
 

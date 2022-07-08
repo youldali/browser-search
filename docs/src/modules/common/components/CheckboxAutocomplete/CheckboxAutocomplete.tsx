@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { grey } from '@mui/material/colors';
-import { NextFilterStateStat } from 'browser-search';
+import { NextFilterStateStat } from '@browser-search/browser-search';
 
 import { ChipFilterStat } from '../ChipFilterStat';
 

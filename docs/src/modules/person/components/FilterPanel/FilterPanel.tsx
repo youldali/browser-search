@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiltersApplied } from 'browser-search';
+import { FiltersApplied } from '@browser-search/browser-search';
 import Fab from '@mui/material/Fab';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';

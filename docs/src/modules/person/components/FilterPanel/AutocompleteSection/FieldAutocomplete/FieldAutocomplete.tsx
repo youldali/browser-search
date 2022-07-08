@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchResponse } from 'browser-search';
+import { SearchResponse } from '@browser-search/browser-search';
 
 import { Person } from '../../../../models';
 import { CheckboxAutocomplete } from '../../../../../common/components';
