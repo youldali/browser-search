@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Request } from '@browser-search/browser-search';
 import {
     SuccessQueryState, useQuery, UseQueryQueryState, UseQuerySuccessState,
-} from 'react-browser-search';
+} from '@browser-search/react-browser-search';
 
 import { personStoreFilterConfigSlice, personStoreSearchSlice } from '../redux';
 import { FilterId, storeId } from '../browserSearch';

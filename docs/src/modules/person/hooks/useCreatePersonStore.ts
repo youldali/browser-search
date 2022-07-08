@@ -1,4 +1,4 @@
-import { useCreateStore, UseCreateStoreQueryState } from 'react-browser-search';
+import { useCreateStore, UseCreateStoreQueryState } from '@browser-search/react-browser-search';
 import { SimplifiedIndexConfig } from '@browser-search/browser-search';
 
 import { Person } from '../models';

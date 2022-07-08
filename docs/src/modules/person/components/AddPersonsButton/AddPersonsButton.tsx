@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAddDataToStore } from 'react-browser-search';
+import { useAddDataToStore } from '@browser-search/react-browser-search';
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import { SxProps } from '@mui/material/styles';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { UseIndexValuesQueryState } from 'react-browser-search';
+import { UseIndexValuesQueryState } from '@browser-search/react-browser-search';
 import Alert from '@mui/material/Alert';
 import { string } from 'yup';
 

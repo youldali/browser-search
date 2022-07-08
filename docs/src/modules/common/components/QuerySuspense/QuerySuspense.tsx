@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import {
     ErrorQueryState, IdleState, LoadingQueryState, QueryState, StaleQueryState, SuccessQueryState,
-} from 'react-browser-search';
+} from '@browser-search/react-browser-search';
 
 type QuerySuspenseProps<Request, Response, Error, T extends QueryState<Request, Response, Error>> = {
   queryState: T;

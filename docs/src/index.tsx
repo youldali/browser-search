@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserSearchProvider } from 'react-browser-search';
+import { BrowserSearchProvider } from '@browser-search/react-browser-search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { store } from './redux';

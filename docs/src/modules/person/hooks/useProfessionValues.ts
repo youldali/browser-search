@@ -1,4 +1,4 @@
-import { useIndexValues } from 'react-browser-search';
+import { useIndexValues } from '@browser-search/react-browser-search';
 
 import { storeId } from '../browserSearch';
 
