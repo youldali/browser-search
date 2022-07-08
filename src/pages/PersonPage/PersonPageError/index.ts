@@ -1,1 +1,0 @@
-export { PersonPageError } from './PersonPageError';

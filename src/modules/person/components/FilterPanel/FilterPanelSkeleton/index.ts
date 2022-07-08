@@ -1,1 +1,0 @@
-export { FilterPanelSkeleton } from './FilterPanelSkeleton';

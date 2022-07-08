@@ -1,1 +1,0 @@
-export { FilterPanelError } from './FilterPanelError';

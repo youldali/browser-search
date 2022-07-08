@@ -1,1 +1,0 @@
-export { PersonPageSkeleton } from './PersonPageSkeleton';

@@ -1,1 +1,0 @@
-export { PersonPage } from './PersonPage';
