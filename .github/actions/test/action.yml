@@ -4,9 +4,6 @@ description: 'checks, tests, builds'
 runs:
   using: "composite"
   steps:
-      - name: installs
-        uses: ./.github/actions/install
-
       - name: Typecheck
         run: yarn typecheck
         shell: bash
