@@ -18,8 +18,10 @@ export const PersonPage = () => (
     </PersonPageDrawer>
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
       <Toolbar />
+      
+      <AddPersonsButton count={10} sx={{ mr: 2 }} />
+      <AddPersonsButton count={100} sx={{ mr: 2 }} />
       <AddPersonsButton count={1000} sx={{ mr: 2 }} />
-      <AddPersonsButton count={1} />
       <Box sx={{ mt: 4 }}>
       <PersonTable />
       </Box>
