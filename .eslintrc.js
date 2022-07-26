@@ -4,7 +4,7 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'standard'
+    'eslint:recommended', 'plugin:@typescript-eslint/recommended'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -15,5 +15,26 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-  }
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+            "object": false,
+            "Function": false,
+        },
+        "extendDefaults": true
+      }
+  ],
+  "@typescript-eslint/ban-ts-comment": "warn",
+  "no-unused-vars": "off",
+    '@typescript-eslint/no-unused-vars': [
+      'warn', // or error
+      { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
+  },
+  ignorePatterns: ['*.test.ts, **/worker.util.ts'],
 }

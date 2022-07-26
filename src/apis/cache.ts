@@ -41,7 +41,7 @@ export const deleteCache = (): EitherAsync<Error, void> => (
 
 const createCacheIfNotExist = (): EitherAsync<Error, void> => (
   storage
-    .createStoreIfNotExist<CachedDocument<any>>(storeName)({})('key')
+    .createStoreIfNotExist<CachedDocument<unknown>>(storeName)({})('key')
     .mapLeft(e => {
       console.log('An error occured when creating the cache: ' + e);
       return e;

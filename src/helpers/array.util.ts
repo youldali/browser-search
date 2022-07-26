@@ -19,7 +19,7 @@ export const findIntersectionOfSortedArrays = <T>(a: T[]) => (b: T[]): T[] => {
 		j = 0;
 
 	while(i < length1 && j < length2){
-		let aI = a[i], bJ = b[j];
+		const aI = a[i], bJ = b[j];
 		if(aI > bJ)
 			j++
 		else if (aI < bJ)
@@ -65,8 +65,8 @@ export const findElementIndexInSortedArray = <T>(a: Array<T>) => (searchedElemen
 		endIndex = a.length - 1;
 
 	while(startIndex <= endIndex){
-		let middleIndex = Math.floor( (endIndex - startIndex) / 2 + startIndex);
-		let middleElement = a[middleIndex];
+		const middleIndex = Math.floor( (endIndex - startIndex) / 2 + startIndex);
+		const middleElement = a[middleIndex];
 		if(searchedElement > middleElement)
 			startIndex = middleIndex + 1;
 		else if (searchedElement < middleElement)
@@ -89,7 +89,7 @@ export const transformIntoObject = (array: Array<StringOrNumber>): Record<string
 }
 
 // [string | number] -> { [string | number] : string | number} -> [string | number]
-export const filterAgainstObjectKeys = (array: StringOrNumber[]) => (object: Record<string, StringOrNumber>) =>
+export const filterAgainstObjectKeys = (array: StringOrNumber[]) => (object: Record<string, StringOrNumber>): StringOrNumber[] =>
 	array.filter( itemId => object[itemId] !== undefined)
 
 

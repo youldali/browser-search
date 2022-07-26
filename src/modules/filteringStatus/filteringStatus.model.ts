@@ -1,8 +1,6 @@
-import { GroupId,} from 'modules/filterConfiguration';
-import { 
-	FilterFunction, 
-	FilteringFunctionsData,
-} from './filteringFunctions.model';
+import { GroupId } from 'modules/filterConfiguration';
+
+import { FilterFunction, FilteringFunctionsData } from './filteringFunctions.model';
 
 export interface FilteredItemStatus {
 	readonly pass: boolean,
@@ -61,11 +59,11 @@ export const getFilterStatusForItem =
  const filterObjectAgainstFilterFunctions = 
  <T>(filterFunctionList: FilterFunction<T>[]) => (target: T): boolean => 
  (function evaluateNextFilterFunction(iterator: Iterator<FilterFunction<T>>): boolean{
-	 const filterFunctionsIteratorResult = iterator.next();
-		 if(filterFunctionsIteratorResult.done)
-			 return false; // mempty for || operator
+		const filterFunctionsIteratorResult = iterator.next();
+		if(filterFunctionsIteratorResult.done)
+			return false; // mempty for || operator
  
-	 const filterFunction = filterFunctionsIteratorResult.value;
-	 return filterFunction(target) || evaluateNextFilterFunction(iterator);
+		const filterFunction = filterFunctionsIteratorResult.value;
+		return filterFunction(target) || evaluateNextFilterFunction(iterator);
  
  })(filterFunctionList[Symbol.iterator]());

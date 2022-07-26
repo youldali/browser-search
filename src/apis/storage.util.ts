@@ -1,8 +1,9 @@
-import * as idb from './indexedDB.api'
-import { isNil } from 'ramda'
+import { isNil } from 'ramda';
 import { Either } from 'purify-ts/Either';
-import { EitherAsync } from 'purify-ts/EitherAsync'
+import { EitherAsync } from 'purify-ts/EitherAsync';
 import { Operator } from 'modules/filterConfiguration/operators';
+
+import * as idb from './indexedDB.api';
 
 const databaseId = "browser-search";
 export interface SimplifiedIndexConfig<T> {
@@ -36,8 +37,8 @@ const closeDatabase = (db: IDBDatabase): EitherAsync<Error, void> => (
     EitherAsync(() => idb.closeDatabase(db))
 );
 
-type IDBCommand = (db: IDBDatabase) => EitherAsync<Error, any>;
-const execute = (...commands: IDBCommand[]): EitherAsync<Error, any> => {
+type IDBCommand = (db: IDBDatabase) => EitherAsync<Error, unknown>;
+const execute = <T>(...commands: IDBCommand[]): EitherAsync<Error, T> => {
     let dbInstance: IDBDatabase | null = null;
 
     const openDatabaseCommand = openDatabase()
@@ -46,7 +47,7 @@ const execute = (...commands: IDBCommand[]): EitherAsync<Error, any> => {
         return db;
     });
 
-    const commandsToExecute: EitherAsync<Error, unknown> = commands.reduce( (commandsAcc, command) => {
+    const commandsToExecute: EitherAsync<Error, unknown> = commands.reduce( (commandsAcc: EitherAsync<Error, unknown>, command: IDBCommand) => {
         return commandsAcc.chain(() => command(dbInstance as IDBDatabase))
     }, openDatabaseCommand);
 
@@ -61,7 +62,7 @@ const execute = (...commands: IDBCommand[]): EitherAsync<Error, any> => {
                 return error;
             });
 
-    return commandsToExecuteWithDbClosing;
+    return commandsToExecuteWithDbClosing as EitherAsync<Error, T>;
 };
 
 export const createStore = 
@@ -122,14 +123,14 @@ export const getPrimaryKeysMatchingOperator =
 (storeName: string) => 
 (indexName: string) =>
 (operator: Operator) =>
-(operand: any): EitherAsync<Error, ItemKey[]> => {
+(operand: unknown): EitherAsync<Error, ItemKey[]> => {
     const eitherKeyRange = Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));
 
     const command: IDBCommand = db => 
         EitherAsync.liftEither(eitherKeyRange)
             .chain (keyRange => EitherAsync(() => idb.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));
 
-    return execute(command);
+    return execute(command) as EitherAsync<Error, ItemKey[]>;
 }
 
 export const getAllPrimaryKeysForIndex = 
