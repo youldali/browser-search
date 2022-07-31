@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Request } from '@browser-search/browser-search';
 import {
-    SuccessQueryState, useQuery, UseQueryQueryState, UseQuerySuccessState,
+    useQuery,
+    UseQueryQueryState,
+    UseQuerySuccessState,
 } from '@browser-search/react-browser-search';
 
 import { personStoreFilterConfigSlice, personStoreSearchSlice } from '../redux';
