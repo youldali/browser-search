@@ -10,7 +10,7 @@ export {
     Filter,
 } from '../../modules/filterConfiguration'
 
-export interface Request<T, TFilterId extends string = string> {
+export interface QueryRequest<T, TFilterId extends string = string> {
     storeId: StoreId;
     filterConfig: FilterConfig<T, TFilterId>;
 	filtersApplied: FiltersApplied<TFilterId>;

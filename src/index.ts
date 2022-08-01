@@ -1,6 +1,6 @@
 import { identity } from 'ramda';
 
-import { Request, ResponseFailure, ResponseSuccess } from './controllers';
+import { QueryRequest, ResponseFailure, ResponseSuccess } from './controllers';
 import { functionToWorkerURL } from './helpers/worker.util';
 import * as storage from './apis/storage.util';
 import { deleteCache } from './apis/cache';
@@ -13,16 +13,16 @@ const workerFunction = () => {
   //@worker
 }
 
-export type SearchResponse<T, TFilterId extends string = string> = ResponseSuccess<T, TFilterId>['payload']
+export type QueryResponse<TDocument, TFilterId extends string = string> = ResponseSuccess<TDocument, TFilterId>['payload']
 export type AbortSearch = () => void;
-export const searchStore = <T, TFilterId extends string = string>(request: Request<T, TFilterId>): [Promise<SearchResponse<T, TFilterId>>, AbortSearch] => {
+export const queryStore = <TDocument, TFilterId extends string = string>(request: QueryRequest<TDocument, TFilterId>): [Promise<QueryResponse<TDocument, TFilterId>>, AbortSearch] => {
   const applicationWorker = new Worker(functionToWorkerURL(workerFunction));
   applicationWorker.postMessage(request);
 
   let rejectResult: (reason?: Error) => void;
-  const result: Promise<SearchResponse<T>> = new Promise((resolve, reject) => {
+  const result: Promise<QueryResponse<TDocument>> = new Promise((resolve, reject) => {
     rejectResult = reject;
-    applicationWorker.onmessage = (event: MessageEvent<ResponseSuccess<T> | ResponseFailure>) => {
+    applicationWorker.onmessage = (event: MessageEvent<ResponseSuccess<TDocument> | ResponseFailure>) => {
       const result = event.data;
       result.outcome === 'error' ? reject(result.reason) : resolve(result.payload);
     }
@@ -36,13 +36,22 @@ export const searchStore = <T, TFilterId extends string = string>(request: Reque
   return [result, abort];
 };
 
-export const createStore = <T>(storeName: string) => (indexConfig: storage.SimplifiedIndexConfig<T>) => async (keyPath: keyof T): Promise<void> => {
-  if(await doesStoreExist(storeName)){
+export type CreateStoreRequest<TDocument> = {
+  storeId: string;
+  indexConfig: storage.SimplifiedIndexConfig<TDocument>,
+  keyPath: keyof TDocument;
+};
+export const createStore = async <TDocument>({
+  storeId,
+  indexConfig,
+  keyPath
+}: CreateStoreRequest<TDocument>): Promise<void> => {
+  if(await doesStoreExist({storeId})){
     await deleteCache().run();
   }
 
   return (
-    storage.createStore<T>(storeName)(indexConfig)(keyPath)
+    storage.createStore<TDocument>(storeId)(indexConfig)(keyPath)
       .run()
       .then(eitherValues => (
         eitherValues.caseOf({ 
@@ -53,10 +62,17 @@ export const createStore = <T>(storeName: string) => (indexConfig: storage.Simpl
   );
 }
 
-export const addDocumentsToStore = <T>(storeName: string) => async (data: T[]): Promise<void> => {
+export type AddDocumentsToStoreRequest<TDocument> = {
+  storeId: string;
+  documents: TDocument[],
+};
+export const addDocumentsToStore = async <TDocument>({
+  storeId,
+  documents,
+}: AddDocumentsToStoreRequest<TDocument>): Promise<void> => {
   await deleteCache().run();
   return (
-    storage.addDocumentsToStore(storeName)(data)
+    storage.addDocumentsToStore(storeId)(documents)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -67,8 +83,16 @@ export const addDocumentsToStore = <T>(storeName: string) => async (data: T[]): 
   )
 }
 
-export const getAllValuesOfProperty = <T extends IDBValidKey>(storeName: string) => (propertyName: string): Promise<T[]> => (
-  storage.getAllUniqueKeysForIndex<T>(storeName)(propertyName)
+
+export type GetIndexValuesRequest = {
+  storeId: string;
+  field: string,
+};
+export const getIndexValues = <T extends IDBValidKey>({
+  storeId,
+  field,
+}: GetIndexValuesRequest): Promise<T[]> => (
+  storage.getAllUniqueKeysForIndex<T>(storeId)(field)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -78,8 +102,13 @@ export const getAllValuesOfProperty = <T extends IDBValidKey>(storeName: string)
     ))
 )
 
-export const getNumberOfDocumentsInStore = (storeName: string): Promise<number> => (
-  storage.getNumberOfDocumentsInStore(storeName)
+export type GetNumberOfDocumentsInStoreRequest = {
+  storeId: string;
+};
+export const getNumberOfDocumentsInStore = ({
+  storeId,
+}: GetNumberOfDocumentsInStoreRequest): Promise<number> => (
+  storage.getNumberOfDocumentsInStore(storeId)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -89,8 +118,16 @@ export const getNumberOfDocumentsInStore = (storeName: string): Promise<number> 
     ))
 )
 
-export const getDocuments = <T>(storeName: string) => (documentIds: IDBValidKey[]): Promise<T[]> => (
-  storage.getDocuments<T>(storeName)(documentIds)
+
+export type GetDocumentsRequest = {
+  storeId: string;
+  documentIds: IDBValidKey[],
+};
+export const getDocuments = <TDocument>({
+  storeId,
+  documentIds,
+}: GetDocumentsRequest): Promise<TDocument[]> => (
+  storage.getDocuments<TDocument>(storeId)(documentIds)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 
@@ -100,10 +137,16 @@ export const getDocuments = <T>(storeName: string) => (documentIds: IDBValidKey[
     ))
 )
 
-export const deleteStore = async (storeName: string): Promise<void> => {
+
+export type DeleteStoreRequest = {
+  storeId: string;
+};
+export const deleteStore = async ({
+  storeId
+}: DeleteStoreRequest): Promise<void> => {
   await deleteCache().run();
   return (
-    storage.deleteStore(storeName)
+    storage.deleteStore(storeId)
       .run()
       .then(eitherValues => (
         eitherValues.caseOf({ 
@@ -114,10 +157,16 @@ export const deleteStore = async (storeName: string): Promise<void> => {
   )
 }
 
-export const deleteStoreIfExist = async (storeName: string): Promise<void> => {
+
+export type DeleteStoreIfExistRequest = {
+  storeId: string;
+};
+export const deleteStoreIfExist = async ({
+  storeId,
+}: DeleteStoreIfExistRequest): Promise<void> => {
   await deleteCache().run();
   return (
-    storage.deleteStoreIfExist(storeName)
+    storage.deleteStoreIfExist(storeId)
       .run()
       .then(eitherValues => (
         eitherValues.caseOf({ 
@@ -142,8 +191,14 @@ export const deleteAllStores = async (): Promise<void> => {
   );
 }
 
-export const doesStoreExist = (storeName: string): Promise<boolean> => (
-  storage.doesStoreExist(storeName)
+
+export type DoesStoreExistRequest = {
+  storeId: string;
+};
+export const doesStoreExist = ({
+  storeId,
+}: DoesStoreExistRequest): Promise<boolean> => (
+  storage.doesStoreExist(storeId)
     .run()
     .then(eitherValues => (
       eitherValues.caseOf({ 

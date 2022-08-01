@@ -1,4 +1,4 @@
-// import { IndexConfig } from '../../../dist/';
+import * as BrowserSearch from '../../../../src';
 
 export type Colour = 'blue' | 'red' | 'green' | 'yellow' | 'brown' | 'white' | 'dark' | 'purple' | 'pink';
 
@@ -210,7 +210,7 @@ export const persons: Person[] = [
 ];
 
 export const storeId = 'persons';
-export const indexConfig = {
+export const indexConfig: BrowserSearch.SimplifiedIndexConfig<Person> = {
   simple: ['name', 'age', 'salary', 'profession', 'country'],
   array: ['favoriteColours']
 };

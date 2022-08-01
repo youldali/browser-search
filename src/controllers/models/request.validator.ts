@@ -1,9 +1,11 @@
 import * as yup from 'yup';
-import { EitherAsync } from 'purify-ts/EitherAsync'
-import { Left, Right } from 'purify-ts/Either'
+import { EitherAsync } from 'purify-ts/EitherAsync';
+import { Left, Right } from 'purify-ts/Either';
+
+import { validateFilterConfig } from '../../modules/filterConfiguration';
+
 import { requestErrors } from './requestErrors';
-import { Request, StoreId } from './request.model';
-import { validateFilterConfig } from '../../modules/filterConfiguration'
+import { QueryRequest, StoreId } from './request.model';
 
 const requestSchema = yup.object({
 	storeId: yup.string().typeError(requestErrors['Request/InvalidStoreId']).required(requestErrors['Request/InvalidStoreId']),
@@ -18,7 +20,7 @@ export interface ExtraValidators {
 	getStoreExist: (storeId: StoreId) => EitherAsync<Error, boolean>;
 }
 
-export const validateRequest = <T>(extraValidators: ExtraValidators) => (request: any) : EitherAsync<Error, Request<T>> =>  (
+export const validateRequest = <T>(extraValidators: ExtraValidators) => (request: any) : EitherAsync<Error, QueryRequest<T>> =>  (
 	validateBaseRequest(request)
 	.chain(baseRequest => (
 		validateFilterConfig(request.filterConfig)
@@ -27,19 +29,19 @@ export const validateRequest = <T>(extraValidators: ExtraValidators) => (request
 	.chain(request => validateStoreExistence(extraValidators.getStoreExist)(request))
 )
 
-type BaseRequest<T, TFilterId extends string = string> = Omit<Request<T, TFilterId>, 'filterConfig'>
+type BaseRequest<T, TFilterId extends string = string> = Omit<QueryRequest<T, TFilterId>, 'filterConfig'>
 const validateBaseRequest = <T>(request: any): EitherAsync<Error, BaseRequest<T>> => {
   const validation = requestSchema.validate(request, {
 		strict: true,
 		stripUnknown: true,
 	})
-	.then( (request) => Right(request as Request<T>))
+	.then( (request) => Right(request as QueryRequest<T>))
 	.catch(err => Left(new Error(err.errors)))
 
 	return EitherAsync.fromPromise(() => validation);
 }
 
-const validateStoreExistence = <T, TFilterId extends string = string>(getStoreExist: ExtraValidators['getStoreExist']) => (request: Request<T, TFilterId>): EitherAsync<Error, Request<T, TFilterId>> => (
+const validateStoreExistence = <T, TFilterId extends string = string>(getStoreExist: ExtraValidators['getStoreExist']) => (request: QueryRequest<T, TFilterId>): EitherAsync<Error, QueryRequest<T, TFilterId>> => (
 	getStoreExist(request.storeId)
 	.map(doesStoreExist => {
 		if(doesStoreExist) {

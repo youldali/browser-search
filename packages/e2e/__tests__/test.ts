@@ -30,15 +30,17 @@ describe('Browser Search', () => {
   let page: puppeteer.Page;
   let browserSearch: typeof BrowserSearch;
 
+  const createStoreRequest: BrowserSearch.CreateStoreRequest<Person> = {keyPath, indexConfig, storeId};
   const createStore = async () => {
-    await page.evaluate(({indexConfig, storeId, keyPath}) => browserSearch.createStore<Person>(storeId)(indexConfig)(keyPath),
-      {keyPath, indexConfig, storeId}
+    await page.evaluate((request: BrowserSearch.CreateStoreRequest<Person>) => browserSearch.createStore<Person>(request),
+      createStoreRequest
     );
   }
 
+  const addDocumentsToStoreRequest: BrowserSearch.AddDocumentsToStoreRequest<Person> = {documents: persons, storeId};
   const addDocumentsToStore = async () => {
-    await page.evaluate(({persons, storeId}) => browserSearch.addDocumentsToStore(storeId)(persons),
-      {persons, storeId} as any
+    await page.evaluate((request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request),
+    addDocumentsToStoreRequest
     );
   }
 
@@ -55,7 +57,7 @@ describe('Browser Search', () => {
     await page.evaluate(() => browserSearch.deleteAllStores());
   })
 
-  describe('searchStore', () => {
+  describe('queryStore', () => {
 
     beforeEach(async () => {
       await createStore();
@@ -65,8 +67,8 @@ describe('Browser Search', () => {
     describe('successes', () => {
 
       it('returns all items', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: [],
@@ -80,8 +82,8 @@ describe('Browser Search', () => {
       })
     
       it('performs a search with 1 filter', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['lowAged'],
@@ -95,8 +97,8 @@ describe('Browser Search', () => {
       })
     
       it('sorts by name ASC', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: [],
@@ -112,8 +114,8 @@ describe('Browser Search', () => {
       })
     
       it('sorts by name DESC', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: [],
@@ -129,8 +131,8 @@ describe('Browser Search', () => {
       })
     
       it('sorts by name ASC, gets the first 5 persons (page 0)', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: [],
@@ -147,8 +149,8 @@ describe('Browser Search', () => {
       })
     
       it('sorts by name ASC, gets the next 5 persons (page 1)', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: [],
@@ -165,8 +167,8 @@ describe('Browser Search', () => {
       })
 
       it('returns an empty array when the page is out of range', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: [],
@@ -183,8 +185,8 @@ describe('Browser Search', () => {
       })
     
       it('search for the engineer profession', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['engineer'],
@@ -198,8 +200,8 @@ describe('Browser Search', () => {
       })
     
       it('returns empty array when no criteria is met', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['engineer', 'lowAged'],
@@ -213,8 +215,8 @@ describe('Browser Search', () => {
       })
     
       it('returns all people who like the red colour', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['red'],
@@ -228,8 +230,8 @@ describe('Browser Search', () => {
       })
     
       it('returns all people who like the red / blue / green colour', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['red', 'blue', 'green'],
@@ -243,8 +245,8 @@ describe('Browser Search', () => {
       })
     
       it('returns all people who like the red / blue / green colour AND are old', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [results] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [results] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['red', 'blue', 'green', 'highAged'],
@@ -258,8 +260,8 @@ describe('Browser Search', () => {
       })
 
       it('runs 2 concurrents searches', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [resultsA] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [resultsA] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['red'],
@@ -267,7 +269,7 @@ describe('Browser Search', () => {
             orderDirection: 'ASC',
             perPage: 3,
           });
-          const [resultsB] = browserSearch.searchStore<Person, FilterIds>({
+          const [resultsB] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig, 
             storeId,
             filtersApplied: ['blue'],
@@ -278,7 +280,7 @@ describe('Browser Search', () => {
 
           return Promise.all([resultsA, resultsB]);
         }
-        , { filterConfig, storeId } as any
+        , { filterConfig, storeId }
         );
     
         expect(documents).toMatchSnapshot();
@@ -288,8 +290,8 @@ describe('Browser Search', () => {
     describe('Failures', () => {
       it('aborts the search', async () => {
         try {
-          await page.evaluate(({filterConfig, storeId}) => {
-            const [results, abort] = browserSearch.searchStore<Person, FilterIds>({
+          await page.evaluate(({filterConfig, storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+            const [results, abort] = browserSearch.queryStore<Person, FilterIds>({
               filterConfig, 
               storeId,
               filtersApplied: [],
@@ -297,75 +299,75 @@ describe('Browser Search', () => {
             });
             abort();
             return results;
-          }, { filterConfig, storeId } as any
+          }, { filterConfig, storeId }
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
 
       it('returns an error when the filter config is undefined', async () => {
         try {
-          await page.evaluate(({storeId}) => browserSearch.searchStore<Person, FilterIds>({
+          await page.evaluate(({storeId}: Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'storeId'>) => browserSearch.queryStore<Person, FilterIds>({
             filterConfig: undefined as any,
             storeId,
             filtersApplied: [],
             page: 2,
             perPage: 5,
-          }), { storeId } as any
+          }), { storeId }
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
   
       it('returns an error when the store does not exist', async () => {
         try {
-          await page.evaluate(({filterConfig}) => browserSearch.searchStore<Person, FilterIds>({
+          await page.evaluate(({filterConfig}:  Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig'>) => browserSearch.queryStore<Person, FilterIds>({
             filterConfig,
             storeId: 'unknown',
             filtersApplied: [],
             page: 2,
             perPage: 5,
-          }), { filterConfig } as any
+          }), { filterConfig }
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
   
       it('returns an error when the filter to apply does not exist', async () => {
         try {
-          await page.evaluate(({filterConfig, storeId}) => browserSearch.searchStore<Person, FilterIds>({
+          await page.evaluate(({filterConfig, storeId}:  Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => browserSearch.queryStore<Person, FilterIds>({
             filterConfig,
             storeId,
             filtersApplied: ['unknown' as any],
             page: 2,
             perPage: 5,
-          }), { filterConfig, storeId } as any
+          }), { filterConfig, storeId }
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
   
       it('returns an error when the page has the wrong format', async () => {
         try {
-          await page.evaluate(({filterConfig, storeId}) => browserSearch.searchStore<Person, FilterIds>({
+          await page.evaluate(({filterConfig, storeId}:  Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => browserSearch.queryStore<Person, FilterIds>({
             filterConfig,
             storeId,
             filtersApplied: [],
             page: -5,
             perPage: 5,
-          }), { filterConfig, storeId } as any
+          }), { filterConfig, storeId }
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
   
@@ -373,8 +375,8 @@ describe('Browser Search', () => {
 
     describe('cache', () => {
       it('retrieves the following queries with the same config from the cache', async () => {
-        const documents = await page.evaluate(({filterConfig, storeId}) => {
-          const [resultsA] = browserSearch.searchStore<Person, FilterIds>({
+        const documents = await page.evaluate(({filterConfig, storeId}:  Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
+          const [resultsA] = browserSearch.queryStore<Person, FilterIds>({
             filterConfig,
             storeId,
             filtersApplied: ['red'],
@@ -385,7 +387,7 @@ describe('Browser Search', () => {
           });
 
           const resultsB = resultsA.then( _ => {
-            const [results] = browserSearch.searchStore<Person, FilterIds>({
+            const [results] = browserSearch.queryStore<Person, FilterIds>({
               filterConfig,
               storeId,
               filtersApplied: ['red'],
@@ -399,17 +401,17 @@ describe('Browser Search', () => {
 
           return Promise.all([resultsA, resultsB]);
         }
-        , { filterConfig, storeId } as any
+        , { filterConfig, storeId }
         );
     
-        expect((documents[0] as any)['_cacheStatus_']).toBe('none');
-        expect((documents[1] as any)['_cacheStatus_']).toBe('partial');
+        expect((documents[0])['_cacheStatus_']).toBe('none');
+        expect((documents[1])['_cacheStatus_']).toBe('partial');
       })
 
       it('does not retrieve the following queries from the cache if the store has changed', async () => {
-        const documentsA = await page.evaluate(({filterConfig, storeId}) => {
+        const documentsA = await page.evaluate(({filterConfig, storeId}:  Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
           const [results] = 
-          browserSearch.searchStore<Person, FilterIds>({
+          browserSearch.queryStore<Person, FilterIds>({
             filterConfig,
             storeId,
             filtersApplied: ['red'],
@@ -421,12 +423,12 @@ describe('Browser Search', () => {
           return results;
         }, { filterConfig, storeId } as any);
 
-        await page.evaluate(({persons, storeId}) => browserSearch.addDocumentsToStore(storeId)(persons),
-        {persons: [{...persons[0], id: 'new', name: 'AAA'}], storeId} as any);
+        await page.evaluate((request:  BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request),
+        {documents: [{...persons[0], id: 'new', name: 'AAA'}], storeId});
 
-        const documentsB = await page.evaluate(({filterConfig, storeId}) => {
+        const documentsB = await page.evaluate(({filterConfig, storeId}:  Pick<BrowserSearch.QueryRequest<Person, FilterIds>, 'filterConfig' | 'storeId'>) => {
           const [results] = 
-          browserSearch.searchStore<Person, FilterIds>({
+          browserSearch.queryStore<Person, FilterIds>({
             filterConfig,
             storeId,
             filtersApplied: ['red'],
@@ -438,8 +440,8 @@ describe('Browser Search', () => {
           return results;
         }, { filterConfig, storeId } as any);
     
-        expect((documentsA as any)['_cacheStatus_']).toBe('none');
-        expect((documentsB as any)['_cacheStatus_']).toBe('none');
+        expect((documentsA )['_cacheStatus_']).toBe('none');
+        expect((documentsB )['_cacheStatus_']).toBe('none');
         expect(documentsA).toMatchSnapshot();
         expect(documentsB).toMatchSnapshot();
       })
@@ -449,10 +451,10 @@ describe('Browser Search', () => {
   
   describe('createStore', () => {
     it('successfully creates the store', async () => {
-      const results = await page.evaluate(({indexConfig, storeId, keyPath}) => browserSearch.createStore<Person>(storeId)(indexConfig)(keyPath),
+      const results = await page.evaluate((request: BrowserSearch.CreateStoreRequest<Person>) => browserSearch.createStore<Person>(request),
         {keyPath, indexConfig, storeId}
       );
-      const doesStoreExist = await page.evaluate(({storeId}) => browserSearch.doesStoreExist(storeId),
+      const doesStoreExist = await page.evaluate((request: BrowserSearch.DoesStoreExistRequest) => browserSearch.doesStoreExist(request),
        {storeId}
       );
       expect(doesStoreExist).toBeTruthy();
@@ -466,7 +468,7 @@ describe('Browser Search', () => {
     })
 
     it('returns true if the store exists', async () => {
-      const doesStoreExist = await page.evaluate(({storeId}) => browserSearch.doesStoreExist(storeId),
+      const doesStoreExist = await page.evaluate((request: BrowserSearch.DoesStoreExistRequest) => browserSearch.doesStoreExist(request),
         {storeId}
       );
 
@@ -474,7 +476,7 @@ describe('Browser Search', () => {
     });
 
     it('returns false if the store does not exist', async () => {
-      const doesStoreExist = await page.evaluate(() => browserSearch.doesStoreExist('unknown'),
+      const doesStoreExist = await page.evaluate(() => browserSearch.doesStoreExist({storeId: 'unknown'}),
       );
 
       expect(doesStoreExist).toBe(false);
@@ -491,13 +493,13 @@ describe('Browser Search', () => {
       it('succeeds when the data is matching the store', async () => {
 
         await page.evaluate(
-          ({storeId, persons}) => browserSearch.addDocumentsToStore(storeId)(persons)
-          ,{ storeId, persons } as any
+          (request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request)
+          ,{ storeId, persons }
         );
   
         const results = await page.evaluate(
-          ({storeId, persons}) => browserSearch.getDocuments<Person>(storeId)([persons[0].id])
-          ,{ storeId, persons } as any
+          (request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments<Person>(request)
+          ,{ storeId, documentIds: [persons[0].id] }
         );
   
         expect(results).toEqual([persons[0]]);
@@ -509,15 +511,15 @@ describe('Browser Search', () => {
         try {
           
           await page.evaluate(
-            ({storeId, persons}) => {
-              browserSearch.addDocumentsToStore(storeId)(persons);
-              browserSearch.addDocumentsToStore(storeId)(persons);
+            (request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => {
+              browserSearch.addDocumentsToStore(request);
+              browserSearch.addDocumentsToStore(request);
             }
-            ,{ storeId, persons: [persons[0]]} as any
+            ,{ storeId, documents: [persons[0]]}
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
         
       });
@@ -525,12 +527,12 @@ describe('Browser Search', () => {
       it('fails when the store does not exist', async () => {
         try {
           await page.evaluate(
-            ({persons}) => browserSearch.addDocumentsToStore('unknown')(persons)
-            ,{ persons: [persons[0]]} as any
+            (request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request)
+            ,{ documents: [persons[0]], storeId: 'unknown'} 
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       });
     })
@@ -547,18 +549,16 @@ describe('Browser Search', () => {
 
     describe('successes', () => {
       it('returns all the colours available', async () => {
-        const results = await page.evaluate(({storeId}) => browserSearch.getAllValuesOfProperty(
-          storeId,
-        )('favoriteColours'), { storeId }
+        const results = await page.evaluate((request: BrowserSearch.GetIndexValuesRequest) => browserSearch.getIndexValues(request), 
+        { storeId, field: 'favoriteColours' }
       );
     
         expect(results).toMatchSnapshot();
       })
     
       it('returns all the countries available', async () => {
-        const results = await page.evaluate(({storeId}) => browserSearch.getAllValuesOfProperty(
-          storeId,
-        )('country'), { storeId }
+        const results = await page.evaluate((request: BrowserSearch.GetIndexValuesRequest) => browserSearch.getIndexValues(request), 
+        { storeId, field: 'country' }
       );
     
         expect(results).toMatchSnapshot();
@@ -568,25 +568,25 @@ describe('Browser Search', () => {
     describe('failures', () => {
       it('fails when the property is not indexed', async () => {
         try {
-          await page.evaluate(({storeId}) => browserSearch.getAllValuesOfProperty(
-            storeId,
-          )('unknown'), { storeId }
+          await page.evaluate((request: BrowserSearch.GetIndexValuesRequest) => browserSearch.getIndexValues(request), 
+          { storeId, field: 'unknown' }
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
 
       it('fails when the store does not exist', async () => {
         try {
-          await page.evaluate(() => browserSearch.getAllValuesOfProperty(
-            'unknown',
-          )('country')
+          await page.evaluate(() => browserSearch.getIndexValues({
+            storeId: 'unknown',
+            field: 'country',
+          })
           );
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
     })
@@ -601,9 +601,9 @@ describe('Browser Search', () => {
     })
 
     it('returns the number of items in the store', async () => {
-      const results = await page.evaluate(({storeId}) => browserSearch.getNumberOfDocumentsInStore(
-        storeId,
-      ), { storeId } as any
+      const results = await page.evaluate((request: BrowserSearch.GetNumberOfDocumentsInStoreRequest) => browserSearch.getNumberOfDocumentsInStore(
+        request,
+      ), { storeId }
      );
   
       expect(results).toBe(persons.length);
@@ -612,12 +612,12 @@ describe('Browser Search', () => {
     it('fails when the store does not exist', async () => {
       try {
         await page.evaluate(() => browserSearch.getNumberOfDocumentsInStore(
-          'unknown',
+          {storeId: 'unknown'},
         )
       );
       }
       catch(e) {
-        expect(e.message).toMatchSnapshot();
+        expect((e as Error).message).toMatchSnapshot();
       }
       
     })
@@ -632,18 +632,16 @@ describe('Browser Search', () => {
 
     describe('successes', () => {
       it('returns the items matching the ids', async () => {
-        const results = await page.evaluate(({storeId, personsIds}) => browserSearch.getDocuments(
-          storeId,
-        )(personsIds), { storeId, personsIds: [persons[0].id, persons[2].id, persons[3].id] } as any
+        const results = await page.evaluate((request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments(request),
+         { storeId, documentIds: [persons[0].id, persons[2].id, persons[3].id] } as BrowserSearch.GetDocumentsRequest
       );
     
         expect(results).toEqual([persons[0], persons[2], persons[3]]);
       })
 
       it('filters out items that do not exist', async () => {
-        const results = await page.evaluate(({storeId, personsIds}) => browserSearch.getDocuments(
-          storeId, 
-        )(personsIds), { storeId, personsIds: [persons[0].id, 'giberrish']} as any
+        const results = await page.evaluate((request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments(request),
+         { storeId, documentIds: [persons[0].id, 'giberrish']} as BrowserSearch.GetDocumentsRequest
       );
     
         expect(results).toEqual([persons[0]]);
@@ -653,9 +651,8 @@ describe('Browser Search', () => {
     describe('failures', () => {
       it('returns an error when the store does not exist', async () => {
         try {
-          const results = await page.evaluate(({storeId, personsIds}) => browserSearch.getDocuments(
-            storeId, 
-            )(personsIds), { storeId: 'unknown', personsIds: [persons[0].id]} as any
+          const results = await page.evaluate((request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments(request),
+           { storeId: 'unknown', documentIds: [persons[0].id]} as BrowserSearch.GetDocumentsRequest
           );
         }
         catch(e) {
@@ -673,12 +670,12 @@ describe('Browser Search', () => {
 
     describe('successes', () => {
       it('deletes the given store', async () => {
-        await page.evaluate(({storeId}) => browserSearch.deleteStore(storeId),
-          {storeId} as any
+        await page.evaluate((request: BrowserSearch.DeleteStoreRequest) => browserSearch.deleteStore(request),
+          {storeId} as BrowserSearch.DeleteStoreRequest
         );
     
-        const doesStoreExist = await page.evaluate(({storeId}) => browserSearch.doesStoreExist(storeId),
-        {storeId} as any
+        const doesStoreExist = await page.evaluate((request: BrowserSearch.DoesStoreExistRequest) => browserSearch.doesStoreExist(request),
+        {storeId} as BrowserSearch.DoesStoreExistRequest
         );
         expect(doesStoreExist).toBe(false);
       })
@@ -687,10 +684,10 @@ describe('Browser Search', () => {
     describe('failures', () => {
       it('returns an error when the store to delete does not exist', async () => {
         try {
-          await page.evaluate(() => browserSearch.deleteStore('unknown'));
+          await page.evaluate(() => browserSearch.deleteStore({storeId: 'unknown'}));
         }
         catch(e) {
-          expect(e.message).toMatchSnapshot();
+          expect((e as Error).message).toMatchSnapshot();
         }
       })
     })
@@ -704,18 +701,18 @@ describe('Browser Search', () => {
     })
 
     it('deletes the given store', async () => {
-      await page.evaluate(({storeId}) => browserSearch.deleteStoreIfExist(storeId),
-        {storeId} as any
+      await page.evaluate((request: BrowserSearch.DeleteStoreIfExistRequest) => browserSearch.deleteStoreIfExist(request),
+        {storeId} as BrowserSearch.DeleteStoreIfExistRequest
       );
   
-      const doesStoreExist = await page.evaluate(({storeId}) => browserSearch.doesStoreExist(storeId),
-      {storeId} as any
+      const doesStoreExist = await page.evaluate((request: BrowserSearch.DeleteStoreIfExistRequest) => browserSearch.doesStoreExist(request),
+      {storeId} as BrowserSearch.DeleteStoreIfExistRequest
       );
       expect(doesStoreExist).toBe(false);
     })
 
     it('does nothing if the store does not exist', async () => {
-      const result = await page.evaluate(() => browserSearch.deleteStoreIfExist('unknown'));
+      const result = await page.evaluate(() => browserSearch.deleteStoreIfExist({storeId: 'unknown'}));
       expect(result).resolves
     })
 
@@ -730,8 +727,8 @@ describe('Browser Search', () => {
     it('deletes all the stores', async () => {
       await page.evaluate(() => browserSearch.deleteAllStores());
   
-      const doesStoreExist = await page.evaluate(({storeId}) => browserSearch.doesStoreExist(storeId),
-      {storeId} as any
+      const doesStoreExist = await page.evaluate((request: BrowserSearch.DoesStoreExistRequest) => browserSearch.doesStoreExist(request),
+      {storeId} as BrowserSearch.DoesStoreExistRequest
       );
       expect(doesStoreExist).toBe(false);
     })

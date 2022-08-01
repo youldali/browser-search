@@ -6,7 +6,12 @@ import { doesStoreExist } from '../apis/storage.util';
 import { FilteringData, NextFilterState } from '../modules/filteringData';
 
 import {
-    CacheStatus, NextFilterStateStat, Request, ResponseFailure, ResponseSuccess, validateRequest,
+    CacheStatus,
+    NextFilterStateStat,
+    QueryRequest,
+    ResponseFailure,
+    ResponseSuccess,
+    validateRequest,
 } from './models/';
 import { getFilteringData } from './filter';
 import { getOrderFromRequest } from './order';
@@ -17,9 +22,9 @@ export interface FilteringStatisticsResponse {
     filtersStatisticsDetailedByFilter: number,
     numberOfMatchingItems: number,
     totalNumberOfItems: number,
-};
+}
 interface RequestEvent<T, TFilterId extends string = string> extends MessageEvent {
-    data: Request<T, TFilterId>,
+    data: QueryRequest<T, TFilterId>,
 }
 
 interface FilteringDataExtended extends FilteringData {
@@ -33,7 +38,7 @@ self.onmessage = <T>(event: RequestEvent<T>): void => {
 };
 
 
-const getFilteringDataFromRequest = <T, TFilterId extends string = string>(request: Request<T, TFilterId>): EitherAsync<Error, FilteringDataExtended> => {
+const getFilteringDataFromRequest = <T, TFilterId extends string = string>(request: QueryRequest<T, TFilterId>): EitherAsync<Error, FilteringDataExtended> => {
   const eitherAsyncFilteringDataFromRequest = 
     validateRequest<T>({getStoreExist: doesStoreExist})(request)
       .map(request => buildFilterConfigData(request.filterConfig)(request.filtersApplied))
@@ -56,7 +61,7 @@ const getFilteringDataFromRequest = <T, TFilterId extends string = string>(reque
   return eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);
 }
 
-const processRequest = async <T, TFilterId extends string = string>(request: Request<T, TFilterId>) => {
+const processRequest = async <T, TFilterId extends string = string>(request: QueryRequest<T, TFilterId>) => {
     const eitherAsyncFilteringData = getFilteringDataFromRequest(request);
     const liftedFilteringData = EitherAsync.liftEither(await eitherAsyncFilteringData.run()); // we run the computation here so that's it's performed only once
 

@@ -1,13 +1,14 @@
-import { EitherAsync } from 'purify-ts/EitherAsync'
-import { transformIntoObject, filterAgainstObjectKeys } from 'helpers/array.util';
+import { EitherAsync } from 'purify-ts/EitherAsync';
+import { filterAgainstObjectKeys, transformIntoObject } from 'helpers/array.util';
 import { getAllPrimaryKeysForIndex } from 'apis/storage.util';
-import { DocumentId, Request } from './models';
-import { Right } from 'purify-ts/Either'
-import { isNil } from 'ramda'
+import { Right } from 'purify-ts/Either';
+import { isNil } from 'ramda';
 
-type OrderParams<T> = Required<Pick<Request<T>, 'storeId' | 'orderBy' | 'orderDirection'>>
+import { DocumentId, QueryRequest } from './models';
 
-export const getOrderFromRequest = <T>(request: Request<T>) => (itemsIdsToSort: DocumentId[]): EitherAsync<Error, DocumentId[]> => {
+type OrderParams<T> = Required<Pick<QueryRequest<T>, 'storeId' | 'orderBy' | 'orderDirection'>>
+
+export const getOrderFromRequest = <T>(request: QueryRequest<T>) => (itemsIdsToSort: DocumentId[]): EitherAsync<Error, DocumentId[]> => {
     const { orderBy, orderDirection } = request;
     return isNil(orderBy) 
     ? getDefaultOrder(itemsIdsToSort)

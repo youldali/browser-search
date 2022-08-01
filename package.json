@@ -16,7 +16,7 @@
     "yalc:update": "yarn build:fast && yalc publish && yalc push",
     "test-build": "yarn test && yarn build",
     "build": "webpack --config ./webpack.worker-config.js && webpack && node ./postBuild.js",
-    "test": "jest",
+    "test": "yarn run typecheck && jest",
     "lint": "yarn run eslint src --fix-dry-run ",
     "semantic-release": "semantic-release"
   },
@@ -46,6 +46,7 @@
     "tslib": "^2.0.0",
     "typescript": "^4.6.3",
     "webpack": "^5.3.2",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.1.0"
   },
   "dependencies": {

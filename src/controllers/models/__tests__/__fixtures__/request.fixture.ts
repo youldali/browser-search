@@ -1,9 +1,7 @@
 import { createFixture } from 'helpers/fixture.util';
-import { Request } from '../../request.model';
-import { 
-  Filter, 
-  FilterConfig,
-} from 'modules/filterConfiguration/filterConfig.model';
+import { Filter, FilterConfig } from 'modules/filterConfiguration/filterConfig.model';
+
+import { QueryRequest } from '../../request.model';
 
 type ItemActivity = 'swimming' | 'tennis' | 'football' | 'golfing';
 
@@ -30,7 +28,7 @@ export const filterConfigFixture: FilterConfig<Item> = [
   [filterDictionaryFixture['activity-1'], filterDictionaryFixture['activity-2'], filterDictionaryFixture['activity-3']]
 ];
   
-export const getRequestFixture = createFixture<Request<Item>>({
+export const getRequestFixture = createFixture<QueryRequest<Item>>({
   storeId: 'items',
   filterConfig: filterConfigFixture,
   filtersApplied: ['priceMin'],
@@ -40,7 +38,7 @@ export const getRequestFixture = createFixture<Request<Item>>({
   page: 0,
 });
 
-export const getShortRequestFixture = createFixture<Request<Item>>({
+export const getShortRequestFixture = createFixture<QueryRequest<Item>>({
   storeId: 'items',
   filterConfig: filterConfigFixture,
   filtersApplied: [],
