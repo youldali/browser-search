@@ -5534,73 +5534,40 @@ function shouldBeQuoted(part) {
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/Either.js":
-/*!******************************************!*\
-  !*** ./node_modules/purify-ts/Either.js ***!
-  \******************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/Either.js":
+/*!*********************************************!*\
+  !*** ./node_modules/purify-ts/es/Either.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Right = exports.Left = exports.Either = void 0;
-var Maybe_1 = __webpack_require__(/*! ./Maybe */ "./node_modules/purify-ts/Maybe.js");
+const Maybe_1 = __webpack_require__(/*! ./Maybe */ "./node_modules/purify-ts/es/Maybe.js");
 exports.Either = {
-    of: function (value) {
+    of(value) {
         return right(value);
     },
-    lefts: function (list) {
-        var e_1, _a;
-        var result = [];
-        try {
-            for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {
-                var x = list_1_1.value;
-                if (x.isLeft()) {
-                    result.push(x.extract());
-                }
+    lefts(list) {
+        let result = [];
+        for (const x of list) {
+            if (x.isLeft()) {
+                result.push(x.extract());
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1);
-            }
-            finally { if (e_1) throw e_1.error; }
         }
         return result;
     },
-    rights: function (list) {
-        var e_2, _a;
-        var result = [];
-        try {
-            for (var list_2 = __values(list), list_2_1 = list_2.next(); !list_2_1.done; list_2_1 = list_2.next()) {
-                var x = list_2_1.value;
-                if (x.isRight()) {
-                    result.push(x.extract());
-                }
+    rights(list) {
+        let result = [];
+        for (const x of list) {
+            if (x.isRight()) {
+                result.push(x.extract());
             }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (list_2_1 && !list_2_1.done && (_a = list_2.return)) _a.call(list_2);
-            }
-            finally { if (e_2) throw e_2.error; }
         }
         return result;
     },
-    encase: function (throwsF) {
+    encase(throwsF) {
         try {
             return right(throwsF());
         }
@@ -5608,36 +5575,25 @@ exports.Either = {
             return left(e);
         }
     },
-    sequence: function (eithers) {
-        var e_3, _a;
-        var res = [];
-        try {
-            for (var eithers_1 = __values(eithers), eithers_1_1 = eithers_1.next(); !eithers_1_1.done; eithers_1_1 = eithers_1.next()) {
-                var e = eithers_1_1.value;
-                if (e.isLeft()) {
-                    return e;
-                }
-                res.push(e.extract());
+    sequence(eithers) {
+        let res = [];
+        for (const e of eithers) {
+            if (e.isLeft()) {
+                return e;
             }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (eithers_1_1 && !eithers_1_1.done && (_a = eithers_1.return)) _a.call(eithers_1);
-            }
-            finally { if (e_3) throw e_3.error; }
+            res.push(e.extract());
         }
         return right(res);
     },
-    isEither: function (x) {
+    isEither(x) {
         return x instanceof Left || x instanceof Right;
     },
-    'fantasy-land/of': function (value) {
+    'fantasy-land/of'(value) {
         return exports.Either.of(value);
     }
 };
-var Right = /** @class */ (function () {
-    function Right(__value) {
+class Right {
+    constructor(__value) {
         this.__value = __value;
         this._ = 'R';
         this['fantasy-land/bimap'] = this.bimap;
@@ -5649,101 +5605,97 @@ var Right = /** @class */ (function () {
         this['fantasy-land/reduce'] = this.reduce;
         this['fantasy-land/extend'] = this.extend;
     }
-    Right.prototype.isLeft = function () {
+    isLeft() {
         return false;
-    };
-    Right.prototype.isRight = function () {
+    }
+    isRight() {
         return true;
-    };
-    Right.prototype.toJSON = function () {
+    }
+    toJSON() {
         return this.__value;
-    };
-    Right.prototype.inspect = function () {
-        return "Right(" + JSON.stringify(this.__value) + ")";
-    };
-    Right.prototype.toString = function () {
+    }
+    inspect() {
+        return `Right(${JSON.stringify(this.__value)})`;
+    }
+    toString() {
         return this.inspect();
-    };
-    Right.prototype.bimap = function (_, g) {
+    }
+    bimap(_, g) {
         return right(g(this.__value));
-    };
-    Right.prototype.map = function (f) {
+    }
+    map(f) {
         return right(f(this.__value));
-    };
-    Right.prototype.mapLeft = function (_) {
+    }
+    mapLeft(_) {
         return this;
-    };
-    Right.prototype.ap = function (other) {
+    }
+    ap(other) {
         return other.isRight() ? this.map(other.extract()) : other;
-    };
-    Right.prototype.equals = function (other) {
+    }
+    equals(other) {
         return other.isRight() ? this.__value === other.extract() : false;
-    };
-    Right.prototype.chain = function (f) {
+    }
+    chain(f) {
         return f(this.__value);
-    };
-    Right.prototype.chainLeft = function (_) {
+    }
+    chainLeft(_) {
         return this;
-    };
-    Right.prototype.join = function () {
+    }
+    join() {
         return this.__value;
-    };
-    Right.prototype.alt = function (_) {
+    }
+    alt(_) {
         return this;
-    };
-    Right.prototype.altLazy = function (_) {
+    }
+    altLazy(_) {
         return this;
-    };
-    Right.prototype.reduce = function (reducer, initialValue) {
+    }
+    reduce(reducer, initialValue) {
         return reducer(initialValue, this.__value);
-    };
-    Right.prototype.extend = function (f) {
+    }
+    extend(f) {
         return right(f(this));
-    };
-    Right.prototype.unsafeCoerce = function () {
+    }
+    unsafeCoerce() {
         return this.__value;
-    };
-    Right.prototype.caseOf = function (patterns) {
+    }
+    caseOf(patterns) {
         return '_' in patterns ? patterns._() : patterns.Right(this.__value);
-    };
-    Right.prototype.leftOrDefault = function (defaultValue) {
+    }
+    leftOrDefault(defaultValue) {
         return defaultValue;
-    };
-    Right.prototype.orDefault = function (_) {
+    }
+    orDefault(_) {
         return this.__value;
-    };
-    Right.prototype.orDefaultLazy = function (_) {
+    }
+    orDefaultLazy(_) {
         return this.__value;
-    };
-    Right.prototype.leftOrDefaultLazy = function (getDefaultValue) {
+    }
+    leftOrDefaultLazy(getDefaultValue) {
         return getDefaultValue();
-    };
-    Right.prototype.ifLeft = function (_) {
+    }
+    ifLeft(_) {
         return this;
-    };
-    Right.prototype.ifRight = function (effect) {
+    }
+    ifRight(effect) {
         return effect(this.__value), this;
-    };
-    Right.prototype.toMaybe = function () {
-        return Maybe_1.Just(this.__value);
-    };
-    Right.prototype.leftToMaybe = function () {
+    }
+    toMaybe() {
+        return (0, Maybe_1.Just)(this.__value);
+    }
+    leftToMaybe() {
         return Maybe_1.Nothing;
-    };
-    Right.prototype.either = function (_, ifRight) {
-        return ifRight(this.__value);
-    };
-    Right.prototype.extract = function () {
+    }
+    extract() {
         return this.__value;
-    };
-    Right.prototype.swap = function () {
+    }
+    swap() {
         return left(this.__value);
-    };
-    return Right;
-}());
+    }
+}
 Right.prototype.constructor = exports.Either;
-var Left = /** @class */ (function () {
-    function Left(__value) {
+class Left {
+    constructor(__value) {
         this.__value = __value;
         this._ = 'L';
         this['fantasy-land/bimap'] = this.bimap;
@@ -5755,583 +5707,357 @@ var Left = /** @class */ (function () {
         this['fantasy-land/reduce'] = this.reduce;
         this['fantasy-land/extend'] = this.extend;
     }
-    Left.prototype.isLeft = function () {
+    isLeft() {
         return true;
-    };
-    Left.prototype.isRight = function () {
+    }
+    isRight() {
         return false;
-    };
-    Left.prototype.toJSON = function () {
+    }
+    toJSON() {
         return this.__value;
-    };
-    Left.prototype.inspect = function () {
-        return "Left(" + JSON.stringify(this.__value) + ")";
-    };
-    Left.prototype.toString = function () {
+    }
+    inspect() {
+        return `Left(${JSON.stringify(this.__value)})`;
+    }
+    toString() {
         return this.inspect();
-    };
-    Left.prototype.bimap = function (f, _) {
+    }
+    bimap(f, _) {
         return left(f(this.__value));
-    };
-    Left.prototype.map = function (_) {
+    }
+    map(_) {
         return this;
-    };
-    Left.prototype.mapLeft = function (f) {
+    }
+    mapLeft(f) {
         return left(f(this.__value));
-    };
-    Left.prototype.ap = function (other) {
+    }
+    ap(other) {
         return other.isLeft() ? other : this;
-    };
-    Left.prototype.equals = function (other) {
+    }
+    equals(other) {
         return other.isLeft() ? other.extract() === this.__value : false;
-    };
-    Left.prototype.chain = function (_) {
+    }
+    chain(_) {
         return this;
-    };
-    Left.prototype.chainLeft = function (f) {
+    }
+    chainLeft(f) {
         return f(this.__value);
-    };
-    Left.prototype.join = function () {
+    }
+    join() {
         return this;
-    };
-    Left.prototype.alt = function (other) {
+    }
+    alt(other) {
         return other;
-    };
-    Left.prototype.altLazy = function (other) {
+    }
+    altLazy(other) {
         return other();
-    };
-    Left.prototype.reduce = function (_, initialValue) {
+    }
+    reduce(_, initialValue) {
         return initialValue;
-    };
-    Left.prototype.extend = function (_) {
+    }
+    extend(_) {
         return this;
-    };
-    Left.prototype.unsafeCoerce = function () {
+    }
+    unsafeCoerce() {
         if (this.__value instanceof Error) {
             throw this.__value;
         }
         throw new Error('Either#unsafeCoerce was ran on a Left');
-    };
-    Left.prototype.caseOf = function (patterns) {
+    }
+    caseOf(patterns) {
         return '_' in patterns ? patterns._() : patterns.Left(this.__value);
-    };
-    Left.prototype.leftOrDefault = function (_) {
+    }
+    leftOrDefault(_) {
         return this.__value;
-    };
-    Left.prototype.orDefault = function (defaultValue) {
+    }
+    orDefault(defaultValue) {
         return defaultValue;
-    };
-    Left.prototype.orDefaultLazy = function (getDefaultValue) {
+    }
+    orDefaultLazy(getDefaultValue) {
         return getDefaultValue();
-    };
-    Left.prototype.leftOrDefaultLazy = function (_) {
+    }
+    leftOrDefaultLazy(_) {
         return this.__value;
-    };
-    Left.prototype.ifLeft = function (effect) {
+    }
+    ifLeft(effect) {
         return effect(this.__value), this;
-    };
-    Left.prototype.ifRight = function (_) {
+    }
+    ifRight(_) {
         return this;
-    };
-    Left.prototype.toMaybe = function () {
+    }
+    toMaybe() {
         return Maybe_1.Nothing;
-    };
-    Left.prototype.leftToMaybe = function () {
-        return Maybe_1.Just(this.__value);
-    };
-    Left.prototype.either = function (ifLeft, _) {
-        return ifLeft(this.__value);
-    };
-    Left.prototype.extract = function () {
+    }
+    leftToMaybe() {
+        return (0, Maybe_1.Just)(this.__value);
+    }
+    extract() {
         return this.__value;
-    };
-    Left.prototype.swap = function () {
+    }
+    swap() {
         return right(this.__value);
-    };
-    return Left;
-}());
+    }
+}
 Left.prototype.constructor = exports.Either;
-var left = function (value) { return new Left(value); };
+const left = (value) => new Left(value);
 exports.Left = left;
-var right = function (value) { return new Right(value); };
+const right = (value) => new Right(value);
 exports.Right = right;
 
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/EitherAsync.js":
-/*!***********************************************!*\
-  !*** ./node_modules/purify-ts/EitherAsync.js ***!
-  \***********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/EitherAsync.js":
+/*!**************************************************!*\
+  !*** ./node_modules/purify-ts/es/EitherAsync.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __asyncValues = (this && this.__asyncValues) || function (o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-};
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EitherAsync = void 0;
-var Either_1 = __webpack_require__(/*! ./Either */ "./node_modules/purify-ts/Either.js");
-var MaybeAsync_1 = __webpack_require__(/*! ./MaybeAsync */ "./node_modules/purify-ts/MaybeAsync.js");
-var helpers = {
-    liftEither: function (either) {
+const Either_1 = __webpack_require__(/*! ./Either */ "./node_modules/purify-ts/es/Either.js");
+const MaybeAsync_1 = __webpack_require__(/*! ./MaybeAsync */ "./node_modules/purify-ts/es/MaybeAsync.js");
+const helpers = {
+    liftEither(either) {
         if (either.isRight()) {
             return Promise.resolve(either.extract());
         }
         throw either.extract();
     },
-    fromPromise: function (promise) {
+    fromPromise(promise) {
         return promise.then(helpers.liftEither);
     },
-    throwE: function (error) {
+    throwE(error) {
         throw error;
     }
 };
-var EitherAsyncImpl = /** @class */ (function () {
-    function EitherAsyncImpl(runPromise) {
-        var _this = this;
+class EitherAsyncImpl {
+    constructor(runPromise) {
         this.runPromise = runPromise;
-        this[Symbol.toStringTag] = 'EitherAsync';
+        this[_a] = 'EitherAsync';
         this['fantasy-land/map'] = this.map;
         this['fantasy-land/bimap'] = this.bimap;
         this['fantasy-land/chain'] = this.chain;
         this['fantasy-land/ap'] = this.ap;
         this['fantasy-land/extend'] = this.extend;
         this['fantasy-land/alt'] = this.alt;
-        this.then = function (onfulfilled, onrejected) {
-            return _this.run().then(onfulfilled, onrejected);
+        this.then = (onfulfilled, onrejected) => {
+            return this.run().then(onfulfilled, onrejected);
         };
     }
-    EitherAsyncImpl.prototype.leftOrDefault = function (defaultValue) {
-        return this.run().then(function (x) { return x.leftOrDefault(defaultValue); });
-    };
-    EitherAsyncImpl.prototype.orDefault = function (defaultValue) {
-        return this.run().then(function (x) { return x.orDefault(defaultValue); });
-    };
-    EitherAsyncImpl.prototype.join = function () {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var either, nestedEither;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this];
-                    case 1:
-                        either = _a.sent();
-                        if (!either.isRight()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, either.extract()];
-                    case 2:
-                        nestedEither = _a.sent();
-                        return [2 /*return*/, helpers.liftEither(nestedEither)];
-                    case 3: return [2 /*return*/, helpers.liftEither(either)];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.ap = function (eitherF) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var otherValue, thisValue;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, eitherF];
-                    case 1:
-                        otherValue = _a.sent();
-                        if (!otherValue.isRight()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this];
-                    case 2:
-                        thisValue = _a.sent();
-                        if (thisValue.isRight()) {
-                            return [2 /*return*/, otherValue.extract()(thisValue.extract())];
-                        }
-                        else {
-                            return [2 /*return*/, helpers.liftEither(thisValue)];
-                        }
-                        _a.label = 3;
-                    case 3: return [2 /*return*/, helpers.liftEither(otherValue)];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.alt = function (other) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var thisValue, otherValue;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this];
-                    case 1:
-                        thisValue = _a.sent();
-                        if (!thisValue.isRight()) return [3 /*break*/, 2];
-                        return [2 /*return*/, thisValue.extract()];
-                    case 2: return [4 /*yield*/, other];
-                    case 3:
-                        otherValue = _a.sent();
-                        return [2 /*return*/, helpers.liftEither(otherValue)];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.extend = function (f) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var either, v;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        either = _a.sent();
-                        if (either.isRight()) {
-                            v = exports.EitherAsync.liftEither(either);
-                            return [2 /*return*/, helpers.liftEither(Either_1.Right(f(v)))];
-                        }
-                        return [2 /*return*/, helpers.liftEither(either)];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.run = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _b.trys.push([0, 2, , 3]);
-                        _a = Either_1.Right;
-                        return [4 /*yield*/, this.runPromise(helpers)];
-                    case 1: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
-                    case 2:
-                        e_1 = _b.sent();
-                        return [2 /*return*/, Either_1.Left(e_1)];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    EitherAsyncImpl.prototype.bimap = function (f, g) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var either;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        either = _a.sent();
-                        return [2 /*return*/, helpers.liftEither(either.bimap(f, g))];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.map = function (f) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return _this.runPromise(helpers).then(f); });
-    };
-    EitherAsyncImpl.prototype.mapLeft = function (f) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var e_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.runPromise(helpers)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        e_2 = _a.sent();
-                        throw f(e_2);
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.chain = function (f) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var value;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runPromise(helpers)];
-                    case 1:
-                        value = _a.sent();
-                        return [2 /*return*/, helpers.fromPromise(f(value))];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.chainLeft = function (f) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var e_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.runPromise(helpers)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        e_3 = _a.sent();
-                        return [2 /*return*/, helpers.fromPromise(f(e_3))];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.toMaybeAsync = function () {
-        var _this = this;
-        return MaybeAsync_1.MaybeAsync(function (_a) {
-            var liftMaybe = _a.liftMaybe;
-            return __awaiter(_this, void 0, void 0, function () {
-                var either;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0: return [4 /*yield*/, this.run()];
-                        case 1:
-                            either = _b.sent();
-                            return [2 /*return*/, liftMaybe(either.toMaybe())];
-                    }
-                });
-            });
-        });
-    };
-    EitherAsyncImpl.prototype.swap = function () {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var either;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        either = _a.sent();
-                        if (either.isRight())
-                            helpers.throwE(either.extract());
-                        return [2 /*return*/, helpers.liftEither(Either_1.Right(either.extract()))];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.ifLeft = function (effect) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var either;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        either = _a.sent();
-                        either.ifLeft(effect);
-                        return [2 /*return*/, helpers.liftEither(either)];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.ifRight = function (effect) {
-        var _this = this;
-        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var either;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        either = _a.sent();
-                        either.ifRight(effect);
-                        return [2 /*return*/, helpers.liftEither(either)];
-                }
-            });
-        }); });
-    };
-    EitherAsyncImpl.prototype.void = function () {
-        return this.map(function (_) { });
-    };
-    return EitherAsyncImpl;
-}());
-exports.EitherAsync = Object.assign(function (runPromise) { return new EitherAsyncImpl(runPromise); }, {
-    fromPromise: function (f) { return exports.EitherAsync(function (_a) {
-        var fP = _a.fromPromise;
-        return fP(f());
-    }); },
-    liftEither: function (either) {
-        return exports.EitherAsync(function (_a) {
-            var liftEither = _a.liftEither;
-            return liftEither(either);
-        });
-    },
-    lefts: function (list) {
-        return Promise.all(list.map(function (x) { return x.run(); })).then(Either_1.Either.lefts);
-    },
-    rights: function (list) {
-        return Promise.all(list.map(function (x) { return x.run(); })).then(Either_1.Either.rights);
-    },
-    sequence: function (eas) {
-        return exports.EitherAsync(function (helpers) { return __awaiter(void 0, void 0, void 0, function () {
-            var res, eas_1, eas_1_1, e, e_4_1;
-            var e_4, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        res = [];
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 6, 7, 12]);
-                        eas_1 = __asyncValues(eas);
-                        _b.label = 2;
-                    case 2: return [4 /*yield*/, eas_1.next()];
-                    case 3:
-                        if (!(eas_1_1 = _b.sent(), !eas_1_1.done)) return [3 /*break*/, 5];
-                        e = eas_1_1.value;
-                        if (e.isLeft()) {
-                            return [2 /*return*/, helpers.liftEither(e)];
-                        }
-                        res.push(e.extract());
-                        _b.label = 4;
-                    case 4: return [3 /*break*/, 2];
-                    case 5: return [3 /*break*/, 12];
-                    case 6:
-                        e_4_1 = _b.sent();
-                        e_4 = { error: e_4_1 };
-                        return [3 /*break*/, 12];
-                    case 7:
-                        _b.trys.push([7, , 10, 11]);
-                        if (!(eas_1_1 && !eas_1_1.done && (_a = eas_1.return))) return [3 /*break*/, 9];
-                        return [4 /*yield*/, _a.call(eas_1)];
-                    case 8:
-                        _b.sent();
-                        _b.label = 9;
-                    case 9: return [3 /*break*/, 11];
-                    case 10:
-                        if (e_4) throw e_4.error;
-                        return [7 /*endfinally*/];
-                    case 11: return [7 /*endfinally*/];
-                    case 12: return [2 /*return*/, helpers.liftEither(Either_1.Right(res))];
-                }
-            });
-        }); });
-    },
-    all: function (eas) {
-        return exports.EitherAsync.fromPromise(function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/, Promise.all(eas).then(Either_1.Either.sequence)];
-        }); }); });
+    leftOrDefault(defaultValue) {
+        return this.run().then((x) => x.leftOrDefault(defaultValue));
     }
+    orDefault(defaultValue) {
+        return this.run().then((x) => x.orDefault(defaultValue));
+    }
+    join() {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const either = await this;
+            if (either.isRight()) {
+                const nestedEither = await either.extract();
+                return helpers.liftEither(nestedEither);
+            }
+            return helpers.liftEither(either);
+        });
+    }
+    ap(eitherF) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const otherValue = await eitherF;
+            if (otherValue.isRight()) {
+                const thisValue = await this;
+                if (thisValue.isRight()) {
+                    return otherValue.extract()(thisValue.extract());
+                }
+                else {
+                    return helpers.liftEither(thisValue);
+                }
+            }
+            return helpers.liftEither(otherValue);
+        });
+    }
+    alt(other) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const thisValue = await this;
+            if (thisValue.isRight()) {
+                return thisValue.extract();
+            }
+            else {
+                const otherValue = await other;
+                return helpers.liftEither(otherValue);
+            }
+        });
+    }
+    extend(f) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const either = await this.run();
+            if (either.isRight()) {
+                const v = exports.EitherAsync.liftEither(either);
+                return helpers.liftEither((0, Either_1.Right)(f(v)));
+            }
+            return helpers.liftEither(either);
+        });
+    }
+    async run() {
+        try {
+            return (0, Either_1.Right)(await this.runPromise(helpers));
+        }
+        catch (e) {
+            return (0, Either_1.Left)(e);
+        }
+    }
+    bimap(f, g) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const either = await this.run();
+            return helpers.liftEither(either.bimap(f, g));
+        });
+    }
+    map(f) {
+        return (0, exports.EitherAsync)((helpers) => this.runPromise(helpers).then(f));
+    }
+    mapLeft(f) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            try {
+                return await this.runPromise(helpers);
+            }
+            catch (e) {
+                throw f(e);
+            }
+        });
+    }
+    chain(f) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const value = await this.runPromise(helpers);
+            return helpers.fromPromise(f(value));
+        });
+    }
+    chainLeft(f) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            try {
+                return await this.runPromise(helpers);
+            }
+            catch (e) {
+                return helpers.fromPromise(f(e));
+            }
+        });
+    }
+    toMaybeAsync() {
+        return (0, MaybeAsync_1.MaybeAsync)(async ({ liftMaybe }) => {
+            const either = await this.run();
+            return liftMaybe(either.toMaybe());
+        });
+    }
+    swap() {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const either = await this.run();
+            if (either.isRight())
+                helpers.throwE(either.extract());
+            return helpers.liftEither((0, Either_1.Right)(either.extract()));
+        });
+    }
+    ifLeft(effect) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const either = await this.run();
+            either.ifLeft(effect);
+            return helpers.liftEither(either);
+        });
+    }
+    ifRight(effect) {
+        return (0, exports.EitherAsync)(async (helpers) => {
+            const either = await this.run();
+            either.ifRight(effect);
+            return helpers.liftEither(either);
+        });
+    }
+    void() {
+        return this.map((_) => { });
+    }
+    caseOf(patterns) {
+        return this.run().then((x) => x.caseOf(patterns));
+    }
+    finally(effect) {
+        return (0, exports.EitherAsync)(({ fromPromise }) => fromPromise(this.run().finally(effect)));
+    }
+}
+_a = Symbol.toStringTag;
+exports.EitherAsync = Object.assign((runPromise) => new EitherAsyncImpl(runPromise), {
+    fromPromise: (f) => (0, exports.EitherAsync)(({ fromPromise: fP }) => fP(f())),
+    liftEither: (either) => (0, exports.EitherAsync)(({ liftEither }) => liftEither(either)),
+    lefts: (list) => Promise.all(list.map((x) => x.run())).then(Either_1.Either.lefts),
+    rights: (list) => Promise.all(list.map((x) => x.run())).then(Either_1.Either.rights),
+    sequence: (eas) => (0, exports.EitherAsync)(async (helpers) => {
+        let res = [];
+        for await (const e of eas) {
+            if (e.isLeft()) {
+                return helpers.liftEither(e);
+            }
+            res.push(e.extract());
+        }
+        return helpers.liftEither((0, Either_1.Right)(res));
+    }),
+    all: (eas) => exports.EitherAsync.fromPromise(async () => Promise.all(eas).then(Either_1.Either.sequence))
 });
 EitherAsyncImpl.prototype.constructor = exports.EitherAsync;
 
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/Maybe.js":
-/*!*****************************************!*\
-  !*** ./node_modules/purify-ts/Maybe.js ***!
-  \*****************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/Maybe.js":
+/*!********************************************!*\
+  !*** ./node_modules/purify-ts/es/Maybe.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Nothing = exports.Just = exports.Maybe = void 0;
-var Either_1 = __webpack_require__(/*! ./Either */ "./node_modules/purify-ts/Either.js");
+const Either_1 = __webpack_require__(/*! ./Either */ "./node_modules/purify-ts/es/Either.js");
 exports.Maybe = {
-    of: function (value) {
+    of(value) {
         return just(value);
     },
-    empty: function () {
+    empty() {
         return nothing;
     },
-    zero: function () {
+    zero() {
         return nothing;
     },
-    fromNullable: function (value) {
+    fromNullable(value) {
         return value == null ? nothing : just(value);
     },
-    fromFalsy: function (value) {
+    fromFalsy(value) {
         return value ? just(value) : nothing;
     },
-    fromPredicate: function (pred, value) {
+    fromPredicate(pred, value) {
         switch (arguments.length) {
             case 1:
-                return function (value) { return exports.Maybe.fromPredicate(pred, value); };
+                return (value) => exports.Maybe.fromPredicate(pred, value);
             default:
                 return pred(value) ? just(value) : nothing;
         }
     },
-    mapMaybe: function (f, list) {
+    mapMaybe(f, list) {
         switch (arguments.length) {
             case 1:
-                return function (list) { return exports.Maybe.mapMaybe(f, list); };
+                return (list) => exports.Maybe.mapMaybe(f, list);
             default:
                 return exports.Maybe.catMaybes(list.map(f));
         }
     },
-    catMaybes: function (list) {
-        var e_1, _a;
-        var res = [];
-        try {
-            for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {
-                var e = list_1_1.value;
-                if (e.isJust()) {
-                    res.push(e.extract());
-                }
+    catMaybes(list) {
+        let res = [];
+        for (const e of list) {
+            if (e.isJust()) {
+                res.push(e.extract());
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1);
-            }
-            finally { if (e_1) throw e_1.error; }
         }
         return res;
     },
-    encase: function (thunk) {
+    encase(thunk) {
         try {
             return just(thunk());
         }
@@ -6339,44 +6065,33 @@ exports.Maybe = {
             return nothing;
         }
     },
-    isMaybe: function (x) {
+    isMaybe(x) {
         return x instanceof Just || x instanceof Nothing;
     },
-    sequence: function (maybes) {
-        var e_2, _a;
-        var res = [];
-        try {
-            for (var maybes_1 = __values(maybes), maybes_1_1 = maybes_1.next(); !maybes_1_1.done; maybes_1_1 = maybes_1.next()) {
-                var m = maybes_1_1.value;
-                if (m.isJust()) {
-                    res.push(m.extract());
-                }
-                else {
-                    return nothing;
-                }
+    sequence(maybes) {
+        let res = [];
+        for (const m of maybes) {
+            if (m.isJust()) {
+                res.push(m.extract());
             }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (maybes_1_1 && !maybes_1_1.done && (_a = maybes_1.return)) _a.call(maybes_1);
+            else {
+                return nothing;
             }
-            finally { if (e_2) throw e_2.error; }
         }
         return just(res);
     },
-    'fantasy-land/of': function (value) {
+    'fantasy-land/of'(value) {
         return this.of(value);
     },
-    'fantasy-land/empty': function () {
+    'fantasy-land/empty'() {
         return this.empty();
     },
-    'fantasy-land/zero': function () {
+    'fantasy-land/zero'() {
         return this.zero();
     }
 };
-var Just = /** @class */ (function () {
-    function Just(__value) {
+class Just {
+    constructor(__value) {
         this.__value = __value;
         this['fantasy-land/equals'] = this.equals;
         this['fantasy-land/map'] = this.map;
@@ -6387,92 +6102,91 @@ var Just = /** @class */ (function () {
         this['fantasy-land/extend'] = this.extend;
         this['fantasy-land/filter'] = this.filter;
     }
-    Just.prototype.isJust = function () {
+    isJust() {
         return true;
-    };
-    Just.prototype.isNothing = function () {
+    }
+    isNothing() {
         return false;
-    };
-    Just.prototype.inspect = function () {
-        return "Just(" + JSON.stringify(this.__value) + ")";
-    };
-    Just.prototype.toString = function () {
+    }
+    inspect() {
+        return `Just(${JSON.stringify(this.__value)})`;
+    }
+    toString() {
         return this.inspect();
-    };
-    Just.prototype.toJSON = function () {
+    }
+    toJSON() {
         return this.__value;
-    };
-    Just.prototype.equals = function (other) {
+    }
+    equals(other) {
         return this.extract() === other.extract();
-    };
-    Just.prototype.map = function (f) {
+    }
+    map(f) {
         return just(f(this.__value));
-    };
-    Just.prototype.ap = function (maybeF) {
+    }
+    ap(maybeF) {
         return maybeF.isJust() ? this.map(maybeF.extract()) : nothing;
-    };
-    Just.prototype.alt = function (_) {
+    }
+    alt(_) {
         return this;
-    };
-    Just.prototype.altLazy = function (_) {
+    }
+    altLazy(_) {
         return this;
-    };
-    Just.prototype.chain = function (f) {
+    }
+    chain(f) {
         return f(this.__value);
-    };
-    Just.prototype.chainNullable = function (f) {
+    }
+    chainNullable(f) {
         return exports.Maybe.fromNullable(f(this.__value));
-    };
-    Just.prototype.join = function () {
+    }
+    join() {
         return this.__value;
-    };
-    Just.prototype.reduce = function (reducer, initialValue) {
+    }
+    reduce(reducer, initialValue) {
         return reducer(initialValue, this.__value);
-    };
-    Just.prototype.extend = function (f) {
+    }
+    extend(f) {
         return just(f(this));
-    };
-    Just.prototype.unsafeCoerce = function () {
+    }
+    unsafeCoerce() {
         return this.__value;
-    };
-    Just.prototype.caseOf = function (patterns) {
+    }
+    caseOf(patterns) {
         return '_' in patterns ? patterns._() : patterns.Just(this.__value);
-    };
-    Just.prototype.orDefault = function (_) {
+    }
+    orDefault(_) {
         return this.__value;
-    };
-    Just.prototype.orDefaultLazy = function (_) {
+    }
+    orDefaultLazy(_) {
         return this.__value;
-    };
-    Just.prototype.toList = function () {
+    }
+    toList() {
         return [this.__value];
-    };
-    Just.prototype.mapOrDefault = function (f, _) {
+    }
+    mapOrDefault(f, _) {
         return f(this.__value);
-    };
-    Just.prototype.extract = function () {
+    }
+    extract() {
         return this.__value;
-    };
-    Just.prototype.extractNullable = function () {
+    }
+    extractNullable() {
         return this.__value;
-    };
-    Just.prototype.toEither = function (_) {
-        return Either_1.Right(this.__value);
-    };
-    Just.prototype.ifJust = function (effect) {
+    }
+    toEither(_) {
+        return (0, Either_1.Right)(this.__value);
+    }
+    ifJust(effect) {
         return effect(this.__value), this;
-    };
-    Just.prototype.ifNothing = function (_) {
+    }
+    ifNothing(_) {
         return this;
-    };
-    Just.prototype.filter = function (pred) {
+    }
+    filter(pred) {
         return pred(this.__value) ? just(this.__value) : nothing;
-    };
-    return Just;
-}());
+    }
+}
 Just.prototype.constructor = exports.Maybe;
-var Nothing = /** @class */ (function () {
-    function Nothing() {
+class Nothing {
+    constructor() {
         this['fantasy-land/equals'] = this.equals;
         this['fantasy-land/map'] = this.map;
         this['fantasy-land/ap'] = this.ap;
@@ -6482,163 +6196,127 @@ var Nothing = /** @class */ (function () {
         this['fantasy-land/extend'] = this.extend;
         this['fantasy-land/filter'] = this.filter;
     }
-    Nothing.prototype.isJust = function () {
+    isJust() {
         return false;
-    };
-    Nothing.prototype.isNothing = function () {
+    }
+    isNothing() {
         return true;
-    };
-    Nothing.prototype.inspect = function () {
+    }
+    inspect() {
         return 'Nothing';
-    };
-    Nothing.prototype.toString = function () {
+    }
+    toString() {
         return this.inspect();
-    };
-    Nothing.prototype.toJSON = function () {
+    }
+    toJSON() {
         return this.__value;
-    };
-    Nothing.prototype.equals = function (other) {
+    }
+    equals(other) {
         return this.extract() === other.extract();
-    };
-    Nothing.prototype.map = function (_) {
+    }
+    map(_) {
         return nothing;
-    };
-    Nothing.prototype.ap = function (_) {
+    }
+    ap(_) {
         return nothing;
-    };
-    Nothing.prototype.alt = function (other) {
+    }
+    alt(other) {
         return other;
-    };
-    Nothing.prototype.altLazy = function (other) {
+    }
+    altLazy(other) {
         return other();
-    };
-    Nothing.prototype.chain = function (_) {
+    }
+    chain(_) {
         return nothing;
-    };
-    Nothing.prototype.chainNullable = function (_) {
+    }
+    chainNullable(_) {
         return nothing;
-    };
-    Nothing.prototype.join = function () {
+    }
+    join() {
         return nothing;
-    };
-    Nothing.prototype.reduce = function (_, initialValue) {
+    }
+    reduce(_, initialValue) {
         return initialValue;
-    };
-    Nothing.prototype.extend = function (_) {
+    }
+    extend(_) {
         return nothing;
-    };
-    Nothing.prototype.unsafeCoerce = function () {
+    }
+    unsafeCoerce() {
         throw new Error('Maybe#unsafeCoerce was ran on a Nothing');
-    };
-    Nothing.prototype.caseOf = function (patterns) {
+    }
+    caseOf(patterns) {
         return '_' in patterns ? patterns._() : patterns.Nothing();
-    };
-    Nothing.prototype.orDefault = function (defaultValue) {
+    }
+    orDefault(defaultValue) {
         return defaultValue;
-    };
-    Nothing.prototype.orDefaultLazy = function (getDefaultValue) {
+    }
+    orDefaultLazy(getDefaultValue) {
         return getDefaultValue();
-    };
-    Nothing.prototype.toList = function () {
+    }
+    toList() {
         return [];
-    };
-    Nothing.prototype.mapOrDefault = function (_, defaultValue) {
+    }
+    mapOrDefault(_, defaultValue) {
         return defaultValue;
-    };
-    Nothing.prototype.extract = function () {
+    }
+    extract() {
         return undefined;
-    };
-    Nothing.prototype.extractNullable = function () {
+    }
+    extractNullable() {
         return null;
-    };
-    Nothing.prototype.toEither = function (left) {
-        return Either_1.Left(left);
-    };
-    Nothing.prototype.ifJust = function (_) {
+    }
+    toEither(left) {
+        return (0, Either_1.Left)(left);
+    }
+    ifJust(_) {
         return this;
-    };
-    Nothing.prototype.ifNothing = function (effect) {
+    }
+    ifNothing(effect) {
         return effect(), this;
-    };
-    Nothing.prototype.filter = function (_) {
+    }
+    filter(_) {
         return nothing;
-    };
-    return Nothing;
-}());
+    }
+}
 Nothing.prototype.constructor = exports.Maybe;
 /** Constructs a Just. Represents an optional value that exists */
-var just = function (value) { return new Just(value); };
+const just = (value) => new Just(value);
 exports.Just = just;
 /** Represents a missing value, you can think of it as a smart 'null' */
-var nothing = new Nothing();
+const nothing = new Nothing();
 exports.Nothing = nothing;
 
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/MaybeAsync.js":
-/*!**********************************************!*\
-  !*** ./node_modules/purify-ts/MaybeAsync.js ***!
-  \**********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/MaybeAsync.js":
+/*!*************************************************!*\
+  !*** ./node_modules/purify-ts/es/MaybeAsync.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MaybeAsync = void 0;
-var Maybe_1 = __webpack_require__(/*! ./Maybe */ "./node_modules/purify-ts/Maybe.js");
-var EitherAsync_1 = __webpack_require__(/*! ./EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-var helpers = {
-    liftMaybe: function (maybe) {
+const Maybe_1 = __webpack_require__(/*! ./Maybe */ "./node_modules/purify-ts/es/Maybe.js");
+const EitherAsync_1 = __webpack_require__(/*! ./EitherAsync */ "./node_modules/purify-ts/es/EitherAsync.js");
+const helpers = {
+    liftMaybe(maybe) {
         if (maybe.isJust()) {
             return Promise.resolve(maybe.extract());
         }
         throw Maybe_1.Nothing;
     },
-    fromPromise: function (promise) {
+    fromPromise(promise) {
         return promise.then(helpers.liftMaybe);
     }
 };
-var MaybeAsyncImpl = /** @class */ (function () {
-    function MaybeAsyncImpl(runPromise) {
+class MaybeAsyncImpl {
+    constructor(runPromise) {
         this.runPromise = runPromise;
-        this[Symbol.toStringTag] = 'MaybeAsync';
+        this[_a] = 'MaybeAsync';
         this['fantasy-land/map'] = this.map;
         this['fantasy-land/chain'] = this.chain;
         this['fantasy-land/ap'] = this.ap;
@@ -6646,211 +6324,117 @@ var MaybeAsyncImpl = /** @class */ (function () {
         this['fantasy-land/extend'] = this.extend;
         this['fantasy-land/alt'] = this.alt;
     }
-    MaybeAsyncImpl.prototype.orDefault = function (defaultValue) {
-        return this.run().then(function (x) { return x.orDefault(defaultValue); });
-    };
-    MaybeAsyncImpl.prototype.join = function () {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var maybe, nestedMaybe;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        maybe = _a.sent();
-                        if (!maybe.isJust()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, maybe.extract()];
-                    case 2:
-                        nestedMaybe = _a.sent();
-                        return [2 /*return*/, helpers.liftMaybe(nestedMaybe)];
-                    case 3: return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.ap = function (maybeF) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var otherValue, thisValue;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, maybeF];
-                    case 1:
-                        otherValue = _a.sent();
-                        if (!otherValue.isJust()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this];
-                    case 2:
-                        thisValue = _a.sent();
-                        if (thisValue.isJust()) {
-                            return [2 /*return*/, otherValue.extract()(thisValue.extract())];
-                        }
-                        else {
-                            return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];
-                        }
-                        _a.label = 3;
-                    case 3: return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.alt = function (other) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var thisValue, otherValue;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this];
-                    case 1:
-                        thisValue = _a.sent();
-                        if (!thisValue.isJust()) return [3 /*break*/, 2];
-                        return [2 /*return*/, thisValue.extract()];
-                    case 2: return [4 /*yield*/, other];
-                    case 3:
-                        otherValue = _a.sent();
-                        return [2 /*return*/, helpers.liftMaybe(otherValue)];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.extend = function (f) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var maybe, v;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        maybe = _a.sent();
-                        if (maybe.isJust()) {
-                            v = exports.MaybeAsync.liftMaybe(maybe);
-                            return [2 /*return*/, helpers.liftMaybe(Maybe_1.Just(f(v)))];
-                        }
-                        return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.filter = function (pred) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var value;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        value = _a.sent();
-                        return [2 /*return*/, helpers.liftMaybe(value.filter(pred))];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.run = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        _c.trys.push([0, 2, , 3]);
-                        _a = Maybe_1.Just;
-                        return [4 /*yield*/, this.runPromise(helpers)];
-                    case 1: return [2 /*return*/, _a.apply(void 0, [_c.sent()])];
-                    case 2:
-                        _b = _c.sent();
-                        return [2 /*return*/, Maybe_1.Nothing];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    MaybeAsyncImpl.prototype.map = function (f) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return _this.runPromise(helpers).then(f); });
-    };
-    MaybeAsyncImpl.prototype.chain = function (f) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var value;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runPromise(helpers)];
-                    case 1:
-                        value = _a.sent();
-                        return [2 /*return*/, helpers.fromPromise(f(value))];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.toEitherAsync = function (error) {
-        var _this = this;
-        return EitherAsync_1.EitherAsync(function (_a) {
-            var liftEither = _a.liftEither;
-            return __awaiter(_this, void 0, void 0, function () {
-                var maybe;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0: return [4 /*yield*/, this.run()];
-                        case 1:
-                            maybe = _b.sent();
-                            return [2 /*return*/, liftEither(maybe.toEither(error))];
-                    }
-                });
-            });
-        });
-    };
-    MaybeAsyncImpl.prototype.ifJust = function (effect) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var maybe;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        maybe = _a.sent();
-                        maybe.ifJust(effect);
-                        return [2 /*return*/, helpers.liftMaybe(maybe)];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.ifNothing = function (effect) {
-        var _this = this;
-        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var maybe;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.run()];
-                    case 1:
-                        maybe = _a.sent();
-                        maybe.ifNothing(effect);
-                        return [2 /*return*/, helpers.liftMaybe(maybe)];
-                }
-            });
-        }); });
-    };
-    MaybeAsyncImpl.prototype.void = function () {
-        return this.map(function (_) { });
-    };
-    MaybeAsyncImpl.prototype.then = function (onfulfilled, onrejected) {
-        return this.run().then(onfulfilled, onrejected);
-    };
-    return MaybeAsyncImpl;
-}());
-exports.MaybeAsync = Object.assign(function (runPromise) { return new MaybeAsyncImpl(runPromise); }, {
-    catMaybes: function (list) {
-        return Promise.all(list).then(Maybe_1.Maybe.catMaybes);
-    },
-    fromPromise: function (f) {
-        return exports.MaybeAsync(function (_a) {
-            var fP = _a.fromPromise;
-            return fP(f());
-        });
-    },
-    liftMaybe: function (maybe) {
-        return exports.MaybeAsync(function (_a) {
-            var liftMaybe = _a.liftMaybe;
-            return liftMaybe(maybe);
+    orDefault(defaultValue) {
+        return this.run().then((x) => x.orDefault(defaultValue));
+    }
+    join() {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const maybe = await this.run();
+            if (maybe.isJust()) {
+                const nestedMaybe = await maybe.extract();
+                return helpers.liftMaybe(nestedMaybe);
+            }
+            return helpers.liftMaybe(Maybe_1.Nothing);
         });
     }
+    ap(maybeF) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const otherValue = await maybeF;
+            if (otherValue.isJust()) {
+                const thisValue = await this;
+                if (thisValue.isJust()) {
+                    return otherValue.extract()(thisValue.extract());
+                }
+                else {
+                    return helpers.liftMaybe(Maybe_1.Nothing);
+                }
+            }
+            return helpers.liftMaybe(Maybe_1.Nothing);
+        });
+    }
+    alt(other) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const thisValue = await this;
+            if (thisValue.isJust()) {
+                return thisValue.extract();
+            }
+            else {
+                const otherValue = await other;
+                return helpers.liftMaybe(otherValue);
+            }
+        });
+    }
+    extend(f) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const maybe = await this.run();
+            if (maybe.isJust()) {
+                const v = exports.MaybeAsync.liftMaybe(maybe);
+                return helpers.liftMaybe((0, Maybe_1.Just)(f(v)));
+            }
+            return helpers.liftMaybe(Maybe_1.Nothing);
+        });
+    }
+    filter(pred) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const value = await this.run();
+            return helpers.liftMaybe(value.filter(pred));
+        });
+    }
+    async run() {
+        try {
+            return (0, Maybe_1.Just)(await this.runPromise(helpers));
+        }
+        catch (_b) {
+            return Maybe_1.Nothing;
+        }
+    }
+    map(f) {
+        return (0, exports.MaybeAsync)((helpers) => this.runPromise(helpers).then(f));
+    }
+    chain(f) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const value = await this.runPromise(helpers);
+            return helpers.fromPromise(f(value));
+        });
+    }
+    toEitherAsync(error) {
+        return (0, EitherAsync_1.EitherAsync)(async ({ liftEither }) => {
+            const maybe = await this.run();
+            return liftEither(maybe.toEither(error));
+        });
+    }
+    ifJust(effect) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const maybe = await this.run();
+            maybe.ifJust(effect);
+            return helpers.liftMaybe(maybe);
+        });
+    }
+    ifNothing(effect) {
+        return (0, exports.MaybeAsync)(async (helpers) => {
+            const maybe = await this.run();
+            maybe.ifNothing(effect);
+            return helpers.liftMaybe(maybe);
+        });
+    }
+    void() {
+        return this.map((_) => { });
+    }
+    caseOf(patterns) {
+        return this.run().then((x) => x.caseOf(patterns));
+    }
+    finally(effect) {
+        return (0, exports.MaybeAsync)(({ fromPromise }) => fromPromise(this.run().finally(effect)));
+    }
+    then(onfulfilled, onrejected) {
+        return this.run().then(onfulfilled, onrejected);
+    }
+}
+_a = Symbol.toStringTag;
+exports.MaybeAsync = Object.assign((runPromise) => new MaybeAsyncImpl(runPromise), {
+    catMaybes: (list) => Promise.all(list).then(Maybe_1.Maybe.catMaybes),
+    fromPromise: (f) => (0, exports.MaybeAsync)(({ fromPromise: fP }) => fP(f())),
+    liftMaybe: (maybe) => (0, exports.MaybeAsync)(({ liftMaybe }) => liftMaybe(maybe))
 });
 MaybeAsyncImpl.prototype.constructor = exports.MaybeAsync;
 
@@ -8979,10 +8563,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var object_hash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! object-hash */ "./node_modules/object-hash/dist/object_hash.js");
 /* harmony import */ var object_hash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(object_hash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/es/EitherAsync.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/es/Either.js");
 /* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/storage.util */ "./src/apis/storage.util.ts");
 
 
@@ -9225,10 +8807,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getKeyRangeMatchingOperator": () => (/* binding */ getKeyRangeMatchingOperator)
 /* harmony export */ });
 /* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/isNil.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/es/Either.js");
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/es/EitherAsync.js");
 /* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ "./src/apis/indexedDB.api.ts");
 
 
@@ -9413,10 +8993,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "validateRequest": () => (/* binding */ validateRequest)
 /* harmony export */ });
 /* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/es/EitherAsync.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/es/Either.js");
 /* harmony import */ var _modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../modules/filterConfiguration */ "./src/modules/filterConfiguration/index.ts");
 /* harmony import */ var _requestErrors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./requestErrors */ "./src/controllers/models/requestErrors.ts");
 
@@ -9725,10 +9303,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
 /* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./operators */ "./src/modules/filterConfiguration/operators.ts");
 /* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./error */ "./src/modules/filterConfiguration/error.ts");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/EitherAsync.js");
-/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/Either.js");
-/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ "./node_modules/purify-ts/es/EitherAsync.js");
+/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ "./node_modules/purify-ts/es/Either.js");
 /* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/uniq.js");
 
 
@@ -12933,7 +12509,7 @@ function toArray(value) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -14512,47 +14088,47 @@ eval("/**\n * Based on Kendo UI Core expression code <https://github.com/telerik
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/Either.js":
-/*!******************************************!*\
-  !*** ./node_modules/purify-ts/Either.js ***!
-  \******************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/Either.js":
+/*!*********************************************!*\
+  !*** ./node_modules/purify-ts/es/Either.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\r\nvar __values = (this && this.__values) || function(o) {\r\n    var s = typeof Symbol === \"function\" && Symbol.iterator, m = s && o[s], i = 0;\r\n    if (m) return m.call(o);\r\n    if (o && typeof o.length === \"number\") return {\r\n        next: function () {\r\n            if (o && i >= o.length) o = void 0;\r\n            return { value: o && o[i++], done: !o };\r\n        }\r\n    };\r\n    throw new TypeError(s ? \"Object is not iterable.\" : \"Symbol.iterator is not defined.\");\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.Right = exports.Left = exports.Either = void 0;\r\nvar Maybe_1 = __webpack_require__(/*! ./Maybe */ \"./node_modules/purify-ts/Maybe.js\");\r\nexports.Either = {\r\n    of: function (value) {\r\n        return right(value);\r\n    },\r\n    lefts: function (list) {\r\n        var e_1, _a;\r\n        var result = [];\r\n        try {\r\n            for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {\r\n                var x = list_1_1.value;\r\n                if (x.isLeft()) {\r\n                    result.push(x.extract());\r\n                }\r\n            }\r\n        }\r\n        catch (e_1_1) { e_1 = { error: e_1_1 }; }\r\n        finally {\r\n            try {\r\n                if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1);\r\n            }\r\n            finally { if (e_1) throw e_1.error; }\r\n        }\r\n        return result;\r\n    },\r\n    rights: function (list) {\r\n        var e_2, _a;\r\n        var result = [];\r\n        try {\r\n            for (var list_2 = __values(list), list_2_1 = list_2.next(); !list_2_1.done; list_2_1 = list_2.next()) {\r\n                var x = list_2_1.value;\r\n                if (x.isRight()) {\r\n                    result.push(x.extract());\r\n                }\r\n            }\r\n        }\r\n        catch (e_2_1) { e_2 = { error: e_2_1 }; }\r\n        finally {\r\n            try {\r\n                if (list_2_1 && !list_2_1.done && (_a = list_2.return)) _a.call(list_2);\r\n            }\r\n            finally { if (e_2) throw e_2.error; }\r\n        }\r\n        return result;\r\n    },\r\n    encase: function (throwsF) {\r\n        try {\r\n            return right(throwsF());\r\n        }\r\n        catch (e) {\r\n            return left(e);\r\n        }\r\n    },\r\n    sequence: function (eithers) {\r\n        var e_3, _a;\r\n        var res = [];\r\n        try {\r\n            for (var eithers_1 = __values(eithers), eithers_1_1 = eithers_1.next(); !eithers_1_1.done; eithers_1_1 = eithers_1.next()) {\r\n                var e = eithers_1_1.value;\r\n                if (e.isLeft()) {\r\n                    return e;\r\n                }\r\n                res.push(e.extract());\r\n            }\r\n        }\r\n        catch (e_3_1) { e_3 = { error: e_3_1 }; }\r\n        finally {\r\n            try {\r\n                if (eithers_1_1 && !eithers_1_1.done && (_a = eithers_1.return)) _a.call(eithers_1);\r\n            }\r\n            finally { if (e_3) throw e_3.error; }\r\n        }\r\n        return right(res);\r\n    },\r\n    isEither: function (x) {\r\n        return x instanceof Left || x instanceof Right;\r\n    },\r\n    'fantasy-land/of': function (value) {\r\n        return exports.Either.of(value);\r\n    }\r\n};\r\nvar Right = /** @class */ (function () {\r\n    function Right(__value) {\r\n        this.__value = __value;\r\n        this._ = 'R';\r\n        this['fantasy-land/bimap'] = this.bimap;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n    }\r\n    Right.prototype.isLeft = function () {\r\n        return false;\r\n    };\r\n    Right.prototype.isRight = function () {\r\n        return true;\r\n    };\r\n    Right.prototype.toJSON = function () {\r\n        return this.__value;\r\n    };\r\n    Right.prototype.inspect = function () {\r\n        return \"Right(\" + JSON.stringify(this.__value) + \")\";\r\n    };\r\n    Right.prototype.toString = function () {\r\n        return this.inspect();\r\n    };\r\n    Right.prototype.bimap = function (_, g) {\r\n        return right(g(this.__value));\r\n    };\r\n    Right.prototype.map = function (f) {\r\n        return right(f(this.__value));\r\n    };\r\n    Right.prototype.mapLeft = function (_) {\r\n        return this;\r\n    };\r\n    Right.prototype.ap = function (other) {\r\n        return other.isRight() ? this.map(other.extract()) : other;\r\n    };\r\n    Right.prototype.equals = function (other) {\r\n        return other.isRight() ? this.__value === other.extract() : false;\r\n    };\r\n    Right.prototype.chain = function (f) {\r\n        return f(this.__value);\r\n    };\r\n    Right.prototype.chainLeft = function (_) {\r\n        return this;\r\n    };\r\n    Right.prototype.join = function () {\r\n        return this.__value;\r\n    };\r\n    Right.prototype.alt = function (_) {\r\n        return this;\r\n    };\r\n    Right.prototype.altLazy = function (_) {\r\n        return this;\r\n    };\r\n    Right.prototype.reduce = function (reducer, initialValue) {\r\n        return reducer(initialValue, this.__value);\r\n    };\r\n    Right.prototype.extend = function (f) {\r\n        return right(f(this));\r\n    };\r\n    Right.prototype.unsafeCoerce = function () {\r\n        return this.__value;\r\n    };\r\n    Right.prototype.caseOf = function (patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Right(this.__value);\r\n    };\r\n    Right.prototype.leftOrDefault = function (defaultValue) {\r\n        return defaultValue;\r\n    };\r\n    Right.prototype.orDefault = function (_) {\r\n        return this.__value;\r\n    };\r\n    Right.prototype.orDefaultLazy = function (_) {\r\n        return this.__value;\r\n    };\r\n    Right.prototype.leftOrDefaultLazy = function (getDefaultValue) {\r\n        return getDefaultValue();\r\n    };\r\n    Right.prototype.ifLeft = function (_) {\r\n        return this;\r\n    };\r\n    Right.prototype.ifRight = function (effect) {\r\n        return effect(this.__value), this;\r\n    };\r\n    Right.prototype.toMaybe = function () {\r\n        return Maybe_1.Just(this.__value);\r\n    };\r\n    Right.prototype.leftToMaybe = function () {\r\n        return Maybe_1.Nothing;\r\n    };\r\n    Right.prototype.either = function (_, ifRight) {\r\n        return ifRight(this.__value);\r\n    };\r\n    Right.prototype.extract = function () {\r\n        return this.__value;\r\n    };\r\n    Right.prototype.swap = function () {\r\n        return left(this.__value);\r\n    };\r\n    return Right;\r\n}());\r\nRight.prototype.constructor = exports.Either;\r\nvar Left = /** @class */ (function () {\r\n    function Left(__value) {\r\n        this.__value = __value;\r\n        this._ = 'L';\r\n        this['fantasy-land/bimap'] = this.bimap;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n    }\r\n    Left.prototype.isLeft = function () {\r\n        return true;\r\n    };\r\n    Left.prototype.isRight = function () {\r\n        return false;\r\n    };\r\n    Left.prototype.toJSON = function () {\r\n        return this.__value;\r\n    };\r\n    Left.prototype.inspect = function () {\r\n        return \"Left(\" + JSON.stringify(this.__value) + \")\";\r\n    };\r\n    Left.prototype.toString = function () {\r\n        return this.inspect();\r\n    };\r\n    Left.prototype.bimap = function (f, _) {\r\n        return left(f(this.__value));\r\n    };\r\n    Left.prototype.map = function (_) {\r\n        return this;\r\n    };\r\n    Left.prototype.mapLeft = function (f) {\r\n        return left(f(this.__value));\r\n    };\r\n    Left.prototype.ap = function (other) {\r\n        return other.isLeft() ? other : this;\r\n    };\r\n    Left.prototype.equals = function (other) {\r\n        return other.isLeft() ? other.extract() === this.__value : false;\r\n    };\r\n    Left.prototype.chain = function (_) {\r\n        return this;\r\n    };\r\n    Left.prototype.chainLeft = function (f) {\r\n        return f(this.__value);\r\n    };\r\n    Left.prototype.join = function () {\r\n        return this;\r\n    };\r\n    Left.prototype.alt = function (other) {\r\n        return other;\r\n    };\r\n    Left.prototype.altLazy = function (other) {\r\n        return other();\r\n    };\r\n    Left.prototype.reduce = function (_, initialValue) {\r\n        return initialValue;\r\n    };\r\n    Left.prototype.extend = function (_) {\r\n        return this;\r\n    };\r\n    Left.prototype.unsafeCoerce = function () {\r\n        if (this.__value instanceof Error) {\r\n            throw this.__value;\r\n        }\r\n        throw new Error('Either#unsafeCoerce was ran on a Left');\r\n    };\r\n    Left.prototype.caseOf = function (patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Left(this.__value);\r\n    };\r\n    Left.prototype.leftOrDefault = function (_) {\r\n        return this.__value;\r\n    };\r\n    Left.prototype.orDefault = function (defaultValue) {\r\n        return defaultValue;\r\n    };\r\n    Left.prototype.orDefaultLazy = function (getDefaultValue) {\r\n        return getDefaultValue();\r\n    };\r\n    Left.prototype.leftOrDefaultLazy = function (_) {\r\n        return this.__value;\r\n    };\r\n    Left.prototype.ifLeft = function (effect) {\r\n        return effect(this.__value), this;\r\n    };\r\n    Left.prototype.ifRight = function (_) {\r\n        return this;\r\n    };\r\n    Left.prototype.toMaybe = function () {\r\n        return Maybe_1.Nothing;\r\n    };\r\n    Left.prototype.leftToMaybe = function () {\r\n        return Maybe_1.Just(this.__value);\r\n    };\r\n    Left.prototype.either = function (ifLeft, _) {\r\n        return ifLeft(this.__value);\r\n    };\r\n    Left.prototype.extract = function () {\r\n        return this.__value;\r\n    };\r\n    Left.prototype.swap = function () {\r\n        return right(this.__value);\r\n    };\r\n    return Left;\r\n}());\r\nLeft.prototype.constructor = exports.Either;\r\nvar left = function (value) { return new Left(value); };\r\nexports.Left = left;\r\nvar right = function (value) { return new Right(value); };\r\nexports.Right = right;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/Either.js?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.Right = exports.Left = exports.Either = void 0;\r\nconst Maybe_1 = __webpack_require__(/*! ./Maybe */ \"./node_modules/purify-ts/es/Maybe.js\");\r\nexports.Either = {\r\n    of(value) {\r\n        return right(value);\r\n    },\r\n    lefts(list) {\r\n        let result = [];\r\n        for (const x of list) {\r\n            if (x.isLeft()) {\r\n                result.push(x.extract());\r\n            }\r\n        }\r\n        return result;\r\n    },\r\n    rights(list) {\r\n        let result = [];\r\n        for (const x of list) {\r\n            if (x.isRight()) {\r\n                result.push(x.extract());\r\n            }\r\n        }\r\n        return result;\r\n    },\r\n    encase(throwsF) {\r\n        try {\r\n            return right(throwsF());\r\n        }\r\n        catch (e) {\r\n            return left(e);\r\n        }\r\n    },\r\n    sequence(eithers) {\r\n        let res = [];\r\n        for (const e of eithers) {\r\n            if (e.isLeft()) {\r\n                return e;\r\n            }\r\n            res.push(e.extract());\r\n        }\r\n        return right(res);\r\n    },\r\n    isEither(x) {\r\n        return x instanceof Left || x instanceof Right;\r\n    },\r\n    'fantasy-land/of'(value) {\r\n        return exports.Either.of(value);\r\n    }\r\n};\r\nclass Right {\r\n    constructor(__value) {\r\n        this.__value = __value;\r\n        this._ = 'R';\r\n        this['fantasy-land/bimap'] = this.bimap;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n    }\r\n    isLeft() {\r\n        return false;\r\n    }\r\n    isRight() {\r\n        return true;\r\n    }\r\n    toJSON() {\r\n        return this.__value;\r\n    }\r\n    inspect() {\r\n        return `Right(${JSON.stringify(this.__value)})`;\r\n    }\r\n    toString() {\r\n        return this.inspect();\r\n    }\r\n    bimap(_, g) {\r\n        return right(g(this.__value));\r\n    }\r\n    map(f) {\r\n        return right(f(this.__value));\r\n    }\r\n    mapLeft(_) {\r\n        return this;\r\n    }\r\n    ap(other) {\r\n        return other.isRight() ? this.map(other.extract()) : other;\r\n    }\r\n    equals(other) {\r\n        return other.isRight() ? this.__value === other.extract() : false;\r\n    }\r\n    chain(f) {\r\n        return f(this.__value);\r\n    }\r\n    chainLeft(_) {\r\n        return this;\r\n    }\r\n    join() {\r\n        return this.__value;\r\n    }\r\n    alt(_) {\r\n        return this;\r\n    }\r\n    altLazy(_) {\r\n        return this;\r\n    }\r\n    reduce(reducer, initialValue) {\r\n        return reducer(initialValue, this.__value);\r\n    }\r\n    extend(f) {\r\n        return right(f(this));\r\n    }\r\n    unsafeCoerce() {\r\n        return this.__value;\r\n    }\r\n    caseOf(patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Right(this.__value);\r\n    }\r\n    leftOrDefault(defaultValue) {\r\n        return defaultValue;\r\n    }\r\n    orDefault(_) {\r\n        return this.__value;\r\n    }\r\n    orDefaultLazy(_) {\r\n        return this.__value;\r\n    }\r\n    leftOrDefaultLazy(getDefaultValue) {\r\n        return getDefaultValue();\r\n    }\r\n    ifLeft(_) {\r\n        return this;\r\n    }\r\n    ifRight(effect) {\r\n        return effect(this.__value), this;\r\n    }\r\n    toMaybe() {\r\n        return (0, Maybe_1.Just)(this.__value);\r\n    }\r\n    leftToMaybe() {\r\n        return Maybe_1.Nothing;\r\n    }\r\n    extract() {\r\n        return this.__value;\r\n    }\r\n    swap() {\r\n        return left(this.__value);\r\n    }\r\n}\r\nRight.prototype.constructor = exports.Either;\r\nclass Left {\r\n    constructor(__value) {\r\n        this.__value = __value;\r\n        this._ = 'L';\r\n        this['fantasy-land/bimap'] = this.bimap;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n    }\r\n    isLeft() {\r\n        return true;\r\n    }\r\n    isRight() {\r\n        return false;\r\n    }\r\n    toJSON() {\r\n        return this.__value;\r\n    }\r\n    inspect() {\r\n        return `Left(${JSON.stringify(this.__value)})`;\r\n    }\r\n    toString() {\r\n        return this.inspect();\r\n    }\r\n    bimap(f, _) {\r\n        return left(f(this.__value));\r\n    }\r\n    map(_) {\r\n        return this;\r\n    }\r\n    mapLeft(f) {\r\n        return left(f(this.__value));\r\n    }\r\n    ap(other) {\r\n        return other.isLeft() ? other : this;\r\n    }\r\n    equals(other) {\r\n        return other.isLeft() ? other.extract() === this.__value : false;\r\n    }\r\n    chain(_) {\r\n        return this;\r\n    }\r\n    chainLeft(f) {\r\n        return f(this.__value);\r\n    }\r\n    join() {\r\n        return this;\r\n    }\r\n    alt(other) {\r\n        return other;\r\n    }\r\n    altLazy(other) {\r\n        return other();\r\n    }\r\n    reduce(_, initialValue) {\r\n        return initialValue;\r\n    }\r\n    extend(_) {\r\n        return this;\r\n    }\r\n    unsafeCoerce() {\r\n        if (this.__value instanceof Error) {\r\n            throw this.__value;\r\n        }\r\n        throw new Error('Either#unsafeCoerce was ran on a Left');\r\n    }\r\n    caseOf(patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Left(this.__value);\r\n    }\r\n    leftOrDefault(_) {\r\n        return this.__value;\r\n    }\r\n    orDefault(defaultValue) {\r\n        return defaultValue;\r\n    }\r\n    orDefaultLazy(getDefaultValue) {\r\n        return getDefaultValue();\r\n    }\r\n    leftOrDefaultLazy(_) {\r\n        return this.__value;\r\n    }\r\n    ifLeft(effect) {\r\n        return effect(this.__value), this;\r\n    }\r\n    ifRight(_) {\r\n        return this;\r\n    }\r\n    toMaybe() {\r\n        return Maybe_1.Nothing;\r\n    }\r\n    leftToMaybe() {\r\n        return (0, Maybe_1.Just)(this.__value);\r\n    }\r\n    extract() {\r\n        return this.__value;\r\n    }\r\n    swap() {\r\n        return right(this.__value);\r\n    }\r\n}\r\nLeft.prototype.constructor = exports.Either;\r\nconst left = (value) => new Left(value);\r\nexports.Left = left;\r\nconst right = (value) => new Right(value);\r\nexports.Right = right;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/es/Either.js?");
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/EitherAsync.js":
-/*!***********************************************!*\
-  !*** ./node_modules/purify-ts/EitherAsync.js ***!
-  \***********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/EitherAsync.js":
+/*!**************************************************!*\
+  !*** ./node_modules/purify-ts/es/EitherAsync.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nvar __generator = (this && this.__generator) || function (thisArg, body) {\r\n    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;\r\n    return g = { next: verb(0), \"throw\": verb(1), \"return\": verb(2) }, typeof Symbol === \"function\" && (g[Symbol.iterator] = function() { return this; }), g;\r\n    function verb(n) { return function (v) { return step([n, v]); }; }\r\n    function step(op) {\r\n        if (f) throw new TypeError(\"Generator is already executing.\");\r\n        while (_) try {\r\n            if (f = 1, y && (t = op[0] & 2 ? y[\"return\"] : op[0] ? y[\"throw\"] || ((t = y[\"return\"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;\r\n            if (y = 0, t) op = [op[0] & 2, t.value];\r\n            switch (op[0]) {\r\n                case 0: case 1: t = op; break;\r\n                case 4: _.label++; return { value: op[1], done: false };\r\n                case 5: _.label++; y = op[1]; op = [0]; continue;\r\n                case 7: op = _.ops.pop(); _.trys.pop(); continue;\r\n                default:\r\n                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }\r\n                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }\r\n                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }\r\n                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }\r\n                    if (t[2]) _.ops.pop();\r\n                    _.trys.pop(); continue;\r\n            }\r\n            op = body.call(thisArg, _);\r\n        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }\r\n        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };\r\n    }\r\n};\r\nvar __asyncValues = (this && this.__asyncValues) || function (o) {\r\n    if (!Symbol.asyncIterator) throw new TypeError(\"Symbol.asyncIterator is not defined.\");\r\n    var m = o[Symbol.asyncIterator], i;\r\n    return m ? m.call(o) : (o = typeof __values === \"function\" ? __values(o) : o[Symbol.iterator](), i = {}, verb(\"next\"), verb(\"throw\"), verb(\"return\"), i[Symbol.asyncIterator] = function () { return this; }, i);\r\n    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }\r\n    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.EitherAsync = void 0;\r\nvar Either_1 = __webpack_require__(/*! ./Either */ \"./node_modules/purify-ts/Either.js\");\r\nvar MaybeAsync_1 = __webpack_require__(/*! ./MaybeAsync */ \"./node_modules/purify-ts/MaybeAsync.js\");\r\nvar helpers = {\r\n    liftEither: function (either) {\r\n        if (either.isRight()) {\r\n            return Promise.resolve(either.extract());\r\n        }\r\n        throw either.extract();\r\n    },\r\n    fromPromise: function (promise) {\r\n        return promise.then(helpers.liftEither);\r\n    },\r\n    throwE: function (error) {\r\n        throw error;\r\n    }\r\n};\r\nvar EitherAsyncImpl = /** @class */ (function () {\r\n    function EitherAsyncImpl(runPromise) {\r\n        var _this = this;\r\n        this.runPromise = runPromise;\r\n        this[Symbol.toStringTag] = 'EitherAsync';\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/bimap'] = this.bimap;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this.then = function (onfulfilled, onrejected) {\r\n            return _this.run().then(onfulfilled, onrejected);\r\n        };\r\n    }\r\n    EitherAsyncImpl.prototype.leftOrDefault = function (defaultValue) {\r\n        return this.run().then(function (x) { return x.leftOrDefault(defaultValue); });\r\n    };\r\n    EitherAsyncImpl.prototype.orDefault = function (defaultValue) {\r\n        return this.run().then(function (x) { return x.orDefault(defaultValue); });\r\n    };\r\n    EitherAsyncImpl.prototype.join = function () {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var either, nestedEither;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this];\r\n                    case 1:\r\n                        either = _a.sent();\r\n                        if (!either.isRight()) return [3 /*break*/, 3];\r\n                        return [4 /*yield*/, either.extract()];\r\n                    case 2:\r\n                        nestedEither = _a.sent();\r\n                        return [2 /*return*/, helpers.liftEither(nestedEither)];\r\n                    case 3: return [2 /*return*/, helpers.liftEither(either)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.ap = function (eitherF) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var otherValue, thisValue;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, eitherF];\r\n                    case 1:\r\n                        otherValue = _a.sent();\r\n                        if (!otherValue.isRight()) return [3 /*break*/, 3];\r\n                        return [4 /*yield*/, this];\r\n                    case 2:\r\n                        thisValue = _a.sent();\r\n                        if (thisValue.isRight()) {\r\n                            return [2 /*return*/, otherValue.extract()(thisValue.extract())];\r\n                        }\r\n                        else {\r\n                            return [2 /*return*/, helpers.liftEither(thisValue)];\r\n                        }\r\n                        _a.label = 3;\r\n                    case 3: return [2 /*return*/, helpers.liftEither(otherValue)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.alt = function (other) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var thisValue, otherValue;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this];\r\n                    case 1:\r\n                        thisValue = _a.sent();\r\n                        if (!thisValue.isRight()) return [3 /*break*/, 2];\r\n                        return [2 /*return*/, thisValue.extract()];\r\n                    case 2: return [4 /*yield*/, other];\r\n                    case 3:\r\n                        otherValue = _a.sent();\r\n                        return [2 /*return*/, helpers.liftEither(otherValue)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.extend = function (f) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var either, v;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        either = _a.sent();\r\n                        if (either.isRight()) {\r\n                            v = exports.EitherAsync.liftEither(either);\r\n                            return [2 /*return*/, helpers.liftEither(Either_1.Right(f(v)))];\r\n                        }\r\n                        return [2 /*return*/, helpers.liftEither(either)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.run = function () {\r\n        return __awaiter(this, void 0, void 0, function () {\r\n            var _a, e_1;\r\n            return __generator(this, function (_b) {\r\n                switch (_b.label) {\r\n                    case 0:\r\n                        _b.trys.push([0, 2, , 3]);\r\n                        _a = Either_1.Right;\r\n                        return [4 /*yield*/, this.runPromise(helpers)];\r\n                    case 1: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];\r\n                    case 2:\r\n                        e_1 = _b.sent();\r\n                        return [2 /*return*/, Either_1.Left(e_1)];\r\n                    case 3: return [2 /*return*/];\r\n                }\r\n            });\r\n        });\r\n    };\r\n    EitherAsyncImpl.prototype.bimap = function (f, g) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var either;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        either = _a.sent();\r\n                        return [2 /*return*/, helpers.liftEither(either.bimap(f, g))];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.map = function (f) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return _this.runPromise(helpers).then(f); });\r\n    };\r\n    EitherAsyncImpl.prototype.mapLeft = function (f) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var e_2;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0:\r\n                        _a.trys.push([0, 2, , 3]);\r\n                        return [4 /*yield*/, this.runPromise(helpers)];\r\n                    case 1: return [2 /*return*/, _a.sent()];\r\n                    case 2:\r\n                        e_2 = _a.sent();\r\n                        throw f(e_2);\r\n                    case 3: return [2 /*return*/];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.chain = function (f) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var value;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.runPromise(helpers)];\r\n                    case 1:\r\n                        value = _a.sent();\r\n                        return [2 /*return*/, helpers.fromPromise(f(value))];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.chainLeft = function (f) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var e_3;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0:\r\n                        _a.trys.push([0, 2, , 3]);\r\n                        return [4 /*yield*/, this.runPromise(helpers)];\r\n                    case 1: return [2 /*return*/, _a.sent()];\r\n                    case 2:\r\n                        e_3 = _a.sent();\r\n                        return [2 /*return*/, helpers.fromPromise(f(e_3))];\r\n                    case 3: return [2 /*return*/];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.toMaybeAsync = function () {\r\n        var _this = this;\r\n        return MaybeAsync_1.MaybeAsync(function (_a) {\r\n            var liftMaybe = _a.liftMaybe;\r\n            return __awaiter(_this, void 0, void 0, function () {\r\n                var either;\r\n                return __generator(this, function (_b) {\r\n                    switch (_b.label) {\r\n                        case 0: return [4 /*yield*/, this.run()];\r\n                        case 1:\r\n                            either = _b.sent();\r\n                            return [2 /*return*/, liftMaybe(either.toMaybe())];\r\n                    }\r\n                });\r\n            });\r\n        });\r\n    };\r\n    EitherAsyncImpl.prototype.swap = function () {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var either;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        either = _a.sent();\r\n                        if (either.isRight())\r\n                            helpers.throwE(either.extract());\r\n                        return [2 /*return*/, helpers.liftEither(Either_1.Right(either.extract()))];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.ifLeft = function (effect) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var either;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        either = _a.sent();\r\n                        either.ifLeft(effect);\r\n                        return [2 /*return*/, helpers.liftEither(either)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.ifRight = function (effect) {\r\n        var _this = this;\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var either;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        either = _a.sent();\r\n                        either.ifRight(effect);\r\n                        return [2 /*return*/, helpers.liftEither(either)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    EitherAsyncImpl.prototype.void = function () {\r\n        return this.map(function (_) { });\r\n    };\r\n    return EitherAsyncImpl;\r\n}());\r\nexports.EitherAsync = Object.assign(function (runPromise) { return new EitherAsyncImpl(runPromise); }, {\r\n    fromPromise: function (f) { return exports.EitherAsync(function (_a) {\r\n        var fP = _a.fromPromise;\r\n        return fP(f());\r\n    }); },\r\n    liftEither: function (either) {\r\n        return exports.EitherAsync(function (_a) {\r\n            var liftEither = _a.liftEither;\r\n            return liftEither(either);\r\n        });\r\n    },\r\n    lefts: function (list) {\r\n        return Promise.all(list.map(function (x) { return x.run(); })).then(Either_1.Either.lefts);\r\n    },\r\n    rights: function (list) {\r\n        return Promise.all(list.map(function (x) { return x.run(); })).then(Either_1.Either.rights);\r\n    },\r\n    sequence: function (eas) {\r\n        return exports.EitherAsync(function (helpers) { return __awaiter(void 0, void 0, void 0, function () {\r\n            var res, eas_1, eas_1_1, e, e_4_1;\r\n            var e_4, _a;\r\n            return __generator(this, function (_b) {\r\n                switch (_b.label) {\r\n                    case 0:\r\n                        res = [];\r\n                        _b.label = 1;\r\n                    case 1:\r\n                        _b.trys.push([1, 6, 7, 12]);\r\n                        eas_1 = __asyncValues(eas);\r\n                        _b.label = 2;\r\n                    case 2: return [4 /*yield*/, eas_1.next()];\r\n                    case 3:\r\n                        if (!(eas_1_1 = _b.sent(), !eas_1_1.done)) return [3 /*break*/, 5];\r\n                        e = eas_1_1.value;\r\n                        if (e.isLeft()) {\r\n                            return [2 /*return*/, helpers.liftEither(e)];\r\n                        }\r\n                        res.push(e.extract());\r\n                        _b.label = 4;\r\n                    case 4: return [3 /*break*/, 2];\r\n                    case 5: return [3 /*break*/, 12];\r\n                    case 6:\r\n                        e_4_1 = _b.sent();\r\n                        e_4 = { error: e_4_1 };\r\n                        return [3 /*break*/, 12];\r\n                    case 7:\r\n                        _b.trys.push([7, , 10, 11]);\r\n                        if (!(eas_1_1 && !eas_1_1.done && (_a = eas_1.return))) return [3 /*break*/, 9];\r\n                        return [4 /*yield*/, _a.call(eas_1)];\r\n                    case 8:\r\n                        _b.sent();\r\n                        _b.label = 9;\r\n                    case 9: return [3 /*break*/, 11];\r\n                    case 10:\r\n                        if (e_4) throw e_4.error;\r\n                        return [7 /*endfinally*/];\r\n                    case 11: return [7 /*endfinally*/];\r\n                    case 12: return [2 /*return*/, helpers.liftEither(Either_1.Right(res))];\r\n                }\r\n            });\r\n        }); });\r\n    },\r\n    all: function (eas) {\r\n        return exports.EitherAsync.fromPromise(function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {\r\n            return [2 /*return*/, Promise.all(eas).then(Either_1.Either.sequence)];\r\n        }); }); });\r\n    }\r\n});\r\nEitherAsyncImpl.prototype.constructor = exports.EitherAsync;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/EitherAsync.js?");
+eval("\r\nvar _a;\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.EitherAsync = void 0;\r\nconst Either_1 = __webpack_require__(/*! ./Either */ \"./node_modules/purify-ts/es/Either.js\");\r\nconst MaybeAsync_1 = __webpack_require__(/*! ./MaybeAsync */ \"./node_modules/purify-ts/es/MaybeAsync.js\");\r\nconst helpers = {\r\n    liftEither(either) {\r\n        if (either.isRight()) {\r\n            return Promise.resolve(either.extract());\r\n        }\r\n        throw either.extract();\r\n    },\r\n    fromPromise(promise) {\r\n        return promise.then(helpers.liftEither);\r\n    },\r\n    throwE(error) {\r\n        throw error;\r\n    }\r\n};\r\nclass EitherAsyncImpl {\r\n    constructor(runPromise) {\r\n        this.runPromise = runPromise;\r\n        this[_a] = 'EitherAsync';\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/bimap'] = this.bimap;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this.then = (onfulfilled, onrejected) => {\r\n            return this.run().then(onfulfilled, onrejected);\r\n        };\r\n    }\r\n    leftOrDefault(defaultValue) {\r\n        return this.run().then((x) => x.leftOrDefault(defaultValue));\r\n    }\r\n    orDefault(defaultValue) {\r\n        return this.run().then((x) => x.orDefault(defaultValue));\r\n    }\r\n    join() {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const either = await this;\r\n            if (either.isRight()) {\r\n                const nestedEither = await either.extract();\r\n                return helpers.liftEither(nestedEither);\r\n            }\r\n            return helpers.liftEither(either);\r\n        });\r\n    }\r\n    ap(eitherF) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const otherValue = await eitherF;\r\n            if (otherValue.isRight()) {\r\n                const thisValue = await this;\r\n                if (thisValue.isRight()) {\r\n                    return otherValue.extract()(thisValue.extract());\r\n                }\r\n                else {\r\n                    return helpers.liftEither(thisValue);\r\n                }\r\n            }\r\n            return helpers.liftEither(otherValue);\r\n        });\r\n    }\r\n    alt(other) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const thisValue = await this;\r\n            if (thisValue.isRight()) {\r\n                return thisValue.extract();\r\n            }\r\n            else {\r\n                const otherValue = await other;\r\n                return helpers.liftEither(otherValue);\r\n            }\r\n        });\r\n    }\r\n    extend(f) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const either = await this.run();\r\n            if (either.isRight()) {\r\n                const v = exports.EitherAsync.liftEither(either);\r\n                return helpers.liftEither((0, Either_1.Right)(f(v)));\r\n            }\r\n            return helpers.liftEither(either);\r\n        });\r\n    }\r\n    async run() {\r\n        try {\r\n            return (0, Either_1.Right)(await this.runPromise(helpers));\r\n        }\r\n        catch (e) {\r\n            return (0, Either_1.Left)(e);\r\n        }\r\n    }\r\n    bimap(f, g) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const either = await this.run();\r\n            return helpers.liftEither(either.bimap(f, g));\r\n        });\r\n    }\r\n    map(f) {\r\n        return (0, exports.EitherAsync)((helpers) => this.runPromise(helpers).then(f));\r\n    }\r\n    mapLeft(f) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            try {\r\n                return await this.runPromise(helpers);\r\n            }\r\n            catch (e) {\r\n                throw f(e);\r\n            }\r\n        });\r\n    }\r\n    chain(f) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const value = await this.runPromise(helpers);\r\n            return helpers.fromPromise(f(value));\r\n        });\r\n    }\r\n    chainLeft(f) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            try {\r\n                return await this.runPromise(helpers);\r\n            }\r\n            catch (e) {\r\n                return helpers.fromPromise(f(e));\r\n            }\r\n        });\r\n    }\r\n    toMaybeAsync() {\r\n        return (0, MaybeAsync_1.MaybeAsync)(async ({ liftMaybe }) => {\r\n            const either = await this.run();\r\n            return liftMaybe(either.toMaybe());\r\n        });\r\n    }\r\n    swap() {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const either = await this.run();\r\n            if (either.isRight())\r\n                helpers.throwE(either.extract());\r\n            return helpers.liftEither((0, Either_1.Right)(either.extract()));\r\n        });\r\n    }\r\n    ifLeft(effect) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const either = await this.run();\r\n            either.ifLeft(effect);\r\n            return helpers.liftEither(either);\r\n        });\r\n    }\r\n    ifRight(effect) {\r\n        return (0, exports.EitherAsync)(async (helpers) => {\r\n            const either = await this.run();\r\n            either.ifRight(effect);\r\n            return helpers.liftEither(either);\r\n        });\r\n    }\r\n    void() {\r\n        return this.map((_) => { });\r\n    }\r\n    caseOf(patterns) {\r\n        return this.run().then((x) => x.caseOf(patterns));\r\n    }\r\n    finally(effect) {\r\n        return (0, exports.EitherAsync)(({ fromPromise }) => fromPromise(this.run().finally(effect)));\r\n    }\r\n}\r\n_a = Symbol.toStringTag;\r\nexports.EitherAsync = Object.assign((runPromise) => new EitherAsyncImpl(runPromise), {\r\n    fromPromise: (f) => (0, exports.EitherAsync)(({ fromPromise: fP }) => fP(f())),\r\n    liftEither: (either) => (0, exports.EitherAsync)(({ liftEither }) => liftEither(either)),\r\n    lefts: (list) => Promise.all(list.map((x) => x.run())).then(Either_1.Either.lefts),\r\n    rights: (list) => Promise.all(list.map((x) => x.run())).then(Either_1.Either.rights),\r\n    sequence: (eas) => (0, exports.EitherAsync)(async (helpers) => {\r\n        let res = [];\r\n        for await (const e of eas) {\r\n            if (e.isLeft()) {\r\n                return helpers.liftEither(e);\r\n            }\r\n            res.push(e.extract());\r\n        }\r\n        return helpers.liftEither((0, Either_1.Right)(res));\r\n    }),\r\n    all: (eas) => exports.EitherAsync.fromPromise(async () => Promise.all(eas).then(Either_1.Either.sequence))\r\n});\r\nEitherAsyncImpl.prototype.constructor = exports.EitherAsync;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/es/EitherAsync.js?");
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/Maybe.js":
-/*!*****************************************!*\
-  !*** ./node_modules/purify-ts/Maybe.js ***!
-  \*****************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/Maybe.js":
+/*!********************************************!*\
+  !*** ./node_modules/purify-ts/es/Maybe.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\r\nvar __values = (this && this.__values) || function(o) {\r\n    var s = typeof Symbol === \"function\" && Symbol.iterator, m = s && o[s], i = 0;\r\n    if (m) return m.call(o);\r\n    if (o && typeof o.length === \"number\") return {\r\n        next: function () {\r\n            if (o && i >= o.length) o = void 0;\r\n            return { value: o && o[i++], done: !o };\r\n        }\r\n    };\r\n    throw new TypeError(s ? \"Object is not iterable.\" : \"Symbol.iterator is not defined.\");\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.Nothing = exports.Just = exports.Maybe = void 0;\r\nvar Either_1 = __webpack_require__(/*! ./Either */ \"./node_modules/purify-ts/Either.js\");\r\nexports.Maybe = {\r\n    of: function (value) {\r\n        return just(value);\r\n    },\r\n    empty: function () {\r\n        return nothing;\r\n    },\r\n    zero: function () {\r\n        return nothing;\r\n    },\r\n    fromNullable: function (value) {\r\n        return value == null ? nothing : just(value);\r\n    },\r\n    fromFalsy: function (value) {\r\n        return value ? just(value) : nothing;\r\n    },\r\n    fromPredicate: function (pred, value) {\r\n        switch (arguments.length) {\r\n            case 1:\r\n                return function (value) { return exports.Maybe.fromPredicate(pred, value); };\r\n            default:\r\n                return pred(value) ? just(value) : nothing;\r\n        }\r\n    },\r\n    mapMaybe: function (f, list) {\r\n        switch (arguments.length) {\r\n            case 1:\r\n                return function (list) { return exports.Maybe.mapMaybe(f, list); };\r\n            default:\r\n                return exports.Maybe.catMaybes(list.map(f));\r\n        }\r\n    },\r\n    catMaybes: function (list) {\r\n        var e_1, _a;\r\n        var res = [];\r\n        try {\r\n            for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {\r\n                var e = list_1_1.value;\r\n                if (e.isJust()) {\r\n                    res.push(e.extract());\r\n                }\r\n            }\r\n        }\r\n        catch (e_1_1) { e_1 = { error: e_1_1 }; }\r\n        finally {\r\n            try {\r\n                if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1);\r\n            }\r\n            finally { if (e_1) throw e_1.error; }\r\n        }\r\n        return res;\r\n    },\r\n    encase: function (thunk) {\r\n        try {\r\n            return just(thunk());\r\n        }\r\n        catch (_a) {\r\n            return nothing;\r\n        }\r\n    },\r\n    isMaybe: function (x) {\r\n        return x instanceof Just || x instanceof Nothing;\r\n    },\r\n    sequence: function (maybes) {\r\n        var e_2, _a;\r\n        var res = [];\r\n        try {\r\n            for (var maybes_1 = __values(maybes), maybes_1_1 = maybes_1.next(); !maybes_1_1.done; maybes_1_1 = maybes_1.next()) {\r\n                var m = maybes_1_1.value;\r\n                if (m.isJust()) {\r\n                    res.push(m.extract());\r\n                }\r\n                else {\r\n                    return nothing;\r\n                }\r\n            }\r\n        }\r\n        catch (e_2_1) { e_2 = { error: e_2_1 }; }\r\n        finally {\r\n            try {\r\n                if (maybes_1_1 && !maybes_1_1.done && (_a = maybes_1.return)) _a.call(maybes_1);\r\n            }\r\n            finally { if (e_2) throw e_2.error; }\r\n        }\r\n        return just(res);\r\n    },\r\n    'fantasy-land/of': function (value) {\r\n        return this.of(value);\r\n    },\r\n    'fantasy-land/empty': function () {\r\n        return this.empty();\r\n    },\r\n    'fantasy-land/zero': function () {\r\n        return this.zero();\r\n    }\r\n};\r\nvar Just = /** @class */ (function () {\r\n    function Just(__value) {\r\n        this.__value = __value;\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/filter'] = this.filter;\r\n    }\r\n    Just.prototype.isJust = function () {\r\n        return true;\r\n    };\r\n    Just.prototype.isNothing = function () {\r\n        return false;\r\n    };\r\n    Just.prototype.inspect = function () {\r\n        return \"Just(\" + JSON.stringify(this.__value) + \")\";\r\n    };\r\n    Just.prototype.toString = function () {\r\n        return this.inspect();\r\n    };\r\n    Just.prototype.toJSON = function () {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.equals = function (other) {\r\n        return this.extract() === other.extract();\r\n    };\r\n    Just.prototype.map = function (f) {\r\n        return just(f(this.__value));\r\n    };\r\n    Just.prototype.ap = function (maybeF) {\r\n        return maybeF.isJust() ? this.map(maybeF.extract()) : nothing;\r\n    };\r\n    Just.prototype.alt = function (_) {\r\n        return this;\r\n    };\r\n    Just.prototype.altLazy = function (_) {\r\n        return this;\r\n    };\r\n    Just.prototype.chain = function (f) {\r\n        return f(this.__value);\r\n    };\r\n    Just.prototype.chainNullable = function (f) {\r\n        return exports.Maybe.fromNullable(f(this.__value));\r\n    };\r\n    Just.prototype.join = function () {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.reduce = function (reducer, initialValue) {\r\n        return reducer(initialValue, this.__value);\r\n    };\r\n    Just.prototype.extend = function (f) {\r\n        return just(f(this));\r\n    };\r\n    Just.prototype.unsafeCoerce = function () {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.caseOf = function (patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Just(this.__value);\r\n    };\r\n    Just.prototype.orDefault = function (_) {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.orDefaultLazy = function (_) {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.toList = function () {\r\n        return [this.__value];\r\n    };\r\n    Just.prototype.mapOrDefault = function (f, _) {\r\n        return f(this.__value);\r\n    };\r\n    Just.prototype.extract = function () {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.extractNullable = function () {\r\n        return this.__value;\r\n    };\r\n    Just.prototype.toEither = function (_) {\r\n        return Either_1.Right(this.__value);\r\n    };\r\n    Just.prototype.ifJust = function (effect) {\r\n        return effect(this.__value), this;\r\n    };\r\n    Just.prototype.ifNothing = function (_) {\r\n        return this;\r\n    };\r\n    Just.prototype.filter = function (pred) {\r\n        return pred(this.__value) ? just(this.__value) : nothing;\r\n    };\r\n    return Just;\r\n}());\r\nJust.prototype.constructor = exports.Maybe;\r\nvar Nothing = /** @class */ (function () {\r\n    function Nothing() {\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/filter'] = this.filter;\r\n    }\r\n    Nothing.prototype.isJust = function () {\r\n        return false;\r\n    };\r\n    Nothing.prototype.isNothing = function () {\r\n        return true;\r\n    };\r\n    Nothing.prototype.inspect = function () {\r\n        return 'Nothing';\r\n    };\r\n    Nothing.prototype.toString = function () {\r\n        return this.inspect();\r\n    };\r\n    Nothing.prototype.toJSON = function () {\r\n        return this.__value;\r\n    };\r\n    Nothing.prototype.equals = function (other) {\r\n        return this.extract() === other.extract();\r\n    };\r\n    Nothing.prototype.map = function (_) {\r\n        return nothing;\r\n    };\r\n    Nothing.prototype.ap = function (_) {\r\n        return nothing;\r\n    };\r\n    Nothing.prototype.alt = function (other) {\r\n        return other;\r\n    };\r\n    Nothing.prototype.altLazy = function (other) {\r\n        return other();\r\n    };\r\n    Nothing.prototype.chain = function (_) {\r\n        return nothing;\r\n    };\r\n    Nothing.prototype.chainNullable = function (_) {\r\n        return nothing;\r\n    };\r\n    Nothing.prototype.join = function () {\r\n        return nothing;\r\n    };\r\n    Nothing.prototype.reduce = function (_, initialValue) {\r\n        return initialValue;\r\n    };\r\n    Nothing.prototype.extend = function (_) {\r\n        return nothing;\r\n    };\r\n    Nothing.prototype.unsafeCoerce = function () {\r\n        throw new Error('Maybe#unsafeCoerce was ran on a Nothing');\r\n    };\r\n    Nothing.prototype.caseOf = function (patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Nothing();\r\n    };\r\n    Nothing.prototype.orDefault = function (defaultValue) {\r\n        return defaultValue;\r\n    };\r\n    Nothing.prototype.orDefaultLazy = function (getDefaultValue) {\r\n        return getDefaultValue();\r\n    };\r\n    Nothing.prototype.toList = function () {\r\n        return [];\r\n    };\r\n    Nothing.prototype.mapOrDefault = function (_, defaultValue) {\r\n        return defaultValue;\r\n    };\r\n    Nothing.prototype.extract = function () {\r\n        return undefined;\r\n    };\r\n    Nothing.prototype.extractNullable = function () {\r\n        return null;\r\n    };\r\n    Nothing.prototype.toEither = function (left) {\r\n        return Either_1.Left(left);\r\n    };\r\n    Nothing.prototype.ifJust = function (_) {\r\n        return this;\r\n    };\r\n    Nothing.prototype.ifNothing = function (effect) {\r\n        return effect(), this;\r\n    };\r\n    Nothing.prototype.filter = function (_) {\r\n        return nothing;\r\n    };\r\n    return Nothing;\r\n}());\r\nNothing.prototype.constructor = exports.Maybe;\r\n/** Constructs a Just. Represents an optional value that exists */\r\nvar just = function (value) { return new Just(value); };\r\nexports.Just = just;\r\n/** Represents a missing value, you can think of it as a smart 'null' */\r\nvar nothing = new Nothing();\r\nexports.Nothing = nothing;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/Maybe.js?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.Nothing = exports.Just = exports.Maybe = void 0;\r\nconst Either_1 = __webpack_require__(/*! ./Either */ \"./node_modules/purify-ts/es/Either.js\");\r\nexports.Maybe = {\r\n    of(value) {\r\n        return just(value);\r\n    },\r\n    empty() {\r\n        return nothing;\r\n    },\r\n    zero() {\r\n        return nothing;\r\n    },\r\n    fromNullable(value) {\r\n        return value == null ? nothing : just(value);\r\n    },\r\n    fromFalsy(value) {\r\n        return value ? just(value) : nothing;\r\n    },\r\n    fromPredicate(pred, value) {\r\n        switch (arguments.length) {\r\n            case 1:\r\n                return (value) => exports.Maybe.fromPredicate(pred, value);\r\n            default:\r\n                return pred(value) ? just(value) : nothing;\r\n        }\r\n    },\r\n    mapMaybe(f, list) {\r\n        switch (arguments.length) {\r\n            case 1:\r\n                return (list) => exports.Maybe.mapMaybe(f, list);\r\n            default:\r\n                return exports.Maybe.catMaybes(list.map(f));\r\n        }\r\n    },\r\n    catMaybes(list) {\r\n        let res = [];\r\n        for (const e of list) {\r\n            if (e.isJust()) {\r\n                res.push(e.extract());\r\n            }\r\n        }\r\n        return res;\r\n    },\r\n    encase(thunk) {\r\n        try {\r\n            return just(thunk());\r\n        }\r\n        catch (_a) {\r\n            return nothing;\r\n        }\r\n    },\r\n    isMaybe(x) {\r\n        return x instanceof Just || x instanceof Nothing;\r\n    },\r\n    sequence(maybes) {\r\n        let res = [];\r\n        for (const m of maybes) {\r\n            if (m.isJust()) {\r\n                res.push(m.extract());\r\n            }\r\n            else {\r\n                return nothing;\r\n            }\r\n        }\r\n        return just(res);\r\n    },\r\n    'fantasy-land/of'(value) {\r\n        return this.of(value);\r\n    },\r\n    'fantasy-land/empty'() {\r\n        return this.empty();\r\n    },\r\n    'fantasy-land/zero'() {\r\n        return this.zero();\r\n    }\r\n};\r\nclass Just {\r\n    constructor(__value) {\r\n        this.__value = __value;\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/filter'] = this.filter;\r\n    }\r\n    isJust() {\r\n        return true;\r\n    }\r\n    isNothing() {\r\n        return false;\r\n    }\r\n    inspect() {\r\n        return `Just(${JSON.stringify(this.__value)})`;\r\n    }\r\n    toString() {\r\n        return this.inspect();\r\n    }\r\n    toJSON() {\r\n        return this.__value;\r\n    }\r\n    equals(other) {\r\n        return this.extract() === other.extract();\r\n    }\r\n    map(f) {\r\n        return just(f(this.__value));\r\n    }\r\n    ap(maybeF) {\r\n        return maybeF.isJust() ? this.map(maybeF.extract()) : nothing;\r\n    }\r\n    alt(_) {\r\n        return this;\r\n    }\r\n    altLazy(_) {\r\n        return this;\r\n    }\r\n    chain(f) {\r\n        return f(this.__value);\r\n    }\r\n    chainNullable(f) {\r\n        return exports.Maybe.fromNullable(f(this.__value));\r\n    }\r\n    join() {\r\n        return this.__value;\r\n    }\r\n    reduce(reducer, initialValue) {\r\n        return reducer(initialValue, this.__value);\r\n    }\r\n    extend(f) {\r\n        return just(f(this));\r\n    }\r\n    unsafeCoerce() {\r\n        return this.__value;\r\n    }\r\n    caseOf(patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Just(this.__value);\r\n    }\r\n    orDefault(_) {\r\n        return this.__value;\r\n    }\r\n    orDefaultLazy(_) {\r\n        return this.__value;\r\n    }\r\n    toList() {\r\n        return [this.__value];\r\n    }\r\n    mapOrDefault(f, _) {\r\n        return f(this.__value);\r\n    }\r\n    extract() {\r\n        return this.__value;\r\n    }\r\n    extractNullable() {\r\n        return this.__value;\r\n    }\r\n    toEither(_) {\r\n        return (0, Either_1.Right)(this.__value);\r\n    }\r\n    ifJust(effect) {\r\n        return effect(this.__value), this;\r\n    }\r\n    ifNothing(_) {\r\n        return this;\r\n    }\r\n    filter(pred) {\r\n        return pred(this.__value) ? just(this.__value) : nothing;\r\n    }\r\n}\r\nJust.prototype.constructor = exports.Maybe;\r\nclass Nothing {\r\n    constructor() {\r\n        this['fantasy-land/equals'] = this.equals;\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/alt'] = this.alt;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/reduce'] = this.reduce;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/filter'] = this.filter;\r\n    }\r\n    isJust() {\r\n        return false;\r\n    }\r\n    isNothing() {\r\n        return true;\r\n    }\r\n    inspect() {\r\n        return 'Nothing';\r\n    }\r\n    toString() {\r\n        return this.inspect();\r\n    }\r\n    toJSON() {\r\n        return this.__value;\r\n    }\r\n    equals(other) {\r\n        return this.extract() === other.extract();\r\n    }\r\n    map(_) {\r\n        return nothing;\r\n    }\r\n    ap(_) {\r\n        return nothing;\r\n    }\r\n    alt(other) {\r\n        return other;\r\n    }\r\n    altLazy(other) {\r\n        return other();\r\n    }\r\n    chain(_) {\r\n        return nothing;\r\n    }\r\n    chainNullable(_) {\r\n        return nothing;\r\n    }\r\n    join() {\r\n        return nothing;\r\n    }\r\n    reduce(_, initialValue) {\r\n        return initialValue;\r\n    }\r\n    extend(_) {\r\n        return nothing;\r\n    }\r\n    unsafeCoerce() {\r\n        throw new Error('Maybe#unsafeCoerce was ran on a Nothing');\r\n    }\r\n    caseOf(patterns) {\r\n        return '_' in patterns ? patterns._() : patterns.Nothing();\r\n    }\r\n    orDefault(defaultValue) {\r\n        return defaultValue;\r\n    }\r\n    orDefaultLazy(getDefaultValue) {\r\n        return getDefaultValue();\r\n    }\r\n    toList() {\r\n        return [];\r\n    }\r\n    mapOrDefault(_, defaultValue) {\r\n        return defaultValue;\r\n    }\r\n    extract() {\r\n        return undefined;\r\n    }\r\n    extractNullable() {\r\n        return null;\r\n    }\r\n    toEither(left) {\r\n        return (0, Either_1.Left)(left);\r\n    }\r\n    ifJust(_) {\r\n        return this;\r\n    }\r\n    ifNothing(effect) {\r\n        return effect(), this;\r\n    }\r\n    filter(_) {\r\n        return nothing;\r\n    }\r\n}\r\nNothing.prototype.constructor = exports.Maybe;\r\n/** Constructs a Just. Represents an optional value that exists */\r\nconst just = (value) => new Just(value);\r\nexports.Just = just;\r\n/** Represents a missing value, you can think of it as a smart 'null' */\r\nconst nothing = new Nothing();\r\nexports.Nothing = nothing;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/es/Maybe.js?");
 
 /***/ }),
 
-/***/ "./node_modules/purify-ts/MaybeAsync.js":
-/*!**********************************************!*\
-  !*** ./node_modules/purify-ts/MaybeAsync.js ***!
-  \**********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ "./node_modules/purify-ts/es/MaybeAsync.js":
+/*!*************************************************!*\
+  !*** ./node_modules/purify-ts/es/MaybeAsync.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nvar __generator = (this && this.__generator) || function (thisArg, body) {\r\n    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;\r\n    return g = { next: verb(0), \"throw\": verb(1), \"return\": verb(2) }, typeof Symbol === \"function\" && (g[Symbol.iterator] = function() { return this; }), g;\r\n    function verb(n) { return function (v) { return step([n, v]); }; }\r\n    function step(op) {\r\n        if (f) throw new TypeError(\"Generator is already executing.\");\r\n        while (_) try {\r\n            if (f = 1, y && (t = op[0] & 2 ? y[\"return\"] : op[0] ? y[\"throw\"] || ((t = y[\"return\"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;\r\n            if (y = 0, t) op = [op[0] & 2, t.value];\r\n            switch (op[0]) {\r\n                case 0: case 1: t = op; break;\r\n                case 4: _.label++; return { value: op[1], done: false };\r\n                case 5: _.label++; y = op[1]; op = [0]; continue;\r\n                case 7: op = _.ops.pop(); _.trys.pop(); continue;\r\n                default:\r\n                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }\r\n                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }\r\n                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }\r\n                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }\r\n                    if (t[2]) _.ops.pop();\r\n                    _.trys.pop(); continue;\r\n            }\r\n            op = body.call(thisArg, _);\r\n        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }\r\n        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };\r\n    }\r\n};\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.MaybeAsync = void 0;\r\nvar Maybe_1 = __webpack_require__(/*! ./Maybe */ \"./node_modules/purify-ts/Maybe.js\");\r\nvar EitherAsync_1 = __webpack_require__(/*! ./EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\r\nvar helpers = {\r\n    liftMaybe: function (maybe) {\r\n        if (maybe.isJust()) {\r\n            return Promise.resolve(maybe.extract());\r\n        }\r\n        throw Maybe_1.Nothing;\r\n    },\r\n    fromPromise: function (promise) {\r\n        return promise.then(helpers.liftMaybe);\r\n    }\r\n};\r\nvar MaybeAsyncImpl = /** @class */ (function () {\r\n    function MaybeAsyncImpl(runPromise) {\r\n        this.runPromise = runPromise;\r\n        this[Symbol.toStringTag] = 'MaybeAsync';\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/filter'] = this.filter;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/alt'] = this.alt;\r\n    }\r\n    MaybeAsyncImpl.prototype.orDefault = function (defaultValue) {\r\n        return this.run().then(function (x) { return x.orDefault(defaultValue); });\r\n    };\r\n    MaybeAsyncImpl.prototype.join = function () {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var maybe, nestedMaybe;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        maybe = _a.sent();\r\n                        if (!maybe.isJust()) return [3 /*break*/, 3];\r\n                        return [4 /*yield*/, maybe.extract()];\r\n                    case 2:\r\n                        nestedMaybe = _a.sent();\r\n                        return [2 /*return*/, helpers.liftMaybe(nestedMaybe)];\r\n                    case 3: return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.ap = function (maybeF) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var otherValue, thisValue;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, maybeF];\r\n                    case 1:\r\n                        otherValue = _a.sent();\r\n                        if (!otherValue.isJust()) return [3 /*break*/, 3];\r\n                        return [4 /*yield*/, this];\r\n                    case 2:\r\n                        thisValue = _a.sent();\r\n                        if (thisValue.isJust()) {\r\n                            return [2 /*return*/, otherValue.extract()(thisValue.extract())];\r\n                        }\r\n                        else {\r\n                            return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];\r\n                        }\r\n                        _a.label = 3;\r\n                    case 3: return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.alt = function (other) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var thisValue, otherValue;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this];\r\n                    case 1:\r\n                        thisValue = _a.sent();\r\n                        if (!thisValue.isJust()) return [3 /*break*/, 2];\r\n                        return [2 /*return*/, thisValue.extract()];\r\n                    case 2: return [4 /*yield*/, other];\r\n                    case 3:\r\n                        otherValue = _a.sent();\r\n                        return [2 /*return*/, helpers.liftMaybe(otherValue)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.extend = function (f) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var maybe, v;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        maybe = _a.sent();\r\n                        if (maybe.isJust()) {\r\n                            v = exports.MaybeAsync.liftMaybe(maybe);\r\n                            return [2 /*return*/, helpers.liftMaybe(Maybe_1.Just(f(v)))];\r\n                        }\r\n                        return [2 /*return*/, helpers.liftMaybe(Maybe_1.Nothing)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.filter = function (pred) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var value;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        value = _a.sent();\r\n                        return [2 /*return*/, helpers.liftMaybe(value.filter(pred))];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.run = function () {\r\n        return __awaiter(this, void 0, void 0, function () {\r\n            var _a, _b;\r\n            return __generator(this, function (_c) {\r\n                switch (_c.label) {\r\n                    case 0:\r\n                        _c.trys.push([0, 2, , 3]);\r\n                        _a = Maybe_1.Just;\r\n                        return [4 /*yield*/, this.runPromise(helpers)];\r\n                    case 1: return [2 /*return*/, _a.apply(void 0, [_c.sent()])];\r\n                    case 2:\r\n                        _b = _c.sent();\r\n                        return [2 /*return*/, Maybe_1.Nothing];\r\n                    case 3: return [2 /*return*/];\r\n                }\r\n            });\r\n        });\r\n    };\r\n    MaybeAsyncImpl.prototype.map = function (f) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return _this.runPromise(helpers).then(f); });\r\n    };\r\n    MaybeAsyncImpl.prototype.chain = function (f) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var value;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.runPromise(helpers)];\r\n                    case 1:\r\n                        value = _a.sent();\r\n                        return [2 /*return*/, helpers.fromPromise(f(value))];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.toEitherAsync = function (error) {\r\n        var _this = this;\r\n        return EitherAsync_1.EitherAsync(function (_a) {\r\n            var liftEither = _a.liftEither;\r\n            return __awaiter(_this, void 0, void 0, function () {\r\n                var maybe;\r\n                return __generator(this, function (_b) {\r\n                    switch (_b.label) {\r\n                        case 0: return [4 /*yield*/, this.run()];\r\n                        case 1:\r\n                            maybe = _b.sent();\r\n                            return [2 /*return*/, liftEither(maybe.toEither(error))];\r\n                    }\r\n                });\r\n            });\r\n        });\r\n    };\r\n    MaybeAsyncImpl.prototype.ifJust = function (effect) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var maybe;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        maybe = _a.sent();\r\n                        maybe.ifJust(effect);\r\n                        return [2 /*return*/, helpers.liftMaybe(maybe)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.ifNothing = function (effect) {\r\n        var _this = this;\r\n        return exports.MaybeAsync(function (helpers) { return __awaiter(_this, void 0, void 0, function () {\r\n            var maybe;\r\n            return __generator(this, function (_a) {\r\n                switch (_a.label) {\r\n                    case 0: return [4 /*yield*/, this.run()];\r\n                    case 1:\r\n                        maybe = _a.sent();\r\n                        maybe.ifNothing(effect);\r\n                        return [2 /*return*/, helpers.liftMaybe(maybe)];\r\n                }\r\n            });\r\n        }); });\r\n    };\r\n    MaybeAsyncImpl.prototype.void = function () {\r\n        return this.map(function (_) { });\r\n    };\r\n    MaybeAsyncImpl.prototype.then = function (onfulfilled, onrejected) {\r\n        return this.run().then(onfulfilled, onrejected);\r\n    };\r\n    return MaybeAsyncImpl;\r\n}());\r\nexports.MaybeAsync = Object.assign(function (runPromise) { return new MaybeAsyncImpl(runPromise); }, {\r\n    catMaybes: function (list) {\r\n        return Promise.all(list).then(Maybe_1.Maybe.catMaybes);\r\n    },\r\n    fromPromise: function (f) {\r\n        return exports.MaybeAsync(function (_a) {\r\n            var fP = _a.fromPromise;\r\n            return fP(f());\r\n        });\r\n    },\r\n    liftMaybe: function (maybe) {\r\n        return exports.MaybeAsync(function (_a) {\r\n            var liftMaybe = _a.liftMaybe;\r\n            return liftMaybe(maybe);\r\n        });\r\n    }\r\n});\r\nMaybeAsyncImpl.prototype.constructor = exports.MaybeAsync;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/MaybeAsync.js?");
+eval("\r\nvar _a;\r\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\r\nexports.MaybeAsync = void 0;\r\nconst Maybe_1 = __webpack_require__(/*! ./Maybe */ \"./node_modules/purify-ts/es/Maybe.js\");\r\nconst EitherAsync_1 = __webpack_require__(/*! ./EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\r\nconst helpers = {\r\n    liftMaybe(maybe) {\r\n        if (maybe.isJust()) {\r\n            return Promise.resolve(maybe.extract());\r\n        }\r\n        throw Maybe_1.Nothing;\r\n    },\r\n    fromPromise(promise) {\r\n        return promise.then(helpers.liftMaybe);\r\n    }\r\n};\r\nclass MaybeAsyncImpl {\r\n    constructor(runPromise) {\r\n        this.runPromise = runPromise;\r\n        this[_a] = 'MaybeAsync';\r\n        this['fantasy-land/map'] = this.map;\r\n        this['fantasy-land/chain'] = this.chain;\r\n        this['fantasy-land/ap'] = this.ap;\r\n        this['fantasy-land/filter'] = this.filter;\r\n        this['fantasy-land/extend'] = this.extend;\r\n        this['fantasy-land/alt'] = this.alt;\r\n    }\r\n    orDefault(defaultValue) {\r\n        return this.run().then((x) => x.orDefault(defaultValue));\r\n    }\r\n    join() {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const maybe = await this.run();\r\n            if (maybe.isJust()) {\r\n                const nestedMaybe = await maybe.extract();\r\n                return helpers.liftMaybe(nestedMaybe);\r\n            }\r\n            return helpers.liftMaybe(Maybe_1.Nothing);\r\n        });\r\n    }\r\n    ap(maybeF) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const otherValue = await maybeF;\r\n            if (otherValue.isJust()) {\r\n                const thisValue = await this;\r\n                if (thisValue.isJust()) {\r\n                    return otherValue.extract()(thisValue.extract());\r\n                }\r\n                else {\r\n                    return helpers.liftMaybe(Maybe_1.Nothing);\r\n                }\r\n            }\r\n            return helpers.liftMaybe(Maybe_1.Nothing);\r\n        });\r\n    }\r\n    alt(other) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const thisValue = await this;\r\n            if (thisValue.isJust()) {\r\n                return thisValue.extract();\r\n            }\r\n            else {\r\n                const otherValue = await other;\r\n                return helpers.liftMaybe(otherValue);\r\n            }\r\n        });\r\n    }\r\n    extend(f) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const maybe = await this.run();\r\n            if (maybe.isJust()) {\r\n                const v = exports.MaybeAsync.liftMaybe(maybe);\r\n                return helpers.liftMaybe((0, Maybe_1.Just)(f(v)));\r\n            }\r\n            return helpers.liftMaybe(Maybe_1.Nothing);\r\n        });\r\n    }\r\n    filter(pred) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const value = await this.run();\r\n            return helpers.liftMaybe(value.filter(pred));\r\n        });\r\n    }\r\n    async run() {\r\n        try {\r\n            return (0, Maybe_1.Just)(await this.runPromise(helpers));\r\n        }\r\n        catch (_b) {\r\n            return Maybe_1.Nothing;\r\n        }\r\n    }\r\n    map(f) {\r\n        return (0, exports.MaybeAsync)((helpers) => this.runPromise(helpers).then(f));\r\n    }\r\n    chain(f) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const value = await this.runPromise(helpers);\r\n            return helpers.fromPromise(f(value));\r\n        });\r\n    }\r\n    toEitherAsync(error) {\r\n        return (0, EitherAsync_1.EitherAsync)(async ({ liftEither }) => {\r\n            const maybe = await this.run();\r\n            return liftEither(maybe.toEither(error));\r\n        });\r\n    }\r\n    ifJust(effect) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const maybe = await this.run();\r\n            maybe.ifJust(effect);\r\n            return helpers.liftMaybe(maybe);\r\n        });\r\n    }\r\n    ifNothing(effect) {\r\n        return (0, exports.MaybeAsync)(async (helpers) => {\r\n            const maybe = await this.run();\r\n            maybe.ifNothing(effect);\r\n            return helpers.liftMaybe(maybe);\r\n        });\r\n    }\r\n    void() {\r\n        return this.map((_) => { });\r\n    }\r\n    caseOf(patterns) {\r\n        return this.run().then((x) => x.caseOf(patterns));\r\n    }\r\n    finally(effect) {\r\n        return (0, exports.MaybeAsync)(({ fromPromise }) => fromPromise(this.run().finally(effect)));\r\n    }\r\n    then(onfulfilled, onrejected) {\r\n        return this.run().then(onfulfilled, onrejected);\r\n    }\r\n}\r\n_a = Symbol.toStringTag;\r\nexports.MaybeAsync = Object.assign((runPromise) => new MaybeAsyncImpl(runPromise), {\r\n    catMaybes: (list) => Promise.all(list).then(Maybe_1.Maybe.catMaybes),\r\n    fromPromise: (f) => (0, exports.MaybeAsync)(({ fromPromise: fP }) => fP(f())),\r\n    liftMaybe: (maybe) => (0, exports.MaybeAsync)(({ liftMaybe }) => liftMaybe(maybe))\r\n});\r\nMaybeAsyncImpl.prototype.constructor = exports.MaybeAsync;\r\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./node_modules/purify-ts/es/MaybeAsync.js?");
 
 /***/ }),
 
@@ -15200,7 +14776,7 @@ eval("\n/**\n * Topological sorting function\n *\n * @param {Array} edges\n * @r
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"set\": () => (/* binding */ set),\n/* harmony export */   \"get\": () => (/* binding */ get),\n/* harmony export */   \"deleteCache\": () => (/* binding */ deleteCache)\n/* harmony export */ });\n/* harmony import */ var object_hash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! object-hash */ \"./node_modules/object-hash/dist/object_hash.js\");\n/* harmony import */ var object_hash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(object_hash__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/storage.util */ \"./src/apis/storage.util.ts\");\n\n\n\n\nconst storeName = '__cache__';\nconst set = (keyToHash, value) => {\n    const key = hashObject(keyToHash);\n    return (createCacheIfNotExist()\n        .chain(_ => _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.addDocumentsToStore(storeName)([{ key, value }])));\n};\nconst get = (keyToHash) => {\n    const key = hashObject(keyToHash);\n    return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getDocuments(storeName)([key])\n        .chain(storeValues => storeValues.length > 0\n        ? purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync.liftEither((0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Right)(storeValues[0].value))\n        : purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync.liftEither((0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error('Cache miss'))))\n        .mapLeft(error => new Error('Error retrieving data from the store cache', { cause: error })));\n};\nconst deleteCache = () => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStoreIfExist(storeName));\nconst createCacheIfNotExist = () => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.createStoreIfNotExist(storeName)({})('key')\n    .mapLeft(e => {\n    console.log('An error occured when creating the cache: ' + e);\n    return e;\n}));\nconst hashObject = (object) => object_hash__WEBPACK_IMPORTED_MODULE_0__(object, { algorithm: 'md5', unorderedArrays: true });\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/apis/cache.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"set\": () => (/* binding */ set),\n/* harmony export */   \"get\": () => (/* binding */ get),\n/* harmony export */   \"deleteCache\": () => (/* binding */ deleteCache)\n/* harmony export */ });\n/* harmony import */ var object_hash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! object-hash */ \"./node_modules/object-hash/dist/object_hash.js\");\n/* harmony import */ var object_hash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(object_hash__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/es/Either.js\");\n/* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/storage.util */ \"./src/apis/storage.util.ts\");\n\n\n\n\nconst storeName = '__cache__';\nconst set = (keyToHash, value) => {\n    const key = hashObject(keyToHash);\n    return (createCacheIfNotExist()\n        .chain(_ => _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.addDocumentsToStore(storeName)([{ key, value }])));\n};\nconst get = (keyToHash) => {\n    const key = hashObject(keyToHash);\n    return (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getDocuments(storeName)([key])\n        .chain(storeValues => storeValues.length > 0\n        ? purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync.liftEither((0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Right)(storeValues[0].value))\n        : purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_2__.EitherAsync.liftEither((0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error('Cache miss'))))\n        .mapLeft(error => new Error('Error retrieving data from the store cache', { cause: error })));\n};\nconst deleteCache = () => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.deleteStoreIfExist(storeName));\nconst createCacheIfNotExist = () => (_apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.createStoreIfNotExist(storeName)({})('key')\n    .mapLeft(e => {\n    console.log('An error occured when creating the cache: ' + e);\n    return e;\n}));\nconst hashObject = (object) => object_hash__WEBPACK_IMPORTED_MODULE_0__(object, { algorithm: 'md5', unorderedArrays: true });\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/apis/cache.ts?");
 
 /***/ }),
 
@@ -15222,7 +14798,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createStore\": () => (/* binding */ createStore),\n/* harmony export */   \"createStoreIfNotExist\": () => (/* binding */ createStoreIfNotExist),\n/* harmony export */   \"deleteStore\": () => (/* binding */ deleteStore),\n/* harmony export */   \"deleteStoreIfExist\": () => (/* binding */ deleteStoreIfExist),\n/* harmony export */   \"deleteDatabase\": () => (/* binding */ deleteDatabase),\n/* harmony export */   \"addDocumentsToStore\": () => (/* binding */ addDocumentsToStore),\n/* harmony export */   \"iterateOverStore\": () => (/* binding */ iterateOverStore),\n/* harmony export */   \"getPrimaryKeysMatchingOperator\": () => (/* binding */ getPrimaryKeysMatchingOperator),\n/* harmony export */   \"getAllPrimaryKeysForIndex\": () => (/* binding */ getAllPrimaryKeysForIndex),\n/* harmony export */   \"getAllUniqueKeysForIndex\": () => (/* binding */ getAllUniqueKeysForIndex),\n/* harmony export */   \"getDocuments\": () => (/* binding */ getDocuments),\n/* harmony export */   \"getNumberOfDocumentsInStore\": () => (/* binding */ getNumberOfDocumentsInStore),\n/* harmony export */   \"doesStoreExist\": () => (/* binding */ doesStoreExist),\n/* harmony export */   \"getKeyRangeMatchingOperator\": () => (/* binding */ getKeyRangeMatchingOperator)\n/* harmony export */ });\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ \"./src/apis/indexedDB.api.ts\");\n\n\n\n\nconst databaseId = \"browser-search\";\nconst simplifiedIndexToIndexConfig = (simplifiedIndex) => {\n    var _a, _b;\n    const arrayConfig = { multiEntry: true, unique: false };\n    const defaultConfig = { multiEntry: false, unique: false };\n    const indexConfigSimpleProperties = (_a = simplifiedIndex.simple) === null || _a === void 0 ? void 0 : _a.reduce((indexConfig, property) => {\n        indexConfig[property] = defaultConfig;\n        return indexConfig;\n    }, {});\n    const indexConfigArrayProperties = (_b = simplifiedIndex.array) === null || _b === void 0 ? void 0 : _b.reduce((indexConfig, property) => {\n        indexConfig[property] = arrayConfig;\n        return indexConfig;\n    }, {});\n    const indexConfig = Object.assign(Object.assign({}, indexConfigSimpleProperties), indexConfigArrayProperties);\n    return indexConfig;\n};\nconst openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));\nconst closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\nconst execute = (...commands) => {\n    let dbInstance = null;\n    const openDatabaseCommand = openDatabase()\n        .map(db => {\n        dbInstance = db;\n        return db;\n    });\n    const commandsToExecute = commands.reduce((commandsAcc, command) => {\n        return commandsAcc.chain(() => command(dbInstance));\n    }, openDatabaseCommand);\n    const commandsToExecuteWithDbClosing = commandsToExecute\n        .map((result) => {\n        closeDatabase(dbInstance).run();\n        return result;\n    })\n        .mapLeft(error => {\n        !(0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(dbInstance) && closeDatabase(dbInstance).run();\n        return error;\n    });\n    return commandsToExecuteWithDbClosing;\n};\nconst createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))\n        .chain(() => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst createStoreIfNotExist = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst deleteStore = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(databaseId)(storeName))));\nconst deleteStoreIfExist = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))));\nconst deleteDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteDatabase(databaseId))));\nconst addDocumentsToStore = (storeName) => (data) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDocumentsToStore(db)(storeName)(data));\n    return execute(command);\n};\nconst iterateOverStore = (storeName) => (callback) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(db)(storeName)(callback));\n    return execute(command);\n};\nconst getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (operand) => {\n    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));\n    const command = db => purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync.liftEither(eitherKeyRange)\n        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));\n    return execute(command);\n};\nconst getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));\n    return execute(command);\n};\nconst getAllUniqueKeysForIndex = (storeName) => (indexName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));\n    return execute(command);\n};\nconst getDocuments = (storeName) => (documentIds) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getDocuments(db)(storeName)(documentIds));\n    return execute(command);\n};\nconst getNumberOfDocumentsInStore = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfDocumentsInStore(db)(storeName));\n    return execute(command);\n};\nconst doesStoreExist = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => Promise.resolve(_indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.doesStoreExist(db)(storeName)));\n    return execute(command);\n};\nconst getKeyRangeMatchingOperator = (operator) => (value) => {\n    switch (operator) {\n        case 'equals':\n        case 'contains':\n            return IDBKeyRange.only(value);\n        case 'lt':\n            return IDBKeyRange.upperBound(value, true);\n        case 'lte':\n            return IDBKeyRange.upperBound(value);\n        case 'gt':\n            return IDBKeyRange.lowerBound(value, true);\n        case 'gte':\n            return IDBKeyRange.lowerBound(value);\n        case 'inRangeClosed':\n            return IDBKeyRange.bound(value[0], value[1]);\n        case 'inRangeOpen':\n            return IDBKeyRange.bound(value[0], value[1], true, true);\n        case 'inRangeOpenClosed':\n            return IDBKeyRange.bound(value[0], value[1], true, false);\n        case 'inRangeClosedOpen':\n            return IDBKeyRange.bound(value[0], value[1], false, true);\n    }\n    throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/apis/storage.util.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createStore\": () => (/* binding */ createStore),\n/* harmony export */   \"createStoreIfNotExist\": () => (/* binding */ createStoreIfNotExist),\n/* harmony export */   \"deleteStore\": () => (/* binding */ deleteStore),\n/* harmony export */   \"deleteStoreIfExist\": () => (/* binding */ deleteStoreIfExist),\n/* harmony export */   \"deleteDatabase\": () => (/* binding */ deleteDatabase),\n/* harmony export */   \"addDocumentsToStore\": () => (/* binding */ addDocumentsToStore),\n/* harmony export */   \"iterateOverStore\": () => (/* binding */ iterateOverStore),\n/* harmony export */   \"getPrimaryKeysMatchingOperator\": () => (/* binding */ getPrimaryKeysMatchingOperator),\n/* harmony export */   \"getAllPrimaryKeysForIndex\": () => (/* binding */ getAllPrimaryKeysForIndex),\n/* harmony export */   \"getAllUniqueKeysForIndex\": () => (/* binding */ getAllUniqueKeysForIndex),\n/* harmony export */   \"getDocuments\": () => (/* binding */ getDocuments),\n/* harmony export */   \"getNumberOfDocumentsInStore\": () => (/* binding */ getNumberOfDocumentsInStore),\n/* harmony export */   \"doesStoreExist\": () => (/* binding */ doesStoreExist),\n/* harmony export */   \"getKeyRangeMatchingOperator\": () => (/* binding */ getKeyRangeMatchingOperator)\n/* harmony export */ });\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/es/Either.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexedDB.api */ \"./src/apis/indexedDB.api.ts\");\n\n\n\n\nconst databaseId = \"browser-search\";\nconst simplifiedIndexToIndexConfig = (simplifiedIndex) => {\n    var _a, _b;\n    const arrayConfig = { multiEntry: true, unique: false };\n    const defaultConfig = { multiEntry: false, unique: false };\n    const indexConfigSimpleProperties = (_a = simplifiedIndex.simple) === null || _a === void 0 ? void 0 : _a.reduce((indexConfig, property) => {\n        indexConfig[property] = defaultConfig;\n        return indexConfig;\n    }, {});\n    const indexConfigArrayProperties = (_b = simplifiedIndex.array) === null || _b === void 0 ? void 0 : _b.reduce((indexConfig, property) => {\n        indexConfig[property] = arrayConfig;\n        return indexConfig;\n    }, {});\n    const indexConfig = Object.assign(Object.assign({}, indexConfigSimpleProperties), indexConfigArrayProperties);\n    return indexConfig;\n};\nconst openDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.openDatabaseLatestVersion(databaseId)));\nconst closeDatabase = (db) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\nconst execute = (...commands) => {\n    let dbInstance = null;\n    const openDatabaseCommand = openDatabase()\n        .map(db => {\n        dbInstance = db;\n        return db;\n    });\n    const commandsToExecute = commands.reduce((commandsAcc, command) => {\n        return commandsAcc.chain(() => command(dbInstance));\n    }, openDatabaseCommand);\n    const commandsToExecuteWithDbClosing = commandsToExecute\n        .map((result) => {\n        closeDatabase(dbInstance).run();\n        return result;\n    })\n        .mapLeft(error => {\n        !(0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(dbInstance) && closeDatabase(dbInstance).run();\n        return error;\n    });\n    return commandsToExecuteWithDbClosing;\n};\nconst createStore = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))\n        .chain(() => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStore(databaseId)(storeName)(indexConfig)(keyPath)))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst createStoreIfNotExist = (storeName) => (simplifiedIndexConfig) => (keyPath) => {\n    const indexConfig = simplifiedIndexToIndexConfig(simplifiedIndexConfig);\n    return (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.createObjectStoreIfNotExist(databaseId)(storeName)(indexConfig)(keyPath))\n        .chain(db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.closeDatabase(db)));\n};\nconst deleteStore = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStore(databaseId)(storeName))));\nconst deleteStoreIfExist = (storeName) => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteObjectStoreIfExist(databaseId)(storeName))));\nconst deleteDatabase = () => ((0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)((() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.deleteDatabase(databaseId))));\nconst addDocumentsToStore = (storeName) => (data) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.addDocumentsToStore(db)(storeName)(data));\n    return execute(command);\n};\nconst iterateOverStore = (storeName) => (callback) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.iterateOverStore(db)(storeName)(callback));\n    return execute(command);\n};\nconst getPrimaryKeysMatchingOperator = (storeName) => (indexName) => (operator) => (operand) => {\n    const eitherKeyRange = purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Either.encase(() => getKeyRangeMatchingOperator(operator)(operand));\n    const command = db => purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync.liftEither(eitherKeyRange)\n        .chain(keyRange => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getPrimaryKeysMatchingRange(db)(storeName)(indexName)(keyRange)));\n    return execute(command);\n};\nconst getAllPrimaryKeysForIndex = (storeName) => (indexName) => (reverseDirection) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllPrimaryKeysForIndex(db)(storeName)(indexName)(reverseDirection));\n    return execute(command);\n};\nconst getAllUniqueKeysForIndex = (storeName) => (indexName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getAllUniqueKeysForIndex(db)(storeName)(indexName));\n    return execute(command);\n};\nconst getDocuments = (storeName) => (documentIds) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getDocuments(db)(storeName)(documentIds));\n    return execute(command);\n};\nconst getNumberOfDocumentsInStore = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => _indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.getNumberOfDocumentsInStore(db)(storeName));\n    return execute(command);\n};\nconst doesStoreExist = (storeName) => {\n    const command = db => (0,purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_1__.EitherAsync)(() => Promise.resolve(_indexedDB_api__WEBPACK_IMPORTED_MODULE_0__.doesStoreExist(db)(storeName)));\n    return execute(command);\n};\nconst getKeyRangeMatchingOperator = (operator) => (value) => {\n    switch (operator) {\n        case 'equals':\n        case 'contains':\n            return IDBKeyRange.only(value);\n        case 'lt':\n            return IDBKeyRange.upperBound(value, true);\n        case 'lte':\n            return IDBKeyRange.upperBound(value);\n        case 'gt':\n            return IDBKeyRange.lowerBound(value, true);\n        case 'gte':\n            return IDBKeyRange.lowerBound(value);\n        case 'inRangeClosed':\n            return IDBKeyRange.bound(value[0], value[1]);\n        case 'inRangeOpen':\n            return IDBKeyRange.bound(value[0], value[1], true, true);\n        case 'inRangeOpenClosed':\n            return IDBKeyRange.bound(value[0], value[1], true, false);\n        case 'inRangeClosedOpen':\n            return IDBKeyRange.bound(value[0], value[1], false, true);\n    }\n    throw `No key Range matching this operator '${operator.toString()}' and value '${value.toString()} `;\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/apis/storage.util.ts?");
 
 /***/ }),
 
@@ -15244,7 +14820,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getFilteringData\": () => (/* binding */ getFilteringData)\n/* harmony export */ });\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var modules_filteringStatus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filteringStatus */ \"./src/modules/filteringStatus/index.ts\");\n/* harmony import */ var modules_filteringData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! modules/filteringData */ \"./src/modules/filteringData/index.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/fromPairs.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/zip.js\");\n/* harmony import */ var apis_storage_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! apis/storage.util */ \"./src/apis/storage.util.ts\");\n\n\n\n\n\nconst getFilteringData = (storeId) => (filterConfigData) => {\n    const getFilterStatus = (0,modules_filteringStatus__WEBPACK_IMPORTED_MODULE_0__.getFilterStatusFromFilterConfig)(filterConfigData);\n    const saveItemFilterStatus = (saveStatus) => (documentId, document) => {\n        const status = getFilterStatus(document);\n        saveStatus(status, documentId);\n    };\n    const eitherFilteringData = getFilterIdToMatchingDocumentIds(storeId)(filterConfigData)\n        .map((0,modules_filteringData__WEBPACK_IMPORTED_MODULE_1__.createFilteringData)(filterConfigData))\n        .chain(filteringData => ((0,apis_storage_util__WEBPACK_IMPORTED_MODULE_2__.iterateOverStore)(storeId)(saveItemFilterStatus(filteringData.addFilteredObjectStatus))\n        .map(_ => filteringData.done())));\n    return eitherFilteringData;\n};\nconst getFilterIdToMatchingDocumentIds = (storeName) => (filterConfigData) => {\n    const filters = Object.values(filterConfigData.getFilterDictionary());\n    const filtersIds = filterConfigData.getAllFilterIds();\n    const eitherAsyncItemsIdsMatchingFiltersList = purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.EitherAsync.sequence(filters.map(filter => (0,apis_storage_util__WEBPACK_IMPORTED_MODULE_2__.getPrimaryKeysMatchingOperator)(storeName)(filter.field)(filter.operator)(filter.operand)));\n    const eitherAsyncItemsIdsMatchingFilters = eitherAsyncItemsIdsMatchingFiltersList.map(itemsIdsMatchingFilters => ((0,ramda__WEBPACK_IMPORTED_MODULE_4__.default)((0,ramda__WEBPACK_IMPORTED_MODULE_5__.default)(filtersIds, itemsIdsMatchingFilters))));\n    return eitherAsyncItemsIdsMatchingFilters;\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/filter.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getFilteringData\": () => (/* binding */ getFilteringData)\n/* harmony export */ });\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var modules_filteringStatus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filteringStatus */ \"./src/modules/filteringStatus/index.ts\");\n/* harmony import */ var modules_filteringData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! modules/filteringData */ \"./src/modules/filteringData/index.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/fromPairs.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/zip.js\");\n/* harmony import */ var apis_storage_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! apis/storage.util */ \"./src/apis/storage.util.ts\");\n\n\n\n\n\nconst getFilteringData = (storeId) => (filterConfigData) => {\n    const getFilterStatus = (0,modules_filteringStatus__WEBPACK_IMPORTED_MODULE_0__.getFilterStatusFromFilterConfig)(filterConfigData);\n    const saveItemFilterStatus = (saveStatus) => (documentId, document) => {\n        const status = getFilterStatus(document);\n        saveStatus(status, documentId);\n    };\n    const eitherFilteringData = getFilterIdToMatchingDocumentIds(storeId)(filterConfigData)\n        .map((0,modules_filteringData__WEBPACK_IMPORTED_MODULE_1__.createFilteringData)(filterConfigData))\n        .chain(filteringData => ((0,apis_storage_util__WEBPACK_IMPORTED_MODULE_2__.iterateOverStore)(storeId)(saveItemFilterStatus(filteringData.addFilteredObjectStatus))\n        .map(_ => filteringData.done())));\n    return eitherFilteringData;\n};\nconst getFilterIdToMatchingDocumentIds = (storeName) => (filterConfigData) => {\n    const filters = Object.values(filterConfigData.getFilterDictionary());\n    const filtersIds = filterConfigData.getAllFilterIds();\n    const eitherAsyncItemsIdsMatchingFiltersList = purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.EitherAsync.sequence(filters.map(filter => (0,apis_storage_util__WEBPACK_IMPORTED_MODULE_2__.getPrimaryKeysMatchingOperator)(storeName)(filter.field)(filter.operator)(filter.operand)));\n    const eitherAsyncItemsIdsMatchingFilters = eitherAsyncItemsIdsMatchingFiltersList.map(itemsIdsMatchingFilters => ((0,ramda__WEBPACK_IMPORTED_MODULE_4__.default)((0,ramda__WEBPACK_IMPORTED_MODULE_5__.default)(filtersIds, itemsIdsMatchingFilters))));\n    return eitherAsyncItemsIdsMatchingFilters;\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/filter.ts?");
 
 /***/ }),
 
@@ -15255,7 +14831,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/storage.util */ \"./src/apis/storage.util.ts\");\n/* harmony import */ var _models___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/ */ \"./src/controllers/models/index.ts\");\n/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter */ \"./src/controllers/filter.ts\");\n/* harmony import */ var _order__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./order */ \"./src/controllers/order.ts\");\n/* harmony import */ var _pagination__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pagination */ \"./src/controllers/pagination.ts\");\n/* harmony import */ var _cache__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cache */ \"./src/controllers/cache.ts\");\n\n\n\n\n\n\n\n\n\n\nself.onmessage = (event) => {\n    const requestData = event.data;\n    console.log('from worker, received data: ', requestData);\n    processRequest(requestData);\n};\nconst getFilteringDataFromRequest = (request) => {\n    const eitherAsyncFilteringDataFromRequest = (0,_models___WEBPACK_IMPORTED_MODULE_2__.validateRequest)({ getStoreExist: _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.doesStoreExist })(request)\n        .map(request => (0,modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.buildFilterConfigData)(request.filterConfig)(request.filtersApplied))\n        .chain(filterConfigData => ((0,_filter__WEBPACK_IMPORTED_MODULE_3__.getFilteringData)(request.storeId)(filterConfigData)\n        .map(filteringData => {\n        (0,_cache__WEBPACK_IMPORTED_MODULE_6__.setCachedFilteringData)(request)(filterConfigData)(filteringData)\n            .run();\n        return Object.assign(Object.assign({}, filteringData), { _cached_: false });\n    })));\n    const eitherAsyncFilteringDataFromCache = (0,_cache__WEBPACK_IMPORTED_MODULE_6__.getCachedFilteringData)(request)\n        .map(filteringData => (Object.assign(Object.assign({}, filteringData), { _cached_: true })))\n        .mapLeft(e => { console.log(e); return e; });\n    return eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);\n};\nconst processRequest = (request) => (0,tslib__WEBPACK_IMPORTED_MODULE_7__.__awaiter)(void 0, void 0, void 0, function* () {\n    const eitherAsyncFilteringData = getFilteringDataFromRequest(request);\n    const liftedFilteringData = purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__.EitherAsync.liftEither(yield eitherAsyncFilteringData.run()); // we run the computation here so that's it's performed only once\n    const eitherAsyncItems = liftedFilteringData\n        .chain(filteringData => (0,_order__WEBPACK_IMPORTED_MODULE_4__.getOrderFromRequest)(request)(filteringData.getDocumentsIdsValidated()))\n        .chain((0,_pagination__WEBPACK_IMPORTED_MODULE_5__.getPaginatedDocuments)(request));\n    const eitherAsyncFilteringStats = liftedFilteringData\n        .map(filteringData => {\n        const nextFilterStates = filteringData.getNextFilterStates();\n        const nextFilterStatesStats = (0,ramda__WEBPACK_IMPORTED_MODULE_9__.default)(getNextFilterStateStat, nextFilterStates);\n        const matchingDocumentIds = filteringData.getDocumentsIdsValidated();\n        return {\n            stats: nextFilterStatesStats,\n            numberOfDocuments: matchingDocumentIds.length,\n        };\n    });\n    const eitherAsyncCacheStatus = liftedFilteringData\n        .map(filteringDataExtended => filteringDataExtended._cached_ ? 'partial' : 'none');\n    Promise\n        .all([eitherAsyncFilteringStats.run(), eitherAsyncItems.run(), eitherAsyncCacheStatus.run()])\n        .then(([eitherFilteringStats, eitherItems, eitherCacheStatus]) => {\n        if (eitherFilteringStats.isRight() && eitherItems.isRight() && eitherCacheStatus.isRight()) {\n            const filteringStats = eitherFilteringStats.extract();\n            const items = eitherItems.extract();\n            const cacheStatus = eitherCacheStatus.extract();\n            postResult(items)(filteringStats)(cacheStatus);\n        }\n        else if (eitherItems.isLeft()) {\n            const error = eitherItems.extract();\n            postError(error);\n        }\n        else if (eitherFilteringStats.isLeft()) {\n            const error = eitherFilteringStats.extract();\n            postError(error);\n        }\n    });\n});\nconst getNextFilterStateStat = (nextFilterState) => (nextFilterState.type === 'added' ?\n    {\n        type: nextFilterState.type,\n        nextDocumentsAdded: nextFilterState.documentIds.length,\n    } : nextFilterState.type === 'narrowed' ?\n    {\n        type: nextFilterState.type,\n        nextNumberOfDocuments: nextFilterState.documentIds.length,\n    } :\n    {\n        type: nextFilterState.type,\n        matchingNumberOfDocuments: nextFilterState.documentIds.length,\n    });\nconst postResult = (documents) => (filteringStats) => (cacheStatus) => {\n    const response = {\n        outcome: 'success',\n        payload: Object.assign({ documents, _cacheStatus_: cacheStatus }, filteringStats),\n    };\n    self.postMessage(response);\n};\nconst postError = (error) => {\n    console.log('ERROR FROM WORKER');\n    const response = {\n        outcome: 'error',\n        reason: error.toString(),\n    };\n    self.postMessage(response);\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/main.worker.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/map.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/storage.util */ \"./src/apis/storage.util.ts\");\n/* harmony import */ var _models___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./models/ */ \"./src/controllers/models/index.ts\");\n/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter */ \"./src/controllers/filter.ts\");\n/* harmony import */ var _order__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./order */ \"./src/controllers/order.ts\");\n/* harmony import */ var _pagination__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pagination */ \"./src/controllers/pagination.ts\");\n/* harmony import */ var _cache__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cache */ \"./src/controllers/cache.ts\");\n\n\n\n\n\n\n\n\n\n\nself.onmessage = (event) => {\n    const requestData = event.data;\n    console.log('from worker, received data: ', requestData);\n    processRequest(requestData);\n};\nconst getFilteringDataFromRequest = (request) => {\n    const eitherAsyncFilteringDataFromRequest = (0,_models___WEBPACK_IMPORTED_MODULE_2__.validateRequest)({ getStoreExist: _apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.doesStoreExist })(request)\n        .map(request => (0,modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_0__.buildFilterConfigData)(request.filterConfig)(request.filtersApplied))\n        .chain(filterConfigData => ((0,_filter__WEBPACK_IMPORTED_MODULE_3__.getFilteringData)(request.storeId)(filterConfigData)\n        .map(filteringData => {\n        (0,_cache__WEBPACK_IMPORTED_MODULE_6__.setCachedFilteringData)(request)(filterConfigData)(filteringData)\n            .run();\n        return Object.assign(Object.assign({}, filteringData), { _cached_: false });\n    })));\n    const eitherAsyncFilteringDataFromCache = (0,_cache__WEBPACK_IMPORTED_MODULE_6__.getCachedFilteringData)(request)\n        .map(filteringData => (Object.assign(Object.assign({}, filteringData), { _cached_: true })))\n        .mapLeft(e => { console.log(e); return e; });\n    return eitherAsyncFilteringDataFromCache.alt(eitherAsyncFilteringDataFromRequest);\n};\nconst processRequest = (request) => (0,tslib__WEBPACK_IMPORTED_MODULE_7__.__awaiter)(void 0, void 0, void 0, function* () {\n    const eitherAsyncFilteringData = getFilteringDataFromRequest(request);\n    const liftedFilteringData = purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_8__.EitherAsync.liftEither(yield eitherAsyncFilteringData.run()); // we run the computation here so that's it's performed only once\n    const eitherAsyncItems = liftedFilteringData\n        .chain(filteringData => (0,_order__WEBPACK_IMPORTED_MODULE_4__.getOrderFromRequest)(request)(filteringData.getDocumentsIdsValidated()))\n        .chain((0,_pagination__WEBPACK_IMPORTED_MODULE_5__.getPaginatedDocuments)(request));\n    const eitherAsyncFilteringStats = liftedFilteringData\n        .map(filteringData => {\n        const nextFilterStates = filteringData.getNextFilterStates();\n        const nextFilterStatesStats = (0,ramda__WEBPACK_IMPORTED_MODULE_9__.default)(getNextFilterStateStat, nextFilterStates);\n        const matchingDocumentIds = filteringData.getDocumentsIdsValidated();\n        return {\n            stats: nextFilterStatesStats,\n            numberOfDocuments: matchingDocumentIds.length,\n        };\n    });\n    const eitherAsyncCacheStatus = liftedFilteringData\n        .map(filteringDataExtended => filteringDataExtended._cached_ ? 'partial' : 'none');\n    Promise\n        .all([eitherAsyncFilteringStats.run(), eitherAsyncItems.run(), eitherAsyncCacheStatus.run()])\n        .then(([eitherFilteringStats, eitherItems, eitherCacheStatus]) => {\n        if (eitherFilteringStats.isRight() && eitherItems.isRight() && eitherCacheStatus.isRight()) {\n            const filteringStats = eitherFilteringStats.extract();\n            const items = eitherItems.extract();\n            const cacheStatus = eitherCacheStatus.extract();\n            postResult(items)(filteringStats)(cacheStatus);\n        }\n        else if (eitherItems.isLeft()) {\n            const error = eitherItems.extract();\n            postError(error);\n        }\n        else if (eitherFilteringStats.isLeft()) {\n            const error = eitherFilteringStats.extract();\n            postError(error);\n        }\n    });\n});\nconst getNextFilterStateStat = (nextFilterState) => (nextFilterState.type === 'added' ?\n    {\n        type: nextFilterState.type,\n        nextDocumentsAdded: nextFilterState.documentIds.length,\n    } : nextFilterState.type === 'narrowed' ?\n    {\n        type: nextFilterState.type,\n        nextNumberOfDocuments: nextFilterState.documentIds.length,\n    } :\n    {\n        type: nextFilterState.type,\n        matchingNumberOfDocuments: nextFilterState.documentIds.length,\n    });\nconst postResult = (documents) => (filteringStats) => (cacheStatus) => {\n    const response = {\n        outcome: 'success',\n        payload: Object.assign({ documents, _cacheStatus_: cacheStatus }, filteringStats),\n    };\n    self.postMessage(response);\n};\nconst postError = (error) => {\n    console.log('ERROR FROM WORKER');\n    const response = {\n        outcome: 'error',\n        reason: error.toString(),\n    };\n    self.postMessage(response);\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/main.worker.ts?");
 
 /***/ }),
 
@@ -15288,7 +14864,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n;\n\n\n\n//# sourceURL=webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"validateRequest\": () => (/* binding */ validateRequest)\n/* harmony export */ });\n/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ \"./node_modules/yup/es/index.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n/* harmony import */ var _requestErrors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./requestErrors */ \"./src/controllers/models/requestErrors.ts\");\n\n\n\n\n\nconst requestSchema = yup__WEBPACK_IMPORTED_MODULE_0__.object({\n    storeId: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidStoreId\"]).required(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidStoreId\"]),\n    filtersApplied: yup__WEBPACK_IMPORTED_MODULE_0__.array().of(yup__WEBPACK_IMPORTED_MODULE_0__.string()).typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidFiltersApplied\"]),\n    page: yup__WEBPACK_IMPORTED_MODULE_0__.number().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPage\"]).min(0, _requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPage\"]).round('round').optional(),\n    perPage: yup__WEBPACK_IMPORTED_MODULE_0__.number().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPerPage\"]).positive(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPerPage\"]).round('round').optional(),\n    orderDirection: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidOrderDirection\"]).oneOf(['ASC', 'DESC'], _requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidOrderDirection\"]).optional(),\n    orderBy: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidOrderBy\"]).optional(),\n}).required();\nconst validateRequest = (extraValidators) => (request) => (validateBaseRequest(request)\n    .chain(baseRequest => ((0,_modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_1__.validateFilterConfig)(request.filterConfig)\n    .map(filterConfig => (Object.assign(Object.assign({}, baseRequest), { filterConfig })))))\n    .chain(request => validateStoreExistence(extraValidators.getStoreExist)(request)));\nconst validateBaseRequest = (request) => {\n    const validation = requestSchema.validate(request, {\n        strict: true,\n        stripUnknown: true,\n    })\n        .then((request) => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Right)(request))\n        .catch(err => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error(err.errors)));\n    return purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__.EitherAsync.fromPromise(() => validation);\n};\nconst validateStoreExistence = (getStoreExist) => (request) => (getStoreExist(request.storeId)\n    .map(doesStoreExist => {\n    if (doesStoreExist) {\n        return request;\n    }\n    throw new Error(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/StoreDoesNotExist\"]);\n}));\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/models/request.validator.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"validateRequest\": () => (/* binding */ validateRequest)\n/* harmony export */ });\n/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ \"./node_modules/yup/es/index.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/es/Either.js\");\n/* harmony import */ var _modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../modules/filterConfiguration */ \"./src/modules/filterConfiguration/index.ts\");\n/* harmony import */ var _requestErrors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./requestErrors */ \"./src/controllers/models/requestErrors.ts\");\n\n\n\n\n\nconst requestSchema = yup__WEBPACK_IMPORTED_MODULE_0__.object({\n    storeId: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidStoreId\"]).required(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidStoreId\"]),\n    filtersApplied: yup__WEBPACK_IMPORTED_MODULE_0__.array().of(yup__WEBPACK_IMPORTED_MODULE_0__.string()).typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidFiltersApplied\"]),\n    page: yup__WEBPACK_IMPORTED_MODULE_0__.number().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPage\"]).min(0, _requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPage\"]).round('round').optional(),\n    perPage: yup__WEBPACK_IMPORTED_MODULE_0__.number().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPerPage\"]).positive(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidPerPage\"]).round('round').optional(),\n    orderDirection: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidOrderDirection\"]).oneOf(['ASC', 'DESC'], _requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidOrderDirection\"]).optional(),\n    orderBy: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/InvalidOrderBy\"]).optional(),\n}).required();\nconst validateRequest = (extraValidators) => (request) => (validateBaseRequest(request)\n    .chain(baseRequest => ((0,_modules_filterConfiguration__WEBPACK_IMPORTED_MODULE_1__.validateFilterConfig)(request.filterConfig)\n    .map(filterConfig => (Object.assign(Object.assign({}, baseRequest), { filterConfig })))))\n    .chain(request => validateStoreExistence(extraValidators.getStoreExist)(request)));\nconst validateBaseRequest = (request) => {\n    const validation = requestSchema.validate(request, {\n        strict: true,\n        stripUnknown: true,\n    })\n        .then((request) => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Right)(request))\n        .catch(err => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error(err.errors)));\n    return purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__.EitherAsync.fromPromise(() => validation);\n};\nconst validateStoreExistence = (getStoreExist) => (request) => (getStoreExist(request.storeId)\n    .map(doesStoreExist => {\n    if (doesStoreExist) {\n        return request;\n    }\n    throw new Error(_requestErrors__WEBPACK_IMPORTED_MODULE_2__.requestErrors[\"Request/StoreDoesNotExist\"]);\n}));\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/models/request.validator.ts?");
 
 /***/ }),
 
@@ -15321,7 +14897,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n\n\n\n//# sourceURL=webpack:/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getOrderFromRequest\": () => (/* binding */ getOrderFromRequest)\n/* harmony export */ });\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var helpers_array_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! helpers/array.util */ \"./src/helpers/array.util.ts\");\n/* harmony import */ var apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apis/storage.util */ \"./src/apis/storage.util.ts\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n\n\n\n\n\nconst getOrderFromRequest = (request) => (itemsIdsToSort) => {\n    const { orderBy, orderDirection } = request;\n    return (0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(orderBy)\n        ? getDefaultOrder(itemsIdsToSort)\n        : getOrderedDocumentIds(Object.assign(Object.assign({}, request), { orderBy, orderDirection: orderDirection !== null && orderDirection !== void 0 ? orderDirection : 'ASC' }))(itemsIdsToSort);\n};\nconst getOrderedDocumentIds = ({ storeId, orderBy, orderDirection }) => (itemsIdsToSort) => {\n    const isReversed = orderDirection === 'DESC';\n    const itemsIdsToSortmap = (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.transformIntoObject)(itemsIdsToSort);\n    const eitherSortedDocumentIds = (0,apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getAllPrimaryKeysForIndex)(storeId)(orderBy)(isReversed)\n        .map(allDocumentIdsSorted => (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.filterAgainstObjectKeys)(allDocumentIdsSorted)(itemsIdsToSortmap));\n    return eitherSortedDocumentIds;\n};\nconst getDefaultOrder = (itemsIdsToSort) => (purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.EitherAsync.liftEither((0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Right)(itemsIdsToSort)));\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/order.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getOrderFromRequest\": () => (/* binding */ getOrderFromRequest)\n/* harmony export */ });\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var helpers_array_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! helpers/array.util */ \"./src/helpers/array.util.ts\");\n/* harmony import */ var apis_storage_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! apis/storage.util */ \"./src/apis/storage.util.ts\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/es/Either.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/isNil.js\");\n\n\n\n\n\nconst getOrderFromRequest = (request) => (itemsIdsToSort) => {\n    const { orderBy, orderDirection } = request;\n    return (0,ramda__WEBPACK_IMPORTED_MODULE_2__.default)(orderBy)\n        ? getDefaultOrder(itemsIdsToSort)\n        : getOrderedDocumentIds(Object.assign(Object.assign({}, request), { orderBy, orderDirection: orderDirection !== null && orderDirection !== void 0 ? orderDirection : 'ASC' }))(itemsIdsToSort);\n};\nconst getOrderedDocumentIds = ({ storeId, orderBy, orderDirection }) => (itemsIdsToSort) => {\n    const isReversed = orderDirection === 'DESC';\n    const itemsIdsToSortmap = (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.transformIntoObject)(itemsIdsToSort);\n    const eitherSortedDocumentIds = (0,apis_storage_util__WEBPACK_IMPORTED_MODULE_1__.getAllPrimaryKeysForIndex)(storeId)(orderBy)(isReversed)\n        .map(allDocumentIdsSorted => (0,helpers_array_util__WEBPACK_IMPORTED_MODULE_0__.filterAgainstObjectKeys)(allDocumentIdsSorted)(itemsIdsToSortmap));\n    return eitherSortedDocumentIds;\n};\nconst getDefaultOrder = (itemsIdsToSort) => (purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_3__.EitherAsync.liftEither((0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_4__.Right)(itemsIdsToSort)));\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/controllers/order.ts?");
 
 /***/ }),
 
@@ -15376,7 +14952,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"validateFilterConfig\": () => (/* binding */ validateFilterConfig)\n/* harmony export */ });\n/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ \"./node_modules/yup/es/index.js\");\n/* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./operators */ \"./src/modules/filterConfiguration/operators.ts\");\n/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./error */ \"./src/modules/filterConfiguration/error.ts\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/EitherAsync.js\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/Either.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/uniq.js\");\n\n\n\n\n\n\nconst alphanumRegex = /^[A-Za-z0-9]+$/;\n/**\n * Validates the JSON filter config passed to the library\n * If invalid, returns a Left(error)\n */\nconst filterSchema = yup__WEBPACK_IMPORTED_MODULE_0__.object({\n    id: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidId\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/MissingId\"]),\n    field: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidFieldName\"]).matches(alphanumRegex, _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidFieldName\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/MissingFieldName\"]),\n    operator: yup__WEBPACK_IMPORTED_MODULE_0__.string().oneOf(Object.values(_operators__WEBPACK_IMPORTED_MODULE_1__.operators), _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidOperator\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/MissingOperator\"]),\n    operand: yup__WEBPACK_IMPORTED_MODULE_0__.mixed(),\n}).required();\nconst groupOfFiltersSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidGroup\"]).of(filterSchema).min(1, _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/EmptyGroup\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/EmptyGroup\"]);\nconst filterConfigSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/Invalid\"]).of(groupOfFiltersSchema).min(1, _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/Empty\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/Empty\"]);\nconst validateFilterConfig = (filterConfig) => {\n    const validation = filterConfigSchema.validate(filterConfig, {\n        strict: true,\n        stripUnknown: true,\n    })\n        .then((filterConfig) => (testFilterConfigUniqueIds(filterConfig)\n        ? (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Right)(filterConfig)\n        : (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/DuplicateOperator\"]))))\n        .catch(err => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error(err.errors)));\n    return purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__.EitherAsync.fromPromise(() => validation);\n};\nconst testFilterConfigUniqueIds = (filterConfig) => {\n    const filterIds = filterConfig.reduce((filterIdsAcc, groupOfFilters) => (groupOfFilters.reduce((filterIdsAcc, filter) => {\n        filterIdsAcc.push(filter.id);\n        return filterIdsAcc;\n    }, filterIdsAcc)), []);\n    const uniqFilterIds = (0,ramda__WEBPACK_IMPORTED_MODULE_5__.default)(filterIds);\n    return filterIds.length === uniqFilterIds.length;\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/modules/filterConfiguration/filterConfig.validator.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"validateFilterConfig\": () => (/* binding */ validateFilterConfig)\n/* harmony export */ });\n/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! yup */ \"./node_modules/yup/es/index.js\");\n/* harmony import */ var _operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./operators */ \"./src/modules/filterConfiguration/operators.ts\");\n/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./error */ \"./src/modules/filterConfiguration/error.ts\");\n/* harmony import */ var purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! purify-ts/EitherAsync */ \"./node_modules/purify-ts/es/EitherAsync.js\");\n/* harmony import */ var purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! purify-ts/Either */ \"./node_modules/purify-ts/es/Either.js\");\n/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ramda */ \"./node_modules/ramda/es/uniq.js\");\n\n\n\n\n\n\nconst alphanumRegex = /^[A-Za-z0-9]+$/;\n/**\n * Validates the JSON filter config passed to the library\n * If invalid, returns a Left(error)\n */\nconst filterSchema = yup__WEBPACK_IMPORTED_MODULE_0__.object({\n    id: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidId\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/MissingId\"]),\n    field: yup__WEBPACK_IMPORTED_MODULE_0__.string().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidFieldName\"]).matches(alphanumRegex, _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidFieldName\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/MissingFieldName\"]),\n    operator: yup__WEBPACK_IMPORTED_MODULE_0__.string().oneOf(Object.values(_operators__WEBPACK_IMPORTED_MODULE_1__.operators), _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidOperator\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/MissingOperator\"]),\n    operand: yup__WEBPACK_IMPORTED_MODULE_0__.mixed(),\n}).required();\nconst groupOfFiltersSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/InvalidGroup\"]).of(filterSchema).min(1, _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/EmptyGroup\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/EmptyGroup\"]);\nconst filterConfigSchema = yup__WEBPACK_IMPORTED_MODULE_0__.array().typeError(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/Invalid\"]).of(groupOfFiltersSchema).min(1, _error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/Empty\"]).required(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/Empty\"]);\nconst validateFilterConfig = (filterConfig) => {\n    const validation = filterConfigSchema.validate(filterConfig, {\n        strict: true,\n        stripUnknown: true,\n    })\n        .then((filterConfig) => (testFilterConfigUniqueIds(filterConfig)\n        ? (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Right)(filterConfig)\n        : (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error(_error__WEBPACK_IMPORTED_MODULE_2__.errors[\"FilterConfig/DuplicateOperator\"]))))\n        .catch(err => (0,purify_ts_Either__WEBPACK_IMPORTED_MODULE_3__.Left)(new Error(err.errors)));\n    return purify_ts_EitherAsync__WEBPACK_IMPORTED_MODULE_4__.EitherAsync.fromPromise(() => validation);\n};\nconst testFilterConfigUniqueIds = (filterConfig) => {\n    const filterIds = filterConfig.reduce((filterIdsAcc, groupOfFilters) => (groupOfFilters.reduce((filterIdsAcc, filter) => {\n        filterIdsAcc.push(filter.id);\n        return filterIdsAcc;\n    }, filterIdsAcc)), []);\n    const uniqFilterIds = (0,ramda__WEBPACK_IMPORTED_MODULE_5__.default)(filterIds);\n    return filterIds.length === uniqFilterIds.length;\n};\n\n\n//# sourceURL=webpack://@browser-search/browser-search/./src/modules/filterConfiguration/filterConfig.validator.ts?");
 
 /***/ }),
 
@@ -15785,7 +15361,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;

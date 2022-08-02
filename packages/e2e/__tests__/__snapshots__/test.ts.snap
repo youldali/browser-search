@@ -2,49 +2,44 @@
 
 exports[`Browser Search addDocumentsToStore failures fails when the store does not exist 1`] = `
 "Evaluation failed: Error: Error when adding data to store: Store \\"unknown\\" does not exist !
-    at http://localhost:8081/script/index.js:9112:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9291:178)
-    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
-    at step (http://localhost:8081/script/index.js:5901:23)
-    at Object.next (http://localhost:8081/script/index.js:5882:53)
-    at http://localhost:8081/script/index.js:5876:71
-    at new Promise (<anonymous>)
-    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5872:12)
-    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6034:16)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5943:26)"
+    at http://localhost:8081/script/index.js:8694:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:8871:178)
+    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:51)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5848:25)
+    at Object.fromPromise (http://localhost:8081/script/index.js:5831:24)
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5934:28)
+    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5924:24)
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:40)"
 `;
 
 exports[`Browser Search deleteStore failures returns an error when the store to delete does not exist 1`] = `
 "Evaluation failed: Error: An error occured when deleting store \\"unknown\\": An error occured when opening Database browser-search: AbortError: Version change transaction was aborted in upgradeneeded event handler.
-    at http://localhost:8081/script/index.js:9095:34"
+    at http://localhost:8081/script/index.js:8677:34
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:40)"
 `;
 
 exports[`Browser Search getAllValuesOfProperty failures fails when the property is not indexed 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"persons\\", index \\"unknown\\". Make sure the store and the index exist. Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.
-    at http://localhost:8081/script/index.js:9164:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9309:183)
-    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
-    at step (http://localhost:8081/script/index.js:5901:23)
-    at Object.next (http://localhost:8081/script/index.js:5882:53)
-    at http://localhost:8081/script/index.js:5876:71
-    at new Promise (<anonymous>)
-    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5872:12)
-    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6034:16)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5943:26)"
+    at http://localhost:8081/script/index.js:8746:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:8889:183)
+    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:51)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5848:25)
+    at Object.fromPromise (http://localhost:8081/script/index.js:5831:24)
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5934:28)
+    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5924:24)
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:40)"
 `;
 
 exports[`Browser Search getAllValuesOfProperty failures fails when the store does not exist 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"unknown\\", index \\"country\\". Make sure the store and the index exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9164:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9309:183)
-    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
-    at step (http://localhost:8081/script/index.js:5901:23)
-    at Object.next (http://localhost:8081/script/index.js:5882:53)
-    at http://localhost:8081/script/index.js:5876:71
-    at new Promise (<anonymous>)
-    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5872:12)
-    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6034:16)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5943:26)"
+    at http://localhost:8081/script/index.js:8746:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:8889:183)
+    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:51)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5848:25)
+    at Object.fromPromise (http://localhost:8081/script/index.js:5831:24)
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5934:28)
+    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5924:24)
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:40)"
 `;
 
 exports[`Browser Search getAllValuesOfProperty successes returns all the colours available 1`] = `
@@ -83,35 +78,31 @@ Array [
 
 exports[`Browser Search getDocuments failures returns an error when the store does not exist 1`] = `
 [Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9175:28
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9313:171)
-    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
-    at step (http://localhost:8081/script/index.js:5901:23)
-    at Object.next (http://localhost:8081/script/index.js:5882:53)
-    at http://localhost:8081/script/index.js:5876:71
-    at new Promise (<anonymous>)
-    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5872:12)
-    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6034:16)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5943:26)]
+    at http://localhost:8081/script/index.js:8757:28
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:8893:171)
+    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:51)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5848:25)
+    at Object.fromPromise (http://localhost:8081/script/index.js:5831:24)
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5934:28)
+    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5924:24)
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:40)]
 `;
 
 exports[`Browser Search getNumberOfDocumentsInStore fails when the store does not exist 1`] = `
 "Evaluation failed: Error: An error occured when getting the number of documents in store \\"unknown\\". Make sure the store exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:9107:31
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:9317:175)
-    at EitherAsyncImpl.<anonymous> (http://localhost:8081/script/index.js:6041:51)
-    at step (http://localhost:8081/script/index.js:5901:23)
-    at Object.next (http://localhost:8081/script/index.js:5882:53)
-    at http://localhost:8081/script/index.js:5876:71
-    at new Promise (<anonymous>)
-    at __webpack_modules__../node_modules/purify-ts/EitherAsync.js.__awaiter (http://localhost:8081/script/index.js:5872:12)
-    at EitherAsyncImpl.__webpack_modules__../node_modules/purify-ts/EitherAsync.js.EitherAsyncImpl.run (http://localhost:8081/script/index.js:6034:16)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5943:26)"
+    at http://localhost:8081/script/index.js:8689:31
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:8897:175)
+    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:51)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5848:25)
+    at Object.fromPromise (http://localhost:8081/script/index.js:5831:24)
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5934:28)
+    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:5924:24)
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:5906:40)"
 `;
 
 exports[`Browser Search queryStore Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
-    at abort (http://localhost:8081/script/index.js:15881:22)
+    at abort (http://localhost:8081/script/index.js:15457:22)
     at __puppeteer_evaluation_script__:9:37"
 `;
 
