@@ -18,7 +18,19 @@ exports[`Browser Search deleteStore failures returns an error when the store to 
     at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:40)"
 `;
 
-exports[`Browser Search getAllValuesOfProperty failures fails when the property is not indexed 1`] = `
+exports[`Browser Search getDocuments failures returns an error when the store does not exist 1`] = `
+[Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at http://localhost:8081/script/index.js:20097:28
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:20233:171)
+    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:51)
+    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:504:25)
+    at Object.fromPromise (http://localhost:8081/script/index.js:487:24)
+    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:590:28)
+    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:580:24)
+    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:40)]
+`;
+
+exports[`Browser Search getIndexValues failures fails when the property is not indexed 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"persons\\", index \\"unknown\\". Make sure the store and the index exist. Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.
     at http://localhost:8081/script/index.js:20086:31
     at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:20229:183)
@@ -30,7 +42,7 @@ exports[`Browser Search getAllValuesOfProperty failures fails when the property 
     at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:40)"
 `;
 
-exports[`Browser Search getAllValuesOfProperty failures fails when the store does not exist 1`] = `
+exports[`Browser Search getIndexValues failures fails when the store does not exist 1`] = `
 "Evaluation failed: Error: An error occured when getting the unique keys for store \\"unknown\\", index \\"country\\". Make sure the store and the index exist. Error: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
     at http://localhost:8081/script/index.js:20086:31
     at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:20229:183)
@@ -42,7 +54,7 @@ exports[`Browser Search getAllValuesOfProperty failures fails when the store doe
     at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:40)"
 `;
 
-exports[`Browser Search getAllValuesOfProperty successes returns all the colours available 1`] = `
+exports[`Browser Search getIndexValues successes returns all the colours available 1`] = `
 Array [
   "blue",
   "brown",
@@ -56,7 +68,7 @@ Array [
 ]
 `;
 
-exports[`Browser Search getAllValuesOfProperty successes returns all the countries available 1`] = `
+exports[`Browser Search getIndexValues successes returns all the countries available 1`] = `
 Array [
   "Barbados",
   "Belarus",
@@ -74,18 +86,6 @@ Array [
   "Taiwan",
   "Tajikistan",
 ]
-`;
-
-exports[`Browser Search getDocuments failures returns an error when the store does not exist 1`] = `
-[Error: Evaluation failed: DOMException: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
-    at http://localhost:8081/script/index.js:20097:28
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:20233:171)
-    at EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:51)
-    at EitherAsyncImpl.then (http://localhost:8081/script/index.js:504:25)
-    at Object.fromPromise (http://localhost:8081/script/index.js:487:24)
-    at EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:590:28)
-    at async EitherAsyncImpl.runPromise (http://localhost:8081/script/index.js:580:24)
-    at async EitherAsyncImpl.run (http://localhost:8081/script/index.js:562:40)]
 `;
 
 exports[`Browser Search getNumberOfDocumentsInStore fails when the store does not exist 1`] = `

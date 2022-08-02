@@ -540,7 +540,7 @@ describe('Browser Search', () => {
   });
 
 
-  describe('getAllValuesOfProperty', () => {
+  describe('getIndexValues', () => {
     
     beforeEach(async () => {
       await createStore();
