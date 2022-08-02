@@ -1,7 +1,7 @@
 const fse = require('fs-extra')
 const path = require('path');
 
-const e2eScriptDir = path.resolve(__dirname, '../e2e/public/script')
+const e2eScriptDir = path.resolve(__dirname, './packages/e2e/public/script')
 const distDir = path.resolve(__dirname, 'dist')
 
 

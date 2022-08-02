@@ -3,7 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = [
   {
-    mode: 'production',
+    mode: 'development',
     entry: {
       worker: './src/controllers/main.worker.ts'
     },

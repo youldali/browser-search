@@ -11,7 +11,7 @@ export declare const deleteStoreIfExist: (storeName: string) => EitherAsync<Erro
 export declare const deleteDatabase: () => EitherAsync<Error, void>;
 export declare const addDocumentsToStore: <T>(storeName: string) => (data: T[]) => EitherAsync<Error, void>;
 export declare const iterateOverStore: <T>(storeName: string) => (callback: (primaryKey: ItemKey, item: T) => void) => EitherAsync<Error, void>;
-export declare const getPrimaryKeysMatchingOperator: (storeName: string) => (indexName: string) => (operator: Operator) => (operand: any) => EitherAsync<Error, ItemKey[]>;
+export declare const getPrimaryKeysMatchingOperator: (storeName: string) => (indexName: string) => (operator: Operator) => (operand: unknown) => EitherAsync<Error, ItemKey[]>;
 export declare const getAllPrimaryKeysForIndex: (storeName: string) => (indexName: string) => (reverseDirection: boolean) => EitherAsync<Error, ItemKey[]>;
 export declare const getAllUniqueKeysForIndex: <K extends IDBValidKey>(storeName: string) => (indexName: string) => EitherAsync<Error, K[]>;
 export declare const getDocuments: <T>(storeName: string) => (documentIds: IDBValidKey[]) => EitherAsync<Error, T[]>;

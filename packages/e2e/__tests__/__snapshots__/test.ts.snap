@@ -109,13 +109,13 @@ exports[`Browser Search getNumberOfDocumentsInStore fails when the store does no
     at EitherAsyncImpl.then (http://localhost:8081/script/index.js:5943:26)"
 `;
 
-exports[`Browser Search searchStore Failures aborts the search 1`] = `
+exports[`Browser Search queryStore Failures aborts the search 1`] = `
 "Evaluation failed: Error: The search request was aborted
     at abort (http://localhost:8081/script/index.js:15881:22)
     at __puppeteer_evaluation_script__:9:37"
 `;
 
-exports[`Browser Search searchStore cache does not retrieve the following queries from the cache if the store has changed 1`] = `
+exports[`Browser Search queryStore cache does not retrieve the following queries from the cache if the store has changed 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -180,7 +180,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore cache does not retrieve the following queries from the cache if the store has changed 2`] = `
+exports[`Browser Search queryStore cache does not retrieve the following queries from the cache if the store has changed 2`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -245,7 +245,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes performs a search with 1 filter 1`] = `
+exports[`Browser Search queryStore successes performs a search with 1 filter 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -337,7 +337,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes returns all items 1`] = `
+exports[`Browser Search queryStore successes returns all items 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -569,7 +569,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes returns all people who like the red / blue / green colour 1`] = `
+exports[`Browser Search queryStore successes returns all people who like the red / blue / green colour 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -728,7 +728,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes returns all people who like the red / blue / green colour AND are old 1`] = `
+exports[`Browser Search queryStore successes returns all people who like the red / blue / green colour AND are old 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -780,7 +780,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes returns all people who like the red colour 1`] = `
+exports[`Browser Search queryStore successes returns all people who like the red colour 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -911,7 +911,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes returns an empty array when the page is out of range 1`] = `
+exports[`Browser Search queryStore successes returns an empty array when the page is out of range 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [],
@@ -949,7 +949,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes returns empty array when no criteria is met 1`] = `
+exports[`Browser Search queryStore successes returns empty array when no criteria is met 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [],
@@ -987,7 +987,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes runs 2 concurrents searches 1`] = `
+exports[`Browser Search queryStore successes runs 2 concurrents searches 1`] = `
 Array [
   Object {
     "_cacheStatus_": "none",
@@ -1144,7 +1144,7 @@ Array [
 ]
 `;
 
-exports[`Browser Search searchStore successes search for the engineer profession 1`] = `
+exports[`Browser Search queryStore successes search for the engineer profession 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -1195,7 +1195,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes sorts by name ASC 1`] = `
+exports[`Browser Search queryStore successes sorts by name ASC 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -1427,7 +1427,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes sorts by name ASC, gets the first 5 persons (page 0) 1`] = `
+exports[`Browser Search queryStore successes sorts by name ASC, gets the first 5 persons (page 0) 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -1528,7 +1528,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes sorts by name ASC, gets the next 5 persons (page 1) 1`] = `
+exports[`Browser Search queryStore successes sorts by name ASC, gets the next 5 persons (page 1) 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [
@@ -1633,7 +1633,7 @@ Object {
 }
 `;
 
-exports[`Browser Search searchStore successes sorts by name DESC 1`] = `
+exports[`Browser Search queryStore successes sorts by name DESC 1`] = `
 Object {
   "_cacheStatus_": "none",
   "documents": Array [

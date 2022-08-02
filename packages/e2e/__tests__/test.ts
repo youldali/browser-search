@@ -33,14 +33,14 @@ describe('Browser Search', () => {
   const createStoreRequest: BrowserSearch.CreateStoreRequest<Person> = {keyPath, indexConfig, storeId};
   const createStore = async () => {
     await page.evaluate((request: BrowserSearch.CreateStoreRequest<Person>) => browserSearch.createStore<Person>(request),
-      createStoreRequest
+      createStoreRequest as any
     );
   }
 
   const addDocumentsToStoreRequest: BrowserSearch.AddDocumentsToStoreRequest<Person> = {documents: persons, storeId};
   const addDocumentsToStore = async () => {
     await page.evaluate((request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request),
-    addDocumentsToStoreRequest
+    addDocumentsToStoreRequest as any
     );
   }
 
@@ -280,7 +280,7 @@ describe('Browser Search', () => {
 
           return Promise.all([resultsA, resultsB]);
         }
-        , { filterConfig, storeId }
+        , { filterConfig, storeId } as any
         );
     
         expect(documents).toMatchSnapshot();
@@ -299,7 +299,7 @@ describe('Browser Search', () => {
             });
             abort();
             return results;
-          }, { filterConfig, storeId }
+          }, { filterConfig, storeId } as any
           );
         }
         catch(e) {
@@ -331,7 +331,7 @@ describe('Browser Search', () => {
             filtersApplied: [],
             page: 2,
             perPage: 5,
-          }), { filterConfig }
+          }), { filterConfig } as any
           );
         }
         catch(e) {
@@ -347,7 +347,7 @@ describe('Browser Search', () => {
             filtersApplied: ['unknown' as any],
             page: 2,
             perPage: 5,
-          }), { filterConfig, storeId }
+          }), { filterConfig, storeId } as any
           );
         }
         catch(e) {
@@ -363,7 +363,7 @@ describe('Browser Search', () => {
             filtersApplied: [],
             page: -5,
             perPage: 5,
-          }), { filterConfig, storeId }
+          }), { filterConfig, storeId } as any
           );
         }
         catch(e) {
@@ -401,7 +401,7 @@ describe('Browser Search', () => {
 
           return Promise.all([resultsA, resultsB]);
         }
-        , { filterConfig, storeId }
+        , { filterConfig, storeId } as any
         );
     
         expect((documents[0])['_cacheStatus_']).toBe('none');
@@ -452,7 +452,7 @@ describe('Browser Search', () => {
   describe('createStore', () => {
     it('successfully creates the store', async () => {
       const results = await page.evaluate((request: BrowserSearch.CreateStoreRequest<Person>) => browserSearch.createStore<Person>(request),
-        {keyPath, indexConfig, storeId}
+        {keyPath, indexConfig, storeId} as any
       );
       const doesStoreExist = await page.evaluate((request: BrowserSearch.DoesStoreExistRequest) => browserSearch.doesStoreExist(request),
        {storeId}
@@ -494,7 +494,7 @@ describe('Browser Search', () => {
 
         await page.evaluate(
           (request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request)
-          ,{ storeId, persons }
+          ,{ storeId, documents: persons } as any
         );
   
         const results = await page.evaluate(
@@ -515,7 +515,7 @@ describe('Browser Search', () => {
               browserSearch.addDocumentsToStore(request);
               browserSearch.addDocumentsToStore(request);
             }
-            ,{ storeId, documents: [persons[0]]}
+            ,{ storeId, documents: [persons[0]]} as any
           );
         }
         catch(e) {
@@ -528,7 +528,7 @@ describe('Browser Search', () => {
         try {
           await page.evaluate(
             (request: BrowserSearch.AddDocumentsToStoreRequest<Person>) => browserSearch.addDocumentsToStore(request)
-            ,{ documents: [persons[0]], storeId: 'unknown'} 
+            ,{ documents: [persons[0]], storeId: 'unknown'} as any
           );
         }
         catch(e) {
@@ -633,7 +633,7 @@ describe('Browser Search', () => {
     describe('successes', () => {
       it('returns the items matching the ids', async () => {
         const results = await page.evaluate((request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments(request),
-         { storeId, documentIds: [persons[0].id, persons[2].id, persons[3].id] } as BrowserSearch.GetDocumentsRequest
+         { storeId, documentIds: [persons[0].id, persons[2].id, persons[3].id] } as any
       );
     
         expect(results).toEqual([persons[0], persons[2], persons[3]]);
@@ -641,7 +641,7 @@ describe('Browser Search', () => {
 
       it('filters out items that do not exist', async () => {
         const results = await page.evaluate((request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments(request),
-         { storeId, documentIds: [persons[0].id, 'giberrish']} as BrowserSearch.GetDocumentsRequest
+         { storeId, documentIds: [persons[0].id, 'giberrish']} as any
       );
     
         expect(results).toEqual([persons[0]]);
@@ -652,7 +652,7 @@ describe('Browser Search', () => {
       it('returns an error when the store does not exist', async () => {
         try {
           const results = await page.evaluate((request: BrowserSearch.GetDocumentsRequest) => browserSearch.getDocuments(request),
-           { storeId: 'unknown', documentIds: [persons[0].id]} as BrowserSearch.GetDocumentsRequest
+           { storeId: 'unknown', documentIds: [persons[0].id]} as any
           );
         }
         catch(e) {

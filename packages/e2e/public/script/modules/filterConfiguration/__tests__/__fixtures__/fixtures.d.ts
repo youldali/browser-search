@@ -7,7 +7,7 @@ interface Item {
     activity: ItemActivity[];
 }
 declare type FilterIds = 'priceMin' | 'priceMax' | 'numberOfPeople' | 'activity-1' | 'activity-2' | 'activity-3';
-export declare const getFilterDictionaryFixture: (overrides?: Partial<Record<FilterIds, Filter<Item, FilterIds>>>) => Record<FilterIds, Filter<Item, FilterIds>> & Partial<Record<FilterIds, Filter<Item, FilterIds>>>;
+export declare const getFilterDictionaryFixture: (overrides?: Partial<Record<FilterIds, Filter<Item, FilterIds>>>) => Record<FilterIds, Filter<Item, FilterIds>>;
 export declare const getFilterConfigFixture: (overrides?: import("../../filterConfig.model").GroupOfFilters<Item, FilterIds>[]) => import("../../filterConfig.model").GroupOfFilters<Item, FilterIds>[];
 export declare const getFiltersIdsAppliedFixture: (overrides?: FilterIds[]) => FilterIds[];
 export {};

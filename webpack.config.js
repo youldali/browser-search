@@ -3,7 +3,7 @@ const fs = require('fs');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 module.exports = [{
-    mode: 'production',
+    mode: 'development',
     entry: {
       index: './src/index.ts',
     },
