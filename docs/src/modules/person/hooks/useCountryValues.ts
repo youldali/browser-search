@@ -7,5 +7,5 @@ export const countryFilterAppliedGroupKey = 'country';
 export const countryGetFilterId = (country: string): string => `country-${country}`;
 
 export const useCountryValues = () => {
-  return useIndexValues<string>(storeId, 'country')
+  return useIndexValues<string>({storeId, field: 'country'})
 }

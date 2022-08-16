@@ -262,7 +262,7 @@ When the filters remain the same, any new request skips the filtering step (it i
 
 ####  Return value
 
-    [Promise<SearchResponse<T, TFilterId>>, AbortSearch]
+    [Promise<QueryResponse<T, TFilterId>>, AbortSearch]
  - `queryResponse: QueryResponse<TDocument, TFilterId  extends  string = string>` is an object containing the result of the request. [See reference](#QueryResponse)
  - `abortSearch: () =>  void`: is the function you can call to abort the search
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchResponse } from '@browser-search/browser-search';
+import { QueryResponse } from '@browser-search/browser-search';
 
 import { Person } from '../../../../models';
 import { CheckboxAutocomplete } from '../../../../../common/components';
@@ -8,7 +8,7 @@ export type Props<FieldValue extends string> = {
   options: FieldValue[];
   values: FieldValue[];
   isStatsStale?: boolean;
-  stats: SearchResponse<Person>["stats"];
+  stats: QueryResponse<Person>["stats"];
   id: string;
   placeholder: string;
   label: string;

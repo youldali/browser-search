@@ -11,5 +11,5 @@ export const allOfHobbiesGetFilterId = (hobby: string): string => `hobbiesAllOf-
 export const allOfHobbiesFilterAppliedGroupKey = 'hobbiesAllOf';
 
 export const useHobbiesValues = () => {
-  return useIndexValues<string>(storeId, 'hobbies');
+  return useIndexValues<string>({storeId, field: 'hobbies'});
 }

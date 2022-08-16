@@ -7,5 +7,5 @@ export const professionFilterAppliedGroupKey = 'profession';
 export const professionGetFilterId = (profession: string): string => `profession-${profession}`;
 
 export const useProfessionValues = () => {
-  return useIndexValues<string>(storeId, 'profession');
+  return useIndexValues<string>({storeId, field: 'profession'});
 }

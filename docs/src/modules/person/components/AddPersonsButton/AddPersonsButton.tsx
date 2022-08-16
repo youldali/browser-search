@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAddDataToStore } from '@browser-search/react-browser-search';
+import { useAddDocumentsToStore } from '@browser-search/react-browser-search';
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import { SxProps } from '@mui/material/styles';
@@ -15,11 +15,11 @@ type Props = {
 export const AddPersonsButton = ({count, sx}: Props) => {
   useUpdateFilterConfig();
 
-  const [addDataToStore] = useAddDataToStore<Person>();
+  const [addDataToStore] = useAddDocumentsToStore<Person>();
 
   const addData = () => {
     const persons  = generatePersons(count);
-    addDataToStore({storeId: 'Persons', data: persons});
+    addDataToStore({storeId: 'Persons', documents: persons});
   }
 
   return (

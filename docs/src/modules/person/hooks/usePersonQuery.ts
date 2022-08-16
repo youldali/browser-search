@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Request } from '@browser-search/browser-search';
+import { QueryRequest } from '@browser-search/browser-search';
 import {
     useQuery,
     UseQueryQueryState,
@@ -19,7 +19,7 @@ export const usePersonQuery = (): UseQueryQueryState<Person, FilterId> => {
   const filtersApplied = useSelector(searchSelectors.selectFiltersApplied);
   const filterConfig = useSelector(configSelectors.selectFilterConfig);
 
-  const request: Request<Person, FilterId> = useMemo(() => ({
+  const request: QueryRequest<Person, FilterId> = useMemo(() => ({
     storeId,
     filterConfig,
     filtersApplied,
