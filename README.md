@@ -1,6 +1,7 @@
 # Browser-search
 
 ### [**-> Take a look at the demo**](https://youldali.github.io/browser-search/)
+### [**-> React-hooks for the library**](https://github.com/youldali/react-browser-search)
 
 Use this library to build a **full-featured search page on the browser**.
 Compose **complex** queries and **store, filter, sort, paginate** your documents directly on the browser without the need for a back-end / server queries.
