@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import {
-    ErrorQueryState, IdleState, LoadingQueryState, QueryState, StaleQueryState, SuccessQueryState,
+    ErrorQueryState, IdleQueryState, LoadingQueryState, QueryState, StaleQueryState, SuccessQueryState,
 } from '@browser-search/react-browser-search';
 
 type QuerySuspenseProps<Request, Response, Error, T extends QueryState<Request, Response, Error>> = {
   queryState: T;
-  idle: (idleQueryState: Extract<T, IdleState>) => ReactElement | null;
+  idle: (idleQueryState: Extract<T, IdleQueryState>) => ReactElement | null;
   error: (errorQueryState: Extract<T, ErrorQueryState<Request, Error>>) => ReactElement | null;
   loading: (loadingQueryState: Extract<T, LoadingQueryState<Request>>) => ReactElement | null;
   stale?: (stateQueryState: Extract<T, StaleQueryState<Request, Response>>) => ReactElement | null;
@@ -22,7 +22,7 @@ export const QuerySuspense = <Request, Response, Error, T extends QueryState<Req
 }: QuerySuspenseProps<Request, Response, Error, T>) => {
 
   if (queryState.status === 'idle') {
-    return idle(queryState as Extract<T, IdleState>);
+    return idle(queryState as Extract<T, IdleQueryState>);
   }
 
   if (queryState.status === 'loading') {

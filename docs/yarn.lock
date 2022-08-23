@@ -1314,10 +1314,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@browser-search/browser-search@1.1.0-beta.2":
-  version "1.1.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@browser-search/browser-search/-/browser-search-1.1.0-beta.2.tgz#8bf32c565f17752f66b149deb000a42f1820d675"
-  integrity sha512-IuTVofJuAEe/7M7hKF5ux1Ey26ReKqzH5tQyUdCifyOTRh2JUyqzJ8C75rsw2oLynHxeXZ3iefzy2cG5FUStOw==
+"@browser-search/browser-search@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@browser-search/browser-search/-/browser-search-1.1.0.tgz#932203c0a8c64bcd21f44f2cb4b2551fe8c9f1f6"
+  integrity sha512-dpMMJ7g5Xva6eTfFJcLUncuU4OhPGhCwvxe5v8dmVARNvobrPJRstmnXYTkleOU37CEg6ovofsogmpbHFDLd9w==
   dependencies:
     "@types/object-hash" "^2.1.0"
     "@types/ramda" "^0.27.39"
@@ -1326,10 +1326,10 @@
     ramda "^0.28.0"
     yup "^1.0.0-beta.4"
 
-"@browser-search/react-browser-search@^1.0.0-beta.2":
-  version "1.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@browser-search/react-browser-search/-/react-browser-search-1.0.0-beta.2.tgz#ac8549c1a0105eb9f0d720b2bb2108e07439d8d2"
-  integrity sha512-4/dg8SvsYvIMJJnXFt5rEOxLSN3QBdqhrlG7gFGdt3Ml0JVR676LQ8n70EB0HSsVuDwXNevfZVRFUyCX/XRMrQ==
+"@browser-search/react-browser-search@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@browser-search/react-browser-search/-/react-browser-search-1.0.0.tgz#9f42bc6636c91634d1e8268eb61d149220b59803"
+  integrity sha512-81OZrGbfbOX0xoYJGzfezKB9pK9BvMkR2/gDVf9Dxaz4xr3oxZvgedZ3PeZ+UlvZltHXlTfyBgD1qT0llqvuZQ==
   dependencies:
     memoizee "^0.4.15"
     object-hash "^3.0.0"
